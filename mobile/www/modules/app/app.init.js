@@ -59,9 +59,9 @@
     function initializePlatform($ionicPlatform, $window, settings, $log, $q,
         $cordovaGoogleAnalytics, $cordovaKeyboard, $cordovaStatusbar, $cordovaDevice) {
 
-        if (!!$window) {
-            $window.logger = $log;
-        }
+            if (!!$window) {
+                $window.logger = $log;
+            }
 
         // setTimeout(function () {
 
@@ -130,47 +130,47 @@
     function initializeBranch($ionicPlatform, $window, settings) {
 
         $ionicPlatform.ready(function (e) {
-            readBranchData();
+                readBranchData();
 
-            $ionicPlatform.on('resume', readBranchData);
-        });
+                $ionicPlatform.on('resume', readBranchData);
+            });
 
-        function readBranchData() {
-            logger.debug('readBranchData');
+            function readBranchData() {
+                logger.debug('readBranchData');
             if (!!$window.cordova && !!branch) {
 
-                branch.setDebug(AppConfig.debug);
-                branch.init(settings.branch.key, function (err, response) {
-                    logger.debug("branch.init - start");
+                    branch.setDebug(AppConfig.debug);
+                    branch.init(settings.branch.key, function (err, response) {
+                        logger.debug("branch.init - start");
 
-                    if (err) {
-                        logger.debug("branch error msg: " + err);
-                    } else {
-                        logger.debug("branch data: " + JSON.stringify(response, null, 1));
-                    }
-
-                    if (_.isEmpty(response)) {
-                        return;
-                    }
-
-                    if (!!response.data) {
-                        logger.debug("branch data: " + JSON.stringify(response.data, null, 1));
-                    }
-
-                    if (!err && response.data) {
-                        var parsed_data = JSON.parse(response.data);
-                        logger.debug('Parsed: ' + JSON.stringify(parsed_data, null, 1))
-
-                        if (parsed_data['+clicked_branch_link']) {
-                            logger.debug('Referral Code' + parsed_data.referring_identity);
-                            $window.localStorage.setItem('referralCode', parsed_data.referring_identity);
-
-                            $window.localStorage.setItem('branchData', JSON.stringify(parsed_data));
+                        if (err) {
+                            logger.debug("branch error msg: " + err);
+                        } else {
+                            logger.debug("branch data: " + JSON.stringify(response, null, 1));
                         }
-                    }
-                });
+
+                        if (_.isEmpty(response)) {
+                            return;
+                        }
+
+                        if (!!response.data) {
+                            logger.debug("branch data: " + JSON.stringify(response.data, null, 1));
+                        }
+
+                        if (!err && response.data) {
+                            var parsed_data = JSON.parse(response.data);
+                            logger.debug('Parsed: ' + JSON.stringify(parsed_data, null, 1))
+
+                            if (parsed_data['+clicked_branch_link']) {
+                                logger.debug('Referral Code' + parsed_data.referring_identity);
+                                $window.localStorage.setItem('referralCode', parsed_data.referring_identity);
+
+                                $window.localStorage.setItem('branchData', JSON.stringify(parsed_data));
+                            }
+                        }
+                    });
+                }
             }
-        }
     }
 
     initializeStateChangeListeners.$inject = ['$rootScope', '$window', '$ionicPlatform', '$cordovaGoogleAnalytics'];
