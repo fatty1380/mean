@@ -43,46 +43,26 @@
                             prop.apply(null, args)
                         };
                     }
-                }); 
-                
+                });
+
                 return $delegate;
             }]);
         }])
 
-<<<<<<< Updated upstream
-        .run(initializePlatform);
-=======
         .run(initializePlatform)
         .run(initializeBranch)
         .run(initializeStateChangeListeners);
->>>>>>> Stashed changes
 
-    initializePlatform.$inject = ['$ionicPlatform', '$window', 'settings', '$log', '$cordovaGoogleAnalytics']
+    initializePlatform.$inject = ['$ionicPlatform', '$window', 'settings', '$log', '$q',
+        '$cordovaGoogleAnalytics', '$cordovaKeyboard', '$cordovaStatusbar', '$cordovaDevice']
 
-    function initializePlatform($ionicPlatform, $window, settings, $log, $cordovaGoogleAnalytics) {
+    function initializePlatform($ionicPlatform, $window, settings, $log, $q,
+        $cordovaGoogleAnalytics, $cordovaKeyboard, $cordovaStatusbar, $cordovaDevice) {
 
         if (!!$window) {
             $window.logger = $log;
         }
 
-<<<<<<< Updated upstream
-        $ionicPlatform.ready(function () {
-            if (window.cordova && window.cordova.plugins.Keyboard) {
-                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
-            }
-            if (window.StatusBar) {
-                StatusBar.styleDefault();
-            }
-
-            ionic.Platform.isFullScreen = true;
-
-            if (!!screen && angular.isFunction(screen.lockOrientation)) {
-                screen.lockOrientation('portrait');
-            }
-
-            readBranchData();
-
-=======
         // setTimeout(function () {
 
             if (!$window.cordova && _.isUndefined($window.ga)) {
@@ -152,17 +132,12 @@
         $ionicPlatform.ready(function (e) {
             readBranchData();
 
->>>>>>> Stashed changes
             $ionicPlatform.on('resume', readBranchData);
         });
 
         function readBranchData() {
             logger.debug('readBranchData');
-<<<<<<< Updated upstream
-            if (!!window.cordova) {
-=======
             if (!!$window.cordova && !!branch) {
->>>>>>> Stashed changes
 
                 branch.setDebug(AppConfig.debug);
                 branch.init(settings.branch.key, function (err, response) {
@@ -196,8 +171,6 @@
                 });
             }
         }
-<<<<<<< Updated upstream
-=======
     }
 
     initializeStateChangeListeners.$inject = ['$rootScope', '$window', '$ionicPlatform', '$cordovaGoogleAnalytics'];
@@ -273,6 +246,5 @@
                     });
             })
         // }, 10000);
->>>>>>> Stashed changes
     }
 })();
