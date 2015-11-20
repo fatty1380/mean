@@ -107,7 +107,9 @@ function checkFriendStatus(req, res, next) {
                 if (!!myRequest) {
                     status = (function (status) {
                         switch (status) {
-                            case 'new': return 'sent';
+                            case 'new':
+                            case 'sent':
+                                return 'sent';
                             case 'accepted': return 'friends';
                             default: return 'none';
                         }
@@ -120,7 +122,9 @@ function checkFriendStatus(req, res, next) {
                 else if (!!theirRequest) {
                     status = (function (status) {
                         switch (status) {
-                            case 'new': return 'pending';
+                            case 'new': 
+                            case 'sent':
+                                return 'pending';
                             case 'accepted': return 'friends';
                             default: return 'none';
                         }
