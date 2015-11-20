@@ -52,106 +52,124 @@
         .run(initializePlatform)
         .run(initializeStateChangeListeners);
 
-    initializePlatform.$inject = ['$ionicPlatform', '$window', 'settings', '$log', '$cordovaGoogleAnalytics', '$cordovaKeyboard', '$cordovaStatusbar', '$cordovaDevice']
+    initializePlatform.$inject = ['$ionicPlatform', '$window', 'settings', '$log', '$q',
+        '$cordovaGoogleAnalytics', '$cordovaKeyboard', '$cordovaStatusbar', '$cordovaDevice']
 
-    function initializePlatform($ionicPlatform, $window, settings, $log, $cordovaGoogleAnalytics, $cordovaKeyboard, $cordovaStatusbar, $cordovaDevice) {
+    function initializePlatform($ionicPlatform, $window, settings, $log, $q,
+        $cordovaGoogleAnalytics, $cordovaKeyboard, $cordovaStatusbar, $cordovaDevice) {
 
-        if (!!$window) {
-            $window.logger = $log;
-        }
 
-        if (!$window.cordova && _.isUndefined($window.ga)) {
-            debugger;
-            (function (i, s, o, g, r, a, m) {
-                i['GoogleAnalyticsObject'] = r;
-                i[r] = i[r] || function () {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date();
-                a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];
-                a.async = 1;
-                a.src = g;
-                m.parentNode.insertBefore(a, m)
-            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        setTimeout(function () {
 
-            ga('create', settings.ga.web, 'auto');
-            ga('send', 'pageview', 'Say Hello from app.init');
-        }
-
-        $ionicPlatform.ready(function () {
-            if ($window.cordova && $window.cordova.plugins.Keyboard) {
-                $cordovaKeyboard.hideAccessoryBar(false);
-                //cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+            if (!!$window) {
+                $window.logger = $log;
             }
 
-            if (!!$window.StatusBar) {
-                $cordovaStatusbar.style(1);
-                // StatusBar.styleDefault();
-            }
-
-            ionic.Platform.isFullScreen = true;
-
-            if (!!screen && angular.isFunction(screen.lockOrientation)) {
-                screen.lockOrientation('portrait');
-            }
-
-            if (!!$window.analytics) {
+            if (!$window.cordova && _.isUndefined($window.ga)) {
                 debugger;
-                logger.info('$cordovaGoogleAnalytics initializing with id [%s]', settings.ga.web);
-                $cordovaGoogleAnalytics.startTrackerWithId(settings.ga.web);
-            } else {
-                logger.warn('$cordovaGoogleAnalytics is not available');
+                (function (i, s, o, g, r, a, m) {
+                    i['GoogleAnalyticsObject'] = r;
+                    i[r] = i[r] || function () {
+                        (i[r].q = i[r].q || []).push(arguments)
+                    }, i[r].l = 1 * new Date();
+                    a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                    a.async = 1;
+                    a.src = g;
+                    m.parentNode.insertBefore(a, m)
+                })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+                ga('create', settings.ga.web, 'auto');
+                ga('send', 'pageview', 'Say Hello from app.init');
             }
 
-            readBranchData();
+            $ionicPlatform.ready(function () {
+                debugger;
+                logger.info('Cordova Available', !!$window.cordova);
+                logger.info('Plugins Available', !!$window.cordova.plugins ? _.keys($window.cordova.plugins) : false);
 
-            $ionicPlatform.on('resume', readBranchData);
-        });
+                if ($window.cordova && $window.cordova.plugins && $window.cordova.plugins.Keyboard) {
+                    $cordovaKeyboard.hideAccessoryBar(false);
+                    //cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+                }
 
-        function readBranchData() {
-            logger.debug('readBranchData');
-            if (!!$window.cordova) {
+                if (!!$window.StatusBar) {
+                    $cordovaStatusbar.style(1);
+                    // StatusBar.styleDefault();
+                }
 
-                branch.setDebug(AppConfig.debug);
-                branch.init(settings.branch.key, function (err, response) {
-                    logger.debug("branch.init - start");
+                ionic.Platform.isFullScreen = true;
 
-                    if (err) {
-                        logger.debug("branch error msg: " + err);
-                    } else {
-                        logger.debug("branch data: " + JSON.stringify(response, null, 1));
-                    }
+                if (!!screen && angular.isFunction(screen.lockOrientation)) {
+                    screen.lockOrientation('portrait');
+                }
 
-                    if (_.isEmpty(response)) {
-                        return;
-                    }
+                if (!!$window.analytics) {
+                    debugger;
+                    logger.info('$cordovaGoogleAnalytics initializing with id [%s]', settings.ga.dev);
+                    $cordovaGoogleAnalytics.startTrackerWithId(settings.ga.dev)
+                        .catch(function (e) {
+                            logger.error('Unable to Initialize GA Tracker', e);
+                        });
 
-                    if (!!response.data) {
-                        logger.debug("branch data: " + JSON.stringify(response.data, null, 1));
-                    }
+                    $cordovaGoogleAnalytics.debugMode();
 
-                    if (!err && response.data) {
-                        var parsed_data = JSON.parse(response.data);
-                        logger.debug('Parsed: ' + JSON.stringify(parsed_data, null, 1))
+                    var er = $cordovaGoogleAnalytics.enableUncaughtExceptionReporting ? $cordovaGoogleAnalytics.enableUncaughtExceptionReporting : analytics.enableUncaughtExceptionReporting
 
-                        if (parsed_data['+clicked_branch_link']) {
-                            logger.debug('Referral Code' + parsed_data.referring_identity);
-                            $window.localStorage.setItem('referralCode', parsed_data.referring_identity);
+                    er(true);
+                } else {
+                    logger.warn('$cordovaGoogleAnalytics is not available');
+                }
 
-                            $window.localStorage.setItem('branchData', JSON.stringify(parsed_data));
+                readBranchData();
+
+                $ionicPlatform.on('resume', readBranchData);
+            });
+
+            function readBranchData() {
+                logger.debug('readBranchData');
+                if (!!$window.cordova) {
+
+                    branch.setDebug(AppConfig.debug);
+                    branch.init(settings.branch.key, function (err, response) {
+                        logger.debug("branch.init - start");
+
+                        if (err) {
+                            logger.debug("branch error msg: " + err);
+                        } else {
+                            logger.debug("branch data: " + JSON.stringify(response, null, 1));
                         }
-                    }
-                });
+
+                        if (_.isEmpty(response)) {
+                            return;
+                        }
+
+                        if (!!response.data) {
+                            logger.debug("branch data: " + JSON.stringify(response.data, null, 1));
+                        }
+
+                        if (!err && response.data) {
+                            var parsed_data = JSON.parse(response.data);
+                            logger.debug('Parsed: ' + JSON.stringify(parsed_data, null, 1))
+
+                            if (parsed_data['+clicked_branch_link']) {
+                                logger.debug('Referral Code' + parsed_data.referring_identity);
+                                $window.localStorage.setItem('referralCode', parsed_data.referring_identity);
+
+                                $window.localStorage.setItem('branchData', JSON.stringify(parsed_data));
+                            }
+                        }
+                    });
+                }
             }
-        }
+        }, 5000);
     }
 
-    initializeStateChangeListeners.$inject = ['$rootScope', '$window', '$cordovaGoogleAnalytics'];
+    initializeStateChangeListeners.$inject = ['$rootScope', '$window', '$ionicPlatform', '$cordovaGoogleAnalytics'];
 
-    function initializeStateChangeListeners($rootScope, $window, $cordovaGoogleAnalytics) {
+    function initializeStateChangeListeners($rootScope, $window, $ionicPlatform, $cordovaGoogleAnalytics) {
         if (!$window.analytics && !!$window.ga) {
             debugger;
-
 
             $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
                 $window.ga('send', 'pageview', { page: toState.name });
@@ -159,7 +177,7 @@
             });
 
             $rootScope.$on('$ionicView.afterEnter', function (event) {
-                $window.ga('send', 'screenview', { screenName: window.location.hash } );
+                $window.ga('send', 'screenview', { screenName: window.location.hash });
                 logger.debug('trackview %s', window.location.hash);
             })
             return;
@@ -171,18 +189,49 @@
 
         var i = 0;
 
-        $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        debugger;
 
+        $ionicPlatform.ready(function (event) {
+
+            logger.debug('Lifecycle Event: launch', event);
+            $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'launch', location.hash)
+                .catch(function (e) {
+                    logger.error('Unable to track Lifecycle Event', e, event);
+                });
+        })
+
+        $ionicPlatform.on('pause', function (event) {
+            logger.debug('Lifecycle Event: pause', event);
+            $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'pause', location.hash)
+                .catch(function (e) {
+                    logger.error('Unable to track Lifecycle Event', e, event);
+                });
+        });
+
+        $ionicPlatform.on('resume', function (event) {
+            logger.debug('Lifecycle Event: resume', event);
+            $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'resume', location.hash)
+                .catch(function (e) {
+                    logger.error('Unable to track Lifecycle Event', e, event);
+                });
+        });
+
+
+        $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
             logger.debug('StateChange %s -> %s', fromState.name, toState.name);
-            $cordovaGoogleAnalytics.trackEvent('StateChange', fromState.name, toState.name, i++);
+            $cordovaGoogleAnalytics.trackEvent('StateChange', fromState.name, toState.name, i++)
+                .catch(function (e) {
+                    logger.error('Unable to track Lifecycle Event', e, event);
+                });
             //$window.ga('send', 'pageview', { page: $location.path() });
         });
 
         $rootScope.$on('$ionicView.afterEnter', function (event) {
             logger.debug('StateChange --> %s', window.location.hash);
-            $cordovaGoogleAnalytics.trackView(window.location.hash);
+            $cordovaGoogleAnalytics.trackView(window.location.hash)
+                .catch(function (e) {
+                    logger.error('Unable to track Lifecycle Event', e, event);
+                });
         })
-
-
     }
 })();
