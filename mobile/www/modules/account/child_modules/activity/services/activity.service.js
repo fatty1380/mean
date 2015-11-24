@@ -30,7 +30,7 @@
             loadMore: loadMore,
             getAvatar: getAvatar
         };
-        
+
         var vm = this;
 
         var feed = [];
@@ -47,7 +47,7 @@
                 };
             }
         });
-        
+
         var feeder = vm.FEEDER_CONFIG;
 
         var feedSource = 'items';
@@ -63,7 +63,7 @@
                 loadingText: 'Loading Activity Feed'
             }
         }
-        
+
         return service;
         
         /////////////////////////////////////////////////////////////////////////////////
@@ -148,7 +148,7 @@
              */
             var itemsToResolve = feed.slice(start, count);
             feed = [];
-            
+
             if (!itemsToResolve || !itemsToResolve.length) {
                 logger.debug('No more activities');
                 return $q.when([]);
@@ -156,12 +156,12 @@
 
 
             var promises = itemsToResolve.map(function (value, index) {
-                if(!angular.isString(value)) return value;
+                if (!angular.isString(value)) return value;
                 return getFeedActivityById(value).then(
                     function (feedItem) {
                         //logger.debug('Loaded Feed item #' + index + '. Feeder: ', feeder);
                         feeder.loaded++;
-                        
+
                         if (_.isEmpty(feedItem)) {
                             return null;
                         }
@@ -178,7 +178,7 @@
                         feed[start + index] = feedItem;
                         return feedItem;
                     })
-                });
+            });
 
             return $q.all(promises).then(function (results) {
                 logger.debug('Resolved %d feed activities to populated feed', results.length, feed);
@@ -266,17 +266,17 @@
 
         function likeActivity(id) {
             var index = _.findIndex(feed, { id: id });
-            
+
             return $http.post(settings.feed + id + '/likes', null)
                 .then(function (response) {
                     var likes = response.data || [];
-                    
+
                     if (index !== -1) {
                         feed[index].likes = likes
                     }
                     return likes;
                 }, function (response) {
-                    
+
                     if (response.status != 403) {
                         logger.error('Unable to like Post', response);
                     }
@@ -388,12 +388,12 @@
                 template: text || 'no message'
             });
         };
-        
+
         function getAvatar(feedItem) {
             if (_.isEmpty(feedItem.user) || _.isString(feedItem.user)) {
                 return null;
             }
-            
+
             return userService.getAvatar(feedItem.user);
         }
     }
