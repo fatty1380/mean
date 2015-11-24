@@ -5,9 +5,11 @@
         .module('messages')
         .controller('MessagesCtrl', MessagesCtrl);
 
-    MessagesCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', 'messageService', 'messageModalsService', 'LoadingService', 'friendsService', 'recipientChat'];
+    MessagesCtrl.$inject = ['$rootScope', '$scope', 'updates', 'updateService', '$cordovaGoogleAnalytics',
+        'messageService', 'messageModalsService', 'LoadingService', 'friendsService', 'recipientChat'];
 
-    function MessagesCtrl($rootScope, updates, updateService, $scope, messageService, messageModalsService, LoadingService, friendsService, recipientChat) {
+    function MessagesCtrl($rootScope, $scope, updates, updateService, $cordovaGoogleAnalytics,
+        messageService, messageModalsService, LoadingService, friendsService, recipientChat) {
 
         var vm = this;
         vm.messages = [];
@@ -19,6 +21,7 @@
         vm.getChats = getChats;
 
         $rootScope.$on("clear", function () {
+            $cordovaGoogleAnalytics.trackEvent('Messages', 'clear', null, vm.chats.length);
             logger.debug('MessagesCtrl clear');
             vm.messages = [];
             vm.chats = [];
@@ -33,6 +36,9 @@
         });
 
         function createNewChat() {
+            $cordovaGoogleAnalytics.trackEvent('Messages', 'createChat', 'start');
+            var then = Date.now();
+
             friendsService
                 .retrieveFriends()
                 .then(function retrieveFriendsSuccess(friends) {
@@ -40,10 +46,19 @@
                         .selectChatRecipient({ friends: friends });
                 })
                 .then(function selectedChatRecipientSuccess(friend) {
-                    if(!!friend) return messageService.getChatByUserId(friend.id);
+                    if (!!friend) {
+                        $cordovaGoogleAnalytics.trackEvent('Messages', 'createChat', 'recipientSelected', Date.now() - then);
+                        return messageService.getChatByUserId(friend.id);
+                    }
                 })
                 .then(function getChatSuccess(chat) {
-                    if(!!chat) showChatDetailsModal(chat);
+                    if (!!chat) {
+                        $cordovaGoogleAnalytics.trackEvent('Messages', 'createChat', 'loadedChat', Date.now() - then);
+                        return showChatDetailsModal(chat);
+                    }
+                })
+                .finally(function () {
+                    $cordovaGoogleAnalytics.trackEvent('Messages', 'createChat', 'complete', Date.now() - then);
                 });
         }
 
@@ -52,6 +67,9 @@
         }
 
         function showChatDetailsModal(chat) {
+            $cordovaGoogleAnalytics.trackEvent('Messages', 'openChat', 'start');
+            var then = Date.now();
+
             logger.debug('showChatDetailsModal() ', chat);
             messageModalsService
                 .showNewMessageModal(chat)
@@ -60,10 +78,15 @@
                 })
                 .catch(function messageModalFailure(err) {
                     logger.error('Messages.showChatDetails failed', err);
+                })
+                .finally(function () {
+                    $cordovaGoogleAnalytics.trackEvent('Messages', 'openChat', 'complete', Date.now() - then);
                 });
         }
 
         function getChats() {
+            var then = Date.now();
+
             LoadingService.showLoader('Loading');
             messageService
                 .getChats()
@@ -75,6 +98,7 @@
                     logger.error('GET CHATS ERROR ----- >>>', err);
                 })
                 .finally(function () {
+                    $cordovaGoogleAnalytics.trackEvent('Messages', 'getChats', 'complete', Date.now() - then);
                     LoadingService.hide();
                 });
         }

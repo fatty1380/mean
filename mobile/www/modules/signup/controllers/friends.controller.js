@@ -5,9 +5,9 @@
         .module('signup')
         .controller('SignupFriendsCtrl', SignupFriendsCtrl);
 
-    SignupFriendsCtrl.$inject = ['$state', '$rootScope', 'registerService'];
+    SignupFriendsCtrl.$inject = ['$state', '$rootScope', '$cordovaGoogleAnalytics', 'registerService'];
 
-    function SignupFriendsCtrl($state, $rootScope, registerService) {
+    function SignupFriendsCtrl($state, $rootScope, $cordovaGoogleAnalytics, registerService) {
         var vm = this;
 
         vm.chooseContacts = chooseContacts;
@@ -29,16 +29,19 @@
         }
 
         function chooseContacts() {
+            $cordovaGoogleAnalytics.trackEvent('signup', 'friends', 'chooseContacts');
             $state.go('signup-friends-contacts', { resolveContacts: true });
         }
 
         function skipToProfile() {
+            $cordovaGoogleAnalytics.trackEvent('signup', 'friends', 'skip');
             // No changes within the friends controller - no saving required
             // single responsibility pattern ftw!
             $state.go('account.profile');
         }
 
         function addManually() {
+            $cordovaGoogleAnalytics.trackEvent('signup', 'friends', 'addManually');
             $state.go('signup-friends-manually');
         }
 

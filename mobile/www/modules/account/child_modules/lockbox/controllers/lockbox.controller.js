@@ -5,9 +5,9 @@
         .module('lockbox', ['pdf'])
         .controller('LockboxCtrl', LockboxCtrl);
 
-    LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', 'securityService', 'user', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup', 'welcome'];
+    LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', 'securityService', 'user', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup', '$cordovaGoogleAnalytics', 'welcome'];
 
-    function LockboxCtrl($scope, $state, $rootScope, securityService, user, documents, lockboxDocuments, lockboxModalsService, $ionicPopup, welcome) {
+    function LockboxCtrl($scope, $state, $rootScope, securityService, user, documents, lockboxDocuments, lockboxModalsService, $ionicPopup, $cordovaGoogleAnalytics, welcome) {
 
 
         var vm = this;
@@ -27,39 +27,44 @@
 
         $scope.$on("$ionicView.beforeEnter", function () {
             logger.debug('Reactivate Lockbox Controller');
-            
+
             if (documents === -1) {
                 logger.debug('docs equals negative 1 - fail1')
                 return;
             }
-            
+
             init();
         });
 
         $rootScope.$on("clear", function () {
+            $cordovaGoogleAnalytics.trackEvent('Lockbox', 'clear', null, vm.documents.length);
             logger.debug('LockboxCtrl clear');
             vm.currentDoc = null;
             vm.documents = [];
             lockboxDocuments.clear();
             securityService.logout();
         });
-        
+
         function init() {
+            $cordovaGoogleAnalytics.trackEvent('Lockbox', 'init', 'start', vm.documents.length);
 
             return lockboxDocuments.checkAccess({ redirect: true, setNew: true })
                 .then(function (isAccessible) {
                     vm.canAccess = isAccessible;
 
                     if (isAccessible) {
+                        $cordovaGoogleAnalytics.trackEvent('Lockbox', 'init', 'accessible', vm.documents.length);
                         if (_.isEmpty(vm.documents)) {
                             logger.debug('Documents not included in parameters - looking up');
                             getDocs();
                         }
-                        
+
                         return;
                     }
+                    $cordovaGoogleAnalytics.trackEvent('Lockbox', 'init', 'inaccessible', vm.documents.length);
                 })
                 .catch(function fail(err) {
+                    $cordovaGoogleAnalytics.trackEvent('Lockbox', 'init', 'fail', vm.documents.length);
                     logger.debug('Failed to access lockbox due to `%s`', err);
                     vm.canAccess = false;
                 });
@@ -69,7 +74,7 @@
             if (_.isEmpty(user) || !user.id) {
                 return false;
             }
-            
+
             return lockboxDocuments.getFilesByUserId(user.id)
                 .then(function (response) {
                     logger.debug('Documents List', response);
@@ -83,6 +88,8 @@
 
         /// Implementation
         function addDocs(docSku) {
+            $cordovaGoogleAnalytics.trackEvent('Lockbox', 'add-doc', docSku, vm.documents.length)
+
             var docCount = vm.documents.length;
             lockboxDocuments.addDocsPopup(docSku)
                 .then(
@@ -115,6 +122,7 @@
          * Skips the 'new doc/order reports' sheet.
          */
         function newDoc(docSku) {
+            $cordovaGoogleAnalytics.trackEvent('Lockbox', 'new-doc', docSku, vm.documents.length)
             return lockboxDocuments.newDocPopup(docSku)
                 .finally(function () {
                     refreshDocuments();
@@ -127,10 +135,12 @@
          * Skips the 'new doc/order reports' sheet.
          */
         function orderDocs(doc) {
+            $cordovaGoogleAnalytics.trackEvent('Lockbox', 'order', doc && doc.sku, vm.documents.length)
             return lockboxDocuments.orderReports(doc);
         }
 
         function showEditModal(parameters) {
+            $cordovaGoogleAnalytics.trackEvent('Lockbox', 'edit', 'click', vm.documents.length)
             var params = {
                 documents: vm.documents
             };
@@ -149,7 +159,9 @@
             var params = {
                 documents: vm.documents
             };
-            
+
+            $cordovaGoogleAnalytics.trackEvent('Lockbox', 'share', null, vm.documents.length)
+
             lockboxModalsService.showShareModal(params)
                 .then(
                     function (result) {
@@ -161,11 +173,13 @@
         }
 
         function refreshDocuments() {
+            $cordovaGoogleAnalytics.trackEvent('Lockbox', 'refresh', 'start', vm.documents.length)
             return lockboxDocuments.getDocuments(true, { redirect: true })
                 .finally(function () {
                     vm.documents = sortDocs(lockboxDocuments.updateDocumentList());
                     // Stop the ion-refresher from spinning
                     $scope.$broadcast('scroll.refreshComplete');
+                    $cordovaGoogleAnalytics.trackEvent('Lockbox', 'refresh', 'complete', vm.documents.length)
                 });
         }
     }

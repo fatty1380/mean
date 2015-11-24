@@ -38,6 +38,8 @@
                 .then(
                     function success(newImageResponse) {
                         profile.profileImageURL = profile.props.avatar = newImageResponse || finalImage;
+                        
+                        return profile.profileImageURL;
                     })
                 .catch(
                     function reject(rejection) {

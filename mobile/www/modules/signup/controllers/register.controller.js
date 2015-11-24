@@ -5,9 +5,11 @@
         .module('signup')
         .controller('RegisterCtrl', RegisterCtrl);
 
-    RegisterCtrl.$inject = ['$state', '$window', '$ionicPopup', 'LoadingService', 'tokenService', 'welcomeService', 'securityService', 'registerService'];
+    RegisterCtrl.$inject = ['$state', '$window', '$ionicPopup', '$cordovaGoogleAnalytics',
+        'LoadingService', 'tokenService', 'welcomeService', 'securityService', 'registerService', 'userService'];
 
-    function RegisterCtrl($state, $window, $ionicPopup, LoadingService, tokenService, welcomeService, securityService, registerService) {
+    function RegisterCtrl($state, $window, $ionicPopup, $cordovaGoogleAnalytics,
+        LoadingService, tokenService, welcomeService, securityService, registerService, userService) {
         var vm = this;
         vm.lastElementFocused = false;
 
@@ -36,11 +38,14 @@
          */
         function submitForm() {
             if (vm.lastElementFocused) {
-                continueToEngagement();
+                return continueToEngagement();
             }
+            $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'formErr:notLast');
         }
 
         function continueToEngagement() {
+            var then = Date.now();
+
             LoadingService.showLoader('Saving');
             registerService.registerUser(vm.user)
                 .then(function (response) {
@@ -62,16 +67,24 @@
                                     $window.localStorage.removeItem('referralCode');
                                     $window.localStorage.removeItem('branchData');
 
-                                    $state.go('signup-engagement');
+                                    return userService.getUserData();
                                 } else {
                                     showPopup(null, signInResponse.title, signInResponse.message.data.error_description);
                                 }
                             })
-                            .finally(function () {
-                                LoadingService.hide();
+                            .then(function success(profileData) {
+                                if (!!profileData) {
+                                    lockboxDocuments.removePrevUserDocuments(profileData.id);
+                                    $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'success', Date.now() - then);
+
+                                    LoadingService.hide();
+                                    return $state.go('signup-engagement');
+                                }
+                                $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'error', Date.now() - then);
                             });
                     } else {
                         LoadingService.hide();
+                        $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'error', Date.now() - then);
 
                         showPopup(response, 'Registration Failed');
                     }
@@ -79,8 +92,6 @@
         }
 
         function showPopup(response, title, message) {
-
-
             if (!!response) {
                 if (response.message.status === 0) {
                     message = 'Request timed-out. Please, check your network connection.'
@@ -91,7 +102,7 @@
 
             if (/unique field/i.test(message)) {
                 message = 'Email is already registered. Would you like to <a ui-sref="login">Login?</a>';
-
+                LoadingService.hide();
                 $ionicPopup.alert({
                     title: title || "Sorry",
                     template: message || "no message"

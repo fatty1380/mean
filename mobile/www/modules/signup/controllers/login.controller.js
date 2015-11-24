@@ -25,9 +25,11 @@
         .module('signup')
         .controller('LoginCtrl', LoginCtrl);
 
-    LoginCtrl.$inject = ['$state', 'lockboxDocuments', '$window', 'registerService', 'LoadingService', 'tokenService', 'userService', 'securityService'];
+    LoginCtrl.$inject = ['$state', 'lockboxDocuments', '$window', '$cordovaGoogleAnalytics',
+        'registerService', 'LoadingService', 'tokenService', 'userService', 'securityService'];
 
-    function LoginCtrl($state, lockboxDocuments, $window, registerService, LoadingService, tokenService, userService, securityService) {
+    function LoginCtrl($state, lockboxDocuments, $window, $cordovaGoogleAnalytics,
+        registerService, LoadingService, tokenService, userService, securityService) {
         var vm = this;
         vm.lastElementFocused = false;
 
@@ -51,8 +53,9 @@
             vm.error = '';
             vm.mainLoginForm.$submitted = true;
             if (vm.lastElementFocused) {
-                signIn();
+                return signIn();
             }
+            $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'err:notLast');
         }
 
         /**
@@ -62,33 +65,40 @@
         function signIn() {
 
             if (vm.mainLoginForm.$invalid) {
+                $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'err:formInvalid');
                 return;
             }
+
+            var then = Date.now();
 
             LoadingService.showLoader('Signing In');
             tokenService.set('access_token', '');
 
             registerService.signIn(vm.user)
                 .then(function (response) {
-                    LoadingService.hide();
+                    debugger; // Check for 'user' in response
                     var data = response && response.message && response.message.data;
                     if (response.success && !!data) {
                         tokenService.set('access_token', data.access_token);
                         tokenService.set('refresh_token', data.refresh_token);
                         tokenService.set('token_type', data.token_type);
 
-                        registerService
-                            .me()
-                            .then(function (profileData) {
-                                if (profileData.success) {
-                                    userService.profileData = profileData.message.data;
+                        userService.getUserData()
+                            .then(
+                                function success(profileData) {
                                     securityService.initialize();
+                                    lockboxDocuments.removeOtherUserDocuments(profileData.id);
 
-                                    removePrevUserDocuments(profileData.message.data.id);
+                                    $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'success', Date.now() - then);
 
+                                    LoadingService.hide();
                                     $state.go('account.profile');
-                                }
-                            });
+                                })
+                            .catch(
+                                function fail(err) {
+                                    logger.error('Unable to retrieve user information', err);
+                                    LoadingService.showAlert('Sorry, unable to login at this time');
+                                });
 
                         vm.error = '';
                     } else {
@@ -99,27 +109,11 @@
                             vm.error = 'Unable to authenticate. Please try again later';
                         }
 
+                        $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'err', status);
+
                         selectInputValue('password');
                     }
                 });
-        }
-
-        function removePrevUserDocuments (id) {
-            var storage = $window.localStorage;
-            var usersJSON = storage.getItem('hasDocumentsForUsers');
-            var users = usersJSON && JSON.parse(usersJSON);
-
-            if(!users || !(users instanceof Array) || !users.length) return;
-
-            angular.forEach(users, function (user) {
-                if(user !== id){
-                    logger.warn('removing documents for user --->>>', user);
-                    return lockboxDocuments.removeDocumentsByUser(user);
-                }
-            });
-
-            logger.warn('Documents users >>>', users);
-            storage.setItem('hasDocumentsForUsers', JSON.stringify(users));
         }
 
         function selectInputValue(id) {

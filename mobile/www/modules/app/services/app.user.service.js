@@ -5,9 +5,9 @@
         .module(AppConfig.appModuleName)
         .service('userService', userService);
 
-    userService.$inject = ['registerService', '$q'];
+    userService.$inject = ['registerService', '$q', '$cordovaGoogleAnalytics'];
 
-    function userService(registerService, $q) {
+    function userService(registerService, $q, $cordovaGoogleAnalytics) {
         var vm = this;
 
         vm.profileData = {};
@@ -30,7 +30,9 @@
         function signOut() {
             return registerService.signOut().then(
                 function (response) {
-                    if(response.success) vm.profileData = {};
+                    if(response.success) {vm.profileData = {};
+                        $cordovaGoogleAnalytics.setUserId();
+                    }
                 }
             )
         }
@@ -42,6 +44,8 @@
                         if(response.success){
                             vm.profileData = response.message.data;
                             getAvatar(vm.profileData);
+                            $cordovaGoogleAnalytics.setUserId(vm.profileData.id);
+                        
                             return vm.profileData;
                         }
                         return null;
@@ -50,15 +54,37 @@
             return $q.when(vm.profileData);
         }
 
+        /**
+         * Makes a request to the server to update the user object.
+         * @dataProps object containing new or updated properties for the user
+         * @note This should not be used for the 'props' object. See `updateUserProps`
+         */
         function updateUserData(dataProps) {
             return registerService.updateUser(dataProps)
                 .then(function (data) {
                     if(data.success && data.message.data.id){
-                        vm.profileData = data.message.data;
+                        _.extend(vm.profileData, data.message.data);
                     }
                     return vm.profileData;
                 });
-            //return vm.profileData;
+        }
+
+        /**
+         * Makes a request to the server to update the user's props object.
+         * @dataProps object containing new or updated properties for the user
+         */
+        function updateUserProps(dataProps) {
+            return registerService.updateUserProps(dataProps)
+                .then(function (data) {
+                    if (data.success) {
+                        vm.profileData.props = vm.profileData.props || {};
+                        _.extend(vm.profileData.props, data.message.data)
+                        return vm.profileData.props;
+                    }
+                    else {
+                        return null;
+                    }
+                });
         }
         
         function getAvatar(userProfile) {
@@ -80,24 +106,6 @@
             }
             
             return input;
-        }
-
-        /**
-         * Makes a request to the server to update the user's props array.
-         * @dataProps object containing new or updated properties for the user
-         */
-        function updateUserProps(dataProps) {
-            return registerService.updateUserProps(dataProps)
-                .then(function (data) {
-                    if (data.success) {
-                        vm.profileData.props = vm.profileData.props || {};
-                        _.extend(vm.profileData.props, data.message.data)
-                        return vm.profileData.props;
-                    }
-                    else {
-                        return null;
-                    }
-                });
         }
     }
 })();

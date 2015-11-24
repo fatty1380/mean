@@ -72,7 +72,9 @@
             var src = feedSource;
             source = /activity|items/i.test(source) ? source : null;
             feedSource = source || (feedSource === 'activity') ? 'items' : 'activity';
-            
+
+            $cordovaGoogleAnalytics.trackEvent('Activity', 'change-feed', feedSource, feedData[feedSource].length);
+
             return src !== feedSource;
         }
 

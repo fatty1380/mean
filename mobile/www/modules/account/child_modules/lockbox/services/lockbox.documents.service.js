@@ -39,6 +39,7 @@
             getDocuments: getDocuments,
             addDocsPopup: addDocsPopup,
             removeDocuments: removeDocuments,
+            removeOtherUserDocuments: removePrevUserDocuments,
             updateDocument: updateDocument,
             writeFileInUserFolder: writeFileInUserFolder,
             removeDocumentsByUser: removeDocumentsByUser,
@@ -313,6 +314,28 @@
         function orderReports() {
             lockboxModalsService
                 .showOrderReportsModal();
+        }
+        
+        /**
+         * Iterates over all stored documents in the lockbox (per local storage)
+         * and removes any documents that are not the newly logged in user's
+         */
+        function removePrevUserDocuments(id) {
+            var storage = $window.localStorage;
+            var usersJSON = storage.getItem('hasDocumentsForUsers');
+            var users = usersJSON && JSON.parse(usersJSON);
+
+            if (!users || !(users instanceof Array) || !users.length) return;
+
+            angular.forEach(users, function (user) {
+                if (user !== id) {
+                    logger.warn('removing documents for user --->>>', user);
+                    return lockboxDocuments.removeDocumentsByUser(user);
+                }
+            });
+
+            logger.warn('Documents users >>>', users);
+            storage.setItem('hasDocumentsForUsers', JSON.stringify(users));
         }
 
         function removeDocuments(documents) {

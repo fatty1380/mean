@@ -8,6 +8,7 @@
 
                 .state('home', {
                     url: '/home',
+                    cache: false,
                     templateUrl: 'modules/signup/templates/home.html',
                     controller: 'HomeCtrl as vm',
                     resolve: {

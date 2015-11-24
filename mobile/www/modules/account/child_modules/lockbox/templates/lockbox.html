@@ -23,7 +23,8 @@
                             <!--<span>{{ doc.created }}</span>-->
                         </div>
                         <oset-doc-view ng-if="!!doc.url" model="doc" btn-text="View"></oset-doc-view>
-                        <button ng-if="!doc.url" class="button button-small" ng-click="!!vm[doc.fn] ? vm[doc.fn](doc) : vm.newDoc(doc.sku)">{{doc.action || 'Add'}}</button>
+                        <button ng-if="!doc.url" class="button button-small" 
+                        ng-click="!!vm[doc.fn] ? vm[doc.fn](doc) : vm.newDoc(doc.sku)">{{doc.action || 'Add'}}</button>
                     </li>
                 </ul>
                 <div ng-if="!vm.documents.length" class="no-content">No documents</div>

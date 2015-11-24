@@ -5,9 +5,11 @@
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
-    ActivityCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', '$state', 'activityModalsService', 'activityService', 'LoadingService', 'user', 'settings', 'welcomeService'];
+    ActivityCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', '$state', '$cordovaGoogleAnalytics',
+        'activityModalsService', 'activityService', 'LoadingService', 'user', 'settings', 'welcomeService'];
 
-    function ActivityCtrl($rootScope, updates, updateService, $scope, $state, activityModalsService, activityService, LoadingService, user, settings, welcomeService) {
+    function ActivityCtrl($rootScope, updates, updateService, $scope, $state, $cordovaGoogleAnalytics,
+        activityModalsService, activityService, LoadingService, user, settings, welcomeService) {
         var vm = this;
         vm.feed = [];
 
@@ -35,7 +37,7 @@
 
         $scope.$on('$ionicView.enter', function () {
             updateService.resetUpdates('activities');
-            
+
             if (vm.feed.length && activityService.changeFeedSource('activity')) {
                 logger.debug('Activity Source Changed to ' + vm.feedData.feedSource);
                 updateFeedData();
@@ -48,6 +50,7 @@
         });
 
         $rootScope.$on('clear', function () {
+            $cordovaGoogleAnalytics.trackEvent('Activity', 'clear', null, vm.feed.length);
             logger.debug('ActivityCtrl clear');
             vm.feed = [];
             vm.lastUpdate = Date.now();
@@ -64,6 +67,7 @@
         }
 
         function addFriends() {
+            $cordovaGoogleAnalytics.trackEvent('Activity', 'add-friends');
             $state.go('account.profile.friends');
         }
 
@@ -73,6 +77,8 @@
 
         function initialize() {
             vm.feed = [];
+
+            $cordovaGoogleAnalytics.trackEvent('Activity', 'init', 'start');
 
             if (vm.feedData && welcomeService.isAckd($state.$current.name)) {
                 LoadingService.showLoader(vm.feedData.loadingText);
@@ -91,6 +97,7 @@
                 })
                 .finally(function () {
                     LoadingService.hide();
+                    $cordovaGoogleAnalytics.trackEvent('Activity', 'init', 'complete', vm.feed.length);
                 });
         }
 
@@ -110,7 +117,7 @@
         }
 
         function loadMore() {
-
+            $cordovaGoogleAnalytics.trackEvent('Activity', 'loadMore', 'start', vm.feed.length);
             if (vm.feed && vm.feed.length > 2) {
                 logger.debug('[loadMore] Loading Updates');
 
@@ -136,8 +143,9 @@
          * @param {Number} id - feed id
          */
         function refreshFeedActivityById(id) {
+            $cordovaGoogleAnalytics.trackEvent('Activity', 'refreshFeedActivityById', id, vm.feed.length);
             LoadingService.showLoader('Updating Feed')
-            
+
             activityService.getFeedActivityById(id).then(function (result) {
                 logger.warn('get feed by id result --->>>', result);
                 result.location = activityService.hasCoordinates(result) ? {
@@ -150,6 +158,9 @@
         }
 
         function showAddActivityModal() {
+            $cordovaGoogleAnalytics.trackEvent('Activity', 'addActivity', 'start');
+            var then = Date.now();
+
             activityModalsService
                 .showAddActivityModal({ user: user })
                 .then(function (res) {
@@ -167,6 +178,11 @@
                             refreshFeedActivityById(res);
                         }
                     }
+
+                    $cordovaGoogleAnalytics.trackEvent('Activity', 'addActivity', 'complete', Date.now() - then);
+                })
+                .catch(function (err) {
+                    $cordovaGoogleAnalytics.trackEvent('Activity', 'addActivity', 'cancel', Date.now() - then);
                 })
         }
     }

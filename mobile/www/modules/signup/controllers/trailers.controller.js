@@ -5,9 +5,9 @@
         .module('signup')
         .controller('TrailersCtrl', TrailersCtrl)
 
-    TrailersCtrl.$inject = ['$scope', '$state', 'registerService', 'LoadingService', '$ionicPopup'];
+    TrailersCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', 'userService', 'LoadingService', '$ionicPopup'];
 
-    function TrailersCtrl($scope, $state, registerService, LoadingService, $ionicPopup) {
+    function TrailersCtrl($scope, $state, $cordovaGoogleAnalytics, userService, LoadingService, $ionicPopup) {
         var vm = this;
         vm.newTrailer = '';
 
@@ -16,6 +16,7 @@
         vm.trailers = getTrailers();
 
         function addTrailer() {
+            var then = Date.now();
             $ionicPopup.show({
                 template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.newTrailer" autofocus>',
                 title: 'Please enter a trailer type',
@@ -25,6 +26,7 @@
                         text: 'Cancel',
                         onTap: function (e) {
                             vm.newTrailer = '';
+                            $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'addCustom:cancel', Date.now() - then);
                         }
                     },
                     {
@@ -33,7 +35,9 @@
                         onTap: function (e) {
                             if (!vm.newTrailer) {
                                 e.preventDefault();
+                                $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'addCustom:empty', Date.now() - then);
                             } else {
+                                $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'addCustom', Date.now() - then);
                                 vm.trailers.push({ name: vm.newTrailer, checked: true });
                                 vm.newTrailer = '';
                                 return vm.newTrailer;
@@ -46,24 +50,25 @@
 
         function goNext(isSave) {
             if (isSave) {
-                registerService.userProps.trailer = getNameKeys(vm.trailers);
+                var then = Date.now();
                 LoadingService.showLoader('Saving');
 
-                return registerService.updateUserProps({ trailer: getNameKeys(vm.trailers) })
-                    .then(function (response) {
-                        if (response.success) {
-                            logger.debug('Trailers: Saved Successfully', response.message);
-                        } else {
-                            logger.error('Trailers: Save Failed', response.message);
-                        }
-
-                        $state.go('signup-friends');
+                return userService.updateUserProps({ trailer: getNameKeys(vm.trailers) })
+                    .then(function success(propsResponse) {
+                        $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'save', Date.now() - then);
+                        logger.debug('Trailers: Saved Successfully');
+                    })
+                    .catch(function fail(err) {
+                        $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'err: ' + err, Date.now() - then);
+                        logger.error('Trailers: Save Failed', err);
                     })
                     .finally(function () {
+                        $state.go('signup-friends');
                         LoadingService.hide();
                     });
             }
 
+            $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'skip');
             $state.go('signup-friends');
         }
 
@@ -77,14 +82,6 @@
                 }
             }
             return keys;
-        }
-
-        function showPopup(response) {
-            var alertPopup = $ionicPopup.alert({
-                title: response.title || 'title',
-                template: response || 'no message'
-            });
-            alertPopup.then(function (res) { });
         }
 
         function getTrailers() {

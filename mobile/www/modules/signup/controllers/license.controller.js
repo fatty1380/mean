@@ -5,9 +5,9 @@
         .module('signup')
         .controller('LicenseCtrl', LicenseCtrl);
 
-    LicenseCtrl.$inject = ['$state', 'registerService', 'LoadingService'];
+    LicenseCtrl.$inject = ['$state', '$cordovaGoogleAnalytics', 'userService', 'LoadingService'];
 
-    function LicenseCtrl($state, registerService, LoadingService) {
+    function LicenseCtrl($state, $cordovaGoogleAnalytics, userService, LoadingService) {
 
         var vm = this;
         vm.class = null;
@@ -27,33 +27,32 @@
                 }
             }
 
+            var then = Date.now();
+
             LoadingService.showLoader('please wait');
 
-            registerService.updateUser(obj).then(
-                function (response) {
-                    if (response.success) {
-                        logger.debug("license response update user : ", response);
+            userService.updateUserData(obj).then(
+                function success(response) {
+                    $cordovaGoogleAnalytics.trackEvent('signup', 'license', 'save', Date.now() - then);
 
-                        $state.go('signup-trucks');
-                        LoadingService.hide();
-                    } else {
-                        logger.error("license response update user ERROR: ", response);
+                    $state.go('signup-trucks');
+                    LoadingService.hide();
+                })
+                .catch(function fail(err) {
+                    logger.error("license response update user ERROR: ", response);
+                    $cordovaGoogleAnalytics.trackEvent('signup', 'license', 'error', Date.now() - then);
 
-                        $state.go('login');
-                        LoadingService.showFailure('Sorry, unable to save at this time');
-                    }
+                    LoadingService.showFailure('Sorry, unable to save at this time');
                 });
         }
-
-
     }
 
     angular
         .module('signup')
         .controller('ProfileEditLicenseCtrl', LicenseProfileCtrl);
 
-    LicenseProfileCtrl.$inject = ['userService', 'LoadingService'];
-    function LicenseProfileCtrl(userService, LoadingService) {
+    LicenseProfileCtrl.$inject = ['$cordovaGoogleAnalytics', 'userService', 'LoadingService'];
+    function LicenseProfileCtrl($cordovaGoogleAnalytics, userService, LoadingService) {
         var vm = this;
 
         vm.class = null;
@@ -86,18 +85,22 @@
                     class: vm.class,
                     endorsements: getEndorsementKeys(vm.endorsement)
                 }
-            }
+            };
+            var then = Date.now();
 
             LoadingService.showLoader('Saving License');
 
             userService.updateUserData(obj).then(
                 function success(response) {
-                    debugger;
+                    $cordovaGoogleAnalytics.trackEvent('profile', 'license', 'save', Date.now() - then);
+                    
                     vm.closeModal(response.license);
                     LoadingService.hide();
-                },
-                function fail(err) {
+                })
+                .catch(function fail(err) {
                     LoadingService.showFailure('Unable to Save at this time');
+                    $cordovaGoogleAnalytics.trackEvent('profile', 'license', 'error', Date.now() - then);
+
                     logger.error(err, 'Failed to update License');
                 });
         }
@@ -116,14 +119,14 @@
         }
         return keys;
     }
-    
+
     function mapEndorsementKeys(keys) {
         var endorsements = _.clone(endorsementStub);
         _.each(keys, function (key) {
             debugger;
             endorsements[key] = true;
         });
-        
+
         return endorsements;
     }
 

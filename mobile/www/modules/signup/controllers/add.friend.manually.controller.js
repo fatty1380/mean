@@ -9,9 +9,9 @@
         .module('signup')
         .controller('AddFriendManuallyCtrl', AddFriendManuallyCtrl);
 
-    AddFriendManuallyCtrl.$inject = ['$scope', '$state', 'contactsService', '$ionicPopup'];
+    AddFriendManuallyCtrl.$inject = ['$scope', '$state', 'contactsService', '$ionicPopup', '$cordovaGoogleAnalytics'];
 
-    function AddFriendManuallyCtrl($scope, $state, contactsService, $ionicPopup) {
+    function AddFriendManuallyCtrl($scope, $state, contactsService, $ionicPopup, $cordovaGoogleAnalytics) {
         var vm = this;
 
         vm.invite = invite;
@@ -29,11 +29,13 @@
         function invite() {
             return contactsService.addContact(vm.contact)
                 .then(function () {
+                    $cordovaGoogleAnalytics.trackEvent('signup', 'addManualContact', 'success');
                     return $state.go('signup-friends-contacts');
                 });
         }
 
         function cancel() {
+            $cordovaGoogleAnalytics.trackEvent('signup', 'addManualContact', 'cancel');
             return $state.go('signup-friends-contacts');
         }
 
