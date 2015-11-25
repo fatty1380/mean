@@ -53,6 +53,7 @@ exports.getSecureReadURL = getSecureReadURL;
 
 
 function directUpload(files, folder, isSecure) {
+        log.debug({ func: 'directUpload' }, 'START');
     var deferred = Q.defer();
     
     debugger;
@@ -84,11 +85,11 @@ function saveContentToCloud(data) {
         name: data.filename
     };
     
-        log.debug({ func: 'saveContentToCloud' }, '1');
+    log.debug({ func: 'saveContentToCloud' }, '1');
 
     var isSecure = _.isUndefined(data.isSecure) ? true : !!data.isSecure;
 
-        log.debug({ func: 'saveContentToCloud' }, '2');
+    log.debug({ func: 'saveContentToCloud' }, '2');
 
     if (/^data:/i.test(data.content)) {
         log.debug({ func: 'saveContentToCloud' }, '3a');
@@ -97,7 +98,7 @@ function saveContentToCloud(data) {
         log.debug({ func: 'saveContentToCloud', matches: matches }, '3a1');
         file.contentType = matches[1];
         file.encoding = matches[2];
-        file.buffer = new Buffer(matches[3], 'utf-8');
+        file.buffer = new Buffer(matches[3], file.encoding || 'utf-8');
         log.debug({ func: 'saveContentToCloud' }, '3a2');
 
     } else {
@@ -116,20 +117,21 @@ function saveContentToCloud(data) {
     log.debug({ func: 'saveContentToCloud' }, '4');
 
     //return Q(directUpload({file: file}, null, true));
-        var x = directUpload({ file: file }, data.folder || null, isSecure);
-        log.debug({ func: 'saveContentToCloud', promise: x }, '5');
-            
-        return x.then(
-            function (success) {
-                log.debug({ func: 'saveContentToCloud', result: success }, 'Returning promise');
+    var x = directUpload({ file: file }, data.folder || null, isSecure);
+    
+    log.debug({ func: 'saveContentToCloud', promise: x }, '5');
+        
+    return x.then(
+        function (success) {
+            log.debug({ func: 'saveContentToCloud', result: success }, 'Returning promise');
 
-                return success;
-            },
-            function (err) {
-                log.error({ func: 'saveContentToCloud', error: err }, 'Returning promise');
+            return success;
+        },
+        function (err) {
+            log.error({ func: 'saveContentToCloud', error: err }, 'Returning promise');
 
-                return Q.reject(err);
-            });
+            return Q.reject(err);
+        });
 }
 
 /**
