@@ -18,6 +18,7 @@
         vm.saveTxt = 'Continue';
 
         vm.save = save;
+        vm.cancel = cancel;
 
         function save() {
             var obj = {
@@ -45,6 +46,15 @@
 
                     LoadingService.showFailure('Sorry, unable to save at this time');
                 });
+        }
+        
+        function cancel() {
+            if (_.isEmpty($ionicHistory.backTitle())) {
+                debugger;
+                return $state.go('account.activity');
+            }
+
+            return $ionicHistory.goBack();
         }
     }
 
