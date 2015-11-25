@@ -2,23 +2,13 @@
     'use strict';
 
     var settings = {};
-
-    //settings.baseUrl = 'http://outset-dev.elasticbeanstalk.com/'; // DEVELOPMENT USE
-    settings.baseUrl = 'https://app.truckerline.com/';              // PRODUCTION USE
-    //settings.baseUrl = 'http://localhost:3000/';
-    //settings.baseUrl = 'http://10.0.1.66:3000/';
+    
+    settings.baseUrl = AppConfig.getUrl(); // [set to 'dev', 'prod', 'local' or 'vault' if needed]
     
     settings.uriScheme = 'truckerline';
-    settings.branch = {
-        key: 'key_live_cjpJIvP9erJIol5fdKzEpmjayAcT0MRH'
-        //key: 'key_test_djoMGBQ5jCINia7eaPxrmocbtqjS2VLX'
-    }
+    settings.branchKey = AppConfig.getBranchKey();
     
-    settings.ga = {
-        id: 'UA-52626400-2',
-        dev: 'UA-52626400-3',
-        web: 'UA-52626400-4'
-    };
+    settings.ga.key = AppConfig.getGAKey();
     
     
 

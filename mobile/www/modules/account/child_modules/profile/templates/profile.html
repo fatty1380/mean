@@ -38,7 +38,8 @@
         <ion-tabs class="profile-tabs tabs-top content-pane" delegate-handle="profile-tabs">
             <ion-tab title="REVIEWS" ui-sref="account.profile.reviews" on-select="vm.showReviewTab()"
              ng-class="{'has-button': !!vm.showRequestReviewModal}"
-             badge="vm.canEdit && vm.getReviewBadge()" badge-style="{{!vm.welcomeReview ? 'badge-energized' : 'badge-assertive'}}">
+             badge="vm.canEdit && vm.getReviewBadge()" 
+             badge-style="{{!vm.welcomeReview ? 'badge-energized' : 'badge-assertive'}}">
 
                 <ion-scroll class="reviews-list">
                     <ion-list ng-if="vm.reviews && vm.reviews.length">
@@ -71,7 +72,9 @@
                 </div>
 
             </ion-tab>
-            <ion-tab title="PROFILE" ui-sref="account.profile" class="content-pane" ng-class="{'has-button': !!vm.showShareModal || !vm.canEdit}"
+            <ion-tab title="PROFILE" ui-sref="account.profile" class="content-pane" 
+            on-select="vm.showProfileTab()"
+            ng-class="{'has-button': !!vm.showShareModal || !vm.canEdit}"
             on-select="logger.debug('Load Tab %s', this)" on-deselect="logger.debug('Leave Tab %s', this)">
                 <ion-scroll class="profile-list">
                     <div class="list">
@@ -143,8 +146,8 @@
             </ion-tab>
             
             <ion-tab title="EXPERIENCE" ui-sref="account.profile.experience" 
-            ng-class="{'has-button': !!vm.showAddExperienceModal}"
             on-select="vm.showExperienceTab()"
+            ng-class="{'has-button': !!vm.showAddExperienceModal}"
             badge="vm.canEdit && vm.getExperienceBadge()" badge-style="badge-energized">
 
                 <ion-scroll class="experience-list">

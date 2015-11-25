@@ -30,7 +30,8 @@
                         text: 'Cancel',
                         onTap: function (e) {
                             vm.newTruck = '';
-                            $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'addCustom:cancel', Date.now() - then);
+                            $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'addCustom:cancel');
+                            $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trucks', 'addCustom:cancel');
                         }
                     },
                     {
@@ -39,9 +40,11 @@
                         onTap: function (e) {
                             if (!vm.newTruck) {
                                 e.preventDefault();
-                                $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'addCustom:empty', Date.now() - then);
+                                $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'addCustom:empty');
+                                $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trucks', 'addCustom:empty');
                             } else {
-                                $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'addCustom', Date.now() - then);
+                                $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'addCustom');
+                                $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trucks', 'addCustom');
                                 vm.trucks.push({ name: vm.newTruck, logoClass: '' });
                                 vm.currentTruck = vm.newTruck;
                                 vm.newTruck = '';
@@ -62,11 +65,13 @@
 
                 return userService.updateUserProps({ truck: vm.currentTruck })
                     .then(function success(propsResponse) {
-                        $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'save', Date.now() - then);
+                        $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'save');
+                        $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trucks', 'save');
                         logger.debug('Trucks: Saved Successfully');
                     })
                     .catch(function fail(err) {
-                        $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'err: ' + err, Date.now() - then);
+                        $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'err: ' + err);
+                        $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trucks', 'err: ' + err);
                         logger.error('Trucks: Save Failed', err);
                     })
                     .finally(function () {

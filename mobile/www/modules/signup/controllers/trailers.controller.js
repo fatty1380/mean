@@ -26,7 +26,8 @@
                         text: 'Cancel',
                         onTap: function (e) {
                             vm.newTrailer = '';
-                            $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'addCustom:cancel', Date.now() - then);
+                            $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'addCustom:cancel');
+                            $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trailers', 'addCustom:cancel');
                         }
                     },
                     {
@@ -35,9 +36,11 @@
                         onTap: function (e) {
                             if (!vm.newTrailer) {
                                 e.preventDefault();
-                                $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'addCustom:empty', Date.now() - then);
+                                $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'addCustom:empty');
+                                $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trailers', 'addCustom:empty');
                             } else {
-                                $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'addCustom', Date.now() - then);
+                                $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'addCustom');
+                                $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trailers', 'addCustom');
                                 vm.trailers.push({ name: vm.newTrailer, checked: true });
                                 vm.newTrailer = '';
                                 return vm.newTrailer;
@@ -55,11 +58,13 @@
 
                 return userService.updateUserProps({ trailer: getNameKeys(vm.trailers) })
                     .then(function success(propsResponse) {
-                        $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'save', Date.now() - then);
+                        $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'save');
+                        $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trailers', 'save');
                         logger.debug('Trailers: Saved Successfully');
                     })
                     .catch(function fail(err) {
-                        $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'err: ' + err, Date.now() - then);
+                        $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'err: ' + err);
+                        $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trailers', 'err: ' + err);
                         logger.error('Trailers: Save Failed', err);
                     })
                     .finally(function () {

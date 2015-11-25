@@ -75,16 +75,20 @@
                             .then(function success(profileData) {
                                 if (!!profileData) {
                                     lockboxDocuments.removePrevUserDocuments(profileData.id);
-                                    $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'success', Date.now() - then);
+                                    $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'signIn:success');
+                                    $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'signIn:success');
 
                                     LoadingService.hide();
                                     return $state.go('signup-engagement');
                                 }
-                                $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'error', Date.now() - then);
+                                $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'signIn:error');
+                                $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'signIn:error');
                             });
                     } else {
                         LoadingService.hide();
-                        $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'error', Date.now() - then);
+                        
+                        $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'error');
+                        $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'error');
 
                         showPopup(response, 'Registration Failed');
                     }

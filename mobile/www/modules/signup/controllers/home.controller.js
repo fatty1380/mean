@@ -16,7 +16,7 @@
         });
 
         $scope.$on('$ionicView.leave', function () {
-            $cordovaGoogleAnalytics.trackEvent('signup', 'home', 'timeOnPage', Date.now() - then);
+            $cordovaGoogleAnalytics.trackTiming('Home', Date.now() - then, 'Landing', 'timeOnPage');
         });
 
 

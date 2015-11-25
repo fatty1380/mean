@@ -22,6 +22,7 @@
             var evt = ctrl + '@' + page;
 
             $cordovaGoogleAnalytics.trackEvent('ModalView', 'show', evt);
+            debugger
             $cordovaGoogleAnalytics.trackView(evt);
 
             var deferred = $q.defer();
@@ -56,14 +57,14 @@
                         modalScope.cancelModal = function cancelModal(result) {
                             deferred.reject(result);
 
-                            $cordovaGoogleAnalytics.trackEvent('ModalView', 'cancel', evt, Date.now() - start);
+                            $cordovaGoogleAnalytics.trackTiming('ModalView', Date.now() - start, 'cancel', evt);
                             $cordovaGoogleAnalytics.trackView(location.hash);
 
                             return modalScope.modal.hide();
                         }
                         modalScope.closeModal = function closeModal(result) {
                             deferred.resolve(result);
-                            $cordovaGoogleAnalytics.trackEvent('ModalView', 'close', evt, Date.now() - start);
+                            $cordovaGoogleAnalytics.trackTiming('ModalView', Date.now() - start, 'close', evt);
                             $cordovaGoogleAnalytics.trackView(location.hash);
                             return modalScope.modal.hide();
                         };

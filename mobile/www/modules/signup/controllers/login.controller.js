@@ -69,7 +69,8 @@
                                     securityService.initialize();
                                     lockboxDocuments.removeOtherUserDocuments(profileData.id);
 
-                                    $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'success', Date.now() - then);
+                                    $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'success');
+                                    $cordovaGoogleAnalytics.trackTiming('login', Date.now() - then, 'submit', 'success');
 
                                     LoadingService.hide();
                                     $state.go('account.profile');
@@ -88,6 +89,7 @@
                         } else {
                             vm.error = 'Unable to authenticate. Please try again later';
                         }
+                        LoadingService.hide();
 
                         $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'err', status);
 

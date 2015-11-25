@@ -179,10 +179,10 @@
                         }
                     }
 
-                    $cordovaGoogleAnalytics.trackEvent('Activity', 'addActivity', 'complete', Date.now() - then);
+                    $cordovaGoogleAnalytics.trackTiming('Activity', Date.now() - then, 'addActivity', 'complete');
                 })
                 .catch(function (err) {
-                    $cordovaGoogleAnalytics.trackEvent('Activity', 'addActivity', 'cancel', Date.now() - then);
+                    $cordovaGoogleAnalytics.trackTiming('Activity', Date.now() - then, 'addActivity', 'cancel');
                 })
         }
     }

@@ -223,18 +223,19 @@
              * editing of user's name, properties, etc
              */
             vm.showEditModal = function (parameters) {
-            $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showEdit');
-                var then = Date.now();
+            				$cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showEdit');
+                
                 profileModalsService
                     .showProfileEditModal(parameters)
                     .then(function (result) {
-                        if (!!result) vm.profileData = result;
+                        if (!!result) {
+																									vm.profileData = result;}
                     });
             };
 
             vm.showShareModal = function (parameters) {
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showShare');
-                var then = Date.now();
+                
                 profileModalsService
                     .showProfileShareModal(parameters)
                     .then(function (result) {
@@ -247,7 +248,7 @@
 
             vm.showRequestReviewModal = function (parameters) {
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showRequestReview');
-                var then = Date.now();
+                
                 profileModalsService
                     .showRequestReviewModal(parameters)
                     .then(function (result) {
@@ -300,9 +301,15 @@
             };
         }
         // END: vm.canEdit
+        
+        vm.showProfileTab = function () {
+            $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
+            $cordovaGoogleAnalytics.trackView(vm.canEdit ? 'account.profile' : 'user.profile');
+        }
 
         vm.showReviewTab = function () {
-                $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
+            $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
+            $cordovaGoogleAnalytics.trackView((vm.canEdit ? 'account.profile' : 'user.profile') + '.reviews');
             if (vm.canEdit) {
                 updateService.resetUpdates('reviews');
 
@@ -314,7 +321,8 @@
         }
 
         vm.showExperienceTab = function () {
-                $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showExperience');
+            $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showExperience');
+            $cordovaGoogleAnalytics.trackView((vm.canEdit ? 'account.profile' : 'user.profile') + '.experience');
             if (vm.canEdit && !vm.welcomeExperience) {
                 vm.welcomeExperience = 'true';
                 StorageService.set('welcome.experience', 'true');

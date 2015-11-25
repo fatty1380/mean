@@ -47,18 +47,18 @@
                 })
                 .then(function selectedChatRecipientSuccess(friend) {
                     if (!!friend) {
-                        $cordovaGoogleAnalytics.trackEvent('Messages', 'createChat', 'recipientSelected', Date.now() - then);
+                        $cordovaGoogleAnalytics.trackTiming('Messages', Date.now() - then, 'createChat', 'recipientSelected');
                         return messageService.getChatByUserId(friend.id);
                     }
                 })
                 .then(function getChatSuccess(chat) {
                     if (!!chat) {
-                        $cordovaGoogleAnalytics.trackEvent('Messages', 'createChat', 'loadedChat', Date.now() - then);
+                        $cordovaGoogleAnalytics.trackTiming('Messages', Date.now() - then, 'createChat', 'loadedChat');
                         return showChatDetailsModal(chat);
                     }
                 })
                 .finally(function () {
-                    $cordovaGoogleAnalytics.trackEvent('Messages', 'createChat', 'complete', Date.now() - then);
+                    $cordovaGoogleAnalytics.trackTiming('Messages', Date.now() - then, 'createChat', 'complete');
                 });
         }
 
@@ -80,7 +80,7 @@
                     logger.error('Messages.showChatDetails failed', err);
                 })
                 .finally(function () {
-                    $cordovaGoogleAnalytics.trackEvent('Messages', 'openChat', 'complete', Date.now() - then);
+                    $cordovaGoogleAnalytics.trackTiming('Messages', Date.now() - then, 'openChat', 'complete');
                 });
         }
 
@@ -98,7 +98,7 @@
                     logger.error('GET CHATS ERROR ----- >>>', err);
                 })
                 .finally(function () {
-                    $cordovaGoogleAnalytics.trackEvent('Messages', 'getChats', 'complete', Date.now() - then);
+                    $cordovaGoogleAnalytics.trackTiming('Messages', Date.now() - then, 'getChats', 'complete');
                     LoadingService.hide();
                 });
         }

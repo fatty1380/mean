@@ -5,9 +5,9 @@
         .module('signup')
         .controller('LicenseCtrl', LicenseCtrl);
 
-    LicenseCtrl.$inject = ['$state', '$cordovaGoogleAnalytics', 'userService', 'LoadingService'];
+    LicenseCtrl.$inject = ['$state', '$cordovaGoogleAnalytics', '$ionicHistory', 'userService', 'LoadingService'];
 
-    function LicenseCtrl($state, $cordovaGoogleAnalytics, userService, LoadingService) {
+    function LicenseCtrl($state, $cordovaGoogleAnalytics, $ionicHistory, userService, LoadingService) {
 
         var vm = this;
         vm.class = null;
@@ -33,14 +33,15 @@
 
             userService.updateUserData(obj).then(
                 function success(response) {
-                    $cordovaGoogleAnalytics.trackEvent('signup', 'license', 'save', Date.now() - then);
+                    $cordovaGoogleAnalytics.trackEvent('signup', 'license', 'save');
+                    $cordovaGoogleAnalytics.trackEvent('signup', Date.now() - then, 'license', 'save');
 
                     $state.go('signup-trucks');
                     LoadingService.hide();
                 })
                 .catch(function fail(err) {
                     logger.error("license response update user ERROR: ", response);
-                    $cordovaGoogleAnalytics.trackEvent('signup', 'license', 'error', Date.now() - then);
+                    $cordovaGoogleAnalytics.trackEvent('signup', 'license', 'error');
 
                     LoadingService.showFailure('Sorry, unable to save at this time');
                 });
@@ -92,14 +93,15 @@
 
             userService.updateUserData(obj).then(
                 function success(response) {
-                    $cordovaGoogleAnalytics.trackEvent('profile', 'license', 'save', Date.now() - then);
+                    $cordovaGoogleAnalytics.trackEvent('profile', 'license', 'save');
+                    $cordovaGoogleAnalytics.trackTiming('profile', Date.now() - then, 'license', 'save');
                     
                     vm.closeModal(response.license);
                     LoadingService.hide();
                 })
                 .catch(function fail(err) {
                     LoadingService.showFailure('Unable to Save at this time');
-                    $cordovaGoogleAnalytics.trackEvent('profile', 'license', 'error', Date.now() - then);
+                    $cordovaGoogleAnalytics.trackEvent('profile', 'license', 'error');
 
                     logger.error(err, 'Failed to update License');
                 });

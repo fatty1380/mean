@@ -41,7 +41,7 @@
                     vm.contacts = resolvedContacts; // contactsService.getContacts();
                     vm.contactsResolved = contactsService.isResolved();
 
-                    $cordovaGoogleAnalytics.trackEvent('signup', 'addContacts', 'loadContacts', Date.now() - then);
+                    $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'addContacts', 'loadContacts');
                 })
                 .finally(LoadingService.hide);
         }
@@ -103,7 +103,8 @@
                     logger.debug('Sent ' + sentRequests.length + ' requests');
                     LoadingService.showSuccess('Invitations Sent');
 
-                    $cordovaGoogleAnalytics.trackEvent('signup', 'addContacts', 'sendInvites', Date.now() - then);
+                    $cordovaGoogleAnalytics.trackEvent('signup', 'addContacts', 'sendInvites', sentRequests.length);
+                    $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'addContacts', 'sendInvites');
 
                     $state.go('account.profile');
                 })

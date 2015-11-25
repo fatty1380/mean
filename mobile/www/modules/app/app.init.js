@@ -50,8 +50,8 @@
         }])
 
         .run(initializePlatform)
-        .run(initializeBranch)
-        .run(initializeStateChangeListeners);
+        .run(initializeStateChangeListeners)
+        .run(initializeBranch);
 
     initializePlatform.$inject = ['$ionicPlatform', '$window', 'settings', '$log', '$q',
         '$cordovaGoogleAnalytics', '$cordovaKeyboard', '$cordovaStatusbar', '$cordovaDevice']
@@ -79,7 +79,7 @@
                 m.parentNode.insertBefore(a, m)
             })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-            ga('create', settings.ga.web, 'auto');
+            ga('create', settings.ga.key, 'auto');
             ga('send', 'pageview', 'Say Hello from app.init');
         }
 
@@ -105,29 +105,6 @@
             if (!!screen && angular.isFunction(screen.lockOrientation)) {
                 screen.lockOrientation('portrait');
             }
-
-            if (!!$window.analytics) {
-                debugger;
-                logger.info('$cordovaGoogleAnalytics initializing with id [%s]', settings.ga.dev);
-                $cordovaGoogleAnalytics.startTrackerWithId(settings.ga.dev)
-                    .catch(function (e) {
-                        logger.error('Unable to Initialize GA Tracker', e);
-                    });
-
-                if (AppConfig.debug) {
-                    $cordovaGoogleAnalytics.debugMode();
-                }
-                var er = $cordovaGoogleAnalytics.enableUncaughtExceptionReporting ? $cordovaGoogleAnalytics.enableUncaughtExceptionReporting : analytics.enableUncaughtExceptionReporting
-
-                $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'launch', location.hash)
-                    .catch(function (e) {
-                        logger.error('Unable to track Lifecycle Event', e, event);
-                    });
-
-                er(true);
-            } else {
-                logger.warn('$cordovaGoogleAnalytics is not available');
-            }
         });
         // }, 5000);
     }
@@ -146,7 +123,7 @@
             if (!!$window.cordova && !!branch) {
 
                 branch.setDebug(AppConfig.debug);
-                branch.init(settings.branch.key, function (err, response) {
+                branch.init(settings.branchKey, function (err, response) {
                     logger.debug("branch.init - start");
 
                     if (err) {
@@ -179,69 +156,93 @@
         }
     }
 
-    initializeStateChangeListeners.$inject = ['$rootScope', '$window', '$ionicPlatform', '$cordovaGoogleAnalytics'];
+    initializeStateChangeListeners.$inject = ['$rootScope', '$window', '$state', '$ionicPlatform', '$cordovaGoogleAnalytics', 'settings'];
 
-    function initializeStateChangeListeners($rootScope, $window, $ionicPlatform, $cordovaGoogleAnalytics) {
-        
+    function initializeStateChangeListeners($rootScope, $window, $state, $ionicPlatform, $cordovaGoogleAnalytics, settings) {
 
-        // setTimeout(function () {
 
-        if (!$window.analytics && !!$window.ga) {
+        return $ionicPlatform.ready(function (e) {
+
+            var initializeAnalyticsPromise;
+
+            if (!!$window.analytics) {
+                debugger;
+                logger.info('$cordovaGoogleAnalytics initializing with id [%s]', settings.ga.key);
+                initializeAnalyticsPromise = $cordovaGoogleAnalytics
+                    .startTrackerWithId(settings.ga.key)
+                    .then(function (result) {
+                        if (AppConfig.debug) {
+                            $cordovaGoogleAnalytics.debugMode();
+                        }
+                        cordovaGoogleAnalytics.enableUncaughtExceptionReporting(true);
+
+                        $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'launch', location.hash)
+                            .catch(function (e) {
+                                logger.error('Unable to track Lifecycle Launch Event: ', e, event);
+                            });
+																												
+						$cordovaGoogleAnalytics.trackView($state.current && $state.current.name || location.hash);
+                    })
+                    .catch(function (e) {
+                        logger.error('Unable to Initialize GA Tracker', e);
+                    });
+
+
+            } else if (!$window.analytics && !!$window.ga) {
+
+                logger.warn('$cordovaGoogleAnalytics is not available');
+
+                debugger;
+
+                $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+                    $window.ga('send', 'pageview', { page: toState.name });
+                    logger.debug('pageview %s', toState.name);
+                });
+
+                $rootScope.$on('$ionicView.afterEnter', function (event) {
+                    $window.ga('send', 'screenview', { screenName: window.location.hash });
+                    logger.debug('trackview %s', window.location.hash);
+                })
+                return;
+            }
+            else {
+                logger.warn('No Google Analytics Available');
+                return;
+            }
+
             debugger;
 
-            $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-                $window.ga('send', 'pageview', { page: toState.name });
-                logger.debug('pageview %s', toState.name);
+            return initializeAnalyticsPromise.then(function (response) {
+                $ionicPlatform.on('pause', function (event) {
+                    logger.debug('Lifecycle Event: pause', event);
+                    $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'pause', location.hash)
+                        .catch(function (e) {
+                            logger.error('Unable to track Lifecycle Pause Event: ', e, event);
+                        });
+                });
+
+                $ionicPlatform.on('resume', function (event) {
+                    logger.debug('Lifecycle Event: resume', event);
+                    $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'resume', location.hash)
+                        .catch(function (e) {
+                            logger.error('Unable to track Lifecycle Resume Event: ', e, event);
+                        });
+                });
+
+                var i = 0;
+
+                $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+                    logger.debug('StateChange %s -> %s', fromState.name, toState.name);
+                    $cordovaGoogleAnalytics.trackView(toState.name)
+                        .catch(function (e) {
+                            logger.error('Unable to track Lifecycle StateChange Event: ', e, event);
+                        });
+                    //$window.ga('send', 'pageview', { page: $location.path() });
+                });
+
             });
 
-            $rootScope.$on('$ionicView.afterEnter', function (event) {
-                $window.ga('send', 'screenview', { screenName: window.location.hash });
-                logger.debug('trackview %s', window.location.hash);
-            })
-            return;
-        }
-        else if (!$window.analytics) {
-            logger.warn('No Google Analytics Available');
-            return;
-        }
-
-        var i = 0;
-
-        debugger;
-
-        $ionicPlatform.on('pause', function (event) {
-            logger.debug('Lifecycle Event: pause', event);
-            $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'pause', location.hash)
-                .catch(function (e) {
-                    logger.error('Unable to track Lifecycle Event', e, event);
-                });
         });
-
-        $ionicPlatform.on('resume', function (event) {
-            logger.debug('Lifecycle Event: resume', event);
-            $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'resume', location.hash)
-                .catch(function (e) {
-                    logger.error('Unable to track Lifecycle Event', e, event);
-                });
-        });
-
-
-        $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-            logger.debug('StateChange %s -> %s', fromState.name, toState.name);
-            $cordovaGoogleAnalytics.trackEvent('StateChange', fromState.name, toState.name, i++)
-                .catch(function (e) {
-                    logger.error('Unable to track Lifecycle Event', e, event);
-                });
-            //$window.ga('send', 'pageview', { page: $location.path() });
-        });
-
-        $rootScope.$on('$ionicView.afterEnter', function (event) {
-            logger.debug('StateChange --> %s', window.location.hash);
-            $cordovaGoogleAnalytics.trackView(window.location.hash)
-                .catch(function (e) {
-                    logger.error('Unable to track Lifecycle Event', e, event);
-                });
-        })
         // }, 10000);
     }
 })();

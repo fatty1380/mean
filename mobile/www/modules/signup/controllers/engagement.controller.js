@@ -23,15 +23,16 @@
             vm.form = scope;
         }
 
-        //update avatar after change data
-        $scope.$watch(
-            function () {
-                return userService.profileData;
-            },
-            function () {
-                vm.profileData = userService.profileData;
-            },
-            true);
+								// Code removed in favor of promise returned by 'getNewAvatar' below
+        // //update avatar after change data
+        // $scope.$watch(
+        //     function () {
+        //         return userService.profileData;
+        //     },
+        //     function () {
+        //         vm.profileData = userService.profileData;
+        //     },
+        //     true);
 
 
         vm.createStartedDateObject = function (started) {
@@ -53,10 +54,13 @@
          * a photo, or selecting from device photos.
          */
         vm.showEditAvatar = function (parameters) {
-            $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'editAvatar');
+									$cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'editAvatar');
+									var then = Date.now();
+												
             avatarService.getNewAvatar(parameters, vm.profileData)
                 .then(function processNewAvatar(avatarResult) {
-                    if (_.isEmpty(avatarResult)) {
+																	if (_.isEmpty(avatarResult)) {
+																					   $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'engagement', 'newAvatar:cancel');
                         return;
                     }
 
@@ -65,6 +69,7 @@
                         debugger;
                         vm.profileData.props.avatar = avatarResult;
                     }
+																				$cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'engagement', 'newAvatar:saved');
 
                 });
         };
