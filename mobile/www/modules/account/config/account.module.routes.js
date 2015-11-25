@@ -63,7 +63,7 @@
                                             userService.getAvatar(profile);
                                             appCache.cacheProfile(profile);
                                         }
-                                        
+
                                         return profile;
                                     })
                                     .catch(function reject(error) {
@@ -112,7 +112,7 @@
                                 function (lockboxDocuments, user, LoadingService) {
 
                                     LoadingService.showLoader('Loading documents');
-                                    
+
                                     return lockboxDocuments.getFilesByUserId(user.id)
                                         .then(function (data) {
                                             logger.debug('returning lockbox doc loaded from device');
@@ -120,12 +120,12 @@
                                         })
                                         .catch(function (err) {
                                             logger.error('[LockboxDocResolve] Couldn\'t retrieve documents err --->>>', err);
-                                            
+
                                             if (/no access/i.test(err)) {
                                                 debugger;
                                                 return -1; // $q.reject(err);
                                             }
-                                            
+
                                             return lockboxDocuments.getDocuments(true, { redirect: true });
                                         })
                                 }],
