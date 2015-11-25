@@ -4,6 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
+		<string>webcredentials:truckerline.com</string>
 		<string>applinks:www.truckerline.com</string>
 		<string>applinks:truckerline.com</string>
 		<string>applinks:app.truckerline.com</string>
