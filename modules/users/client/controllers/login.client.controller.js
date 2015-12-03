@@ -18,8 +18,6 @@
 
             LoginService.login(credentials)
                 .then(function success(response) {
-                    debugger;
-
                     if (!vm.auth.user) {
                         vm.auth.user = response;
                     }

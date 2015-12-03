@@ -3244,13 +3244,17 @@ oset-chat-console > .chat-window .chat-section .chat-box .timestamp a:hover {
   max-width: 900px;
   margin: 0 auto;
   background-color: #FFF;
-  padding: 30px;
   border-radius: 4px;
   background-clip: padding-box;
   text-align: left;
 }
 .content-section .about {
   padding: 30px;
+}
+@media (max-width: 768px) {
+  .content-section .about {
+    padding: 4px;
+  }
 }
 .content-section .message {
   border-color: #f19180;

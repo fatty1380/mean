@@ -110,5 +110,13 @@ ReportApplicantSchema.virtual('applicantId')
     .set(function (val) {
         this.remoteId = val;
     });
+    
+ReportApplicantSchema.virtual('remoteData')
+    .get(function () {
+        return this._remoteData;
+    })
+    .set(function (val) {
+        this._remoteData = val;
+    });
 
 mongoose.model('ReportApplicant', ReportApplicantSchema);

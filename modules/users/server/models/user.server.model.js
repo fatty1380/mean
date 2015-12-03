@@ -199,7 +199,7 @@ UserSchema.index({
 var fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller'));
 UserSchema.pre('init', function (next, data) {
 
-    log.info({ props: data.props, avatar: data.props && data.props.avatar, pURL: data.profileImageURL }, 'Logging avatar');
+    log.trace({ props: data.props, avatar: data.props && data.props.avatar, pURL: data.profileImageURL }, 'Logging avatar');
 
     if (data.props && /^data:/.test(data.props.avatar)) {
         return saveImageToCloud(data.props.avatar, data, next);

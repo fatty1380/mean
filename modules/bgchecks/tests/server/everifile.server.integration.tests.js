@@ -72,9 +72,10 @@ describe('Everifile CRUD tests', function (done) {
 
     describe('Basic Applicant Functions', function () {
 
-        it.skip('should be able to get a list of all applicants', function (done) {
+        it('should be able to get a list of all applicants', function (done) {
 
-            this.timeout(60000); // 60s Timeout for this test
+            this.slow(60000);
+            this.timeout(120000); // 60s Timeout for this test
 
             everifile.GetAllApplicants(session)
                 .then(function (applicantList) {

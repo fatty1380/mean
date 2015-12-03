@@ -28,7 +28,7 @@ var inviter, user;
 
 var _test;
 
-describe.only('User Connection Tests', function () {
+describe('User Connection Tests', function () {
 	before(function () {
 		log.trace({ func: 'beforeAll' }, 'Setup Base');
 

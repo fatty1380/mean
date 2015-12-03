@@ -1,7 +1,10 @@
 (function () {
     'use strict';
 
-
+    //Setting up route
+    angular.module('bgchecks')
+        .config(BgCheckRoutes)
+        .controller('ReportListController', ReportListController);
 
     /** ------------------------------------------ **/
 
@@ -27,46 +30,72 @@
             lead: 'Order Reports to Include with your Job Applications&hellip;',
             sub: '&hellip;and become 8-12x more likely to get the interview.'
         };
-        
+
         vm.order = function (sku) {
             $state.go('orderReports', { sku: sku });
         };
-
-        // AppConfig.getReports().$promise.then(function(reportResponse) {
-        //     debugger;
-        //     vm.packages = reportResponse;
-        // });
     }
 
-    function resolveApplicantForUser(Applicants, Authentication, $q) {
-        var userId = Authentication.user._id;
+    resolveUser.$inject = ['LoginService'];
+    function resolveUser(LoginService) {
+        return LoginService.getUser();
+    }
+
+    resolveApplicantForUser.$inject = ['user', 'Applicants', '$q'];
+    function resolveApplicantForUser(user, Applicants, $q) {
+        var userId = user.id;
+
+        if (_.isEmpty(userId)) {
+            return $q.reject('Not Authenticated');
+        }
+
         var getApplicant = Applicants.ByUser.get({ userId: userId });
 
-        return getApplicant.$promise.catch(
-            function (error) {
-                if (error.status === 404) {
-                    console.log('No Existing Applicant for User');
-                    return null;
-                }
+        return getApplicant.$promise
+            .then(
+                function (result) {
+                    if (!_.isEmpty(result.remoteData)) {
+                        _.extend(result, result.remoteData);
+                        delete result.remoteData;
+                    }
 
-                console.error('Hard error %s searching for applicant: %o', error.status, error);
-                return $q.reject(error);
-            }
-            );
+                    return result;
+                })
+            .catch(
+                function (error) {
+                    debugger;
+                    if (error.status === 404) {
+                        console.log('No Existing Applicant for User');
+                        return null;
+                    }
+
+                    console.error('Hard error %s searching for applicant: %o', error.status, error);
+                    return $q.reject(error);
+                });
     }
 
+    resolveRemoteApplicantData.$inject = ['applicant', 'Applicants'];
+    function resolveRemoteApplicantData(applicant, Applicants) {
+        if (_.isEmpty(applicant)) {
+            return {};
+        }
+
+        return Applicants.getRemoteData(applicant._id)
+    }
+
+    resolveReportDetails.$inject = ['Reports', '$stateParams'];
     function resolveReportDetails(Reports, $stateParams) {
         var sku = $stateParams.sku;
-
-        debugger;
         return Reports.get(sku);
     }
 
+    resolveReports.$inject = ['Reports', '$stateParams'];
     function resolveReports(Reports, $stateParams) {
         var skus = $stateParams.sku;
         return Reports.Types.list().$promise;
     }
 
+    BgCheckRoutes.$inject = ['$stateProvider'];
     function BgCheckRoutes($stateProvider) {
         // Bgchecks state routing
         $stateProvider.
@@ -95,6 +124,12 @@
                     packages: ['AppConfig', function (AppConfig) {
                         return AppConfig.getReports().$promise;
                     }]
+                },
+                params: {
+                    sku: {
+                        value: null,
+                        isArray: true
+                    }
                 }
             }).
             state('orderReports', {
@@ -105,12 +140,14 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
+                    user: resolveUser,
                     report: resolveReportDetails,
-                    applicant: resolveApplicantForUser
+                    applicant: resolveApplicantForUser,
+                    remoteData: resolveRemoteApplicantData
                 },
                 params: {
                     sku: {
-                        default: null,
+                        value: null,
                         isArray: true
                     }
                 }
@@ -133,6 +170,7 @@
                 templateUrl: '/modules/bgchecks/views/paymentTest.client.view.html',
                 parent: 'fixed-opaque',
                 resolve: {
+                    user: resolveUser,
                     report: resolveReportDetails,
                     token: ['Payments', function (payments) {
                         var mytoken = payments.getToken();
@@ -147,16 +185,5 @@
                 bindToController: true
             });
     }
-
-    BgCheckRoutes.$inject = ['$stateProvider'];
-
-    resolveApplicantForUser.$inject = ['Applicants', 'Authentication', '$q'];
-    resolveReports.$inject = ['Reports', '$stateParams'];
-    resolveReportDetails.$inject = ['Reports', '$stateParams'];
-
-    //Setting up route
-    angular.module('bgchecks')
-        .config(BgCheckRoutes)
-        .controller('ReportListController', ReportListController);
 
 })();

@@ -25,7 +25,8 @@ _.extend(exports, {
     save: SaveNewApplicant,
     get: GetReportApplicant, /* Searches for local ReportApplicant and sets req.applicant */
     getRemote: GetRemoteApplicantData,
-    read: ReadReportApplicant
+    read: ReadReportApplicant,
+    readRemoteData: ReadRemoteApplicantData
 });
 
 /** Bound Router Middleware ------------------------------------------ **/
@@ -42,19 +43,20 @@ exports.applicantByID = applicantByID;
  */
 
 function applicantByID(req, res, next, id) {
+    req.log.info({ func: 'applicantById', id: id }, 'Looking up applicant by ID')
     req.applicantId = id;
     ReportApplicant
         .findById(id)
         .exec(function (err, applicant) {
-        if (err) {
-            log.error(err, 'Failed to lookup applicant by Id %s', id);
-            return next(err);
-        }
+            if (err) {
+                log.error(err, 'Failed to lookup applicant by Id %s', id);
+                return next(err);
+            }
 
-        log.debug({ func: 'applicantById', applicant: applicant }, 'Found Applicant by ID');
-        req.applicant = applicant;
-        next();
-    });
+            log.debug({ func: 'applicantById', applicant: applicant }, 'Found Applicant by ID');
+            req.applicant = applicant;
+            next();
+        });
 }
 
 /**
@@ -79,70 +81,73 @@ function UpsertRemoteApplicant(req, res, next) {
     var formApplicantRsrc = req.body;
     var formData = formApplicantRsrc.reportSource;
 
-    console.log('[UpserRemoteApplicant] SENSITIVE REMOVE: Form Data: $s', JSON.stringify(formData, undefined, 2));
+    req.log.debug({ func: 'GetAllRemoteApplicants', controller: 'remote-applicant', formData: formData }, 'Logging fromdata Input');
 
-    debugger; // check that request body has correct ssn/dlid s
+    //debugger; // check that request body has correct ssn/dlid s
 
     var message = 'Requesting user does not match applicant user';
 
     if (!req.user._id.equals(formApplicantRsrc.userId)) {
         message = message + ' (' + req.user._id + '!=' + formApplicantRsrc.userId + ')';
-        console.error('[UpsertRemoteApplicant] %s', message);
+        req.log.error({ func: 'UpserRemoteApplicant', controller: 'remote-applicant', message: message }, 'Unable to continue - unauthorized');
         res.status(401).send({ message: message });
     }
+    var upsertResponse;
 
-    everifile.GetSession().then(
-        function (session) {
-            var upsertResponse;
-            
-            everifile.CreateApplicant(session, formData).then(
-                function (applicantUpsertResponse) {
-                    console.log('[UpsertRemoteApplicant] Got applicant response from eVerifile: %j', applicantUpsertResponse);
+    return everifile.GetSession()
+        .then(
+            function (session) {
 
-                    req.remoteApplicant = upsertResponse = applicantUpsertResponse;
+                req.log.debug({ func: 'func', controller: 'remote-applicant', session: session }, 'Got eVerifile Session');
 
-                    if (applicantUpsertResponse.updated) {
-                        return ReportApplicant.findOne({
-                            'remoteId': applicantUpsertResponse.applicantId,
-                            'remoteSystem': 'everifile'
-                        }).exec();
-                    }
-                    else {
-                        console.log('[UpsertRemoteApplicant] Continuing to next to save teh applicant ...');
-                        next();
-                    }
+                return everifile.CreateApplicant(session, formData)
+                    .catch(function (err) {
+                        req.log.error({ func: 'UpsertRemoteApplicant', controller: 'remote-applicant', err: err }, 'Failed to create or update applicant');
+                        return q.reject(err);
+                    });
+            })
+        .then(
+            function (createApplicantResponse) {
+                req.log.debug({ func: 'UpserRemoteApplicant', controller: 'remote-applicant' },
+                    'Got applicant response from eVerifile: %j', createApplicantResponse);
 
+                req.remoteApplicant = upsertResponse = createApplicantResponse;
 
-                },
-                function (reject) {
-                    console.log('[UpsertRemoteApplicant] Error response: %j', reject, reject);
-                    next(reject);
-                }).then(
-                function (localApplicant) {
-                    if (!localApplicant) {
+                if (createApplicantResponse.updated) {
+                    return ReportApplicant.findOne({
+                        'remoteId': createApplicantResponse.applicantId,
+                        'remoteSystem': 'everifile'
+                    }).exec();
+                }
+            })
+        .then(
+            function (localApplicant) {
+                if (!localApplicant) {
+
+                    if (!req.remoteApplicant) {
+                        req.log.error({ func: 'UpsertRemoteApplicant', controller: 'remote-applicant' }, 'No Local Applicant Found');
                         return res.status(400).send({
                             message: 'Unable to find your data in our system',
                             response: upsertResponse
                         });
                     }
 
-                    if (localApplicant.remoteId !== upsertResponse.applicantId) {
-                        console.error('Mismatched remoteIds between %j and %j', upsertResponse, localApplicant);
-                    }
+                    req.log.info({ func: 'UpsertRemoteApplicant', controller: 'remote-applicant', applicant: req.remoteApplicant }, 'No Local Applicant Found - Continuing to save a new applicant');
+                    return next();
+                }
 
-                    res.json(localApplicant);
-                    return;
-                },
-                function (err) {
-                    return res.status(400).send({
-                        message: 'Unable to find your data in our system',
-                        response: upsertResponse
-                    });
-                });
-        }, function (error) {
-            console.log('[GetAllRemoteApplicants] failed due to error: %j', error);
-            next(error);
-        });
+                if (localApplicant.remoteId !== upsertResponse.applicantId) {
+                    req.log.error({ func: 'UpsertRemoteApplicant', controller: 'remote-applicant' }, 'Mismatched remoteIds between %j and %j', upsertResponse, localApplicant);
+                }
+
+                res.json(localApplicant);
+                return;
+            })
+        .catch(
+            function (err) {
+                req.log.error({ func: 'func', controller: 'GetAllRemoteApplicants-applicant', err: err }, 'failed due to error: %j', err);
+                next(err);
+            });
 }
 
 /**
@@ -157,16 +162,18 @@ function SaveNewApplicant(req, res, next) {
         user: req.user
     });
 
+    req.log.debug({ func: 'SaveNewApplicant', controller: 'remote-applicant', applicant: applicant }, 'Saving new applicant')
+
     applicant.save(function (err) {
         if (err) {
-            console.log('Saving ReportApplicant failed with error: %j', err);
+            req.log.error({ func: 'SaveNewApplicant', controller: 'remote-applicant' }, 'Saving ReportApplicant failed with error: %j', err);
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err),
                 error: err
             });
         }
 
-        console.log('Successfully saved ReportApplicant: %j', applicant);
+        req.log.debug({ func: 'SaveNewApplicant', controller: 'remote-applicant' }, 'Successfully saved ReportApplicant: %j', applicant);
 
         applicant.remoteData = req.remoteApplicant;
         res.json(applicant);
@@ -184,23 +191,24 @@ function GetAllRemoteApplicants(req, res, next) {
         return res.status(404);
     }
 
-    everifile.GetSession().then(
-        function (session) {
-            everifile.GetAllApplicants(session).then(
-                function (applicantModels) {
-                    console.log('[GetAllRemoteApplicants] Got %d applicant models from eVerifile');
+    everifile.GetSession()
+        .then(
+            function (session) {
+                everifile.GetAllApplicants(session).then(
+                    function (applicantModels) {
+                        req.log.debug({ func: 'GetAllRemoteApplicants', controller: 'remote-applicant' }, 'Got %d applicant models from eVerifile');
 
-                    res.json(applicantModels);
-                },
-                function (reject) {
-                    console.log('[GetAllRemoteApplicants] Error response: %j', reject, reject);
-                    next(reject);
-                }
-                );
-        }, function (error) {
-            console.log('[GetAllRemoteApplicants] failed due to error: %j', error);
-            next(error);
-        });
+                        res.json(applicantModels);
+                    },
+                    function (reject) {
+                        req.log.error({ func: 'GetAllRemoteApplicants', controller: 'remote-applicant' }, 'Error response: %j', reject, reject);
+                        next(reject);
+                    }
+                    );
+            }, function (error) {
+                req.log.error({ func: 'GetAllRemoteApplicants', controller: 'remote-applicant' }, 'unable to get eVerifile Session due to error: %j', error);
+                next(error);
+            });
 }
 
 /**
@@ -213,9 +221,9 @@ function GetReportApplicant(req, res, next) {
 
         return ReportApplicant.populate(req.applicant, { path: 'reports' })
             .then(function (success) {
-            log.trace({ func: GetReportApplicant }, 'Populated Reports');
-            next();
-        });
+                log.trace({ func: GetReportApplicant }, 'Populated Reports');
+                next();
+            });
     }
 
     var query, id;
@@ -223,7 +231,7 @@ function GetReportApplicant(req, res, next) {
     if (!!(id = req.remoteApplicantId || req.query.remoteApplicantId)) {
         query = { remoteId: id };
     } else if (!!(id = req.applicantId || req.query.applicantId)) {
-        query = { remoteId: id };
+        query = { _id: id };
     } else if (req.userId) {
         query = { user: mongoose.Types.ObjectId(req.userId) };
     } else if (req.user) {
@@ -237,18 +245,23 @@ function GetReportApplicant(req, res, next) {
     ReportApplicant.findOne(query)
         .populate('reports')
         .exec(function (err, localApplicant) {
-        if (err) {
-            log.error(err, 'Unable to find, or error while finding ReportApplicant via query %o', query);
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        }
+            if (err) {
+                log.error(err, 'Unable to find, or error while finding ReportApplicant via query %o', query);
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            }
 
-        log.trace({ func: 'GetReportApplicant', applicant: localApplicant }, 'Found Local Applicant');
+            if (!localApplicant) {
+                log.info({ func: 'GetReportApplicant' }, 'No Local Applicant Found');
+                return next();
+            }
 
-        req.applicant = localApplicant;
-        next();
-    });
+            log.debug({ func: 'GetReportApplicant', applicant: localApplicant }, 'Found Local Applicant');
+
+            req.applicant = localApplicant;
+            next();
+        });
 
 }
 
@@ -260,7 +273,7 @@ function GetReportApplicant(req, res, next) {
  * req.applicant will be populated from the previous method: GetReportApplicant.
  *
  * If it is not populated, we will assume that no remote applicant exists and one
- * should be created.
+ * should be created (in a separate method)
  *
  * In the future, we may choose to search for applicants, but maybe not.
  */
@@ -285,29 +298,31 @@ function GetRemoteApplicantData(req, res, next) {
 
     return everifile.GetSession().then(
         function (session) {
-            everifile.GetApplicant(session, id).then(
-                function (remoteApplicant) {
+            everifile.GetApplicant(session, id)
+                .then(
+                    function (remoteApplicant) {
 
-                    log.debug({ func: 'GetRemoteApplicantData' }, 'Got remoteApplicant info: %j', remoteApplicant);
-                    req.remoteApplicant = remoteApplicant;
-                    next();
-                }
-                ).catch(function (error) {
-                log.debug({ func: 'GetRemoteApplicantData' }, 'failed due to error: %j', error);
-                if (error.status === 401) {
-                    log.warn({ func: 'GetRemoteApplicantData' }, 'Value for remote applicant is invalid');
+                        log.debug({ func: 'GetRemoteApplicantData' }, 'Got remoteApplicant info: %j', remoteApplicant);
+                        req.remoteApplicant = remoteApplicant;
 
-                    req.remoteApplicant = null;
+                        next();
+                    })
+                .catch(function (error) {
+                    log.debug({ func: 'GetRemoteApplicantData' }, 'failed due to error: %j', error);
+                    if (error.status === 401) {
+                        log.warn({ func: 'GetRemoteApplicantData' }, 'Value for remote applicant is invalid');
 
-                    next();
-                } else {
-                    next(error);
-                }
-            });
+                        req.remoteApplicant = null;
+
+                        next();
+                    } else {
+                        next(error);
+                    }
+                });
         }).catch(function (error) {
-        log.error({ func: 'GetRemoteApplicantData', error: error }, 'Unable to get remote session: %j', error);
-        next(error);
-    });
+            log.error({ func: 'GetRemoteApplicantData', error: error }, 'Unable to get remote session: %j', error);
+            next(error);
+        });
 }
 
 /**
@@ -323,9 +338,27 @@ function ReadReportApplicant(req, res) {
         });
     }
 
-    log.trace({ func: 'ReportApplicant.read', applicant: req.applicant }, 'Returning Applicant');
-    log.debug({ func: 'ReportApplicant.read', applicant: req.applicant.id }, 'Returning Applicant ID');
+    log.trace({ func: 'ReportApplicant.read', applicant: req.applicant }, 'Returning Applicant `%s`', req.applicant.id);
+    log.debug({ func: 'ReportApplicant.read', applicant: req.applicant.id }, 'Returning Applicant `%s`', req.applicant.id);
 
     res.json(req.applicant);
+}
+/**
+ * @alias applicant.readRemoteData
+ *
+ * Reads and returns the RemoteData from the response;
+ */
+function ReadRemoteApplicantData(req, res) {
+
+    if (!req.applicant) {
+        return res.status(404).send({
+            message: 'No remote applicant data found'
+        });
+    }
+
+    log.trace({ func: 'RemoteApplicant.read', applicant: req.remoteApplicant }, 'Returning Remote Applicant `%s`', req.remoteApplicant.id);
+    log.debug({ func: 'RemoteApplicant.read', applicant: req.remoteApplicant.id }, 'Returning Remote Applicant `%s`', req.remoteApplicant.id);
+
+    res.json(req.remoteApplicant);
 }
 

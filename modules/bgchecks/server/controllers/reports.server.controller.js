@@ -58,15 +58,15 @@ exports.debug = {
 /** BEGIN : Implementation -------------------------------------------- **/
 
 function availableReportTypes(req, res, next) {
-    console.log('[availableReportTypes] request query: %j', req.query);
+    req.log.debug({ func: 'availableReportTypes', file: 'reports.server.controller' }, 'request query: %j', req.query);
     var query;
     if (req.query.returnAll) {
         query = {};
-        console.log('[availableReportTypes] loading all report types');
+        req.log.debug({ func: 'availableReportTypes', file: 'reports.server.controller' }, 'loading all report types');
     }
     else {
         query = { 'enabled': true };
-        console.log('[availableReportTypes] loading all enabled report types');
+        req.log.debug({ func: 'availableReportTypes', file: 'reports.server.controller' }, 'loading all enabled report types');
     }
 
     ReportType.find(query)
@@ -79,7 +79,7 @@ function availableReportTypes(req, res, next) {
                 });
             }
 
-            console.log('[availableReportTypes] loaded %d reports', reportTypes && reportTypes.length || -1);
+            req.log.debug({ func: 'availableReportTypes', file: 'reports.server.controller' }, 'loaded %d reports', reportTypes && reportTypes.length || -1);
 
             res.json(reportTypes);
         });
@@ -88,12 +88,12 @@ function availableReportTypes(req, res, next) {
 /** Router Middleware ------------------------------------------ **/
 
 function reportBySKU(req, res, next, id) {
-    console.log('Looking up report for SKU: %s', id);
+    req.log.debug({ func: 'reportBySKU', file: 'reports.server.controller' }, 'Looking up report for SKU: %s', id);
 
     var rpt = _.find(constants.reportPackages, { 'sku': id });
 
     if (rpt) {
-        console.log('Found hardcoded report type for SKU %s ... Returning', id);
+        req.log.debug({ func: 'reportBySKU', file: 'reports.server.controller' }, 'Found hardcoded report type for SKU %s ... Returning', id);
 
         req.reportType = rpt;
         return next();
@@ -102,11 +102,11 @@ function reportBySKU(req, res, next, id) {
     ReportType.findOne({ 'sku': id })
         .exec(function (err, reportType) {
             if (err) {
-                console.log('ReportBySKU] ERROR: ', err);
+                req.log.error({ func: 'reportBySKU', file: 'reports.server.controller', err: err }, 'ReportBySKU] ERROR: ', err);
                 return next(err);
             }
 
-            console.log('got report for sku [%s]: %o', id, reportType);
+            req.log.debug({ func: 'reportBySKU', file: 'reports.server.controller' }, 'got report for sku [%s]: %o', id, reportType);
 
             req.reportType = reportType;
             next();
@@ -178,7 +178,7 @@ function UpdateReportDefinitionsFromServer(req, res, next) {
                 }
                 );
         }, function (error) {
-            console.log('UpdateReportDefinitionsFromServer failed due to error: %j', error);
+            log.error({ func: 'UpdateReportDefinitionsFromServer', err: err }, 'UpdateReportDefinitionsFromServer failed');
             next(error);
         });
 }
@@ -187,7 +187,7 @@ function UpdateReportDefinitionsFromServer(req, res, next) {
 function SaveUpdatedReportDefinitions(req, res, next) {
 
     if (!req.reportTypes) {
-        console.log('[SaveUpdatedReportDefinitions] No Report types present in request!');
+        log.debug({ func: 'SaveUpdatedReportDefinitions' }, 'No Report types present in request!');
         return next();
     }
 
@@ -195,7 +195,7 @@ function SaveUpdatedReportDefinitions(req, res, next) {
 
     var reportsToBeProcessed = req.reportTypes.map(generateQueries);
 
-    console.log('[SaveUpdatedReportDefinitions] Analyzing %d of $d report types', reportsToBeProcessed.length, req.reportTypes.length);
+    log.debug({ func: 'SaveUpdatedReportDefinitions' }, 'Analyzing %d of $d report types', reportsToBeProcessed.length, req.reportTypes.length);
 
     q.allSettled(reportsToBeProcessed).then(
         function (processedReportTypes) {
@@ -252,7 +252,7 @@ function handleSettledPromises(results, request, success, failure) {
  * @returns {!Promise.<!Array>}
  */
 function generateQueries(reportTypeData) {
-    console.log('[generateQueries] Querying DB for existing "%s:%s" report', reportTypeData.sku, reportTypeData.name);
+    log.debug({ func: 'generateQueries' }, 'Querying DB for existing "%s:%s" report', reportTypeData.sku, reportTypeData.name);
 
     var reportQueryPromise = ReportType
         .findOne({ 'sku': reportTypeData.sku })
@@ -267,21 +267,21 @@ function reportTypeUpsert(dbValue, newReport) {
 
     var report;
 
-    console.log('[reportTypeUpsert] Upserting report type with data %j', newReport);
+    log.debug({ func: 'reportTypeUpsert' }, 'Upserting report type with data %j', newReport);
 
     if (!dbValue) {
         report = new ReportType(newReport);
-        console.log('[UpdateAvailableReports] Creating a new report type with data %j', newReport);
+        log.debug({ func: 'UpdateAvailableReports' }, 'Creating a new report type with data %j', newReport);
     } else {
         report = _.extend(dbValue, newReport);
 
         if (!dbValue.isModified()) {
-            console.log('[UpdateAvailableReports] Report Type is unchanged from DB copy');
+            log.debug({ func: 'UpdateAvailableReports' }, 'Report Type is unchanged from DB copy');
             dbValue.unchanged = true;
 
             return q.resolve(dbValue);
         }
-        console.log('[UpdateAvailableReports] Updating a new report type for SKU: %s', newReport.sku);
+        log.debug({ func: 'UpdateAvailableReports' }, 'Updating a new report type for SKU: %s', newReport.sku);
     }
 
     return q.ninvoke(report, 'save').then(
@@ -376,7 +376,7 @@ function CheckApplicantReportStatus(req, res, next) {
                 });
         })
         .catch(function (error) {
-            console.log('[CreateNewReport] failed due to error: %j', error);
+            log.debug({ func: 'CreateNewReport' }, 'failed due to error: %j', error);
             next(error);
         });
 }
@@ -433,7 +433,7 @@ function CheckRemoteReportStatus(req, res, next) {
                 );
         },
         function (error) {
-            console.log('[CreateNewReport] failed due to error: %j', error);
+            log.debug({ func: 'CreateNewReport' }, 'failed due to error: %j', error);
             next(error);
         });
 }
@@ -452,7 +452,7 @@ function GetReportData(req, res, next) {
                 );
         },
         function (error) {
-            console.log('[CreateNewReport] failed due to error: %j', error);
+            log.debug({ func: 'CreateNewReport' }, 'failed due to error: %j', error);
             next(error);
         });
 }
@@ -482,7 +482,7 @@ function LoadPDFData(req, res, next) {
                 );
         },
         function (error) {
-            console.log('[CreateNewReport] failed due to error: %j', error);
+            log.debug({ func: 'CreateNewReport' }, 'failed due to error: %j', error);
             next(error);
         });
 }
@@ -612,7 +612,7 @@ function doReportSync(req, res, next) {
                                     func: 'doReportSync',
                                     report: reportData.headers
                                 }, 'Recieved new PDF Report File');
-                                
+
                                 reportData.isSecure = true;
 
                                 return fileUploader.saveContentToCloud(reportData);
@@ -678,8 +678,6 @@ function doReportSync(req, res, next) {
  */
 function CreateNewReport(req, res, next) {
 
-    var deferred = q.defer();
-
     var bgcheck = new Bgcheck({
         user: req.user,
         remoteApplicantId: req.applicant.remoteId,
@@ -689,102 +687,114 @@ function CreateNewReport(req, res, next) {
         status: 'PAID'
     });
 
-    console.log('[PostNonce] Creating bg check record: %j', bgcheck);
+    req.log.debug({ func: 'PostNonce' }, 'Creating bg check record: %j', bgcheck);
 
-    bgcheck.save(function (err) {
-        if (err) {
-            console.log('[PostNonce] Unable to save due to error: %j', err);
-            return res.status(400).send({
-                message: err.message
+    var saveData = bgcheck.save()
+        .then(
+            function (savedResult) {
+                req.bgcheck = savedResult;
+
+                // bgcheck was saved successfully
+                // update teh applicant's record
+                var applicant = req.applicant;
+                applicant.reports.push(bgcheck);
+
+                req.log.debug({ func: 'PostNonce' }, 'pushing bg check to applicant reports', req.applicant.reports);
+
+                return applicant.save()
+            })
+        .then(
+            function (savedApplicant) {
+                req.applicant = savedApplicant;
+
+                return savedApplicant;
+            })
+        .catch(
+            function (err) {
+                req.log.debug({ func: 'PostNonce' }, 'Unable to save due to error: %j', err);
+                res.status(400).send({
+                    message: err.message
+                });
+
+                return q.reject();
             });
-        }
 
-        req.bgcheck = bgcheck;
+    saveData.then(
+        function (savedApplicantResult) {
 
-        // bgcheck was saved successfully
-        // update teh applicant's record
-        var applicant = req.applicant;
-        applicant.reports.push(bgcheck);
+            var bgcheck = req.bgcheck;
 
-        console.log('[PostNonce] pushing bg check to applicant reports', req.applicant.reports);
+            req.log.debug({ func: 'CreateNewReport' }, 'START for bgcheck %j', bgcheck);
 
-        applicant.save(function (err) {
-            if (err) {
-                console.error('Crap, unable to save applicant %j', applicant, err);
-            }
+            everifile.GetSession()
+                .then(
+                    function (session) {
 
-            req.applicant = applicant;
-            deferred.resolve();
+                        req.log.debug({ func: 'CreateNewReport' }, 'Local "%s" report has remote SKUs: "%j"', bgcheck.localReportSku, req.reportType.skus);
+
+                        var deferrals = _.map(req.reportType.skus, function (remoteSku) {
+
+                            var remoteApplicant = bgcheck.remoteApplicantId;
+
+                            return everifile
+                                .RunReport(session, remoteSku, remoteApplicant)
+                                .then(
+                                    function (remoteReportStatus) {
+                                        req.log.debug({ func: 'CreateNewReport' }, 'Created remote report: %j', remoteReportStatus);
+
+                                        if (_.endsWith('000', remoteReportStatus.toString())) {
+                                            req.log.debug({ func: 'CreateNewReport', raw: remoteReportStatus.timestamp, divided: remoteReportStatus.timestamp / 1000 }, 'Dividing timestamp by 1000');
+                                            remoteReportStatus.timestamp = remoteReportStatus.timestamp / 1000;
+                                        }
+
+                                        var status = {
+                                            remoteId: remoteReportStatus.remoteId,
+                                            sku: remoteReportStatus.reportSku,
+                                            value: remoteReportStatus.status.toUpperCase(),
+                                            requiredData: remoteReportStatus.requiredData,
+                                            completed: remoteReportStatus.completed,
+                                            timestamp: remoteReportStatus.timestamp
+                                        };
+
+                                        req.log.debug({ func: 'CreateNewReport', status: status }, 'Returning Remote Status');
+
+                                        return status;
+                                    });
+                        });
+                    })
+                .then(
+                    function (settledStatusUpdates) {
+                        console.log('Finished Report requests!');
+
+                        _.each(settledStatusUpdates, function (statusUpdate) {
+
+                            req.log.debug({ func: 'CreateNewReport', statuses: bgcheck.statuses, statusUpdate: statusUpdate }, 'Pushing new Remote Status');
+                            bgcheck.statuses.push(statusUpdate.value);
+                        });
+
+                        //bgcheck.statuses = bgcheck.statuses.concat(settledStatusUpdates);
+                        req.log.debug({ func: 'CreateNewReport', bgcheck: bgcheck }, 'Saving BGCheck Object');
+                        bgcheck.save()
+                            .then(
+                                function (successResult) {
+                                    req.log.info({ func: 'CreateNewReport', result: successResult }, 'Successfully saved and updated bgchecks');
+                                    res.json(successResult);
+                                })
+                            .catch(
+                                function (err) {
+                                    req.log.error({ func: 'CreateNewReport', err: err }, 'Failed to save due to `%s`', errorHandler.getErrorMessage(err));
+                                    res.status(500).send({ message: errorHandler.getErrorMessage(err) });
+                                    return;
+                                });
+                        // TODO, more!
+                    });
+
+
+        },
+        function (error) {
+            req.log.error({ func: 'CreateNewReport', err: error }, 'failed due to error');
+            next(error);
         });
-
-
-    });
-
-    deferred.then(function () {
-
-        var bgcheck = req.bgcheck;
-
-        console.log('[CreateNewReport] START for bgcheck %j', bgcheck);
-
-        everifile.GetSession().then(
-            function (session) {
-
-                console.log('[CreateNewReport] Local "%s" report has remote SKUs: "%j"', bgcheck.localReportSku, req.reportType.skus);
-
-                var deferrals = _.map(req.reportType.skus, function (remoteSku) {
-
-                    var defer = q.defer();
-
-                    var remoteApplicant = bgcheck.remoteApplicantId;
-
-                    everifile.RunReport(session, remoteSku, remoteApplicant).then(
-                        function (remoteReportStatus) {
-                            console.log('[CreateNewReport] Created remote report: %j', remoteReportStatus);
-
-                            var status = {
-                                remoteId: remoteReportStatus.remoteId,
-                                sku: remoteReportStatus.reportSku,
-                                value: remoteReportStatus.status.toUpperCase(),
-                                requiredData: remoteReportStatus.requiredData,
-                                completed: remoteReportStatus.completed,
-                                timestamp: remoteReportStatus.timestamp
-                            };
-
-                            defer.resolve(status);
-                        }
-                        );
-
-                    return defer.promise;
-                });
-
-                q.allSettled(deferrals).then(function (statusUpdates) {
-                    console.log('Finished Report requests!');
-
-                    statusUpdates.map(function (statusUpdate) {
-                        bgcheck.statuses.push(statusUpdate.value);
-                    });
-
-                    bgcheck.statuses = bgcheck.statuses.concat(statusUpdates);
-
-                    bgcheck.save(function (err) {
-                        if (err) {
-                            console.log(errorHandler.getErrorMessage(err));
-                            res.status(500).send({ message: errorHandler.getErrorMessage(err) });
-                            return;
-                        }
-
-                        res.json(bgcheck);
-                    });
-                    // TODO, more!
-                });
-
-
-            },
-            function (error) {
-                console.log('[CreateNewReport] failed due to error: %j', error);
-                next(error);
-            });
-    });
 }
 
 
@@ -795,7 +805,7 @@ function rerunReport(req, res, next) {
         function (session) {
             everifile.RunReport(session, 'MVRDOM', 44679).then(
                 function (bgReport) {
-                    console.log('[rerunReport] Created remote report: %j', bgReport);
+                    log.debug({ func: 'rerunReport' }, 'Created remote report: %j', bgReport);
 
                     bgReport.save(function (err) {
                         if (err) {
@@ -808,7 +818,7 @@ function rerunReport(req, res, next) {
                 );
         },
         function (error) {
-            console.log('[rerunReport] failed due to error: %j', error);
+            log.debug({ func: 'rerunReport' }, 'failed due to error: %j', error);
             next(error);
         });
 }

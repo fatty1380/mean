@@ -20,7 +20,11 @@ var
         module: 'bgchecks',
         file  : 'everifile.server.service'
     });
+    
 
+require('ssl-root-cas/latest')
+    .inject()
+    .addFile(path.resolve('./certs/gdig2.crt'));
 
 /** eVERIFILE Service
  * ----------------------------
@@ -118,6 +122,7 @@ function getSession() {
     var deferredGetSession = Q.defer();
 
     if (!Cookie.isValid()) {
+        log.debug('Invalid or no cookie, logging in');
 
         // Initalize new Cookie Jar
         var newJar = unirest.jar(true);
@@ -149,6 +154,7 @@ function getSession() {
                 return deferredGetSession.resolve(Cookie);
             });
     } else {
+        log.debug('Cookie is valid, continuing');
         Cookie.lastAccessed = moment();
         deferredGetSession.resolve(Cookie);
     }
@@ -335,6 +341,8 @@ function getAllApplicants(cookie) {
 }
 
 function sanitizeReportApplicant(model) {
+    
+    log.debug({func: 'sanitizeReportApplicant', applicant: model}, 'Pre-sanitized applicant');
 
     model.remoteId = model.applicantId;
 
@@ -378,13 +386,14 @@ function getApplicant(cookie, id, noSanitize) {
 
 
 function upsertApplicant(cookie, applicantData) {
-    log.debug('[UpsertApplicant] %s an applicant', !!applicantData.applicantId ? 'Updating' : 'Creating');
+    log.debug({func: 'UpsertApplicant', requestBody: requestBody}, '%s an applicant', !!applicantData.applicantId ? 'Updating' : 'Creating');
 
     var deferred = Q.defer();
-    debugger;
 
     var method, trailer;
 
+    log.debug({func: 'UpsertApplicant', applicantData: applicantData}, 'ApplicantData is currently set to');
+    
     if (applicantData.applicantId) {
         method  = 'PUT';
         trailer = '/' + applicantData.applicantId;
@@ -396,30 +405,30 @@ function upsertApplicant(cookie, applicantData) {
     var requestBody = applicantData;
     var endpoint    = server.baseUrl + '/rest/applicant' + trailer;
 
-    log.debug('%s %s : %j', method, endpoint, requestBody);
+    log.debug({func: 'UpsertApplicant', requestBody: requestBody}, '%s %s', method, endpoint);
 
-    debugger; // check applicant data. Should we be using applicant.toObject()? merging with the report field def?
+    // check applicant data. Should we be using applicant.toObject()? merging with the report field def?
     // Ensure that response Body contains Gov ID
-
 
     unirest(method, endpoint)
         .headers({'Content-Type': 'application/json'})
         .send(requestBody)
         .jar(cookie.jar)
         .end(function (response) {
-            log.debug('[UpsertApplicant] Got response Body: %j', response.body);
+            log.debug({func: 'UpsertApplicant', response: response.body}, 'Got response Body');
 
             if (response.error) {
-                log.debug('[UpsertApplicant] Handling Error Code %d', response.statusCode);
+                log.error({func: 'UpsertApplicant', response: response.error}, 'Got response Error');
+                log.debug({func: 'UpsertApplicant'}, 'Handling Error Code %d', response.statusCode);
                 if (response.statusCode === 406) {
-                    log.debug('[UpsertApplicant] Applicant already exists, searching...');
+                    log.debug({func: 'UpsertApplicant', requestBody: requestBody}, 'Applicant already exists, searching...');
 
                     searchForApplicant(cookie, requestBody).then(
                         function (success) {
-                            log.debug('[UpsertApplicant] Success! found applicantId: %s! ', success.applicantId);
+                            log.debug({func: 'UpsertApplicant', requestBody: requestBody}, 'Success! found applicantId: %s! ', success.applicantId);
                             deferred.resolve(success);
                         }, function (err) {
-                            log.debug('[UpsertApplicant] Applicant search failed');
+                            log.debug({func: 'UpsertApplicant', requestBody: requestBody}, 'Applicant search failed');
                             deferred.reject(err);
                         });
                 } else {

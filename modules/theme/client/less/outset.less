@@ -490,12 +490,17 @@ oset-chat-console > .chat-window {
     max-width: 900px;
     margin: 0 auto;
     background-color: #FFF;
-    padding: 30px;
+    //padding: 30px;
     .border-radius(4px);
     text-align: left;
   }
   .about {
     padding: 30px;
+  }
+  @media (max-width: 768px) {
+      .about {
+          padding: 4px;
+      }
   }
   .message {
     border-color: lighten(@color, 10%);

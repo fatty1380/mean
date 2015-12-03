@@ -46,8 +46,6 @@
                     return;
                 }
                 
-                debugger;
-                
                 vm.pictureUrl = vm.profile.profileImageURL; //vm.profile.props && vm.profile.props.avatar || 
                 vm.subTitle = vm.profile.handle || vm.profile.type;
 

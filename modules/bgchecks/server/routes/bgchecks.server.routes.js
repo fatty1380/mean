@@ -63,6 +63,11 @@ module.exports = function (app) {
 
     app.route('/api/reports/pdf')
         .get(reports.loadPDF);
+        
+    ////////////////////////////////////////
+    
+    app.route('/api/reports/applicants/:applicantId/remoteData')
+        .get(acl.isAllowed, remoteApplicant.getRemote, remoteApplicant.readRemoteData);
 
     /**
      *  * path: /api/reports/applicants
