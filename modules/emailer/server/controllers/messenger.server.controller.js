@@ -38,29 +38,30 @@ function sendMessageRequest(message, messageConfig) {
         message = 'Build your Driving Career at Truckerline.com';
     }
 
-    var sender = !!messageConfig.from && (messageConfig.from.firstName || messageConfig.from.displayName)
-        || messageConfig.vars && messageConfig.vars.SENDER_NAME
-        || null;
+    var sender = !!messageConfig.from &&
+        (messageConfig.from.firstName || messageConfig.from.displayName) ||
+        (messageConfig.vars && messageConfig.vars.SENDER_NAME) ||
+        null;
 
     var body = noSenderTemplate;
     var vars = messageConfig.vars || [];
     var tempFn;
-        log.info({ vars: vars }, 'Composing message with vars');
-    
+    log.info({ vars: vars }, 'Composing message with vars');
+
     if (!!sender) {
         tempFn = doT.template(message || messageConfig.template || defaultMessageTemplate);
         body = tempFn(vars);
     } else {
         log.warn({ func: 'sendMessageRequest', err: 'No Sender Specified', config: messageConfig }, 'Must specify a sender when sending a message request');
         tempFn = doT.template(noSenderTemplate);
-        
+
         body = tempFn(vars);
 
     }
-    
-    var recipient = _.isString(messageConfig.to) && messageConfig.to
-        || messageConfig.vars && messageConfig.vars.PHONE
-        || null;
+
+    var recipient = _.isString(messageConfig.to) && messageConfig.to ||
+        (messageConfig.vars && messageConfig.vars.PHONE) ||
+        null;
 
     var messageObj = {
         to: recipient,

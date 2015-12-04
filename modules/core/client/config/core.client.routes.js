@@ -125,7 +125,7 @@
     
     handleBadRoute.$inject = ['$location'];
     function handleBadRoute($location) {
-        console.log('Unknown URL pattern: %s', $location.url());
+        console.log('Unknown URL pattern: %s', location.href);
         
         var settings = {
             isProduction: ApplicationConfiguration.isProduction,

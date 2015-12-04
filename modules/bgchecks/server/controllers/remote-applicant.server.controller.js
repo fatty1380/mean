@@ -43,7 +43,7 @@ exports.applicantByID = applicantByID;
  */
 
 function applicantByID(req, res, next, id) {
-    req.log.info({ func: 'applicantById', id: id }, 'Looking up applicant by ID')
+    req.log.info({ func: 'applicantById', id: id }, 'Looking up applicant by ID');
     req.applicantId = id;
     ReportApplicant
         .findById(id)
@@ -162,7 +162,7 @@ function SaveNewApplicant(req, res, next) {
         user: req.user
     });
 
-    req.log.debug({ func: 'SaveNewApplicant', controller: 'remote-applicant', applicant: applicant }, 'Saving new applicant')
+    req.log.debug({ func: 'SaveNewApplicant', controller: 'remote-applicant', applicant: applicant }, 'Saving new applicant');
 
     applicant.save(function (err) {
         if (err) {

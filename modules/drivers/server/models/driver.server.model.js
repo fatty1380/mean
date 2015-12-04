@@ -278,7 +278,8 @@ function saveImageToCloud(data) {
         content: data.profileImageURL
     };
 
-    return fileUploader.saveContentToCloud(post)
+    return fileUploader
+        .saveContentToCloud(post)
         .then(
             function success(uploadResponse) {
                 log.info({ func: 'saveImageToCloud', url: uploadResponse }, 'Uploaded Data to cloud');
@@ -300,7 +301,7 @@ function saveImageToCloud(data) {
 
                 if (data.profileImageURL !== saveResult.url) {
                     debugger;
-                    log.error({ func: 'saveImageToCloud', profileImage: data.profileImageURL }, 'Profile Image URL was not updated')
+                    log.error({ func: 'saveImageToCloud', profileImage: data.profileImageURL }, 'Profile Image URL was not updated');
                 }
 
                 if (data._doc && data.doc.props) {
@@ -313,5 +314,5 @@ function saveImageToCloud(data) {
             }
 
             return data;
-        })
+        });
 }

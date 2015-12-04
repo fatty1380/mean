@@ -177,7 +177,7 @@ function UpdateReportDefinitionsFromServer(req, res, next) {
                     next();
                 }
                 );
-        }, function (error) {
+        }, function (err) {
             log.error({ func: 'UpdateReportDefinitionsFromServer', err: err }, 'UpdateReportDefinitionsFromServer failed');
             next(error);
         });
@@ -701,7 +701,7 @@ function CreateNewReport(req, res, next) {
 
                 req.log.debug({ func: 'PostNonce' }, 'pushing bg check to applicant reports', req.applicant.reports);
 
-                return applicant.save()
+                return applicant.save();
             })
         .then(
             function (savedApplicant) {
