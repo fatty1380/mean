@@ -17,7 +17,7 @@
             isLoggedIn: isLoggedIn,
             isAdmin: isAdmin
         };
-        
+
         Object.defineProperty(service, 'user', {
             enumerable: true,
             get: function () {
@@ -34,7 +34,7 @@
                     $window.user = null;
                     return;
                 }
-                
+
                 $window.user = value;
             }
         });
@@ -50,24 +50,24 @@
         function isAdmin() {
             return !!service.user && service.user.isAdmin;
         }
-        
+
     }
-    
+
     LoginService.$inject = ['$http', '$log', 'TokenFactory', '$window', '$q', 'Authentication'];
     function LoginService($http, $log, TokenFactory, $window, $q, auth) {
-        getUser();
-        
+        getUser().catch(_.noop);
+
         return {
             getUser: getUser,
             login: login,
             logout: logout
         };
-        
+
         function login(credentials) {
             credentials.client_id = 'outset_webapp_dev';
             credentials.client_secret = 'supernanigans';
             credentials.grant_type = 'password';
-            
+
             return $http.post('/oauth/token', credentials)
                 .then(function success(response) {
                     $log.debug('Got Token Response: ', response);
@@ -84,12 +84,12 @@
             TokenFactory.clear();
             return ($window.user = null);
         }
-        
+
         function getUser() {
             if (!_.isEmpty(auth.user)) {
                 return $q.when(auth.user);
             }
-            
+
             if (!TokenFactory.isEmpty() && TokenFactory.isValid()) {
                 // $http = $http || $injector.get('$http');
                 return $http.get('api/users/me').then(
@@ -100,14 +100,19 @@
                     },
                     function error(err) {
                         console.error('Got error Response: ', err);
+
+                        if (err && err.status === 401) {
+                            TokenFactory.clear();
+                        }
+                        
                         return $q.reject(err);
                     });
-            } 
+            }
             else {
                 return $q.reject();
             }
-            
-            
+
+
         }
     }
 
@@ -159,11 +164,11 @@
                 console.error('Unable to process args', { key: key, value: value });
             }
         }
-        
+
         function get(key, defaultValue) {
             return $window.localStorage[key] || defaultValue;
         }
-        
+
         function clear(key) {
             if (!!key) {
                 set(key);
@@ -174,19 +179,19 @@
                 });
             }
         }
-        
+
         function isEmpty() {
             return !get('access_token');
         }
-        
+
         function isValid() {
             return !isEmpty() && Date.now() < get('token_expires');
         }
-        
+
         function getAuthToken() {
             return [get('token_type'), get('access_token')].join(' ');
         }
-        
+
         function getRefreshToken() {
             return 'Refresh ' + get('refresh_token');
         }

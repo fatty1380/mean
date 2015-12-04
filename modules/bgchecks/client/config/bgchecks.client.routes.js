@@ -39,13 +39,8 @@
     resolveUser.$inject = ['LoginService', '$uibModal', '$log'];
     function resolveUser(LoginService, $uibModal, $log) {
         return LoginService.getUser()
-            .then(function (user) {
-                debugger;
-                return user;
-            })
             .catch(function (err) {
-                if (!err) {
-                    debugger;
+                if (!err || err.status === 401) {
                     var vm = {};
 
                     var modalInstance = $uibModal.open({
@@ -94,7 +89,6 @@
         }
 
         var getApplicant = Applicants.ByUser.get({ userId: userId });
-
         return getApplicant.$promise
             .then(
                 function (result) {
@@ -107,7 +101,6 @@
                 })
             .catch(
                 function (error) {
-                    debugger;
                     if (error.status === 404) {
                         console.log('No Existing Applicant for User');
                         return null;
