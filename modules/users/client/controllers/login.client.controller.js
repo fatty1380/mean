@@ -18,19 +18,19 @@
 
             LoginService.login(credentials)
                 .then(function success(response) {
-                    if (!vm.auth.user) {
-                        vm.auth.user = response;
-                    }
-
                     if (!!$modalInstance && _.isFunction($modalInstance.close)) {
                         $modalInstance.close('success');
                     }
 
-                    if (vm.srefRedirect) {
+                    if (_.isString(vm.srefRedirect) && vm.srefRedirect) {
                         $state.go(vm.srefRedirect.state, vm.srefRedirect.params, { reload: true });
                     } else if (!$state.includes('intro')) {
-                        $log.debug('currently at state `%s`, staying here and not redirecting home', $state.$current.name);
-                        $state.go($state.current, {}, { reload: true });
+                        if (_.isBoolean(vm.srefRedirect) && !vm.srefRedirect) {
+                            $log.debug('currently at state `%s`, SREF Redirect is disabled');
+                        } else {
+                            $log.debug('currently at state `%s`, staying here and not redirecting home', $state.$current.name);
+                            $state.go($state.current, {}, { reload: true });
+                        }
                     } else {
                         $state.go('trucker');
                     }

@@ -64,7 +64,6 @@
         };
         
         function login(credentials) {
-            
             credentials.client_id = 'outset_webapp_dev';
             credentials.client_secret = 'supernanigans';
             credentials.grant_type = 'password';

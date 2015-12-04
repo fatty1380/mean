@@ -36,9 +36,53 @@
         };
     }
 
-    resolveUser.$inject = ['LoginService'];
-    function resolveUser(LoginService) {
-        return LoginService.getUser();
+    resolveUser.$inject = ['LoginService', '$uibModal', '$log'];
+    function resolveUser(LoginService, $uibModal, $log) {
+        return LoginService.getUser()
+            .then(function (user) {
+                debugger;
+                return user;
+            })
+            .catch(function (err) {
+                if (!err) {
+                    debugger;
+                    var vm = {};
+
+                    var modalInstance = $uibModal.open({
+                        templateUrl: 'loginModal.html',
+                        controller: 'LoginController',
+                        resolve: {
+                            srefRedirect: false
+                        },
+                        controllerAs: 'vm',
+                        bindToController: true
+                    });
+
+                    modalInstance.opened.then(function (args) {
+                        vm.isOpen = true;
+                    });
+
+                    return modalInstance.result
+                        .then(
+                            function (result) {
+                                $log.info('Modal result %o', result);
+                                vm.isOpen = false;
+                                return result;
+                            },
+                            function (result) {
+                                $log.info('Modal dismissed at: ' + new Date());
+                                vm.isOpen = false;
+                                return result;
+                            })
+                        .then(
+                            function (result) {
+                                debugger;
+                                return LoginService.getUser();
+                            });
+                } else {
+                    debugger;
+                }
+            });
     }
 
     resolveApplicantForUser.$inject = ['user', 'Applicants', '$q'];
@@ -83,8 +127,8 @@
         return Applicants.getRemoteData(applicant._id)
     }
 
-    resolveReportDetails.$inject = ['Reports', '$stateParams'];
-    function resolveReportDetails(Reports, $stateParams) {
+    resolveReportDetails.$inject = ['user', 'Reports', '$stateParams'];
+    function resolveReportDetails(user, Reports, $stateParams) {
         var sku = $stateParams.sku;
         return Reports.get(sku);
     }
