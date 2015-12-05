@@ -345,6 +345,9 @@ input[type="button"] {
   margin-top: 0;
   margin-bottom: 60px;
 }
+.faq.has-bg-color .title {
+  color: #666 !important;
+}
 .faq .panel {
   background-color: #FFF;
   -webkit-box-shadow: 0 4px 1px rgba(0, 0, 0, 0.05);
@@ -3900,7 +3903,8 @@ os-bg-check-summary > .pricing h3 {
   vertical-align: middle;
 }
 .pricing .item .heading .title {
-  font-size: 22px;
+  font-size: 1.8em;
+  font-weight: 500;
   color: #0e2d4c;
 }
 .pricing .item .item-inner {
