@@ -155,18 +155,12 @@
 
     resolveUser.$inject = ['Authentication', 'LoginService'];
     function resolveUser(Authentication, LoginService) {
-        return LoginService.getUser().then(
-            function success(user) {
-
-                if (!Authentication.user) {
-                    Authentication.user = user;
-                }
-
-                return user;
-            },
+        return LoginService.getUser().catch(
             function reject(reason) {
-                console.error('Unable to load user - not logged in?', reason);
-
+                if (!!reason) {
+                    console.error('Unable to load user - not logged in?', reason);
+                }
+                
                 return null;
             });
     }

@@ -3846,22 +3846,27 @@ os-bg-check-summary > .pricing h3 {
   padding-top: 0;
 }
 .pricing .price-lead {
-  height: 350px;
-  margin-bottom: 50px;
+  margin-top: 1em;
+  margin-bottom: 3em;
+}
+@media (max-width: 768px) {
+  .pricing .price-lead {
+    margin-top: 2em!important;
+  }
 }
 .pricing .price-lead > .row {
   position: relative;
   top: 0;
 }
 .pricing .price-lead .title {
-  font-size: 42px;
+  font-size: 2.4em;
   font-weight: 400;
   text-shadow: 0 0 50px #000;
   color: white;
 }
 .pricing .price-lead .title.secondary {
   padding-top: 30px;
-  font-size: 36px;
+  font-size: 2em;
 }
 .pricing .title {
   padding: 0 0 0 0;
@@ -3896,6 +3901,7 @@ os-bg-check-summary > .pricing h3 {
 }
 .pricing .item .heading .title {
   font-size: 22px;
+  color: #0e2d4c;
 }
 .pricing .item .item-inner {
   -webkit-transition: transform 0.2s;
@@ -3906,6 +3912,9 @@ os-bg-check-summary > .pricing h3 {
 }
 .pricing .item .item-inner:hover {
   background-color: #FFF;
+}
+.pricing .item .item-inner .footer {
+  margin-bottom: 15px;
 }
 .pricing .item .fa-stack .price-figure-inner .number {
   color: #f3f3f3;

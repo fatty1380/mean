@@ -3,13 +3,14 @@
 var path      = require('path'),
     config    = require(path.resolve('./config/config')),
     constants = require('../models/outset.constants'),
+    everifile = require(path.resolve('./config/systems/everifile')),
     _         = require('lodash');
 
 var configOptions = {
     'states': constants.usStates,
     'countries': constants.countries,
     'baseSchedule': constants.baseSchedule,
-    'reports': constants.reportPackages,
+    'reports': everifile.reportPackages, // constants.reportPackages,
     'faqs': getFAQs,
     'debug': { debug: config.options.debug },
     'modules': getModulesConfig,
@@ -29,7 +30,8 @@ exports.getConfig = function (req, res, next, varName) {
         req.log.trace({ file: 'config.server.ctrl', func: 'getConfig' }, 'Launching function');
         req.configVal = configVal(req);
     } else if (_.isObject(configVal)) {
-        req.log.trace({ file: 'config.server.ctrl', func: 'getConfig' }, 'returning Object');
+        req.log.debug({ file: 'config.server.ctrl', func: 'getConfig'}, 'returning Object for var `%s`', varName);
+        req.log.trace({ file: 'config.server.ctrl', func: 'getConfig', val: configVal }, 'returning Object for var `%s`', varName);
         req.configVal = configVal;
     } else {
         return next(new Error('Unknown Configuration Option'));

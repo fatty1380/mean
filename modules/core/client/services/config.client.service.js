@@ -76,9 +76,17 @@
                     }
                     );
             },
-            getReports: function () {
+            getReports: function () { 
                 var rsrc = $resource('config/reports');
-                return rsrc.get();
+                return rsrc.query()
+                    .$promise
+                    .then(function (result) {
+                        return result;
+                    })
+                    .catch(function fail(err) {
+                        $log.error('Failed to load reports from server', err);
+                        return null;
+                    });
             },
             getFaqs: function (myfilter) {
                 var d = $q.defer();

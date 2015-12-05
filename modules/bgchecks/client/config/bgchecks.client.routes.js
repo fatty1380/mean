@@ -3,38 +3,9 @@
 
     //Setting up route
     angular.module('bgchecks')
-        .config(BgCheckRoutes)
-        .controller('ReportListController', ReportListController);
+        .config(BgCheckRoutes);
 
     /** ------------------------------------------ **/
-
-
-    ReportListController.$inject = ['reports', 'packages', '$state', '$stateParams', 'AppConfig'];
-    function ReportListController(reports, packages, $state, $stateParams, AppConfig) {
-        var vm = this;
-
-        vm.skus = $stateParams.sku;
-
-        vm.reports = reports;
-        vm.packages = packages;
-
-        vm.faqs = AppConfig.getFaqs({ category: 'bgreport' }).then(function (vals) {
-
-            console.log('[FAQ] promise resolved with %d vals', vals.length);
-
-            vm.faqs = vals;
-            return vals;
-        });
-
-        vm.text = {
-            lead: 'Order Reports to Include with your Job Applications&hellip;',
-            sub: '&hellip;and become 8-12x more likely to get the interview.'
-        };
-
-        vm.order = function (sku) {
-            $state.go('orderReports', { sku: sku });
-        };
-    }
 
     resolveUser.$inject = ['LoginService', '$uibModal', '$log'];
     function resolveUser(LoginService, $uibModal, $log) {
@@ -126,6 +97,7 @@
         return Reports.get(sku);
     }
 
+    // TODO: Determine utility or purpose of this code
     resolveReports.$inject = ['Reports', '$stateParams'];
     function resolveReports(Reports, $stateParams) {
         var skus = $stateParams.sku;
@@ -157,9 +129,9 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    reports: resolveReports,
+                    //reports: resolveReports, TODO: Determine Utility of 'Reports'
                     packages: ['AppConfig', function (AppConfig) {
-                        return AppConfig.getReports().$promise;
+                        return AppConfig.getReports();
                     }]
                 },
                 params: {
