@@ -29,7 +29,7 @@ exports.getConfig = function (req, res, next, varName) {
     if (_.isFunction(configVal)) {
         req.log.debug({ file: 'config.server.ctrl', func: 'getConfig', config: varName }, 'Launching function');
         req.configVal = configVal(req);
-            req.log.debug({ file: 'config.server.ctrl', func: 'getConfig', retval: req.configVal }, 'got retval');
+            req.log.trace({ file: 'config.server.ctrl', func: 'getConfig', retval: req.configVal }, 'got retval');
     } else if (_.isObject(configVal)) {
         req.log.debug({ file: 'config.server.ctrl', func: 'getConfig'}, 'returning Object for var `%s`', varName);
         req.log.trace({ file: 'config.server.ctrl', func: 'getConfig', val: configVal }, 'returning Object for var `%s`', varName);
@@ -72,7 +72,7 @@ exports.validate = function (varName, value) {
 
 function getFAQs(req) {
     var filter = req.query;
-    req.log.debug({ file: 'config.server.ctrl', func: 'getFAQs', filter: filter, faqs: constants.faqs }, 'looking up faqs with filter: %j', filter);
+    req.log.trace({ file: 'config.server.ctrl', func: 'getFAQs', filter: filter, faqs: constants.faqs }, 'looking up faqs with filter: %j', filter);
     var filterdFAQs = _.filter(constants.faqs, req.query);
     
     return filterdFAQs;
