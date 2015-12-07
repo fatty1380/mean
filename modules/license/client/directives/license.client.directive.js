@@ -48,7 +48,10 @@
         };
 
         vm.states = appConfig.getStates();
-        vm.debug = appConfig.get('debug');
+        appConfig.getAsync('debug')
+            .then(function (debugSetting) {
+                vm.debug = debugSetting;
+            });
 
         vm.dateFormat = 'MM/DD/YYYY';
 

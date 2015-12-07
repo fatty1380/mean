@@ -9,8 +9,10 @@
     function ReportDetailsController(report, applicant, remoteData, appConfig, Authentication, Applicants, $q, $log, $state, $uibModal, $document, PolyField) {
         var vm = this;
 
-        vm.debugMode = appConfig.get('debug');
-
+        appConfig.getAsync('debug')
+            .then(function (debugSetting) {
+                vm.debugMode = debugSetting;
+            });
 
         vm.report = report;
         vm.baseApplicant = applicant || {};

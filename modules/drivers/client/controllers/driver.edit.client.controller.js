@@ -22,7 +22,10 @@
             profile: {responses: [], questions: []}
         });
 
-        vm.debug = AppConfig.get('debug');
+        appConfig.getAsync('debug')
+            .then(function (debugSetting) {
+                vm.debug = debugSetting;
+            });
 
         // Functions:
         vm.submit = submit;

@@ -34,45 +34,20 @@
                 }
                 return months;
             },
-            get: function (config) {
-                var rsrc = $resource('config/' + config);
-                var d = $q.defer();
-                rsrc.get().$promise.then(
-                    function (resp) {
-
-                        if (resp.hasOwnProperty(config)) {
-                            d.resolve(resp[config]);
-                        } else {
-                            d.resolve(resp);
-                        }
-                    },
-                    function (err) {
-                        $log.log('[AppCfg] "%s" is not an available', config, err);
-                        d.reject(err);
-                    }
-                    );
-
-                d.promise.then(function (f) {
-                    return f;
-                }, function (e) {
-                    $log.warn('Swallowing error: %o', e);
-                    return null;
-                });
-            },
             getAsync: function (config) {
                 var rsrc = $resource('config/' + config);
 
                 return rsrc.get().$promise.then(
                     function (success) {
                         if (success.hasOwnProperty(config)) {
-                            return $q.when(success[config]);
+                            return success[config];
                         } else {
-                            return $q.when(success);
+                            return success;
                         }
                     },
                     function (err) {
                         $log.log('[AppCfg] "%s" is not an available', config, err);
-                        return $q.when(null);
+                        return null;
                     }
                     );
             },
