@@ -10,7 +10,7 @@ var mongoose = require('mongoose'),
     ReportType = mongoose.model('ReportType'),
     ReportApplicant = mongoose.model('ReportApplicant'),
     q = require('q'),
-    everifile = require('./everifile.server.service'),
+    everifile = require(path.resolve('./config/systems/everifile')),
     constants = require(path.resolve('./modules/core/server/models/outset.constants')),
     fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
     _ = require('lodash'),
@@ -89,28 +89,38 @@ function availableReportTypes(req, res, next) {
 
 function reportBySKU(req, res, next, id) {
     req.log.debug({ func: 'reportBySKU', file: 'reports.server.controller' }, 'Looking up report for SKU: %s', id);
+    req.log.debug({ func: 'reportBySKU', file: 'reports.server.controller', sourceReports: everifile.reportPackages }, 'Searching avilable hard-coded report packages');
 
-    var rpt = _.find(constants.reportPackages, { 'sku': id });
+    var sku = _.isArray(id) ? _.first(id) : id;
+    
+    //var rpt = _.find(constants.reportPackages, { 'sku': id });
+    var rpt = _.find(everifile.reportPackages, { 'sku': sku });
 
     if (rpt) {
-        req.log.debug({ func: 'reportBySKU', file: 'reports.server.controller' }, 'Found hardcoded report type for SKU %s ... Returning', id);
+        req.log.debug({ func: 'reportBySKU', file: 'reports.server.controller' }, 'Found hardcoded report type for SKU %s ... Returning', sku);
 
         req.reportType = rpt;
         return next();
     }
 
-    ReportType.findOne({ 'sku': id })
-        .exec(function (err, reportType) {
-            if (err) {
+    ReportType.findOne({ 'sku': sku })
+        .exec()
+        .then(
+            function (reportType) {
+                if (!!reportType) {
+                    req.log.debug({ func: 'reportBySKU', file: 'reports.server.controller' }, 'got report for sku [%s]: %o', sku, reportType);
+                }
+                else {
+                    req.log.warn({ func: 'reportBySKU', file: 'reports.server.controller' }, 'No report for sku [%s]', sku);
+                }
+                req.reportType = reportType;
+                next();
+            })
+        .catch(
+            function (err) {
                 req.log.error({ func: 'reportBySKU', file: 'reports.server.controller', err: err }, 'ReportBySKU] ERROR: ', err);
                 return next(err);
-            }
-
-            req.log.debug({ func: 'reportBySKU', file: 'reports.server.controller' }, 'got report for sku [%s]: %o', id, reportType);
-
-            req.reportType = reportType;
-            next();
-        });
+            });
 
 }
 

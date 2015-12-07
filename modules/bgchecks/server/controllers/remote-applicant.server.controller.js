@@ -356,8 +356,8 @@ function ReadRemoteApplicantData(req, res) {
         });
     }
 
-    log.trace({ func: 'RemoteApplicant.read', applicant: req.remoteApplicant }, 'Returning Remote Applicant `%s`', req.remoteApplicant.id);
-    log.debug({ func: 'RemoteApplicant.read', applicant: req.remoteApplicant.id }, 'Returning Remote Applicant `%s`', req.remoteApplicant.id);
+    log.trace({ func: 'RemoteApplicant.read', applicant: req.remoteApplicant }, 'Returning Remote Applicant `%s`', req.remoteApplicant && req.remoteApplicant.id);
+    log.debug({ func: 'RemoteApplicant.read', applicant: req.remoteApplicant && req.remoteApplicant.id }, 'Returning Remote Applicant `%s`', req.remoteApplicant && req.remoteApplicant.id);
 
     res.json(req.remoteApplicant);
 }
