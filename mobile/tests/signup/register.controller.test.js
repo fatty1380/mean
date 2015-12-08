@@ -24,6 +24,18 @@
             registerCtrl.initForm(form);
             expect(registerCtrl.form).toEqual(form);
         });
+        
+        it('should register a user', function () {
+            registerCtrl.vm.user = {
+            firstName: 'Testing',
+            lastName: 'Userman',
+            email: 'test+user@test.com',
+            password: 'password',
+            confirmPassword: 'password'
+            };
+
+            registerCtrl.initForm = 
+        });
 
     });
 }());

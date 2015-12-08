@@ -7,8 +7,7 @@
     
     settings.uriScheme = 'truckerline';
     settings.branchKey = AppConfig.getBranchKey();
-    
-    settings.ga.key = AppConfig.getGAKey();
+    settings.gaKey = AppConfig.getGAKey();
     
     
 

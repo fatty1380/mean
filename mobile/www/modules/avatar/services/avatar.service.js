@@ -30,7 +30,7 @@
          * getNewAvatar
          */
         function getNewAvatar(parameters, profile) {
-            cameraService.showActionSheet({ cameraDirection: 1 })
+            return cameraService.showActionSheet({ cameraDirection: 1 })
                 .then(
                     function success(rawImageResponse) {
                         return showCropModal({ rawImage: rawImageResponse, imgSize: 512 });

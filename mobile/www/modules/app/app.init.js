@@ -66,7 +66,6 @@
         // setTimeout(function () {
 
         if (!$window.cordova && _.isUndefined($window.ga)) {
-            debugger;
             (function (i, s, o, g, r, a, m) {
                 i['GoogleAnalyticsObject'] = r;
                 i[r] = i[r] || function () {
@@ -79,14 +78,13 @@
                 m.parentNode.insertBefore(a, m)
             })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-            ga('create', settings.ga.key, 'auto');
+            ga('create', settings.gaKey, 'auto');
             ga('send', 'pageview', 'Say Hello from app.init');
         }
 
         $ionicPlatform.ready(function () {
-            debugger;
             logger.info('Cordova Available', !!$window.cordova);
-            logger.info('Plugins Available', !!$window.cordova.plugins ? _.keys($window.cordova.plugins) : false);
+            logger.info('Plugins Available', !!$window.cordova && !!$window.cordova.plugins ? _.keys($window.cordova.plugins) : false);
 
             if ($window.cordova && $window.cordova.plugins && $window.cordova.plugins.Keyboard) {
                 $cordovaKeyboard.hideAccessoryBar(false);
@@ -166,15 +164,14 @@
             var initializeAnalyticsPromise;
 
             if (!!$window.analytics) {
-                debugger;
-                logger.info('$cordovaGoogleAnalytics initializing with id [%s]', settings.ga.key);
+                logger.info('$cordovaGoogleAnalytics initializing with id [%s]', settings.gaKey);
                 initializeAnalyticsPromise = $cordovaGoogleAnalytics
-                    .startTrackerWithId(settings.ga.key)
+                    .startTrackerWithId(settings.gaKey)
                     .then(function (result) {
                         if (AppConfig.debug) {
                             $cordovaGoogleAnalytics.debugMode();
                         }
-                        cordovaGoogleAnalytics.enableUncaughtExceptionReporting(true);
+                        $cordovaGoogleAnalytics.enableUncaughtExceptionReporting(true);
 
                         $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'launch', location.hash)
                             .catch(function (e) {
@@ -182,17 +179,18 @@
                             });
 																												
 						$cordovaGoogleAnalytics.trackView($state.current && $state.current.name || location.hash);
-                    })
-                    .catch(function (e) {
+                        
+                        return true;
+                    }, 
+                    function startTrackerFailed(e) {
                         logger.error('Unable to Initialize GA Tracker', e);
-                    });
+                        return false;
+                    })
 
 
             } else if (!$window.analytics && !!$window.ga) {
 
                 logger.warn('$cordovaGoogleAnalytics is not available');
-
-                debugger;
 
                 $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
                     $window.ga('send', 'pageview', { page: toState.name });
@@ -210,9 +208,12 @@
                 return;
             }
 
-            debugger;
-
             return initializeAnalyticsPromise.then(function (response) {
+                if(!response) {
+                    logger.error('GA Tracker not Initialized', response);
+                    return;
+                }
+                
                 $ionicPlatform.on('pause', function (event) {
                     logger.debug('Lifecycle Event: pause', event);
                     $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'pause', location.hash)

@@ -24,7 +24,7 @@ var AppConfig = (function () {
     var debug = true;
 
     var URLs = {
-        prod: 'https://app.truckerline.com/',              // PRODUCTION USE
+        prod: 'https://app.truckerline.com/',           // PRODUCTION USE
         dev: 'http://outset-dev.elasticbeanstalk.com/', // DEVELOPMENT USE
         local: 'http://localhost:3000/',
         vault: 'http://10.0.1.66:3000/'
@@ -37,7 +37,7 @@ var AppConfig = (function () {
     
     var gaKeys = {
         prod: 'UA-52626400-2',
-        dev: 'UA-52626400-3'
+        dev:  'UA-52626400-3'
     };
 
     return {

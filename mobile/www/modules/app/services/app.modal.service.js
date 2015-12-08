@@ -14,7 +14,6 @@
         };
 
         function show(templateUrl, controller, parameters, options) {
-            debugger;
 
             var start = Date.now();
             var ctrl = _.first(controller.split(' '));
@@ -22,7 +21,7 @@
             var evt = ctrl + '@' + page;
 
             $cordovaGoogleAnalytics.trackEvent('ModalView', 'show', evt);
-            debugger
+
             $cordovaGoogleAnalytics.trackView(evt);
 
             var deferred = $q.defer();

@@ -327,15 +327,32 @@
 
             if (!users || !(users instanceof Array) || !users.length) return;
 
-            angular.forEach(users, function (user) {
+            var removals = angular.map(users, function (user) {
                 if (user !== id) {
                     logger.warn('removing documents for user --->>>', user);
-                    return lockboxDocuments.removeDocumentsByUser(user);
+                    return removeDocumentsByUser(user);
                 }
+                
+                return $q.resolve(null);
             });
+            
+            return $q.all(removals).then(
+                function removalSuccess(result) {
+                    var removed = _.omit(removals, _.isEmpty);
+                    
+                    logger.info('Removed %d user\'s documents', removed && removed.length);
+                    logger.info('Documents users >>>', users);
+                    
+                    return storage.setItem('hasDocumentsForUsers', JSON.stringify(users));
+                }
+            )
+            .catch(
+                function removalFail(err) {
+                    logger.error('Failed to remove all user documents due to error', err);
+                    return null;
+                }
+            )
 
-            logger.warn('Documents users >>>', users);
-            storage.setItem('hasDocumentsForUsers', JSON.stringify(users));
         }
 
         function removeDocuments(documents) {

@@ -52,7 +52,7 @@
 
                     if (response.success) {
                         tokenService.set('access_token', '');
-                        registerService.signIn({ email: response.message.data.email, password: vm.user.password })
+                        registerService.signIn({ email: response.message.data.username, password: vm.user.password })
                             .then(function (signInResponse) {
                                 if (signInResponse.success) {
                                     // TODO: Move tokenService actions into registerService

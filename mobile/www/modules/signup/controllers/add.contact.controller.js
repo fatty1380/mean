@@ -6,10 +6,10 @@
         .controller('AddContactFriendsCtrl', AddContactFriendsCtrl);
 
     AddContactFriendsCtrl.$inject = ['contacts', '$state', '$q', '$cordovaGoogleAnalytics', '$ionicPopup', '$http',
-        'registerService', 'settings', 'utilsService', 'LoadingService', 'contactsService', '$filter'];
+        'settings', 'utilsService', 'LoadingService', 'contactsService', '$filter'];
 
     function AddContactFriendsCtrl(contacts, $state, $q, $cordovaGoogleAnalytics, $ionicPopup, $http,
-        registerService, settings, utilsService, LoadingService, contactsService, $filter) {
+        settings, utilsService, LoadingService, contactsService, $filter) {
         var vm = this;
 
         debugger;
