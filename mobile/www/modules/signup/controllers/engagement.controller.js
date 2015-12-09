@@ -5,34 +5,49 @@
         .module('signup')
         .controller('EngagementCtrl', EngagementCtrl)
 
-    EngagementCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', 'registerService', 'cameraService', 'userService', 'avatarService'];
+    EngagementCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', 'userService', 'avatarService', 'LoadingService'];
 
-    function EngagementCtrl($scope, $state, $cordovaGoogleAnalytics, registerService, cameraService, userService, avatarService) {
+    function EngagementCtrl($scope, $state, $cordovaGoogleAnalytics, userService, avatarService, LoadingService) {
 
         var vm = this;
+
         vm.handle = '';
-        vm.started = '';
-        vm.company = '';
-        vm.owner = null;
-        vm.camera = cameraService;
+        vm.userProps = {
+            started: '',
+            company: '',
+            avatar: null,
+            owner: null
+        }
 
         vm.initEngagementForm = initEngagementForm;
-        vm.continueToLicense = continueToLicense;
+        vm.continue = continueToLicense;
 
         function initEngagementForm(scope) {
             vm.form = scope;
         }
 
-								// Code removed in favor of promise returned by 'getNewAvatar' below
-        // //update avatar after change data
-        // $scope.$watch(
-        //     function () {
-        //         return userService.profileData;
-        //     },
-        //     function () {
-        //         vm.profileData = userService.profileData;
-        //     },
-        //     true);
+        /**
+         * Load User Data
+         * ---------------
+         * Load the user's profile data from the server and extend the 
+         * local profile object.
+         */
+        userService.getUserData().then(
+            function success(userData) {
+                vm.profileData = userData;
+
+                if (!vm.profileData.props) {
+                    vm.profileData.props = {};
+                }
+
+                _.extend(vm.userProps, vm.profileData.props);
+                
+                // if (/\d{4}\-\d{2}/.test(vm.userProps.started)) {
+                //     vm.userProps.started = vm.createStartedDateObject(vm.userProps.started);
+                // }
+
+                vm.handle = vm.profileData.handle;
+            });
 
 
         vm.createStartedDateObject = function (started) {
@@ -54,68 +69,69 @@
          * a photo, or selecting from device photos.
          */
         vm.showEditAvatar = function (parameters) {
-									$cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'editAvatar');
-									var then = Date.now();
-												
+            $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'editAvatar');
+            var then = Date.now();
+            
+            
+
             avatarService.getNewAvatar(parameters, vm.profileData)
                 .then(function processNewAvatar(avatarResult) {
-																	if (_.isEmpty(avatarResult)) {
-																					   $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'engagement', 'newAvatar:cancel');
+                    if (_.isEmpty(avatarResult)) {
+                        $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'engagement', 'newAvatar:cancel');
                         return;
                     }
 
                     $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'newAvatar');
-                    if (vm.profileData.props.avatar !== avatarResult) {
-                        debugger;
-                        vm.profileData.props.avatar = avatarResult;
+                    if (vm.userProps.avatar !== avatarResult) {
+                        vm.userProps.avatar = avatarResult;
                     }
-																				$cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'engagement', 'newAvatar:saved');
+                    $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'engagement', 'newAvatar:saved');
 
                 });
         };
 
         function continueToLicense() {
-            // Set Owner/Operator Status if set. This is to support trinary selection : null/true/false
-            if (vm.owner !== null) {
-                registerService.userProps.owner = vm.owner;
-                $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'setOwner');
-            }
+
             var then = Date.now();
+            LoadingService.showLoader('Saving');
             
-            // Set standard Properties
-            registerService.userProps.started = vm.createStartedDateObject(vm.started);
-            registerService.userProps.avatar = avatarService.getImage();
-            registerService.userProps.company = vm.company;
-            
-            // Events for Props: 
-            if (!!vm.started) { $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'setStarted'); }
-            if (!!vm.handle) { $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'setHandle'); }
-            if (!!vm.company) { $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'setCompany'); }
-
-            registerService.updateUserProps(registerService.userProps)
-                .then(function success(propsResult) {
-                    logger.debug('Updated User Props ...', propsResult);
-                    // TODO: Check for success/fail
-                   
-                    $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'saveProps');
-
-                    registerService.userData.handle = vm.handle;
-                    return registerService.updateUser({ handle: vm.handle });
-                })
-                .then(function success(result) {
-                    // TODO: Check for success/fail
-                    logger.debug('Saved changes to user', result);
-                    $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'save', Date.now()-then);
-
-                    $state.go('signup-license');
-                })
-                .catch(function failure(err) {
-                    logger.error('Unable to save changes to user', registerService.userData, err);
-                    $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'error');
-                    vm.error = 'Unable to save changes';
-                });
-
+        // Set standard Properties
+        var userProps = {
+            owner: vm.userProps.owner,
+            started: vm.createStartedDateObject(vm.userProps.started),
+            //avatar: avatarService.getImage(),
+            company: vm.userProps.company
         }
+            
+        // Events for Props: 
+        if (userProps.owner !== null) { $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'setOwner'); }
+        if (!!userProps.started) { $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'setStarted'); }
+        if (!!userProps.handle) { $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'setHandle'); }
+        if (!!userProps.company) { $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'setCompany'); }
+
+        userService.updateUserProps(userProps)
+            .then(function success(propsResult) {
+                logger.debug('Updated User Props ...', propsResult);
+                $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'saveProps');
+
+                return userService.updateUserData({ handle: vm.handle });
+            })
+            .then(function success(result) {
+                // TODO: Check for success/fail
+                logger.debug('Saved changes to user', result);
+                $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'save', Date.now() - then);
+
+                LoadingService.hide();
+                $state.go('signup.license');
+            })
+            .catch(function failure(err) {
+                logger.error('Unable to save changes to user: %o', userProps, err);
+                $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'error');
+                
+                LoadingService.showFailuer('Unable to save changes');
+            });
+
     }
+}
 
 })();

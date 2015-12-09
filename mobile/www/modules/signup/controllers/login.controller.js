@@ -56,7 +56,7 @@
 
             registerService.signIn(vm.user)
                 .then(function (response) {
-                    debugger; // Check for 'user' in response
+                    
                     var data = response && response.message && response.message.data;
                     if (response.success && !!data) {
                         tokenService.set('access_token', data.access_token);
@@ -74,11 +74,21 @@
 
                                     LoadingService.hide();
                                     $state.go('account.profile');
-                                })
-                            .catch(
+                                },
                                 function fail(err) {
                                     logger.error('Unable to retrieve user information', err);
                                     LoadingService.showAlert('Sorry, unable to login at this time');
+                                })
+                            .catch(
+                                function fail(err) {
+                                    logger.error('Unknown error occurred after loading user data', err);
+                                    
+                                    if(_.isEmpty(userService.profileData)) {
+                                      LoadingService.showAlert('Sorry, unable to login at this time');  
+                                    } else {
+                                        LoadingService.hide();
+                                        $state.go('account.profile');
+                                    }
                                 });
 
                         vm.error = '';

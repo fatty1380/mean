@@ -1,14 +1,16 @@
 <ion-view class="signup-section view-section min-size">
 
-    <ion-header-bar align-title="center" class="bar-stable">
-        <ion-nav-bar>
-            <ion-nav-back-button ng-click="vm.cancel()">{{::vm.backTxt}}</ion-nav-back-button>
-        </ion-nav-bar>
-            <h1 class="title">{{::vm.header}}</h1>
-        </ion-header-bar>
+    <ion-header-bar align-title="center" class="bar-stable">            
+        <button class="button button-icon icon ion-ios-arrow-back" ng-click="vm.cancel()" 
+        nav-direction="{{!!vm.showCancel ? 'exit' : 'back'}}"></button>
+        
+        <h1 class="title">
+            <span ng-if="!!vm.header" ng-bind="vm.header"></span>
+            <i ng-if="!vm.header" class="app-brand"></i>
+        </h1>
+    </ion-header-bar>
 
-    <ion-pane class="has-footer license-content">
-        <ion-scroll>
+    <ion-content class="has-footer license-content">
             <h4>Select your license Class</h4>
             <div class="list license">
                 <label class="oset-cb-item category-a" ng-click="vm.class='A'" ng-class="{'active':vm.class==='A'}">
@@ -62,13 +64,13 @@
                         <br> Hazardous Materials</p>
                 </li>
             </ul>
-        </ion-scroll>
-    </ion-pane>
+    </ion-content>
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button secondary" ng-if="vm.showCancel" ng-click="vm.cancel()">Cancel</button>
-            <button class="button {{!!vm.showCancel ? 'primary' : secondary}} submit" ng-click="vm.save()">{{::vm.saveTxt}}</button>
+            <button class="button secondary" ng-if="vm.showCancel" ng-click="vm.cancel()" nav-direction="exit">Cancel</button>
+            <button class="button {{!!vm.showCancel ? 'primary' : secondary}} submit" ng-click="vm.save()"
+             nav-direction="{{!!vm.showCancel ? 'exit' : 'forward'}}">{{::vm.saveTxt}}</button>
         </div>
     </ion-footer-bar>
 

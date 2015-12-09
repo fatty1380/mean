@@ -13,12 +13,11 @@
         vm.class = null;
         vm.endorsement = endorsementStub;
 
-        vm.header = 'Create Account';
         vm.backTxt = 'Back';
         vm.saveTxt = 'Continue';
 
         vm.save = save;
-        vm.cancel = cancel;
+        vm.cancel = goBack;
 
         function save() {
             var obj = {
@@ -37,7 +36,7 @@
                     $cordovaGoogleAnalytics.trackEvent('signup', 'license', 'save');
                     $cordovaGoogleAnalytics.trackEvent('signup', Date.now() - then, 'license', 'save');
 
-                    $state.go('signup-trucks');
+                    $state.go('signup.trucks');
                     LoadingService.hide();
                 })
                 .catch(function fail(err) {
@@ -48,10 +47,9 @@
                 });
         }
         
-        function cancel() {
+        function goBack() {
             if (_.isEmpty($ionicHistory.backTitle())) {
-                debugger;
-                return $state.go('account.activity');
+                return $state.go('signup.engagement');
             }
 
             return $ionicHistory.goBack();

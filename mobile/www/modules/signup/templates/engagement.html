@@ -1,7 +1,9 @@
 <ion-view class="signup-section view-section compact-size">
 
     <ion-header-bar align-title="center" class="bar-stable">
-        <h1 class="title">Create Account</h1>
+        <h1 class="title">
+            <i class="app-brand"></i>
+        </h1>
     </ion-header-bar>
 
     <div class="bar bar-subheader">
@@ -10,7 +12,7 @@
 
     <ion-pane class="has-footer has-subheader">
         <ion-scroll>
-        <form name="mainEnagegmentForm" id="mainEnagegmentForm" class="list signup-form" ng-init="vm.initEngagementForm(this)" ng-submit="vm.continueToLicense()"
+        <form name="mainEnagegmentForm" id="mainEnagegmentForm" class="list signup-form" ng-init="vm.initEngagementForm(this)" ng-submit="vm.continue()"
         role="form">
             <label class="item item-input">
                 <input type="text" placeholder="Enter your CB Handle" ng-model="vm.handle" autofocus>
@@ -20,16 +22,16 @@
                     <button type="button" class="button button-block button-clear button-light">
                         Add your Profile Picture
                     </button>
-                    <i ng-if="!vm.profileData.props.avatar" class="ico ico-cameraicon ico-middle"></i>
-                    <img ng-if="vm.profileData.props.avatar" class="round-avatar" ng-src="{{ vm.profileData.props.avatar }}" />
+                    <i ng-if="!vm.userProps.avatar" class="ico ico-cameraicon ico-middle"></i>
+                    <img ng-if="vm.userProps.avatar" class="round-avatar" ng-src="{{ vm.userProps.avatar }}" />
                 </div>
             </div>
-            <oset-toggle label="Owner Operator" type="button-small" model="vm.owner"></oset-toggle>
+            <oset-toggle label="Owner Operator" type="button-small" model="vm.userProps.owner"></oset-toggle>
             <label class="item item-input">
-                <input type="text" placeholder="Driving Since" ng-model="vm.started" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
+                <input type="text" placeholder="Driving Since" ng-model="vm.userProps.started" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
             </label>
             <label class="item item-input">
-                <input type="text" placeholder="Name of Employer" ng-model="vm.company">
+                <input type="text" placeholder="Name of Employer" ng-model="vm.userProps.company">
             </label>
         </form>
         </ion-scroll>
@@ -37,7 +39,8 @@
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button type="button" class="button secondary submit" form="mainEnagegmentForm" ng-click="vm.continueToLicense()">Continue</button>
+            <button type="button" class="button secondary submit" form="mainEnagegmentForm" 
+            ng-click="vm.continue()" nav-direction="forward">Continue</button>
         </div>
     </ion-footer-bar>
 

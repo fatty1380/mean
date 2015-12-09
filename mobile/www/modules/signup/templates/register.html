@@ -1,38 +1,41 @@
-<ion-view class="signup-section register-screen view-section min-size">
+<ion-view class="signup-section view-section register-screen">
 
     <ion-header-bar align-title="center" class="bar-stable">
         <div class="buttons">
             <button class="button button-icon icon ion-ios-arrow-back" nav-direction="back" ui-sref="home"></button>
         </div>
-        <h1 class="title">Create Account</h1>
+        <h1 class="title">
+            <i class="app-brand"></i>
+        </h1>
     </ion-header-bar>
 
-    <ion-pane class="has-header has-footer">
+    <div class="bar bar-subheader">
+        <h3 class="title">Create your TruckerLine account</h3>
+    </div>
+
+    <ion-content class="has-subheader has-footer">
         <!--<div class="bar bar-subheader hide-on-keyboard-open">
             <h3 class="title">Create your TruckerLine account below</h3>
         </div>-->
-
-        <ion-scroll>
             <div class="login-content">
-                <h3>Create your TruckerLine account</h3>
-                <form name="mainForm" id="mainForm" class="list sign-up signup-form" ng-init="vm.initForm(this)" ng-submit="vm.submitForm()"
+                <form name="vm.mainForm" id="mainForm" class="list sign-up signup-form" ng-submit="vm.submitForm($event)"
                 novalidate>
                     <label class="item item-input">
-                        <input id="firstName" name="firstName" type="text" placeholder="First Name" ng-model="vm.user.firstName" ng-focus="vm.lastElementFocused = false"
-                        required focus-me>
+                        <input id="firstName" name="firstName" type="text" placeholder="First Name" ng-model="vm.user.firstName" focus required autocorrect="off"
+                        spellcheck="false" focus-me>
                     </label>
                     <label class="item item-input">
-                        <input type="text" placeholder="Last Name" ng-model="vm.user.lastName" ng-focus="vm.lastElementFocused = false" required>
+                        <input type="text" placeholder="Last Name" ng-model="vm.user.lastName" focus required autocorrect="off" spellcheck="false">
                     </label>
                     <label class="item item-input">
-                        <input type="email" name="email" placeholder="Email" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false" required>
+                        <input type="email" name="email" placeholder="Email" ng-model="vm.user.email" focus required>
                     </label>
                     <label class="item item-input">
-                        <input type="password" placeholder="Password" ng-model="vm.user.password" ng-focus="vm.lastElementFocused = false" required>
+                        <input type="password" placeholder="Password" ng-model="vm.user.password" focus required>
                     </label>
                     <label class="item item-input item-ass">
                         <input name="confirmPassword" type="password" placeholder="Confirm Password" ng-model="vm.user.confirmPassword" compare-to="vm.user.password"
-                        ng-focus="vm.lastElementFocused = true" required>
+                        ng-focus="vm.lastElementFocused = true" ng-blur="vm.lastElementFocused = false" required>
                     </label>
                     <input style="position:absolute; left:9999px" type="submit" />
                 </form>
@@ -41,12 +44,11 @@
                     <i class="app-logo"></i>
                 </div>
             </div>
-        </ion-scroll>
-    </ion-pane>
+    </ion-content>
 
     <ion-footer-bar>
-        <div class="button-bar action-buttons">
-            <button class="button secondary submit" ng-disabled="vm.form.mainForm.$invalid" ng-click="vm.continueToEngagement()">Create Account</button>
+        <div class="bar-clear button-bar action-buttons">
+            <button class="button secondary submit" ng-disabled="vm.mainForm.$invalid" ng-click="vm.continueToEngagement()">Create Account</button>
         </div>
     </ion-footer-bar>
 </ion-view>

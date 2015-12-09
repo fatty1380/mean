@@ -144,6 +144,26 @@ body{
   }
 }
 
+ion-content {
+    &.has-footer {
+        .scroll {
+            //padding-bottom: $bar-footer-height;
+            
+            .select-truck, .select-trailer {
+            
+            .list {
+                >:last-child {
+                    margin-bottom: $bar-footer-height;
+                    border: 2px dotted yellow;
+                }
+                
+                padding-bottom: $bar-footer-height;
+                border-bottom: 2px solid red;
+            }
+            }
+        }
+    }
+}
 
 .pane.has-title{padding-top: 64px;}
 .pane.has-footer{

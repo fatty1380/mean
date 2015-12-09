@@ -98,7 +98,6 @@
                 return userService.updateUserData(vm.profileData)
                     .then(function (success) {
                         if (success.id) {
-                            debugger;
                             vm.closeModal(success);
                         } else {
                             $ionicPopup.alert({ title: 'Error', template: 'Profile wasn\'t updated' });

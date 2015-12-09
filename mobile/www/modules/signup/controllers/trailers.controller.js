@@ -5,13 +5,14 @@
         .module('signup')
         .controller('TrailersCtrl', TrailersCtrl)
 
-    TrailersCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', 'userService', 'LoadingService', '$ionicPopup'];
+    TrailersCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', '$ionicHistory', 'userService', 'LoadingService', '$ionicPopup'];
 
-    function TrailersCtrl($scope, $state, $cordovaGoogleAnalytics, userService, LoadingService, $ionicPopup) {
+    function TrailersCtrl($scope, $state, $cordovaGoogleAnalytics, $ionicHistory, userService, LoadingService, $ionicPopup) {
         var vm = this;
         vm.newTrailer = '';
 
         vm.addTrailer = addTrailer;
+        vm.goBack = goBack;
         vm.continue = goNext;
         vm.trailers = getTrailers();
 
@@ -68,13 +69,22 @@
                         logger.error('Trailers: Save Failed', err);
                     })
                     .finally(function () {
-                        $state.go('signup-friends');
+                        $state.go('signup.friends');
                         LoadingService.hide();
                     });
             }
 
             $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'skip');
-            $state.go('signup-friends');
+            $state.go('signup.friends');
+        }
+        
+        
+        function goBack() {
+            if (_.isEmpty($ionicHistory.backTitle())) {
+                return $state.go('signup.trucks');
+            }
+
+            return $ionicHistory.goBack();
         }
 
         function getNameKeys(obj) {

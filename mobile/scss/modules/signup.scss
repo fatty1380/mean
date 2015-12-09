@@ -2,19 +2,19 @@ ion-content {
   .signup-title {
     text-align: center;
     margin: 50px 0 80px;
-    color:white;
+    color: $light;;
   }
 
   .engagement-title {
     text-align: center;
     margin: 45px 0 35px 0;
-    color:white;
+    color: $light;;
   }
 
   .title {
     text-align: center;
     margin: 20px;
-    color:white;
+    color: $light;;
   }
 }
 
@@ -692,6 +692,7 @@ $but-height: 70px;
 .friends-screen {
   .friends-pane {
     padding-bottom: 44px;
+    background-color: $stable;
 
     input {
       height: 40px;
@@ -699,11 +700,11 @@ $but-height: 70px;
       font-size: 14px;
       font-weight: bold;
       line-height: 14px;
-      color: white;
+      color: $light;
     }
 
     input::-webkit-input-placeholder {
-      color:white
+      color: $light;
     }
 
     .search-bar{
@@ -824,19 +825,29 @@ $but-height: 70px;
   .scroll{
     padding: 0 30px;
   }
+  
+  .image-holder i {
+      text-align: center;
+      color: $light;
+      display: block;
+        font-size: 20em;
+        font-weight: light;
+    }
+  
   .description{
     color: $light;
     display: block;
-    font-size: 13px;
+    font-size: $font-size-small;
+    line-height: $line-height-small;
     padding-bottom: 50px;
     text-align: center;
   }
   .choose-contacts-button {
-    background: #3eaeb1;
+    background: $balanced;
     color: $light;
     margin: 0 0 20px;
     padding: 5px 0;
-    font-size: 15px;
+    font-size: $font-size-large;
     -webkit-border-radius: 26px;
     -moz-border-radius: 26px;
     border-radius: 26px;

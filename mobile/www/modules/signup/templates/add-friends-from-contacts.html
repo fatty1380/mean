@@ -1,13 +1,15 @@
-<ion-view class="friends-screen view-section min-size">
+<ion-view class="friends-screen view-section">
 
-    <ion-header-bar>
-        <button class="button button-clear" ng-click="vm.back()">Back</button>
-        <h1 class="title">Add Friends</h1>
-        <a class="button button-clear" ng-click="vm.skip();">Skip</a>
+    <ion-header-bar align-title="center" class="bar-stable">
+        <button class="button button-icon icon ion-ios-arrow-back" ng-click="vm.back()"></button>
+        <h1 class="title">
+            <i class="app-brand"></i>
+        </h1>
+        <a class="button button-clear" ng-click="vm.skip();">skip</a>
     </ion-header-bar>
 
-    <ion-pane class="has-footer friends-pane">
-        <div class="item item-input search-bar">
+    <ion-content class="has-header has-footer friends-pane">
+        <div class="item item-input search-bar" ng-hide="!vm.contactsResolved">
             <i class="icon light ion-ios-search-strong"></i>
             <input type="text" placeholder="Search for Friends" ng-model="vm.searchText" ng-change="vm.searchHandler()">
         </div>
@@ -28,13 +30,13 @@
                  Load All Contacts
                  </button>
                 
-                <a class="button button-block button-clear manual-add" ui-sref="signup-friends-manually">
+                <a class="button button-block button-clear manual-add" ui-sref="signup.friends-manually">
                     <i class="icon ion-ios-plus-outline"></i>
                     Add by Mobile Phone or Email
                 </a>
             </div>
         </ion-scroll>
-    </ion-pane>
+    </ion-content>
 
     <ion-footer-bar>
         <div class="button-bar">

@@ -359,3 +359,17 @@
   -webkit-background-size: 160px 176px;
   background-size: 160px 176px;
 }
+
+/* app brand */
+
+.app-brand{
+  background-image: url('../img/tl-brand-white.png');
+  background-repeat: no-repeat;
+  display: inline-block;
+  vertical-align: middle;
+  pointer-events: none;
+  width: 149px;
+  height: 20px;
+  -webkit-background-size: 149px 18px;
+  background-size: 149px 18px;
+}

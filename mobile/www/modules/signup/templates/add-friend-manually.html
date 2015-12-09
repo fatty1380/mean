@@ -2,7 +2,9 @@
 
     <ion-header-bar align-title="center">        
         <button class="button button-clear" ng-click="$ionicGoBack(); vm.init()">Cancel</button>
-        <h1 class="title">Add Friends</h1>
+        <h1 class="title">
+            <i class="app-brand"></i>
+        </h1>
         <a class="button button-clear" ng-disabled="!vm.contact.phone && !vm.contact.email" ng-click="vm.skip();">Invite</a>
     </ion-header-bar>
 

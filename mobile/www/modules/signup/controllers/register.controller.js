@@ -6,10 +6,30 @@
         .controller('RegisterCtrl', RegisterCtrl);
 
     RegisterCtrl.$inject = ['$state', '$window', '$ionicPopup', '$cordovaGoogleAnalytics',
-        'LoadingService', 'tokenService', 'welcomeService', 'securityService', 'registerService', 'userService'];
+        'LoadingService', 'tokenService', 'welcomeService', 'securityService', 'registerService', 'userService', 'lockboxDocuments'];
+
+    angular.module('signup')
+        .directive('focus', function () {
+            return {
+                restrict: 'A',
+                link: function ($scope, elem, attrs) {
+
+                    elem.bind('keydown', function (e) {
+                        if ((e.keyCode || e.which) === 13) {
+                            e.preventDefault();
+                            try {
+                                elem.parent().next().children('input')[0].focus();
+                            } catch (error) {
+                                logger.error('Focus change failed', error);
+                            }
+                        }
+                    });
+                }
+            }
+        });
 
     function RegisterCtrl($state, $window, $ionicPopup, $cordovaGoogleAnalytics,
-        LoadingService, tokenService, welcomeService, securityService, registerService, userService) {
+        LoadingService, tokenService, welcomeService, securityService, registerService, userService, lockboxDocuments) {
         var vm = this;
         vm.lastElementFocused = false;
 
@@ -25,21 +45,18 @@
             branchData: branchData
         };
 
-        vm.initForm = initForm;
         vm.continueToEngagement = continueToEngagement;
         vm.submitForm = submitForm;
-
-        function initForm(scope) {
-            vm.form = scope;
-        }
 
         /**
          * @description Submit form if last field in focus
          */
-        function submitForm() {
+        function submitForm(event) {
+            debugger;
             if (vm.lastElementFocused) {
                 return continueToEngagement();
             }
+
             $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'formErr:notLast');
         }
 
@@ -74,19 +91,21 @@
                             })
                             .then(function success(profileData) {
                                 if (!!profileData) {
-                                    lockboxDocuments.removePrevUserDocuments(profileData.id);
+                                    LoadingService.hide();
+                                    $state.go('signup.engagement');
+
+                                    lockboxDocuments.removeOtherUserDocuments(profileData.id);
                                     $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'signIn:success');
                                     $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'signIn:success');
 
-                                    LoadingService.hide();
-                                    return $state.go('signup-engagement');
+                                    return;
                                 }
                                 $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'signIn:error');
                                 $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'signIn:error');
                             });
                     } else {
                         LoadingService.hide();
-                        
+
                         $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'error');
                         $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'error');
 

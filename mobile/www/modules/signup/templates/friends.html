@@ -1,24 +1,31 @@
-<ion-view class="signup-section view-section compact-size">
+<ion-view class="signup-section view-section">
 
     <ion-header-bar align-title="center" class="bar-stable">
-        <button class="button button-clear" ng-click="$ionicGoBack();">Back</button>
-        <h1 class="title">Add Friends</h1>
-        <button class="button button-clear" ng-click="vm.skipToProfile();">Skip</button>
+        <button class="button button-icon icon ion-ios-arrow-back" ng-click="vm.goBack()" nav-direction="back"></button>
+        <h1 class="title">
+            <i class="app-brand"></i>
+        </h1>
+        <button class="button button-clear" ng-click="vm.skipToProfile();" nav-direction="close">skip</button>
     </ion-header-bar>
 
     <div class="bar bar-subheader">
         <h3 class="title big-lineheight">Add Friends and Grow your Convoy!</h3>
     </div>
 
-    <ion-pane class="friends-block">
-        <ion-scroll>
-            <span class="description">Send Invites to the 5 best drivers you know to help us grow your network of Professional Truck Drivers in the USA</span>
-            <div class="button-holder text-center">
-                <button class="button button-block choose-contacts-button" ng-click="vm.chooseContacts()">Choose from Contacts</button>
-                <button class="button button-clear enter-manually-button" ng-click="vm.addManually();">Enter Manually</button>
+
+    <ion-content class="friends-block has-subheader">
+            <div class="image-holder">
+                <i class="icon ion-ios-people-outline"></i>
             </div>
-        </ion-scroll>
-    </ion-pane>
+            <span class="description">
+                <p>Send Invites to the 5 best drivers you know to help us grow your network of Professional Truck Drivers in the USA</p></span>
+            <div class="button-holder text-center">
+                <button class="button button-block choose-contacts-button" ng-click="vm.chooseContacts()" nav-direction="forward">
+                    <i class="icon ion-ios-plus-outline"></i>
+                    Choose from Contacts
+                </button>
+                <button class="button button-clear enter-manually-button" ng-click="vm.addManually();" nav-direction="enter">Enter Manually</button>
+            </div>
+    </ion-content>
 
 </ion-view>
-

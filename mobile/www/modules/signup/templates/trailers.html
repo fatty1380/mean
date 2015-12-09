@@ -1,26 +1,26 @@
-<ion-view class="signup-section view-section compact-size">
+<ion-view class="signup-section view-section">
 
     <ion-header-bar align-title="center">
-        <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
-        <h1 class="title">Create Account</h1>
+        <button class="button button-icon icon ion-ios-arrow-back" ng-click="vm.goBack()" nav-direction="back"></button>
+        <h1 class="title">
+            <i class="app-brand"></i>
+        </h1>
         <button class="button button-clear" ng-click="vm.continue(false)">
-            Skip
+            skip
         </button>
     </ion-header-bar>
 
-    <div class="bar bar-subheader" >
+    <div class="bar bar-subheader">
         <h3 class="title big-lineheight">Choose Your Trailer Type</h3>
     </div>
 
-    <ion-pane class="has-footer">
-        <ion-scroll>
-            <ul class="list select-trailer">
-                <li class="item item-checkbox" ng-repeat="trailer in vm.trailers"
-                    ng-class="{'active': !!trailer.checked}">
+    <ion-content class="has-footer has-subheader">
+        <ion-list class="select-trailer has-footer">
+                <li class="item item-checkbox" ng-repeat="trailer in vm.trailers" ng-class="{'active': !!trailer.checked}">
                     <label class="checkbox">
                         <input type="checkbox" ng-model="trailer.checked">
                         <div class="item-content">
-                            <i class="ico ico-checkboxselected" ></i>
+                            <i class="ico ico-checkboxselected"></i>
                         </div>
                     </label>
                     <p>{{ trailer.name }}</p>
@@ -29,17 +29,16 @@
                 <li class="item item-checkbox">
                     <label class="item item-radio" ng-click="vm.addTrailer()">
                         <div class="item-content button-other">
-                        <p class="center-text">other...</p>
+                            <p class="center-text">other...</p>
                         </div>
                     </label>
                 </li>
-            </ul>
-        </ion-scroll>
-    </ion-pane>
+        </ion-list>
+    </ion-content>
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button secondary"  ng-click="vm.continue(true)" type="submit">Continue</button>
+            <button class="button secondary" ng-click="vm.continue(true)" nav-direction="forward" type="submit">Continue</button>
         </div>
     </ion-footer-bar>
 

@@ -5,14 +5,15 @@
         .module('signup')
         .controller('SignupFriendsCtrl', SignupFriendsCtrl);
 
-    SignupFriendsCtrl.$inject = ['$state', '$rootScope', '$cordovaGoogleAnalytics', 'registerService'];
+    SignupFriendsCtrl.$inject = ['$state', '$rootScope', '$cordovaGoogleAnalytics', '$ionicHistory', 'registerService'];
 
-    function SignupFriendsCtrl($state, $rootScope, $cordovaGoogleAnalytics, registerService) {
+    function SignupFriendsCtrl($state, $rootScope, $cordovaGoogleAnalytics, $ionicHistory, registerService) {
         var vm = this;
 
         vm.chooseContacts = chooseContacts;
         vm.addManually = addManually;
         vm.skipToProfile = skipToProfile;
+        vm.goBack = goBack;
 
         $rootScope.$on('$stateChangeError', handleStateChangeError);
 
@@ -23,14 +24,14 @@
             logger.debug('fromState -->', fromState);
             logger.debug('error -->', error);
 
-            if (fromState && fromState.name === 'signup-friends') {
-                $state.go('signup-friends-contacts');
+            if (fromState && fromState.name === 'signup.friends') {
+                $state.go('signup.friends-contacts');
             }
         }
 
         function chooseContacts() {
             $cordovaGoogleAnalytics.trackEvent('signup', 'friends', 'chooseContacts');
-            $state.go('signup-friends-contacts', { resolveContacts: true });
+            $state.go('signup.friends-contacts', { resolveContacts: true });
         }
 
         function skipToProfile() {
@@ -42,7 +43,15 @@
 
         function addManually() {
             $cordovaGoogleAnalytics.trackEvent('signup', 'friends', 'addManually');
-            $state.go('signup-friends-manually');
+            $state.go('signup.friends-manually');
+        }
+        
+        function goBack() {
+            if (_.isEmpty($ionicHistory.backTitle())) {
+                return $state.go('signup.trailers');
+            }
+
+            return $ionicHistory.goBack();
         }
 
     }

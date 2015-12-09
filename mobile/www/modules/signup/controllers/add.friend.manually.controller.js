@@ -30,13 +30,13 @@
             return contactsService.addContact(vm.contact)
                 .then(function () {
                     $cordovaGoogleAnalytics.trackEvent('signup', 'addManualContact', 'success');
-                    return $state.go('signup-friends-contacts');
+                    return $state.go('signup.friends-contacts');
                 });
         }
 
         function cancel() {
             $cordovaGoogleAnalytics.trackEvent('signup', 'addManualContact', 'cancel');
-            return $state.go('signup-friends-contacts');
+            return $state.go('signup.friends-contacts');
         }
 
     }

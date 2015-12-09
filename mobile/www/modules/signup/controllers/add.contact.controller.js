@@ -12,7 +12,6 @@
         settings, utilsService, LoadingService, contactsService, $filter) {
         var vm = this;
 
-        debugger;
         vm.contacts = contacts || contactsService.getContacts();
         vm.contactsResolved = contactsService.isResolved();
 
@@ -30,10 +29,11 @@
 
         function goBack() {
             $cordovaGoogleAnalytics.trackEvent('signup', 'addContacts', 'gotBack');
-            return $state.go('signup-friends');
+            return $state.go('signup.friends');
         }
 
         function loadContacts() {
+            LoadingService.showLoader('Loading Contacts');
             var then = Date.now();
             return contactsService.resolveContacts()
                 .then(function (resolvedContacts) {
