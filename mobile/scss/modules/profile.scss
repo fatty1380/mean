@@ -299,6 +299,11 @@ $photo-dimension : $profile-subheader-height * 1.1;
         }
       }
     }
+    
+    .item-loading ion-spinner svg {
+        width: 48px;
+        height: 48px;
+    }
   }
 }
 
@@ -484,7 +489,7 @@ $photo-dimension : $profile-subheader-height * 1.1;
 
 
 .profile-activity{
-  .title{
+  >.title{
     display: block;
     font-size: 14px;
     line-height: 31px;
@@ -498,6 +503,12 @@ $photo-dimension : $profile-subheader-height * 1.1;
     display: block;
     padding: 10px 20px 20px;
     font-size: 14px;
+  }
+  
+  .item.card {
+      margin-left: 1px;
+      margin-right: 1px;
+      background-color: $light;
   }
 }
 

@@ -109,8 +109,9 @@
             if (!vm.isFriend) {
                 vm.profileData.displayName = vm.profileData.firstName + ' ' + (vm.profileData.lastName && vm.profileData.lastName[0]);
             } else {
-                LoadingService.showLoader('Loading ' + vm.profileData.firstName + '\'s Feed');
-
+                //LoadingService.showLoader('Loading ' + vm.profileData.firstName + '\'s Feed');
+                vm.feedLoading = true;
+                
                 activityService
                     .getFeed().then(function (result) {
                         var uniqueResults = _.uniq(result),
@@ -126,9 +127,10 @@
                         }
 
                         vm.feed = sortedItems;
+                    })
+                    .finally(function () {
                         LoadingService.hide();
-                    }, function (err) {
-                        LoadingService.hide();
+                        vm.feedLoading = false;
                     });
             }
 
