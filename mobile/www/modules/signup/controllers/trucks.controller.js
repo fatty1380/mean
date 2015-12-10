@@ -87,7 +87,7 @@
         
         function goBack() {
             if (_.isEmpty($ionicHistory.backTitle())) {
-                return $state.go('signup.license');
+                return $state.go('signup.engagement');
             }
 
             return $ionicHistory.goBack();

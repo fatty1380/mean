@@ -92,7 +92,7 @@
                             .then(function success(profileData) {
                                 if (!!profileData) {
                                     LoadingService.hide();
-                                    $state.go('signup.engagement');
+                                    $state.go('signup.license');
 
                                     lockboxDocuments.removeOtherUserDocuments(profileData.id);
                                     $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'signIn:success');

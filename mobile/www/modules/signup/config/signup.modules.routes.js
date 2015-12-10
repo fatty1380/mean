@@ -61,16 +61,16 @@
                     controller: 'RegisterCtrl as vm'
                 })
 
-                .state('signup.engagement', {
-                    url: '/engagement',
-                    templateUrl: 'modules/signup/templates/engagement.html',
-                    controller: 'EngagementCtrl as vm'
-                })
-
                 .state('signup.license', {
                     url: '/license',
                     templateUrl: 'modules/signup/templates/license.html',
                     controller: 'LicenseCtrl as vm'
+                })
+
+                .state('signup.engagement', {
+                    url: '/engagement',
+                    templateUrl: 'modules/signup/templates/engagement.html',
+                    controller: 'EngagementCtrl as vm'
                 })
 
                 .state('signup.trucks', {

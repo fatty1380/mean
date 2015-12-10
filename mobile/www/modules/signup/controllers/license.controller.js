@@ -13,8 +13,9 @@
         vm.class = null;
         vm.endorsement = endorsementStub;
 
-        vm.backTxt = 'Back';
+        //vm.backTxt = 'Back';
         vm.saveTxt = 'Continue';
+        vm.canGoBack = false;
 
         vm.save = save;
         vm.cancel = goBack;
@@ -36,7 +37,7 @@
                     $cordovaGoogleAnalytics.trackEvent('signup', 'license', 'save');
                     $cordovaGoogleAnalytics.trackEvent('signup', Date.now() - then, 'license', 'save');
 
-                    $state.go('signup.trucks');
+                    $state.go('signup.engagement');
                     LoadingService.hide();
                 })
                 .catch(function fail(err) {
@@ -48,11 +49,12 @@
         }
         
         function goBack() {
-            if (_.isEmpty($ionicHistory.backTitle())) {
-                return $state.go('signup.engagement');
-            }
+            return null;
+            // if (_.isEmpty($ionicHistory.backTitle())) {
+            //     return $state.go('signup.engagement');
+            // }
 
-            return $ionicHistory.goBack();
+            // return $ionicHistory.goBack();
         }
     }
 
@@ -71,6 +73,7 @@
         vm.backTxt = 'Cancel';
         vm.saveTxt = 'Save';
         vm.showCancel = true;
+        vm.canGoBack = true;
 
         vm.save = save;
         vm.cancel = vm.cancelModal;
