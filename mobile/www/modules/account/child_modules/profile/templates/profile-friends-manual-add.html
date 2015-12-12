@@ -1,4 +1,4 @@
-<ion-modal-view class="view-section compact-size">
+<ion-modal-view class="view-section">
 
     <ion-header-bar align-title="center">
         <ion-nav-bar>
@@ -8,13 +8,14 @@
     </ion-header-bar>
 
     <div class="bar bar-subheader">
-        <h3 class="title">Please enter a Mobile Phone Number or Email Address below.</h3>
+        <h3 class="title">Enter a Mobile Phone or Email Address below</h3>
     </div>
 
-    <ion-pane class="pane has-footer content-pane">
-        <ion-scroll>
-            <oset-manual-contact model="vm.contact" show-message="false"></oset-manual-contact>
-        </ion-scroll>
+    <ion-pane class="pane has-subheader has-footer content-pane">
+        <oset-manual-contact model="vm.contact" show-message="false"></oset-manual-contact>
+        <div class="error" ng-if="vm.error">
+            <span ng-bind="vm.error"></span>
+        </div>
     </ion-pane>
 
     <ion-footer-bar>

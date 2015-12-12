@@ -18,6 +18,8 @@
         vm.cancel = cancel;
         vm.init = init;
 
+        vm.registerForm = registerForm;
+
         $scope.$on('$ionicView.enter', function () {
             init();
         });
@@ -26,8 +28,23 @@
             vm.contact = newContact || { type: 'manual' };
         }
 
+        function registerForm(form) {
+            vm.contactForm = form;
+        }
+
         function invite() {
-            return contactsService.addContact(vm.contact)
+            if (!!vm.contactForm) {
+                vm.contactForm.$setSubmitted(true);
+                vm.contactForm.validate();
+
+                if (vm.contactForm.$invalid) {
+                    vm.error = 'Please fix the errors above';
+                    return;
+                }
+            }
+
+            return contactsService
+                .addContact(vm.contact)
                 .then(function () {
                     $cordovaGoogleAnalytics.trackEvent('signup', 'addManualContact', 'success');
                     return $state.go('signup.friends-contacts');
@@ -35,6 +52,7 @@
         }
 
         function cancel() {
+            init();
             $cordovaGoogleAnalytics.trackEvent('signup', 'addManualContact', 'cancel');
             return $state.go('signup.friends-contacts');
         }

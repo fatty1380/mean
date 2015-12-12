@@ -36,8 +36,7 @@
             LoadingService.showLoader('Loading Contacts');
             var then = Date.now();
             return contactsService.resolveContacts()
-                .then(function (resolvedContacts) {
-                    debugger;
+                .then(function handleResolvedContacts(resolvedContacts) {
                     vm.contacts = resolvedContacts; // contactsService.getContacts();
                     vm.contactsResolved = contactsService.isResolved();
 

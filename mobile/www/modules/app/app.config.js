@@ -4,6 +4,7 @@ var AppConfig = (function () {
     var appModuleName = 'truckerline',
         appModuleDependencies = [
             'ionic',
+            'ngMessages',
             'ui.router',
             'ionic.rating',
             'ngCordova.plugins.file',
@@ -61,4 +62,5 @@ var AppConfig = (function () {
         }
     };
 })();
+
 

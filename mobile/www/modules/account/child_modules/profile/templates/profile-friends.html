@@ -9,7 +9,9 @@
     <ion-pane class="friends-pane" ng-class="{'has-footer':vm.canEdit && !!vm.friends.length}">
         <div class="item item-input search-bar">
             <i class="icon light ion-ios-search-strong"></i>
-            <input type="search" debounce placeholder="{{!vm.friends.length ? 'Find TruckerLine Users' : 'Search'}}" ng-model="vm.searchText"
+            <input type="search" debounce 
+            placeholder="{{!vm.friends.length ? 'Find TruckerLine Users' : 'Search'}}" 
+            ng-model="vm.searchText"
             ng-change="vm.canEdit && vm.searchHandler()">
         </div>
 

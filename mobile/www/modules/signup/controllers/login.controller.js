@@ -18,6 +18,11 @@
             email: '',
             password: ''
         };
+        
+        vm.focus = {
+            email: true,
+            pass: false
+        };
 
         vm.signIn = signIn;
         vm.submitForm = submitForm;
@@ -35,6 +40,8 @@
             if (vm.lastElementFocused) {
                 return signIn();
             }
+            
+            vm.focus['pass'] = true;
             $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'err:notLast');
         }
 

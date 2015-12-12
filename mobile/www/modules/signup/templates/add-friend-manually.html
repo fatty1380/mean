@@ -1,26 +1,27 @@
-<ion-view class="view-section compact-size">
+<ion-view class="view-section">
 
-    <ion-header-bar align-title="center">        
-        <button class="button button-clear" ng-click="$ionicGoBack(); vm.init()">Cancel</button>
+    <ion-header-bar align-title="center">
+        <button class="button button-clear" ng-click="vm.cancel()">Cancel</button>
         <h1 class="title">
             <i class="app-brand"></i>
         </h1>
-        <a class="button button-clear" ng-disabled="!vm.contact.phone && !vm.contact.email" ng-click="vm.skip();">Invite</a>
+        <a class="button button-clear" ng-disabled="!vm.contact.phone && !vm.contact.email" ng-click="vm.invite();">Invite</a>
     </ion-header-bar>
 
     <div class="bar bar-subheader">
-        <h3 class="title">Please enter a Mobile Phone Number or Email Address below.</h3>
+        <h3 class="title">Enter a Mobile Phone or Email Address below</h3>
     </div>
 
-    <ion-pane class="pane has-footer content-pane">
-        <ion-scroll>
-            <oset-manual-contact model="vm.contact" show-message="false"></oset-manual-contact>
-        </ion-scroll>
+    <ion-pane class="pane has-subheader has-footer content-pane">
+        <oset-manual-contact model="vm.contact" show-message="false" form-init="vm.registerForm"></oset-manual-contact>
+        <div class="error" ng-if="vm.error">
+            <span ng-bind="vm.error"></span>
+        </div>
     </ion-pane>
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button secondary" ng-click="$ionicGoBack(); vm.init()">Cancel</button>
+            <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
             <button class="button primary" ng-disabled="!vm.contact.phone && !vm.contact.email" ng-click="vm.invite();">Invite</button>
         </div>
     </ion-footer-bar>

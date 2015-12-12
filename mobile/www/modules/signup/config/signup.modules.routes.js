@@ -12,34 +12,7 @@
                     templateUrl: 'modules/signup/templates/home.html',
                     controller: 'HomeCtrl as vm',
                     resolve: {
-                        /**
-                         * @desc check user logged in
-                        */
-                        check: ['$q', 'userService', '$state', 'tokenService', 'registerService', 'securityService',
-                            function ($q, userService, $state, tokenService, registerService, securityService) {
-                                var defer = $q.defer();
-                                if (tokenService.get('access_token')) {
-                                    registerService.me()
-                                        .then(function (response) {
-                                            if (response && response.success) {
-                                                defer.resolve();
-                                                if (response.message.data) {
-                                                    securityService.initialize();
-                                                    $state.go('account.profile');
-                                                }
-                                            } else {
-                                                if (response && response.status == 401) {
-                                                    tokenService.set('access_token', '');
-                                                }
-                                                defer.resolve();
-                                            }
-                                        });
-                                } else {
-                                    defer.resolve();
-                                }
-                                return defer.promise;
-                            }
-                        ]
+                        loginCheck: loginCheckAndRedirect
                     }
                 })
 
@@ -48,7 +21,7 @@
                     templateUrl: 'modules/signup/templates/login.html',
                     controller: 'LoginCtrl as vm'
                 })
-                
+
                 .state('signup', {
                     url: '/signup',
                     templateUrl: 'modules/signup/templates/signup-base.html',
@@ -112,4 +85,35 @@
                 })
 
         }]);
+
+
+    /**
+     * @desc check user logged in
+    */
+    loginCheckAndRedirect.$inject = ['$q', 'userService', '$state', 'tokenService', 'registerService', 'securityService'];
+    function loginCheckAndRedirect($q, userService, $state, tokenService, registerService, securityService) {
+        if (tokenService.get('access_token')) {
+            return registerService.me()
+                .then(function (response) {
+                    if (response && response.success) {
+                        if (response.message.data) {
+                            securityService.initialize();
+                            $state.go('account.profile');
+                            return true;
+                        }
+                    } else {
+                        if (response && response.status == 401) {
+                            tokenService.set('access_token', '');
+                        }
+                    }
+                    return false;
+                })
+                .catch(function (err) {
+                    logger.error('Failed to load `me`', err);
+                    return false;
+                });
+        } else {
+            return $q.when(false);
+        }
+    }
 })();

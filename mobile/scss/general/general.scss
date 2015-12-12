@@ -78,8 +78,8 @@ body{
 
     h3{
       font-weight: normal;
-      font-size: 15px;
-      line-height: 19px;
+      font-size: $font-size-base;
+      line-height: $line-height-base;
       white-space: normal;
       padding: 0 20px;
       margin: 0;
@@ -144,22 +144,15 @@ body{
   }
 }
 
-ion-content {
-    &.has-footer {
-        .scroll {
-            //padding-bottom: $bar-footer-height;
-            
-            .select-truck, .select-trailer {
-            
+ion-content.has-footer {
+    .scroll {
+        .select-truck, .select-trailer {
             .list {
                 >:last-child {
                     margin-bottom: $bar-footer-height;
-                    border: 2px dotted yellow;
                 }
                 
-                padding-bottom: $bar-footer-height;
-                border-bottom: 2px solid red;
-            }
+                padding-bottom: $bar-footer-height + $bar-height;
             }
         }
     }
@@ -188,18 +181,21 @@ textarea{
 
   &.button-bar{
     .button{
-      font-weight: bold;
+      font-size: $font-size-base;
+      font-weight: 500;
       border-width: 1px 0 0;
       border-radius: 0 0 0 0 !important;
 
       &.primary{
         color: $modal-primary-text;
         background-color: $modal-primary-bg;
+        border-color: $modal-primary-border;
       }
 
       &.secondary{
         color: $modal-secondary-text;
         background-color: $modal-secondary-bg;
+        border-color: $modal-secondary-border;
       }
 
       &.button-block{
@@ -350,6 +346,10 @@ textarea{
 
     input{
       padding-right: 0;
+      
+      &.ng-invalid { 
+          color: $assertive; 
+          } 
     }
     
     i.icon {
@@ -406,15 +406,15 @@ textarea{
   .label{
     float: left;
     color: #444;
-    font-size: 16px;
+    font-size: $font-size-base;
     text-transform: none;
     font-weight: normal;
-    width: 40%;
+    width: 50%;
   }
 
   .button-bar{
     float: right;
-    width: 55%;
+    width: 45%;
 
     .button{
       background: transparent;

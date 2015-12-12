@@ -102,7 +102,6 @@
                     sm.contacts = _(sm.contacts.concat(newContacts)).uniq(function (c) {
                         return c.id || 'manual-' + Math.floor(10000 * Math.random() + 1000);
                     }).value();
-                    debugger;
                     
                     deviceContactsLoaded = true;
                     

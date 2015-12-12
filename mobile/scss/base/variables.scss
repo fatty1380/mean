@@ -6,7 +6,9 @@ $icon-blue: #cfedff;
 $badge-green: #206B89;
 $ribbon-bg: #4d4951;
 $brand-blue: #4896BB;
+$search-bar: #76a2bd;
 $gradient-bottom: #276b93;
+$list-title-bg: #2D729B;
 $tab-selected: #3e86b1;
 $content-bg: #f8f8f8;
 $action-text: #b5b5b5;
@@ -35,8 +37,10 @@ $dark:                            #444 !default;
 /** Outset Context specific variables **/
 $modal-primary-bg: $positive;
 $modal-primary-text: $light;
+$modal-primary-border: darken($positive, 5%);
 $modal-secondary-bg: $light;
 $modal-secondary-text: #858585;
+$modal-secondary-border: darken($light, 20%);
 
 $signup-entry-row-bg: rgba(255,255,255,0.2);
 $signup-entry-row-active-bg: rgba(250,250,250,1);
@@ -52,9 +56,9 @@ $font-family-serif:               serif !default;
 $font-family-monospace:           monospace !default;
 
 $font-family-base:                $font-family-sans-serif !default;
-$font-size-base:                  14px !default;
+$font-size-small:                 14px !default;
+$font-size-base:                  16px !default;
 $font-size-large:                 18px !default;
-$font-size-small:                 16px !default;
 
 $line-height-base:                1.428571429 !default; // 20/14
 $line-height-computed:            floor($font-size-base * $line-height-base) !default; // ~20px

@@ -50,8 +50,8 @@ ion-content {
       padding: 15px 30px;
       color: $light;
       font-weight: bold;
-      font-size: 14px;
-      line-height: 20px;
+      font-size: $font-size-base - 1px;
+      line-height: $line-height-computed;
     }
   }
 
@@ -82,6 +82,9 @@ ion-content {
   .avatar{
     cursor: pointer;
     margin:auto;
+    .button-clear {
+        color: $light!important;
+    }
   }
 }
 
@@ -508,7 +511,7 @@ $but-height: 70px;
       padding: 0;
       line-height: 30px;
       font-weight: bold;
-      font-size: 14px;
+      font-size: $font-size-base;
     }
     .button-bar{
       .button{
@@ -526,12 +529,6 @@ $but-height: 70px;
     }
   }
 
-}
-
-.register-screen{
-  .bar.bar-subheader{
-      h3{line-height: 63px;}
-  }
 }
 .trailers-bg{
   background-image:url("../img/trailersBg.png");
@@ -641,20 +638,17 @@ $but-height: 70px;
     display: block;
     margin: auto;
   }
-
-  h3{
-    font: 14px Helvetica Neue, Helvetica, Arial;
-    color: $light;
-    font-weight: bold;
-    text-align: center;
-    margin:20px;
-  }
-
-  h4{
-    color:red;
-    text-align: center;
-  }
 }
+  .error {
+      margin: $button-block-margin;
+      padding: $padding-large-vertical $padding-base-horizontal;
+      text-align: center;
+      font-size: $font-size-base;
+      background-color: $item-assertive-bg;
+      color: $item-assertive-text;
+      border: 1px solid $item-assertive-border;
+      border-radius: $border-radius-small;
+  }
 
 
 
@@ -693,13 +687,17 @@ $but-height: 70px;
   .friends-pane {
     padding-bottom: 44px;
     background-color: $stable;
+    
+    &.scroll-content {
+        padding-top: 0;
+    }
 
     input {
       height: 40px;
       width: 100%;
-      font-size: 14px;
+      font-size: $font-size-base;
       font-weight: bold;
-      line-height: 14px;
+      line-height: $line-height-computed;
       color: $light;
     }
 
@@ -708,7 +706,7 @@ $but-height: 70px;
     }
 
     .search-bar{
-      background-color: #76a2bd;
+      background-color: $search-bar;
       .icon {
         font-size: 24px;
         padding-right: 14px;
@@ -725,7 +723,7 @@ $but-height: 70px;
       font-size: 13px;
 
       .icon{
-        color: #3EAEB1;
+        color: $balanced;
       }
     }
 
@@ -745,7 +743,7 @@ $but-height: 70px;
 
           strong{
             display: block;
-            color: #ff8000;
+            color: $energized;
           }
         }
 
@@ -806,12 +804,12 @@ $but-height: 70px;
       }
     }
 
-    .title {
-      background-color: #2D729B;
-      color: white;
+    .title, .item.item-divider {
+      background-color: $gradient-bottom;
+      color: $light;
       padding: 10px 16px;
-      font-size: 14px;
-      line-height: 20px;
+      font-size: $font-size-base;
+      line-height: $line-height-computed;
     }
 
     .no-friends{
@@ -837,8 +835,8 @@ $but-height: 70px;
   .description{
     color: $light;
     display: block;
-    font-size: $font-size-small;
-    line-height: $line-height-small;
+    font-size: $font-size-base;
+    line-height: $line-height-base;
     padding-bottom: 50px;
     text-align: center;
   }

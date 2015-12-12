@@ -46,7 +46,8 @@
         };
 
         vm.continueToEngagement = continueToEngagement;
-        vm.submitForm = submitForm;
+        vm.submitForm = submitForm; 
+        vm.clearConfirm = clearConfirm;
 
         /**
          * @description Submit form if last field in focus
@@ -59,8 +60,33 @@
 
             $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'formErr:notLast');
         }
+        
+        function clearConfirm() {
+            vm.user.confirmPassword = '';
+        }
 
         function continueToEngagement() {
+            
+            if (vm.user.confirmPassword !== vm.user.password) {
+                debugger;
+                // vm.user.confirmPassword = '';
+                // vm.user.password = '';
+                // vm.error = 'Passwords do not match';
+                
+                // vm.mainForm.password.$setValidity('compareTo', false);
+                // vm.mainForm.confirmPassword.$setValidity('compareTo', false);
+                vm.focusPass = true;
+                return;
+            }
+            
+            if (!vm.mainForm.$valid) {
+                debugger;
+                vm.error = vm.error || 'Please correct errors above';
+                return;
+            }
+            
+            vm.error = null;
+            
             var then = Date.now();
 
             LoadingService.showLoader('Saving');
@@ -124,7 +150,7 @@
             }
 
             if (/unique field/i.test(message)) {
-                message = 'Email is already registered. Would you like to <a ui-sref="login">Login?</a>';
+                message = 'Email is already registered. Would you like to <a ui-sref="login">LOGIN?</a>';
                 LoadingService.hide();
                 $ionicPopup.alert({
                     title: title || "Sorry",

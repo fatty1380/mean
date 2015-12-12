@@ -31,6 +31,7 @@
             return registerService.signOut().then(
                 function (response) {
                     if(response.success) {vm.profileData = {};
+                            $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'signout');
                         $cordovaGoogleAnalytics.setUserId();
                     }
                 }
@@ -41,11 +42,12 @@
             if (!vm.profileData || !vm.profileData.id) {
                 return registerService.me()
                     .then(function (response) {
-                        if(response.success){
+                        if (response.success) {
                             vm.profileData = response.message.data;
                             getAvatar(vm.profileData);
+                            $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'getUserData');
                             $cordovaGoogleAnalytics.setUserId(vm.profileData.id);
-                        
+
                             return vm.profileData;
                         }
                         return null;

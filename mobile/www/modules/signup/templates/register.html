@@ -17,33 +17,44 @@
         <!--<div class="bar bar-subheader hide-on-keyboard-open">
             <h3 class="title">Create your TruckerLine account below</h3>
         </div>-->
-            <div class="login-content">
-                <form name="vm.mainForm" id="mainForm" class="list sign-up signup-form" ng-submit="vm.submitForm($event)"
-                novalidate>
-                    <label class="item item-input">
-                        <input id="firstName" name="firstName" type="text" placeholder="First Name" ng-model="vm.user.firstName" focus required autocorrect="off"
-                        spellcheck="false" focus-me>
-                    </label>
-                    <label class="item item-input">
-                        <input type="text" placeholder="Last Name" ng-model="vm.user.lastName" focus required autocorrect="off" spellcheck="false">
-                    </label>
-                    <label class="item item-input">
-                        <input type="email" name="email" placeholder="Email" ng-model="vm.user.email" focus required>
-                    </label>
-                    <label class="item item-input">
-                        <input type="password" placeholder="Password" ng-model="vm.user.password" focus required>
-                    </label>
-                    <label class="item item-input item-ass">
-                        <input name="confirmPassword" type="password" placeholder="Confirm Password" ng-model="vm.user.confirmPassword" compare-to="vm.user.password"
-                        ng-focus="vm.lastElementFocused = true" ng-blur="vm.lastElementFocused = false" required>
-                    </label>
-                    <input style="position:absolute; left:9999px" type="submit" />
-                </form>
-
-                <div class="register-content">
-                    <i class="app-logo"></i>
-                </div>
+        <div class="login-content">
+            <form name="vm.mainForm" id="mainForm" class="list sign-up signup-form" ng-submit="vm.submitForm($event)" novalidate>
+                <label class="item item-input">
+                    <input name="firstName" id="firstName" type="text" placeholder="First Name" ng-model="vm.user.firstName" focus required autocorrect="off"
+                    spellcheck="false" focus-me>
+                </label>
+                <label class="item item-input">
+                    <input name="lastName" type="text" placeholder="Last Name" ng-model="vm.user.lastName" focus required autocorrect="off" spellcheck="false">
+                </label>
+                <label class="item item-input">
+                    <input name="email" type="email" placeholder="Email" ng-model="vm.user.email" focus required>
+                </label>
+                <label class="item item-input">
+                    <input name="password" type="password" placeholder="Password" ng-model="vm.user.password" ng-minlength="8" focus required
+                    focus-me="vm.focusPass">
+                </label>
+                <label class="item item-input item-ass">
+                    <input name="confirmPassword" type="password" placeholder="Confirm Password" ng-model="vm.user.confirmPassword" 
+                    compare-to="vm.user.password"
+                    ng-focus="vm.lastElementFocused = true; vm.clearConfirm();" ng-blur="vm.lastElementFocused = false" required>
+                </label>
+                <input style="position:absolute; left:9999px" type="submit" />
+            </form>
+            
+            <div class="error" ng-if="vm.mainForm.$submitted && vm.mainForm.$invalid" role="alert" ng-messages="vm.mainForm.$error">
+                <div ng-message="email">Please enter a valid email address</div>
+                <div ng-message="minlength">Password must be at least 8 characters</div>
+                <div ng-message="password">Passwords do not match</div>
+                <div ng-message="compareTo">Passwords do not match</div>
+                <div ng-message="required">Please enter all required fields</div>
             </div>
+            
+            
+            
+            <div ng-if="!vm.mainForm.$submitted && !vm.error || !vm.mainForm.$invalid" class="register-content">
+                <i class="app-logo"></i>
+            </div>
+        </div>
     </ion-content>
 
     <ion-footer-bar>

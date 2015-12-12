@@ -9,23 +9,25 @@
     </ion-header-bar>
 
     <div class="bar bar-subheader">
-        <h3 class="title big-lineheight">Add Friends and Grow your Convoy!</h3>
+        <h3 class="title">Add Friends and Grow your Convoy!</h3>
     </div>
 
 
     <ion-content class="friends-block has-subheader">
-            <div class="image-holder">
-                <i class="icon ion-ios-people-outline"></i>
-            </div>
-            <span class="description">
-                <p>Send Invites to the 5 best drivers you know to help us grow your network of Professional Truck Drivers in the USA</p></span>
-            <div class="button-holder text-center">
-                <button class="button button-block choose-contacts-button" ng-click="vm.chooseContacts()" nav-direction="forward">
-                    <i class="icon ion-ios-plus-outline"></i>
-                    Choose from Contacts
-                </button>
-                <button class="button button-clear enter-manually-button" ng-click="vm.addManually();" nav-direction="enter">Enter Manually</button>
-            </div>
+        <div class="image-holder">
+            <i class="icon ion-ios-people-outline"></i>
+        </div>
+        <span class="description">
+            <!--<p>TruckerLine works best with a team. Invite Drivers you know and trust to join your convoy and get the most out of TruckerLine</p>-->
+            <!--<p>Send Invites to the 5 best drivers you know to help us grow your network of Professional Truck Drivers in the USA</p>-->
+            <p>Get the most out of TruckerLine. Start by inviting up to 10 drivers you know and trust!</p>
+        </span>
+        <div class="button-holder text-center">
+            <button class="button button-block choose-contacts-button" ng-click="vm.chooseContacts()" nav-direction="forward">
+                <i class="icon ion-ios-plus-outline"></i> Choose from Contacts
+            </button>
+            <button class="button button-clear enter-manually-button" ng-click="vm.addManually();" nav-direction="enter">Enter Manually</button>
+        </div>
     </ion-content>
 
 </ion-view>
