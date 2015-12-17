@@ -5,11 +5,11 @@ exports.listRequests = listRequests;
 exports.getRequest = getRequest;
 exports.createRequest = createRequest;
 exports.updateRequest = updateRequest;
-exports.loadRequest = requestByShortId;
 exports.closeRequestChain = closeRequestChain;
 
 /** Middleware */
 exports.requestById = requestById;
+exports.loadRequest = requestByShortId;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -207,7 +207,7 @@ function getRequest(req, res, next) {
                     req.log.debug({ func: 'getRequest', resolvedDocs: updatedDocs }, 'Appending resolved docs to Response');
                     request.contents.resolvedDocs = updatedDocs;
                 }
-                
+
                 return res.json(request);
             });
     }
@@ -629,7 +629,7 @@ function normalizeRequest(request) {
             
     // Normalize and Clean up Other Fields;
     if (/^hello there/i.test(request.text)) {
-        log.info({ func: 'normalizeRequest', text: request.text }, 'Removing Existing Placeholder Text')
+        log.info({ func: 'normalizeRequest', text: request.text }, 'Removing Existing Placeholder Text');
         request.text = null;
     }
     
@@ -638,6 +638,9 @@ function normalizeRequest(request) {
 
     return request;
 }
+
+// General Utility Functions
+// TODO: Split out into utils
 
 function deformatPhone(phone) {
     if (_.isEmpty(phone)) { return; }

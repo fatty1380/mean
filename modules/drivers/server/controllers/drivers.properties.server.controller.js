@@ -64,8 +64,8 @@ function loginPostUpdate(req, res, user, property) {
         if (err) {
             res.status(400).send(err);
         } else {
-
-            req.log.error({ module: 'drivers', func: 'loginPostUpdate', property: property, User: user, userProp: user[property], reqUser: req.user, reqProp: req.user.props }, 'Post Login Result');
+            req.log.error({ module: 'drivers', func: 'loginPostUpdate', property: property, User: user, 
+                            userProp: user && user[property], reqUser: req.user, reqProp: req.user.props }, 'Post Login Result');
 
             res.json(user[property]);
         }

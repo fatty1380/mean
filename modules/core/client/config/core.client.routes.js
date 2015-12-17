@@ -51,24 +51,9 @@
             state('intro', {
                 url: '/',
                 abstract: true,
-                template: '<div ui-view></div>',
-                // controller: ['$state', '$timeout', function ($state, $timeout) {
-                //     if ($state.is('intro')) {
-                //         $timeout(function () {
-                //             $state.go('intro.driver');
-                //         }, 0);
-                //     }
-                // }]
+                template: '<div ui-view></div>'
 
             }).
-
-            // state('intro.driver', {
-            //     url: '',
-            //     templateUrl: '/modules/core/views/intro.client.view.html',
-            //     parent: 'intro',
-            //     controller: 'HomeController',
-            //     controllerAs: 'vm'
-            // }).
 
             state('intro.owner', {
                 url: '',
@@ -77,35 +62,6 @@
                 controller: 'HomeController',
                 controllerAs: 'vm'
             }).
-
-            // state('home', {
-            //     url: '/home',
-            //     controller: ['$state', 'LoginService', 'Authentication', function ($state, LoginService, Authentication) {
-            //         LoginService.getUser().then(
-            //             function success(user) {
-
-            //                 if (!Authentication.user) {
-            //                     debugger;
-            //                     Authentication.user = user;
-            //                 }
-
-            //                 console.log('Success in looking up user, redirecting', user);
-            //                 if (user.isDriver) {
-            //                     //$state.go('drivers.home', {}, { reload: true });
-            //                     $state.go('feed.list', { userId: user.id });
-            //                 }
-            //                 else if (user.isOwner) {
-            //                     $state.go('companies.home');
-            //                 } else {
-            //                     $state.go('intro');
-            //                 }
-            //             },
-            //             function reject(err) {
-            //                 console.log('No user lookup, redirecting', err);
-            //                 $state.go('intro.owner');
-            //             });
-            //     }]
-            // }).
             
         /// Page - Specific States
 

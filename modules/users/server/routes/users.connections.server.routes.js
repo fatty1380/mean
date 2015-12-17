@@ -7,16 +7,6 @@ module.exports = function (app) {
 		Requests = require('../controllers/requests.server.controller'),
 		requestsPolicy = require(path.resolve('./modules/users/server/policies/requests.server.policy'));
 		
-	// Friends & Connections
-        
-	app.route('/api/friends')
-		.all(users.requiresLogin)
-		.get(users.loadFriends);
-
-	app.route('/api/friends/:userId')
-		.all(users.requiresLogin)
-		.get(users.checkFriendStatus)
-		.delete(users.removeFriend);
             
 	/** 
 	 * Listing of the Requests
@@ -39,14 +29,25 @@ module.exports = function (app) {
 	app.route('/r/:shortId')
 		.all(requestsPolicy.isAllowed)
 		.get(Requests.loadRequest);
+	
+	app.param('requestId', Requests.requestById);
 		
 	////////////////////////////////////////////////////////////////////////////
 		
+	// Friends & Connections
+        
+	app.route('/api/friends')
+		.all(users.requiresLogin)
+		.get(users.loadFriends);
+
+	app.route('/api/friends/:userId')
+		.all(users.requiresLogin)
+		.get(users.checkFriendStatus)
+        .delete(users.removeFriend);
+        
 	app.route('/api/friends/:userId')
 		.put(users.updateFriendRequest);
 
 	app.route('/api/users/:userId/friends')
 		.get(users.requiresLogin, users.loadFriends);
-	
-	app.param('requestId', Requests.requestById);
 };
