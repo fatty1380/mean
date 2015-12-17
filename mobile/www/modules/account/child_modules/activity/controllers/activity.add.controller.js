@@ -20,7 +20,7 @@
         var infoWindow = null;
         var user = parameters.user;
 
-        logger.warn(' user --->>>', user);
+        logger.info(' Loading User', user);
 
         vm.activity = {
             title: '',
@@ -94,6 +94,7 @@
                 zoom: 8,
                 center: myCoordinates,
                 draggable: true,
+                sensor: true,
                 zoomControl: true,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             });
@@ -102,7 +103,7 @@
                 title: 'Point A',
                 map: map,
                 draggable: false
-            });
+             });
 
             vm.mapIsVisible = true;
 

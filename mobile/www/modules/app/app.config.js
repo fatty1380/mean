@@ -22,7 +22,7 @@ var AppConfig = (function () {
     //////////////////////////////////////////////////////////////////////////////////////
     // TODO: Find more appropriate place to put this code (if there is one)
         
-    var debug = true;
+    var debug = false;
 
     var URLs = {
         prod: 'https://app.truckerline.com/',           // PRODUCTION USE
