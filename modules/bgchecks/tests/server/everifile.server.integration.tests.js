@@ -10,7 +10,7 @@ var should = require('should'),
     path = require('path'),
     express = require(path.resolve('./config/lib/express')),
     config = require(path.resolve('./config/config')),
-    everifile = require(path.resolve('modules/bgchecks/server/controllers/everifile.server.service'));
+    everifile = require(path.resolve('./modules/bgchecks/server/controllers/everifile.server.service'));
 
 /**
  * Globals
@@ -21,11 +21,11 @@ var app, agent, credentials, applicant, article, session;
 /**
  * Article routes tests
  */
-describe('Everifile CRUD tests', function (done) {
+describe.only('Everifile CRUD tests', function (done) {
     this.timeout(10000);
     this.slow(500);
 
-    beforeEach(function (done) {
+    beforeEach(function () {
 
         applicant = {
             'middleName': '',
@@ -50,15 +50,13 @@ describe('Everifile CRUD tests', function (done) {
             'remoteId': 45958
         };
 
-        everifile.GetSession()
+        return everifile.GetSession()
             .then(function (sessionResponse) {
                 session = sessionResponse;
             })
             .catch(function (err) {
                 console.error('Error Initializing tests ', err);
                 should.not.exist(err);
-            }).finally(function () {
-                done();
             });
     });
 

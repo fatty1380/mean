@@ -169,16 +169,16 @@ BackgroundReportSchema.virtual('latestStatuses')
         var skus = this.remoteReportSkus && this.remoteReportSkus.split(',');
         skus = _.union(skus,_.unique(_.pluck(this.statuses, 'sku')));
 
-        log.debug({func: 'latestStatuses', skus: skus},'Iterating over skus');
+        log.trace({func: 'latestStatuses', skus: skus},'Iterating over skus');
 
         _.each(skus, function (sku) {
             var stati = _.findLast(statuses, {sku: sku});
 
             retval[sku] = stati && stati.value || 'UNKNOWN';
-            log.debug({func: 'latestStatuses'}, 'Report [%s] has status`%s`', sku, retval[sku]);
+            log.trace({func: 'latestStatuses'}, 'Report [%s] has status`%s`', sku, retval[sku]);
         });
 
-        log.debug({func: 'latestStatuses', retval: retval},'Returning Latest Statuses');
+        log.trace({func: 'latestStatuses', retval: retval},'Returning Latest Statuses');
         return retval;
     });
 
@@ -208,8 +208,11 @@ BackgroundReportSchema.methods.addStatus = function (remoteStatus) {
 
     this.statuses.push(localStatus);
     this.updateStatus();
+    
+    var statuses = this.latestStatuses;
+    log.debug({ func: 'addStatus', statuses: statuses }, 'Looking at latest statuses');
 
-    log.debug({func: 'addStatus', status: this.status, sku: this.latestStatuses[localStatus.sku]}, 'RESULTS');
+    log.debug({func: 'addStatus', status: this.status, sku: statuses[localStatus.sku]}, 'RESULTS');
 
     return true;
 };
@@ -220,8 +223,11 @@ var statusOrder = ['PAID', 'SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'VALI
 BackgroundReportSchema.methods.updateStatus = function () {
     var index = 99;
     var latest = this.latestStatuses;
+    log.debug({ func: 'updateStatus', latest: latest }, 'GOT latest statuses');
     var allComplete = !_.isEmpty(latest);
 
+    log.debug({ func: 'updateStatus', allComplete: allComplete }, 'Completion Status');
+    
     _.each(latest, function (status) {
         log.debug({func: 'updateStatus'}, 'evaluating status value %j', status);
         if (allComplete && (!status || status !== 'COMPLETED')) {
@@ -236,6 +242,8 @@ BackgroundReportSchema.methods.updateStatus = function () {
             index = i;
         }
     });
+    
+    log.debug({ func: 'updateStatus', allComplete: allComplete }, 'Finished -EACH- processing');
 
     if (allComplete) {
         log.info({func: 'updateStatus'}, 'All Reports are Complete!!!');
@@ -244,8 +252,10 @@ BackgroundReportSchema.methods.updateStatus = function () {
         this.completed = Date.now();
     } else if(index !== -1 && index !== 99) {
         this.status = statusOrder[index];
+        log.info({func: 'updateStatus', index: index, status: this.status}, 'Reports are NOT Complete!!!');
     } else {
         this.status = 'UNKNOWN';
+        log.info({func: 'updateStatus', index: index, status: this.status}, 'Reports are NOT Complete!!!');
     }
 
 

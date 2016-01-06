@@ -191,10 +191,10 @@ function GetAllRemoteApplicants(req, res, next) {
         return res.status(404);
     }
 
-    everifile.GetSession()
+    return everifile.GetSession()
         .then(
             function (session) {
-                everifile.GetAllApplicants(session).then(
+                return everifile.GetAllApplicants(session).then(
                     function (applicantModels) {
                         req.log.debug({ func: 'GetAllRemoteApplicants', controller: 'remote-applicant' }, 'Got %d applicant models from eVerifile');
 
