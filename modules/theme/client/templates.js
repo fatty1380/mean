@@ -5329,8 +5329,9 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                <label ng-init="$element.focus()" for="username" class="col-sm-2 control-label">Email</label>\n' +
   '\n' +
   '                <div class="col-sm-10">\n' +
-  '                    <input modal-focus="vm.isOpen" type="text" id="username" name="username" class="form-control"\n' +
-  '                           data-ng-model="vm.credentials.username" placeholder="email address used for sign up">\n' +
+  '                    <input modal-focus="vm.isOpen" type="email" id="username" name="username" class="form-control"\n' +
+  '                           data-ng-model="vm.credentials.username" placeholder="email address used for sign up"\n' +
+  '                           autocorrect="off" autocapitalize="off">\n' +
   '                </div>\n' +
   '            </div>\n' +
   '\n' +

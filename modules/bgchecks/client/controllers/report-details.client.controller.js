@@ -5,8 +5,10 @@
         .controller('ReportDetailsController', ReportDetailsController);
 
 
-    ReportDetailsController.$inject = ['report', 'applicant', 'remoteData', 'AppConfig', 'Authentication', 'Applicants', '$q', '$log', '$state', '$uibModal', '$document', 'PolyFieldService'];
-    function ReportDetailsController(report, applicant, remoteData, appConfig, Authentication, Applicants, $q, $log, $state, $uibModal, $document, PolyField) {
+    ReportDetailsController.$inject = ['report', 'applicant', 'remoteData', 'AppConfig', 'Authentication', 'Applicants',
+        '$q', '$log', '$state', '$uibModal', '$document', 'PolyFieldService'];
+    function ReportDetailsController(report, applicant, remoteData, appConfig, Authentication, Applicants,
+        $q, $log, $state, $uibModal, $document, PolyField) {
         var vm = this;
 
         appConfig.getAsync('debug')
@@ -15,7 +17,7 @@
             });
 
         vm.report = report;
-        vm.baseApplicant = applicant || {};
+        vm.baseApplicant = applicant || {user: Authentication.user && Authentication.user.id };
         vm.applicant = remoteData || {};
         vm.config = appConfig;
 

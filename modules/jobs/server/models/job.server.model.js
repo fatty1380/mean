@@ -55,6 +55,7 @@ var JobSchema = new Schema({
         default: ''
     },
 
+    // TODO: Migrate to single embedded (?)
     location: {
         type: ['Address']
     },
@@ -74,6 +75,7 @@ var JobSchema = new Schema({
         }
     },
 
+    // TODO: Determine if used
     views: [{
         user: {
             type: Schema.ObjectId,
