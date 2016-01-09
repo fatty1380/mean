@@ -523,35 +523,6 @@ function applicationByID(req, res, next, id) {
 }
 
 
-/**
- * Application authorization middleware
- */
-exports.hasAuthorization = function (req, res, next) {
-    req.log.trace({
-        func       : 'hasAuthorization',
-        user       : req.user,
-        application: req.application
-    }, 'Authorizing access to this Application');
-
-    if (req.user.isDriver && req.application.user._id.equals(req.user.id)) {
-        req.log.debug({func: 'hasAuthorization'}, 'Authorized: Driver matches Application User');
-        return next();
-    }
-
-    if (req.user.isOwner && req.application.company._id.equals(req.user.company)) {
-        req.log.debug({func: 'hasAuthorization'}, 'Authorized: Owner Company matches Application Company');
-        return next();
-    }
-
-    if (req.user.isAdmin) {
-        req.log.debug({func: 'hasAuthorization'}, 'Authorized: User is an Admin');
-        return next();
-    }
-
-    req.log.debug({func: 'hasAuthorization'}, 'Unauthorized: User does not have access to this application');
-
-    return res.status(403).send('User is not authorized');
-};
 
 /** ---- MESSAGES ------------------------------------------ */
 
