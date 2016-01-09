@@ -37,7 +37,7 @@ var AddressSchema = new Schema({
 
     streetAddresses: {
         type: [String],
-        default: [],
+        default: [null,null],
         trim: true
     },
 
@@ -59,7 +59,24 @@ var AddressSchema = new Schema({
         match: [/\d{5}(\-\d{4})?/],
         trim: true
     }
-}, {toJSON: {virtuals: true}});
+}, { toJSON: { virtuals: true } });
+
+AddressSchema.virtual('line1')
+    .get(function () {
+        return this.streetAddresses.length > 0 ? this.streetAddresses[0] : '';
+    })
+    .set(function (value) {
+        this.streetAddresses[0] = value;
+    });
+    
+AddressSchema.virtual('line2')
+    .get(function () {
+        return this.streetAddresses.length > 1 ? this.streetAddresses[1] : '';
+    })
+    .set(function (value) {
+        this.streetAddresses[1] = value;
+    });
+    
 
 AddressSchema.virtual('empty')
     .get(function () {

@@ -128,6 +128,13 @@ module.exports = {
             url: 'https://api.branch.io',
             key: 'key_test_djoMGBQ5jCINia7eaPxrmocbtqjS2VLX',
             secret: 'secret_test_AWSPorraAdrOEyxfukw0DKT2icQFeHwe'
+        },
+        luceo: {
+            coreMark: {
+                baseUrl: 'https://ws-core-mark.luceosolutions.com/rest/',
+                username: 'core-mark',
+                password: 'eFEv6GFyN'
+            }
         }
     },
     port: process.env.PORT || 3000,
