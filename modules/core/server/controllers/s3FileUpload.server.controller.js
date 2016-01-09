@@ -53,7 +53,7 @@ exports.getSecureReadURL = getSecureReadURL;
 
 
 function directUpload(files, folder, isSecure) {
-        log.debug({ func: 'directUpload' }, 'START');
+    log.debug({ func: 'directUpload' }, 'START');
     var deferred = Q.defer();
     
     debugger;
