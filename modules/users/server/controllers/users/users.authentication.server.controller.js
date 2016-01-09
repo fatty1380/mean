@@ -24,6 +24,8 @@ var mongoose = require('mongoose'),
     RequestMessage = mongoose.model('RequestMessage'),
     Login = mongoose.model('Login'),
     BranchData = mongoose.model('BranchData');
+    
+mongoose.Promise = require('q').Promise;
 
 exports.userseed = function (req, res) {
     delete req.body.roles;
@@ -63,7 +65,12 @@ exports.signup = function (req, res) {
     // Add missing user fields
     user.provider = 'local';
 
-    saves.push(user.save());
+    saves.push(user.save()
+        .then(function (res) { req.log.info({ user: user }, 'Saved User'); })
+        .catch(function (err) {
+            req.log.error({ func: 'signup', err: err }, 'Error with User Saving');
+            throw err;
+        }));
 
     if (!!req.body.companyName && req.body.type === 'owner') {
 
@@ -71,16 +78,25 @@ exports.signup = function (req, res) {
         req.log.info({ func: 'signup', company: company }, 'Creating company');
         user.company = company._id;
 
-        saves.push(company.save());
+        saves.push(company.save()
+            .then(function (res) { req.log.info({ company: company }, 'Saved Company'); })
+            .catch(function (err) {
+                req.log.error({ func: 'signup', err: err }, 'Error with Company Saving');
+                throw err;
+            }));
     }
 
     var newUser;
 
+    debugger;
     return Q.all(saves)
         .then(function (results) {
-            req.log.info({ func: 'signup', company: company }, 'Returned from saves');
-            results.user = results[0];
-            results.company = results[1];
+            
+            req.log.info({ func: 'signup', user:user, company: company }, 'Returned from saves');
+
+            debugger;
+            results.user = results[0] || user;
+            results.company = results[1] || company;
             
             if (!_.isEmpty(results.company)) {
                 NotificationCtr.events.emit('company:new', results.company, req);
@@ -108,11 +124,10 @@ exports.signup = function (req, res) {
                 res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                 });
+                res.headersSent = true;
             }
         })
-        .finally(function () {
-            // Crappy hack to save to feed before returning the user ;/
-            
+        .finally(function () {            
             if (!res.headersSent) {
                 res.json(req.user);
             }

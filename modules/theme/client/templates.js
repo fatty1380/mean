@@ -2026,9 +2026,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '\n' +
   '        <div class="row">\n' +
   '            <div class="col-md-8 opaque-bg">\n' +
-  '                <span class="nowrap"\n' +
-  '                      style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;"\n' +
-  '                      ng-bind-html="vm.company.about | limitTo : 1000"></span>\n' +
+  '                <span class="nowrap" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;" ng-bind-html="vm.company.about | limitTo : 1000"></span>\n' +
   '            </div>\n' +
   '            <dl class="col-md-4 dl-horizontal">\n' +
   '                <dt>Location:</dt>\n' +
@@ -2043,7 +2041,9 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '        <div class="panel panel-oset" ng-if="!!vm.company && vm.company.about">\n' +
   '            <div class="panel-heading">\n' +
   '                <span class="title">ABOUT US</span>\n' +
-  '                <a href="" class="icon"><img src="modules/drivers/img/share.png" title="share" class="share"/></a>\n' +
+  '                <a href="" class="icon"><img src="modules/drivers/img/share.png" title="share" class="share" /></a>\n' +
+  '                <button type="button" class="btn btn-link" ng-click="vm.creEdit()">Edit Company Profile!\n' +
+  '                </button>\n' +
   '            </div>\n' +
   '            <div class="panel-body">\n' +
   '                <div data-ng-bind-html="vm.company.about"></div>\n' +
@@ -2053,10 +2053,11 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '        <div class="panel-oset" ng-if="(!vm.company || !vm.company.about) && vm.canEdit">\n' +
   '            <div class="panel-heading"><span class="h4">Please create your company profile</span></div>\n' +
   '            <div class="panel-body">\n' +
-  '                <p class="text-muted">Hi {{::vm.user.firstName}},<br/>{{::vm.createText}}</p><br/>\n' +
+  '                <p class="text-muted">Hi {{::vm.user.firstName}},\n' +
+  '                    <br/>{{::vm.createText}}</p>\n' +
+  '                <br/>\n' +
   '\n' +
-  '                <p class="text-right" ng-if="!vm.canEdit"><img src="/modules/core/img/brand/logo-blue.png"\n' +
-  '                                                               alt="The Outset Team"/></p>\n' +
+  '                <p class="text-right" ng-if="!vm.canEdit"><img src="/modules/core/img/brand/logo-blue.png" alt="The Outset Team" /></p>\n' +
   '\n' +
   '                <div class="text-center" ng-if="vm.canEdit">\n' +
   '                    <button type="button" class="btn btn-cta-secondary btn-lg" ng-click="vm.creEdit()">Get Started!\n' +
@@ -2074,8 +2075,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '        </div>\n' +
   '    </div>\n' +
   '    <!-- os-company directive : END -->\n' +
-  '</section>\n' +
-  '');
+  '</section>');
  $templateCache.put('/modules/core/views/profile-base.client.template.html',
   '<div class="headline-bg headline-sm headline-map-bg">\n' +
   '    <div class="blue-mask container-fluid"></div>\n' +
@@ -2139,25 +2139,23 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '');
  $templateCache.put('/modules/core/views/templates/os-page-header.client.template.html',
   '<!-- os-page-header directive : os-page-header.client.template -->\n' +
-  '<div class="page-header panel row" data-ng-if="vm.showHeader || vm.includeTransclude"\n' +
-  '     ng-class="{\'panel panel-default\' : !vm.level}"\n' +
-  '     ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">\n' +
-  '    \n' +
+  '<div name="os-page-header" class="page-header panel row" \n' +
+  '    data-ng-if="vm.showHeader || vm.includeTransclude" \n' +
+  '    ng-class="{\'panel panel-default\' : !vm.level}"\n' +
+  '    ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">\n' +
+  '\n' +
   '    <div class="profile-photo col-sm-4" data-ng-if="!!vm.pictureUrl">\n' +
   '        <div class="center-block full-width">\n' +
-  '            <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"\n' +
-  '                 class="img-thumbnail user-profile-picture img-responsive">\n' +
-  '            <br data-ng-if="vm.showPicEdit"/>\n' +
-  '            <a class="btn btn-link" data-ng-click="vm.editPicFn()" data-ng-if="vm.showPicEdit"\n' +
-  '               ui-sref="{{vm.editPicSref || \'.\'}}">edit\n' +
+  '            <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture" class="img-thumbnail user-profile-picture img-responsive">\n' +
+  '            <br data-ng-if="vm.showPicEdit" />\n' +
+  '            <a class="btn btn-link" data-ng-click="vm.editPicFn()" data-ng-if="vm.showPicEdit" ui-sref="{{vm.editPicSref || \'.\'}}">edit\n' +
   '                <i class="fa fa-pencil-square-o"></i>\n' +
   '            </a>\n' +
   '        </div>\n' +
   '    </div>\n' +
   '\n' +
   '    <div class="profile-info {{!!vm.pictureUrl ? \'col-sm-8\' : \'col-sm-12\'}}">\n' +
-  '        <button ng-if="vm.showBackBtn" class="btn btn-oset-primary pull-left mgn-right"\n' +
-  '                ng-click="vm.backBtnFn()">\n' +
+  '        <button ng-if="vm.showBackBtn" class="btn btn-oset-primary pull-left mgn-right" ng-click="vm.backBtnFn()">\n' +
   '            <i class="fa fa-arrow-left"></i>{{::vm.backBtnText || \'Back\'}}\n' +
   '        </button>\n' +
   '        <span class="title" data-ng-bind-html="vm.title" data-ng-if="vm.showHeader">&nbsp;</span>\n' +
@@ -2168,13 +2166,11 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '            <a class="btn btn-link" ui-sref="{{vm.editSref}}">\n' +
   '            </a>\n' +
   '        </div>\n' +
-  '        <button ng-if="vm.btnShow && (!!vm.btnText && !!vm.btnSref)" class="btn btn-oset-primary pull-right"\n' +
-  '                ui-sref="{{vm.btnSref}}">{{::vm.btnText}}\n' +
+  '        <button ng-if="vm.btnShow && (!!vm.btnText && !!vm.btnSref)" class="btn btn-oset-primary pull-right" ui-sref="{{vm.btnSref}}">{{::vm.btnText}}\n' +
   '        </button>\n' +
   '    </div>\n' +
   '</div>\n' +
-  '<!-- os-page-header directive : END -->\n' +
-  '');
+  '<!-- os-page-header directive : END -->');
  $templateCache.put('/modules/core/views/templates/oset-categories.client.template.html',
   '<section class="category-directive">\n' +
   '    <section ng-if="vm.mode === \'edit\' || vm.mode === \'select\'">\n' +

@@ -71,8 +71,9 @@ ReportApplicantSchema.pre('init', function (next) {
         this.remoteId = this.applicantId;
     }
 
-    this.governmentId = this.governmentId && this.governmentId.replace(/\D/g, ''); // Replace non-numeric values
-
+    // Replace non-numeric values
+    this.governmentId = this.governmentId && this.governmentId.replace(/\D/g, ''); 
+    
     if (this.governmentId && this.governmentId.length === 9) {
         this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
         this.governmentId = this.getHashedValue(this.governmentId);

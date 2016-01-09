@@ -3225,9 +3225,6 @@ oset-chat-console > .chat-window .chat-section .chat-box .timestamp a:hover {
   position: relative;
   z-index: 10;
 }
-.content-section.section-on-bg .content-section .title {
-  color: #fff;
-}
 .content-section os-page-header .title {
   font-size: 36px;
   margin-bottom: 60px;
@@ -3278,11 +3275,6 @@ oset-chat-console > .chat-window .chat-section .chat-box .timestamp a:hover {
   font-size: 28px;
 }
 /* Page Headers and Profiles */
-img.user-profile-picture {
-  max-height: 200px;
-  min-height: 200px;
-  max-width: 300px;
-}
 .profile-floater {
   text-align: center;
 }

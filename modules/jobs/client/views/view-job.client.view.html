@@ -1,9 +1,7 @@
 <section class="container-fluid" name="view-job-client-view">
-    <os-page-header title="Job Details" edit-sref="jobs.edit({jobId: '{{vm.job._id}}'})"
-                    show-edit="vm.enableEdit" sub-title="{{vm.job.name}}">
-        Posted on
-        <span data-ng-bind="vm.job.created | date:'mediumDate'"></span> by
-        <span data-ng-bind="vm.job.user.displayName"></span>
+    <os-page-header title="{{vm.job.name}}" edit-sref="jobs.edit({jobId: '{{vm.job._id}}'})"
+                    show-edit="vm.enableEdit" sub-title="Posted on {{vm.job.created | date:'mediumDate'}} by {{vm.job.user.displayName}}"
+                    picture-url="vm.company.profileImageURL">
     </os-page-header>
 
     <div class="row profile">

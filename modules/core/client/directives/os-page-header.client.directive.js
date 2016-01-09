@@ -24,6 +24,7 @@
             restrict: 'E',
             controller: ['$transclude', '$log', '$state', '$attrs', function (transclude, $log, $state, $attrs) {
                 var vm = this;
+                debugger;
 
                 vm.btnShow = typeof this.btnShow === 'undefined' ? true : this.btnShow;
                 vm.showEdit = typeof this.showEdit === 'undefined' ? false : this.showEdit;

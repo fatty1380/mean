@@ -27,7 +27,7 @@
             controller: function() {
                 var vm = this;
 
-                vm.showAlt = !!vm.altFn();
+                vm.showAlt = _.isFunction(vm.altFn) && _.isFunction(vm.altFn());
                 vm.altText = vm.altText || 'Other Action';
 
                 vm.showCancel = !!vm.cancelFn();
