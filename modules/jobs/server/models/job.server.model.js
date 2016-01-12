@@ -110,6 +110,14 @@ var JobSchema = new Schema({
         default: 'draft',
         enum: ['draft', 'posted', 'withdrawn', 'deleted']
     },
+    
+    remoteSystem: {
+        type: String
+    },
+    
+    remoteSystemId: {
+        type: String
+    },
 
     isDeleted: {
         type: Boolean,

@@ -399,6 +399,28 @@ UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
     });
 };
 
+UserSchema.virtual('address')
+    .get(function () {
+        if (_.isEmpty(this.addresses)) {
+            return null;
+        }
+        if (this.addresses.length === 1) {
+            return this.addresses[0];
+        }
+
+        var addr = _.find(this.addresses, { type: 'main' });
+        if (!_.isEmpty(addr)) {
+            return addr;
+        }
+
+        addr = _.find(this.addresses, { type: 'home' });
+        if (!_.isEmpty(addr)) {
+            return addr;
+        }
+
+        return _.first(this.addresses);
+    });
+
 UserSchema.virtual('shortName')
     .get(function () {
         return (!!this.firstName ? this.firstName : null) + (!!this.lastName ? this.lastName.substring(0, 1) : null);

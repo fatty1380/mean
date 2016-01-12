@@ -563,14 +563,29 @@ function translateUserToCandidate(srcUser) {
 
         var keys = userKey.split('.') || null;
         log.debug({ func: 'translateUserToCandidate', keys: userKey }, 'Keys for Prop');
+        
+        if (keys.length > 1) {
+            log.info({ func: 'translateUserToCandidate', keyCt: keys.length }, 'Processing Compound Key');
+        }
 
         var key = keys.shift();
-            var val = srcUser[key];
+        var val = srcUser[key];
         log.debug({ func: 'translateUserToCandidate', val: val }, 'User has value for `%s`', key);
 
-        while (keys.lenth > 0 && _.isObject(val)) {
+        while (keys.length > 0 && _.isObject(val)) {
             key = keys.shift();
-            val = val[key];
+            
+            var matches = key.match(/(\w+)\[(\d+)\]/);
+            if (!_.isEmpty(matches)) {
+                key = matches[1];
+                var i = matches[2];
+                
+                val = val[key][i];
+            }
+            else {
+                val = val[key];
+            }
+            
             log.debug({ func: 'translateUserToCandidate', val: val }, 'Extended...User has value for `%s`', key);
         }
         
@@ -791,8 +806,8 @@ var translation = [
     { ext: 'Prop6', desc: 'First Name', key: 'firstName', refUrl: null, type: 'text' },
     { ext: 'Prop4', desc: 'Last Name', key: 'lastName', refUrl: null, type: 'text' },
     { ext: 'Prop5', desc: 'Preferred Name', key: 'displayName', refUrl: null, type: 'text' },
-    { ext: 'Prop9', desc: 'Address Line 1', key: 'address.line1', refUrl: null, type: 'text' },
-    { ext: 'Prop10', desc: 'Address Line 2', key: 'address.line2', refUrl: null, type: 'text' },
+    { ext: 'Prop9', desc: 'Address Line 1', key: 'address.streetAddresses[0]', refUrl: null, type: 'text' },
+    { ext: 'Prop10', desc: 'Address Line 2', key: 'address.streetAddresses[1]', refUrl: null, type: 'text' },
     { ext: 'Prop11', desc: 'Zip Code', key: 'address.zipCode', refUrl: null, type: 'text' },
     { ext: 'Prop12', desc: 'City', key: 'address.city', refUrl: null, type: 'text' },
     { ext: 'Prop93', desc: 'State', key: 'address.state', refUrl: 'ref/ref/?params=type:2', type: 'toolbox' },
