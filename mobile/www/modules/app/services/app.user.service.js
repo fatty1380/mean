@@ -5,9 +5,9 @@
         .module(AppConfig.appModuleName)
         .service('userService', userService);
 
-    userService.$inject = ['registerService', '$q', '$cordovaGoogleAnalytics', 'DriveTracker'];
+    userService.$inject = ['registerService', '$q', '$cordovaGoogleAnalytics'];
 
-    function userService(registerService, $q, $cordovaGoogleAnalytics, DriveTracker) {
+    function userService(registerService, $q, $cordovaGoogleAnalytics) {
         var vm = this;
 
         vm.profileData = {};
@@ -51,20 +51,6 @@
                             return vm.profileData;
                         }
                         return null;
-                    })
-                    .finally(function () {
-                        if (_.isEmpty(vm.profileData)) {
-                            return null;
-                        }
-                        
-                        var newProfile = vm.profileData;
-                        var props = newProfile && newProfile.props;
-                        
-                        var zendriveId = !!props && (props.zendriveKey || props.zendriveEnabled && 'oi3t1c8qSUQ7cgJnY59hIUpMgoFykxa4');
-                        if (!_.isEmpty(zendriveId)) {
-                            logger.info('Attempting to init zendrive with id ' + newProfile.id + ' and zd key: ' + zendriveId);
-                            DriveTracker.initialize(newProfile, zendriveId);
-                        }
                     });
             }
             return $q.when(vm.profileData);
