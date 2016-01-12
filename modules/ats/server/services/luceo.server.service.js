@@ -109,7 +109,7 @@ function createCandidate(user, auxProperties) {
                 return createCandidateP.promise;
             }
             
-            log.info({ func: 'createCandidate', postData: postData, candidate: candidate, user: user, candidateId: candidateId }, '%s Candidate with the following info...', action);
+            log.info({ func: 'createCandidate', postData: postData, candidate: candidate, candidateId: candidateId }, '%s Candidate with the following info...', action);
 
             unirest.post(url)
                 .send(postData)

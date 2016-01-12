@@ -92,7 +92,7 @@ function createApplicant(req, res) {
             
             // TODO: Save Application Status to the DB
             
-            debugger;
+            //debugger;
 
             return remoteApplication;
         },
