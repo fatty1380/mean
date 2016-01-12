@@ -28,6 +28,7 @@
         vm.showProfileEditTrailersModal = showProfileEditTrailersModal;
         vm.showProfileEditTrucksModal = showProfileEditTrucksModal;
         vm.editLicense = showProfileEditLicenseModal;
+        vm.editAddress = showEditAddress;
         vm.updateTrailers = updateTrailers;
         vm.updateTrucks = updateTrucks;
 
@@ -39,6 +40,10 @@
         function updateTrucks(truck) {
             if (!truck) return;
             vm.profileData.props.truck = truck;
+        }
+        
+        function showEditAddress() {
+            vm.addressEditing = true;
         }
 
         function showProfileEditTrailersModal() {

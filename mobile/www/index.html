@@ -14,14 +14,15 @@
     <ion-nav-view></ion-nav-view>
 
     <!-- libs -->
+    <script src='assets/js/googleMapsAPI.js'></script>
+    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDb2fSf75lhB2A0lBXeZ_89iXDhO-pmLoY&libraries=geometry,places"></script>-->
+        
     <script src="lib/ionic/release/js/ionic.bundle.js"></script>
     <script src="lib/ionic-rating/ionic-rating.js"></script>
     <script src="lib/lodash/lodash.js"></script>
     <script src="lib/angular-elastic/elastic.js"></script>
     <script src="lib/angular-messages/angular-messages.js"></script>
     <script src='lib/angular-google-staticmaps/angular-google-staticmaps.js'></script>
-    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDb2fSf75lhB2A0lBXeZ_89iXDhO-pmLoY&libraries=geometry,places"></script>-->
-    <script src='assets/js/googleMapsAPI.js'></script>
     
     <script src="lib/moment/min/moment.min.js"></script>
 
@@ -102,6 +103,8 @@
     <script src="modules/account/account.module.js"></script>
     <script src="modules/account/config/account.module.routes.js"></script>
     <script src="modules/account/controllers/account.controller.js"></script>
+    
+    <script src="modules/account/directives/address.directive.js"></script>
 
     <!-- profile -->
     <script src="modules/account/child_modules/profile/profile.module.js"></script>
@@ -128,6 +131,10 @@
     <script src="modules/account/child_modules/company/config/company.module.routes.js"></script>
     <script src="modules/account/child_modules/company/services/company.service.js"></script>
     <script src="modules/account/child_modules/company/controllers/company.controller.js"></script>
+    <script src="modules/account/child_modules/company/controllers/job.controller.js"></script>
+    <script src="modules/account/child_modules/company/services/company.modals.service.js"></script>
+    <script src="modules/account/child_modules/company/directives/job-item.mobile.directive.js"></script>
+    
 
     <!-- lockbox -->
     <script src="modules/account/child_modules/lockbox/lockbox.module.js"></script>
@@ -168,6 +175,6 @@
     <script src="modules/account/child_modules/activity/services/activity.modals.service.js"></script>
     <script src="modules/account/child_modules/activity/directives/activity.iongoogleplace.directive.js"></script>
     <script src="modules/account/child_modules/activity/directives/feed-item.mobile.directive.js"></script>
-
+    
 </body>
 </html>

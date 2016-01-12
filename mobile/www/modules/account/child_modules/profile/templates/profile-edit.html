@@ -39,10 +39,52 @@
                     <span class="input-label">Phone Number</span>
                     <input type="tel" ng-model="vm.profileData.phone" placeholder="Phone Number" name="phone">
                 </label>
+
+                <div class="item edit-profile-types">
+                    <div class="top">
+                        <span class="input-label">Address</span>
+                        <button type="button" class="button button-small" ng-click="vm.addressEditing = !vm.addressEditing">
+                            {{vm.addressEditing ? 'done' : 'edit'}}
+                        </button>
+                    </div>
+
+                    <div ng-if="!vm.addressEditing">
+                        <span ng-bind="vm.profileData.addresses[0].streetAddresses[0]"></span>
+                        <br>
+                        <span ng-if="!!vm.profileData.addresses[0].streetAddresses[1]">
+                            {{vm.profileData.addresses[0].streetAddresses[1]}}<br>
+                        </span>
+                        <span ng-bind="vm.profileData.addresses[0].city"></span>
+                        <span ng-bind="vm.profileData.addresses[0].state"></span>
+                        <span ng-bind="vm.profileData.addresses[0].zipCode"></span>
+                    </div>
+
+                    <span ng-if="!!vm.addressEditing">
+                        <!--<div class="item item-input">
+                            <input type="text" name="addrLine1" ng-model="vm.profileData.addresses[0].streetAddresses[0]" placeholder="Street Address">
+                        </div>
+                        <div class="item item-input">
+                            <input type="text" name="addrLine2" ng-model="vm.profileData.addresses[0].streetAddresses[1]" placeholder="Line 2 (optional)">
+                        </div>
+                        <div class="item item-input">
+                            <input type="text" name="addrCity" ng-model="vm.profileData.addresses[0].city" placeholder="City">
+                        </div>
+                        <div class="item item-input">
+                            <input type="text" name="addrState" ng-model="vm.profileData.addresses[0].state" placeholder="State">
+                        </div>
+                        <div class="item item-input">
+                            <input type="tel" name="addrZip" ng-model="vm.profileData.addresses[0].zipCode" placeholder="Zip">
+                        </div>-->
+                        
+                        <oset-edit-address ng-model="vm.profileData.addresses[0]"></oset-edit-address>
+                    </span>
+                </div>
+
+
                 <div class="item edit-profile-types">
                     <div class="top">
                         <span class="input-label">Truck Manufacturer</span>
-                        <button class="button button-small" ng-click="vm.showProfileEditTrucksModal();">change</button>
+                        <button type="button" class="button button-small" ng-click="vm.showProfileEditTrucksModal();">change</button>
                     </div>
                     <div ng-bind="vm.profileData.props.truck"></div>
                 </div>
@@ -54,7 +96,7 @@
                 <div class="item edit-profile-types">
                     <div class="top">
                         <span class="input-label">Trailer Types</span>
-                        <button class="button button-small" ng-click="vm.showProfileEditTrailersModal();">change</button>
+                        <button type="button" class="button button-small" ng-click="vm.showProfileEditTrailersModal();">change</button>
                     </div>
                     <ul class="selected-trailers">
                         <li ng-repeat="trailer in vm.profileData.props.trailer">{{trailer}}</li>
@@ -70,14 +112,13 @@
                         <span ng-if="vm.profileData.license.endorsements.length">Endorsements
                             <span ng-repeat="code in vm.profileData.license.endorsements">
                                 {{code}}<span ng-if="!$last">,</span>
-                            </span>
+                        </span>
                         </span>
                     </div>
                 </div>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Driving Since</span>
-                    <input type="text" ng-model="vm.started" placeholder="Driving Since"  name="started"
-                    onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
+                    <input type="text" ng-model="vm.started" placeholder="Driving Since" name="started" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
                 </label>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Employer</span>

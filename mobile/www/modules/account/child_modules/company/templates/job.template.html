@@ -1,0 +1,44 @@
+<ion-modal-view class="activity view-section min-size">
+
+    <ion-header-bar align-title="center">
+        <button class="button button-clear" ng-click="vm.closeModal()">Close</button>
+        <h1 class="title">{{vm.entry.title || 'Job Details'}}</h1>
+        <button class="button button-clear" ng-click="vm.share()" ng-hide="true">Share Job</button>
+    </ion-header-bar>
+
+    <ion-content class="pane has-footer has-header">
+        <ion-item class="job-item">
+
+            <oset-job-item model="vm.entry"></oset-job-item>
+
+            <h1>Job Description</h1>
+            <p ng-bind-html="vm.entry.description"></p>
+            <h1>Job Requirements</h1>
+            <p ng-bind-html="vm.entry.requirements"></p>
+        </ion-item>
+    </ion-content>
+    <!--
+    <ion-pane class="pane has-footer details-activity-pane">
+        <ion-scroll>
+
+            <ion-item class="item">
+                <div class="activity-item">
+                    <p>
+                        <pre>{{vm.entry | prettyPrint}}</pre>
+                    </p>
+
+
+
+                </div>
+            </ion-item>
+
+        </ion-scroll>
+    </ion-pane>-->
+
+    <ion-footer-bar ng-if="!vm.isInputVisible">
+        <div class="button-bar action-buttons">
+            <button class="button icon ion-ios-plus-outline primary" ng-click="vm.toggleInput($event, true)"> Apply Now!</button>
+        </div>
+    </ion-footer-bar>
+
+</ion-modal-view>

@@ -13,6 +13,21 @@
     <ion-pane class="pane profile-pane has-subheader">
         <ion-tabs class="profile-tabs tabs-top">
             
+            <ion-tab title="JOBS" ui-sref="company.jobs">
+                <ion-scroll class="jobs-list">
+                    <ion-list class="activity">
+                        <ion-item class="card" ng-repeat="entry in vm.jobs" ng-show="!!entry.id">
+                            <oset-job-item model="entry" embedded="true"></oset-job-item>
+                        </ion-item>
+                        <br>
+                    </ion-list>
+
+                    <div ng-if="!vm.jobs || !vm.jobs.length" class="no-content">
+                        <p class="message">{{vm.company.name}} has not posted any jobs yet. Check back again soon!</p>
+                    </div>
+                </ion-scroll>
+            </ion-tab>
+            
             <ion-tab title="FEED" ui-sref="company.feed">
                 <ion-scroll>
                     <ion-list class="activity">
@@ -21,19 +36,6 @@
                     
                     <div ng-if="!vm.feed || !vm.feed.length" class="no-content">
                         <p class="message">{{vm.company.name}} has not posted anything to their feed yet. Check back again soon!</p>
-                    </div>
-                </ion-scroll>
-            </ion-tab>
-            
-            <ion-tab title="JOBS" ui-sref="company.jobs">
-                <ion-scroll class="jobs-list">
-                    <ion-list class="activity">
-                        <oset-feed-item ng-repeat="entry in vm.jobs" model="entry"></oset-feed-item>
-                        <br>
-                    </ion-list>
-
-                    <div ng-if="!vm.jobs || !vm.jobs.length" class="no-content">
-                        <p class="message">{{vm.company.name}} has not posted any jobs yet. Check back again soon!</p>
                     </div>
                 </ion-scroll>
             </ion-tab>

@@ -90,7 +90,7 @@
                             <span class="item-note">
                                 <div class="logo">
                                     <i ng-if="vm.trucksMap[vm.profileData.props.truck]" class="{{vm.trucksMap[vm.profileData.props.truck]}}"></i>
-                                    <div ng-if="!vm.trucksMap[vm.profileData.props.truck]">{{vm.profileData.props.truck}} {{vm.profileData.props.model}}</div>
+                                    <div ng-if="!!vm.profileData.props.truck && !vm.trucksMap[vm.profileData.props.truck]">{{vm.profileData.props.truck}} {{vm.profileData.props.model}}</div>
                                     <div ng-if="!vm.profileData.props.truck && vm.profileData.props.model">{{vm.profileData.props.model}}</div>
                                     <span ng-if="vm.trucksMap[vm.profileData.props.truck] && vm.profileData.props.model" class="badge badge-positive">
                                         {{vm.profileData.props.model}}
