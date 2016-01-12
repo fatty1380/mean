@@ -29,21 +29,20 @@
                 vm.canEdit = true;
                 vm.titleText = 'Company Profile';
                 vm.subtitle = 'ADMINISTRATOR MODE';
-            } else if(!!vm.company) {
+            } else if (!!vm.company) {
                 vm.canEdit = false;
                 vm.titleText = vm.company.name;
                 vm.subtitle = 'Welcome to the home of ' + vm.company.name + ' on Outset!';
-
-                Jobs.ById.query({company: vm.company.id}).$promise
-                    .then(function (success) {
-                        vm.jobs = success;
-                    })
-                    .catch(function (err) {
-                        console.log('job list failed', err);
-                    });
-            } else {
-                
             }
+
+            Jobs.ById.query({ company: vm.company.id }).$promise
+                .then(function (success) {
+                    vm.jobs = success;
+                })
+                .catch(function (err) {
+                    console.log('job list failed', err);
+                });
+
             vm.imageURL = vm.company.profileImageURL || vm.imageURL;
 
         }

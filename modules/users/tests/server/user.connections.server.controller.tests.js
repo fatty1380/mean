@@ -11,7 +11,7 @@ var should = require('should'),
         file: 'user.connections.server.controller'
     });
     
-var ConnectionCtrl = rewire(path.resolve('./modules/users/server/controllers/users/users.connections.server.controller'));
+var RequestCtrl = rewire(path.resolve('./modules/users/server/controllers/requests.server.controller'));
 
 var mongoose = require('mongoose'),
     User = mongoose.model('User'),
@@ -22,7 +22,7 @@ var mongoose = require('mongoose'),
  */
 var app, agent, credentials, user, _test, request;
 
-var normalizeRequest = ConnectionCtrl.__get__('normalizeRequest');
+var normalizeRequest = RequestCtrl.__get__('normalizeRequest');
 
 
 describe('Request Messages & Social', function () {

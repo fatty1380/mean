@@ -13,8 +13,10 @@ module.exports = function(app) {
         .all(atsPolicy.isAllowed)
 		.get(ats.read)
         .put(ats.update)
-        .post(ats.createApplicant)
-		.delete(ats.removeApplicant);
+        .delete(ats.removeApplicant);
+        
+    app.route('/api/jobs/:jobId/apply')
+        .post(ats.createApplicant);
 
 	// Finish by binding the At middleware
 	app.param('atsId', ats.atsByID);

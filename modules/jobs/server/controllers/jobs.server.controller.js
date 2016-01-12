@@ -4,20 +4,22 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-_            = require('lodash'),
-path         = require('path'),
-Job          = mongoose.model('Job'),
-Address      = mongoose.model('Address'),
-Application  = mongoose.model('Application'),
-Company      = mongoose.model('Company'),
-errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-companies    = require(path.resolve('./modules/companies/server/controllers/companies.server.controller')),
-log          = require(path.resolve('./config/lib/logger')).child({
-    module: 'jobs',
-    file: 'Jobs.Controller'
-}),
-moment       = require('moment'),
-Q            = require('q');
+    _ = require('lodash'),
+    path = require('path'),
+    Job = mongoose.model('Job'),
+    Address = mongoose.model('Address'),
+    Application = mongoose.model('Application'),
+    Company = mongoose.model('Company'),
+    errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+    companies = require(path.resolve('./modules/companies/server/controllers/companies.server.controller')),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'jobs',
+        file: 'Jobs.Controller'
+    }),
+    moment = require('moment'),
+    Q = require('q');
+    
+mongoose.Promise = require('q').Promise;
 
 /**
  * "Instance" Methods
@@ -25,55 +27,43 @@ Q            = require('q');
 
 exports.executeQuery = function (req, res, next) {
 
-    req.log.debug('ExecuteQuery', {query: req.query, sort: req.sort});
+    req.log.debug({ func: 'ExecuteQuery', query: req.query, sort: req.sort }, 'START');
 
     var query = req.query || {};
     var sort = req.sort || '-posted';
     var populate = [
-        {property: 'user', fields: 'displayName'},
-        {property: 'company', fields: null}
+        { property: 'user', fields: 'displayName' },
+        { property: 'company', fields: null }
     ];
 
     if (req.populate) {
+        req.log.debug({ func: 'ExecuteQuery', populate: req.populate }, 'Adding Populate Fields');
         req.populate = _.union(populate, req.populate);
     }
 
     query.isDeleted = req.params && !!req.params.includeDeleted;
 
-    var base = Job.find(query)
-        .populate('user', 'displayName')
-        .populate('company')
-        .populate('applications')
-        .sort(sort);
+    req.log.debug({ func: 'ExecuteQuery', query: req.query, sort: sort }, 'Executing');
 
-    base.exec(function (err, jobs) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        }
+    try {
+        
+    Job.find(query)
+    //.sort(sort)
+    //.populate('user', 'displayName')
+    //.populate('company')
+    //.populate('applications')
+    //    .exec() // Exec no longer needed?
+        .then(function (jobs) {
 
-        req.jobs = jobs || [];
+            req.log.debug({ func: 'ExecuteQuery.Results', jobs: jobs }, 'Got Result');
+            req.jobs = jobs || [];
 
-        if (req.jobs.length > 0 && !!_.find(req.populate, {'property': 'applications'})) {
-
-            var options = [
-                {path: 'applications.user', model: 'User'},
-                {path: 'applications.messages'}
-            ];
-
-            Job.populate(jobs, options, function (err, populated) {
-                if (err) {
-                    req.log.error('error looking up users for applications, returning non-populated version', err);
-                    next();
-                }
+            if (req.jobs.length > 0 && !!_.find(req.populate, { 'property': 'applications' })) {
 
                 var options = [
-                    {path: 'applications.user.driver', model: 'Driver'},
-                    {path: 'applications.connection', model: 'Connection'}
+                    { path: 'applications.user', model: 'User' },
+                    { path: 'applications.messages' }
                 ];
-
-                req.jobs = populated;
 
                 Job.populate(jobs, options, function (err, populated) {
                     if (err) {
@@ -81,17 +71,42 @@ exports.executeQuery = function (req, res, next) {
                         next();
                     }
 
+                    var options = [
+                        { path: 'applications.user.driver', model: 'Driver' },
+                        { path: 'applications.connection', model: 'Connection' }
+                    ];
+
                     req.jobs = populated;
-                    next();
+
+                    Job.populate(jobs, options, function (err, populated) {
+                        if (err) {
+                            req.log.error('error looking up users for applications, returning non-populated version', err);
+                            next();
+                        }
+
+                        req.jobs = populated;
+                        next();
+
+                    });
 
                 });
+            }
+            else {
+                next();
+            }
+        }).catch(function (err) {
 
+            req.log.error({ func: 'Jobs.ExecQuery', query: query, err: err }, 'Error while executing query');
+
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
             });
-        }
-        else {
-            next();
-        }
-    });
+            });
+        
+    } catch (error) {
+           
+            req.log.error({ func: 'Jobs.ExecQuery', query: query, err: error }, 'Error while executing query');
+    }
 };
 
 /**
@@ -143,7 +158,7 @@ var incrementJobsCount = function (req) {
     }
 
     sub.save(function (err) {
-        req.log.info('updated company subscription', {subscription: sub});
+        req.log.info('updated company subscription', { subscription: sub });
     });
 };
 
@@ -155,7 +170,7 @@ exports.create = function (req, res) {
 
     var job = new Job(req.body);
 
-    req.log.info('Create', 'Company %s is posting a new job', req.companyId, {job: job});
+    req.log.info('Create', 'Company %s is posting a new job', req.companyId, { job: job });
 
     // Set properties
     job.user = req.user;
@@ -163,11 +178,11 @@ exports.create = function (req, res) {
     job.postStatus = 'posted';
     job.posted = Date.now();
 
-    req.log.trace('Create', 'Creating new job', {job: job});
+    req.log.trace('Create', 'Creating new job', { job: job });
 
     job.save(function (err) {
         if (err) {
-            req.log.error('Create', 'Error Creating new job', {error: err, job: job});
+            req.log.error('Create', 'Error Creating new job', { error: err, job: job });
             return res.send(400, {
                 message: getErrorMessage(err) || 'Unable to create a new job at this time. Please try again later ' + (err.message ? '(' + err.message + ')' : '')
             });
@@ -186,8 +201,8 @@ exports.create = function (req, res) {
  * Show the current Job
  */
 exports.read = function (req, res) {
-    req.log.info('read', 'Loaded Job', {jobId: req.job && req.job._id, query: req.query});
-    req.log.trace('read', 'Loaded Job', {jobId: req.job && req.job._id, query: req.query, job: req.job});
+    req.log.info('read', 'Loaded Job', { jobId: req.job && req.job._id, query: req.query });
+    req.log.trace('read', 'Loaded Job', { jobId: req.job && req.job._id, query: req.query, job: req.job });
 
     if (!req.job) {
         return res.status(404).send({
@@ -202,8 +217,8 @@ exports.read = function (req, res) {
  * List of Jobs stored in request
  */
 exports.list = function (req, res) {
-    req.log.info({query: req.query, func: 'list'}, 'Found %d jobs', req.jobs.length);
-    req.log.trace({query: req.query, jobs: req.jobs, func: 'list'}, 'Found %d jobs', req.jobs.length);
+    req.log.info({ query: req.query, func: 'list' }, 'Found %d jobs', req.jobs.length);
+    req.log.trace({ query: req.query, jobs: req.jobs, func: 'list' }, 'Found %d jobs', req.jobs.length);
     res.json(req.jobs);
 };
 
@@ -211,7 +226,7 @@ exports.list = function (req, res) {
  * Update a Job
  */
 exports.update = function (req, res) {
-    req.log.trace('update', 'START', {body: req.body});
+    req.log.trace('update', 'START', { body: req.body });
     var job = req.job;
 
     debugger;
@@ -221,7 +236,7 @@ exports.update = function (req, res) {
     //job.location = Address.map(req.body.location);
     job.location = req.body.location;
 
-    req.log.trace('update', 'Saving job', {job: job});
+    req.log.trace('update', 'Saving job', { job: job });
 
     job.save(function (err) {
         if (err) {
@@ -230,7 +245,7 @@ exports.update = function (req, res) {
                 message: getErrorMessage(err)
             });
         } else {
-            req.log.trace('update', 'Successfully Saved job', {job: job});
+            req.log.trace('update', 'Successfully Saved job', { job: job });
             res.json(job);
         }
     });
@@ -256,7 +271,7 @@ exports.delete = function (req, res) {
 /** * List of a user's posted jobs
  */
 exports.queryByUserID = function (req, res, next) {
-    req.log.trace('queryByUserID', 'Querying by companyId', {companyId: req.params.userId, query: req.query});
+    req.log.trace('queryByUserID', 'Querying by companyId', { companyId: req.params.userId, query: req.query });
 
     req.query = {
         user: req.params.userId
@@ -269,10 +284,10 @@ exports.queryByUserID = function (req, res, next) {
  * List of a company's posted jobs
  */
 exports.queryByCompanyID = function (req, res, next) {
-    req.log.trace('queryByCompanyID', 'Querying by companyId', {companyId: req.params.companyId, query: req.query});
+    req.log.trace('queryByCompanyID', 'Querying by companyId', { companyId: req.company.id, query: req.query });
 
     req.query = {
-        company: req.params.companyId
+        company: req.company._id
     };
 
     next();
@@ -280,7 +295,7 @@ exports.queryByCompanyID = function (req, res, next) {
 
 exports.populateApplications = function (req, res, next) {
     req.log.trace('populateApplications', 'populating applications');
-    req.populate = [{property: 'applications', fields: ''}];
+    req.populate = [{ property: 'applications', fields: '' }];
 
     next();
 };
@@ -290,15 +305,15 @@ exports.populateApplications = function (req, res, next) {
  */
 exports.jobByID = function (req, res, next, id) {
 
-    req.log.debug('JobById', 'Loading job by id %s. URL: %s', {jobId: id, url: req.url});
-    req.log.trace('JobById', 'Request body', {reqBody: req.body, jobId: id, url: req.url});
+    req.log.debug('JobById', 'Loading job by id %s. URL: %s', { jobId: id, url: req.url });
+    req.log.trace('JobById', 'Request body', { reqBody: req.body, jobId: id, url: req.url });
 
     Job.findById(id)
         .populate('user', 'displayName email')
         .populate('company')
         .exec(function (err, job) {
             if (err) {
-                req.log.error('JobById', 'Error while loading job', {error: err});
+                req.log.error('JobById', 'Error while loading job', { error: err });
                 return next(err);
             }
 
@@ -314,8 +329,8 @@ exports.jobByID = function (req, res, next, id) {
                 });
             }
 
-            req.log.debug('JobById', 'Returning job', {jobId: !!job && job._id});
-            req.log.trace('JobById', 'Returning job', {jobId: !!job && job._id, job: job});
+            req.log.debug('JobById', 'Returning job', { jobId: !!job && job._id });
+            req.log.trace('JobById', 'Returning job', { jobId: !!job && job._id, job: job });
 
             req.job = job;
             next();
@@ -343,17 +358,17 @@ exports.validateSubscription = function (req, res, next) {
         .populate('subscription')
         .exec(function (err, company) {
             if (err || !company) {
-                req.log.warn('ValidateSubscription', 'Unable to find Company', {companyId: req.companyId});
-                return res.status(404).send({message: 'Unable to find company', error: err});
+                req.log.warn('ValidateSubscription', 'Unable to find Company', { companyId: req.companyId });
+                return res.status(404).send({ message: 'Unable to find company', error: err });
             }
 
             if (!company.subscription) {
                 req.log.warn('ValidateSubscription', 'No Subscription object');
-                return res.status(403).send({message: 'No Active Subscription'});
+                return res.status(403).send({ message: 'No Active Subscription' });
             }
-            else if(!company.subscription.isValid) {
-                req.log.warn('ValidateSubscription', 'Invalid Subscription: %s', company.subscription.statusMessage, {subscription: company.subscription});
-                return res.status(403).send({message: company.subscription.statusMessage});
+            else if (!company.subscription.isValid) {
+                req.log.warn('ValidateSubscription', 'Invalid Subscription: %s', company.subscription.statusMessage, { subscription: company.subscription });
+                return res.status(403).send({ message: company.subscription.statusMessage });
             }
 
             req.company = company;

@@ -17,6 +17,8 @@
         };
     }
 
+    angular.module('core')
+        .filter('prettyPrint', prettyPrint);
     function prettyPrint() {
         return function (input) {
             return (!!input) ? JSON.stringify(input, undefined, 2) : '';
@@ -89,7 +91,6 @@
 
     angular.module('core')
         .filter('titleCase', capFilter)
-        .filter('prettyPrint', prettyPrint)
         .filter('isoDatePrint', isoDateFilter)
         .filter('sanitize', sanitizeFilter)
         .filter('streamline', streamlineFilter)

@@ -20,18 +20,18 @@ var configOptions = {
 
 exports.getConfig = function (req, res, next, varName) {
 
-    req.log.debug({ file: 'config.server.ctrl', func: 'getConfig', config: varName, keys: _.keys(configOptions) }, 'Looking up config for `%s`', varName);
+    req.log.trace({ file: 'config.server.ctrl', func: 'getConfig', config: varName, keys: _.keys(configOptions) }, 'Looking up config for `%s`', varName);
 
     var configVal = configOptions[varName.toLowerCase()] || { varName: null };
     
     req.log.trace({ file: 'config.server.ctrl', func: 'getConfig' }, 'Did you find what you were looking for? %s', !!configVal ? 'YES' : 'NO');
 
     if (_.isFunction(configVal)) {
-        req.log.debug({ file: 'config.server.ctrl', func: 'getConfig', config: varName }, 'Launching function');
+        req.log.trace({ file: 'config.server.ctrl', func: 'getConfig', config: varName }, 'Launching function');
         req.configVal = configVal(req);
             req.log.trace({ file: 'config.server.ctrl', func: 'getConfig', retval: req.configVal }, 'got retval');
     } else if (_.isObject(configVal)) {
-        req.log.debug({ file: 'config.server.ctrl', func: 'getConfig'}, 'returning Object for var `%s`', varName);
+        req.log.trace({ file: 'config.server.ctrl', func: 'getConfig'}, 'returning Object for var `%s`', varName);
         req.log.trace({ file: 'config.server.ctrl', func: 'getConfig', val: configVal }, 'returning Object for var `%s`', varName);
         req.configVal = configVal;
     } else {

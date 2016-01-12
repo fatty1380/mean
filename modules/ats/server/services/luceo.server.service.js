@@ -13,11 +13,17 @@ var
     path = require('path'),
     config = require(path.resolve('./config/config')),
     constants = require(path.resolve('./modules/core/server/models/outset.constants')),
+    xml2js = require('xml2js'),
     parseXML = Q.nfbind(require('xml2js').parseString),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'luceo',
         file: 'luceo.server.service'
     });
+    
+var xmlProcessors = {
+    valueProcessors: [xml2js.processors.parseNumbers],
+    explicitArray: false
+};
 
 var company = 'coreMark',
     sysConfig = config.services.luceo[company] || {},
@@ -41,7 +47,12 @@ _.extend(exports, {
         remove: _.noop,
         update: updateCandidate,
         list: listCandidates,
-        get: getCandidateForUser
+        findByUser: findCandidateForUser,
+        get: getCandidateDetails
+    },
+    application: {
+        create: createApplication,
+        find: findApplicationsForUser
     }
 });
 
@@ -72,169 +83,392 @@ _.extend(exports, {
  *     }
  */
 function createCandidate(user, auxProperties) {
-    var createCandidateP = Q.defer();
-    var candidate = translateUserToCandidate(user);
-    
-    _.forOwn(auxProperties, function (value, propName) {
-        log.warn({ func: 'createCandidate' }, 'Unsure what to do with prop `%s` and val `%s`', propName, value);
-    });
-    
-    var postData = { params: encodeParameters(candidate, true) };
-    var url = baseUrl + 'candidate/';
-    
-    unirest.post(url)
-        .send(postData)
-        .auth(auth)
-        .end(function processCandidateCreateResult(response) {
-            if (response.error) {
-                log.error({ func: 'processCandidateCreateResult', err: response.error }, 'Request Errored');
-                return createCandidateP.reject(response.error);
+
+    return translateUserToCandidate(user)
+        .then(function processNewCandidate(candidate) {
+
+            _.forOwn(auxProperties, function (value, propName) {
+                log.warn({ func: 'createCandidate' }, 'Unsure what to do with prop `%s` and val `%s`', propName, value);
+            });
+            
+            var candidateId = !!auxProperties && auxProperties.candidateId || null;
+            var action = 'Creating new';
+            var postData = { params: encodeParameters(candidate, true) };
+            var url = baseUrl + 'candidate/';
+            
+            if (!_.isEmpty(candidateId)) {
+                action = 'Updating Existing';
+                url = url + candidateId + '/';
             }
+                        
+            var createCandidateP = Q.defer();
 
-            parseXML(response.body)
-                .then(function xmlParseSuccess(responseObject) {
+            if (_.isEmpty(candidate)) {
+                log.error({ func: createCandidate }, 'Candidate Object is empty ... Aborting Creation');
+                createCandidateP.reject(new Error('Failed to create Candidate'));
+                return createCandidateP.promise;
+            }
+            
+            log.info({ func: 'createCandidate', postData: postData, candidate: candidate, user: user, candidateId: candidateId }, '%s Candidate with the following info...', action);
 
-                    log.debug({ func: 'processCandidateCreateResult', response: responseObject }, 'Processing candidate JS from XML');
-                    debugger;
-
-                    var results = responseObject.root;
-
-                    if (!!results.err) {
-                        log.error({ func: 'processCandidateCreateResult', err: results.errmsg });
-                        return createCandidateP.reject(new Error(results.errmsg));
+            unirest.post(url)
+                .send(postData)
+                .auth(auth)
+                .end(function processCandidateCreateResult(response) {
+                    if (response.error) {
+                        log.error({ func: 'processCandidateCreateResult', err: response.error }, 'Request Errored');
+                        return createCandidateP.reject(response.error);
                     }
 
-                    var newCandidate = results.result;
-                    log.info({ func: 'processCandidateCreateResult', candidate: newCandidate });
-                    
-                    createCandidateP.resolve(newCandidate);
+                    parseXML(response.body, xmlProcessors)
+                        .then(function xmlParseSuccess(responseObject) {
 
-                })
-                .catch(function xmlParseError(err) {
-                    log.error({ func: 'processCandidateCreateResult', err: err }, 'Request Errored');
-                    return createCandidateP.reject(err);
+                            log.debug({ func: 'processCandidateCreateResult', response: responseObject }, 'Processing candidate JS from XML');
+                            
+                            var responseRoot = responseObject.root;
+
+                            if (!!responseRoot.err) {
+                                log.error({ func: 'processCandidateCreateResult', err: responseRoot.errmsg });
+                                return createCandidateP.reject(new Error(responseRoot.errmsg));
+                            }
+
+                            var newCandidate = responseRoot.result;
+                            log.info({ func: 'processCandidateCreateResult', candidate: newCandidate });
+
+                            createCandidateP.resolve(newCandidate);
+
+                        })
+                        .catch(function xmlParseError(err) {
+                            log.error({ func: 'processCandidateCreateResult', err: err }, 'Request Errored');
+                            return createCandidateP.reject(err);
+                        });
+
+
                 });
-            
-            
-        });
-        
-    return createCandidateP.promise;
-}
- 
-function updateCandidate(candidateId, updatedProperties) {
-    
-    
-}
- 
-function parseCandidateResponse(response, promise) {
 
-    promise = promise || Q.defer();
-
-    return parseXML(response.body)
-        .then(function xmlParseSuccess(responseObject) {
-
-            log.debug({ func: 'processCandidateSearchResults', response: responseObject }, 'Processing candidate JS from XML');
-            debugger;
-
-            var results = responseObject.root;
-
-            if (!!results.err) {
-                log.error({ func: 'processCandidateSearchResults', err: results.errmsg });
-                var e = new Error(results.errmsg);
-                promise.reject(e);
-                throw e;
-            }
-
-            var candidate;
-
-            if (!_.isUndefined(results.recordCount)) {
-                if (results.recordCount === 0) {
-                    promise.reject(null);
-                    return null;
-                }
-                if (results.recordCount > 1) {
-                    log.warn({ func: 'processCandidateSearchResults', candidateCount: results.recordCount }, 'Multiple matches found, returning first');
-                }
-
-                candidate = _.first(results.result);
-            } else {
-                candidate = results.result;
-            }
-            
-            candidate = candidate || {};
-
-            log.info({ func: 'processCandidateSearchResults', candidate: candidate });
-            
-            var secondaryRequestP = Q.defer();
-        
-            // Resolve this phase with a server call to load the candidate's full info
-            unirest.get(candidate.link)
-                .auth(auth)
-                .end(function processCandidateDetails(candidateDetailsResponse) {
-                    secondaryRequestP.resolve(candidateDetailsResponse);
-                });
-                
-            promise.resolve(secondaryRequestP.promise);
-            return secondaryRequestP.promise;
+            return createCandidateP.promise;
         })
-        .catch(function xmlParseError(err) {
-            log.error({ func: 'processCandidateSearchResults', err: err }, 'Request Errored');
-            promise.reject(err);
+        .then(function updateCandidateProps(candidate) {
+            if (!_.isEmpty(user.experience)) {
+                
+                log.debug({ func: 'updateCandidateProps', experience: user.experience }, 'Updating Candidate\'s Experience');
+                            
+                return setExperienceForCandidate(candidate.id, user.experience)
+                    .then(function handleExperienceResult(expResult) {
+                            log.debug({ func: createCandidate.updateCandidateProps, result: expResult }, 'Completed Update candidate Experience');
+                    },
+                        function handleExperienceSaveErr(err) {
+                            log.error({ func: createCandidate.updateCandidateProps, err: err }, 'Updating candidate Experience Failed');
+                        })
+                    .then(function wrap() {
+                        return candidate;
+                    });
+                            
+            }
+        })
+        .catch(function (err) {
+
+            log.error({ func: 'createCandidate', err: err }, 'Creating new Candidate Failed');
             throw err;
         });
 }
 
-function getCandidateForUser(user) {
+function setExperienceForCandidate(candidateId, experienceArray) {
+    if (_.isEmpty(candidateId)) {
+        return Q(new Error('Candidate ID not Specified'));
+    }
+    
+    var promises = _.map(experienceArray, function saveExperienceToCandidate(experienceItem) {
+        var deferred = Q.defer();
+        
+        var translatedExperience = translateExperienceToEmployment(experienceItem);
+
+        var postData = { params: encodeParameters(translatedExperience, true) };
+        var url = baseUrl + 'candidate/' + candidateId + '/employment/';
+        
+        log.info({ func: 'createCandidate', postData: postData, experience: experienceItem, candidateId: candidateId }, 'Posting Experience for Candidate');
+        
+        unirest.post(url)
+        .send(postData)
+        .auth(auth)
+        .end(function processExperienceCreateRequest(response) {
+            if (response.error) {
+                log.error({ func: 'processExperienceCreateRequest', err: response.error }, 'Request Errored');
+                return deferred.reject(response.error);
+            }
+
+            parseXML(response.body, xmlProcessors)
+                .then(function xmlParseSuccess(responseObject) {
+
+                    log.debug({ func: 'processExperienceCreateRequest', response: responseObject }, 'Processing experience JS from XML');
+                    
+                    var responseRoot = responseObject.root;
+
+                    if (!!responseRoot.err) {
+                        log.error({ func: 'processExperienceCreateRequest', err: responseRoot.errmsg });
+                        return deferred.reject(new Error(responseRoot.errmsg));
+                    }
+
+                    var newExperience = responseRoot.result;
+                    log.info({ func: 'processExperienceCreateRequest', candidate: newExperience });
+
+                    deferred.resolve(newExperience);
+
+                })
+                .catch(function xmlParseError(err) {
+                    log.error({ func: 'processExperienceCreateRequest', err: err }, 'Request Errored');
+                    return deferred.reject(err);
+                });
+
+
+        });
+
+        return deferred.promise.then(function updatePromises(savedExperienceObj) {
+            // TODO: Save Remote ID of Experience to User's experience;
+            
+            return savedExperienceObj;
+        });
+    });
+    
+    return Q.allSettled(promises)
+        .then(function processExperienceUpdates(results) {
+
+            var experienceResults = [];
+
+            _.each(results, function (res) {
+                if (res.state === 'fulfilled' && !!res.value) {
+                    experienceResults.push(res.value);
+                }
+            });
+
+            return experienceResults;
+        });
+    
+}
+
+function translateExperienceToEmployment(experience) {
+    var employmentObj = {};
+    
+    _.each(experienceTranslation, function (prop) {
+        var key = prop.ext;
+        var val = experience[prop.key];
+
+        if (prop.type === 'Date') {
+            val = moment(val).format('MM/DD/YYYY');
+        }
+
+        employmentObj[key] = val;
+    });
+    
+    return employmentObj;
+}
+
+var experienceTranslation = [
+    { ext: 'Prop1', desc: 'Start', key: 'startDate', refUrl: null, type: 'Date' },
+    { ext: 'Prop2', desc: 'End', key: 'endDate', refUrl: null, type: 'Date' },
+    { ext: 'Prop4', desc: 'Company', key: 'company', refUrl: null, type: 'text' },
+    { ext: 'Prop5', desc: 'Position', key: 'title', refUrl: null, type: 'text' },
+    { ext: 'Prop6', desc: 'Description', key: 'description', refUrl: null, type: 'text' }
+];
+ 
+function updateCandidate(candidateId, updatedProperties) {
+    
+    log.warn({ func: 'updateCandidate' }, 'WARNING: UPDATE CANDIDATE NOT IMPLEMENTED, Returning simple candidate object');
+    
+    throw new Error('Update Candidate is not yet implemented');
+}
+ 
+function findCandidateForUser(user) {
     var loadCandidateDetailsP = Q.defer();
     var email = user.email;
 
-    var queryString = encodeParameters({ 'Prop15': email });
-    var url = baseUrl + 'candidate/' + queryString;
+    return listCandidates({ 'Prop15': email })
+        .then(function processCandidateList(matchingCandidatesResult) {
 
-    unirest.get(url)
-        .auth(auth)
-        .end(function processCandidateSearchResults(response) {
-            if (response.error) {
-                log.error({ func: 'processCandidateSearchResults', err: response.error }, 'Request Errored');
-                return loadCandidateDetailsP.reject(response.error);
-            }
+            var matchCount = matchingCandidatesResult.recordCount;
+            var matches = matchingCandidatesResult.result;
 
-            parseCandidateResponse(response, loadCandidateDetailsP);
-        });
+            log.debug({ func: 'getCandidateForUser', matches: matches }, 'Got %d matching candidates for user', matchCount);
 
-    return loadCandidateDetailsP.promise
-        .then(function processCandidateDetails(candidateDetailsResponse) {
+            var candidate = _.first(matches);
 
-            if (candidateDetailsResponse.error) {
-                log.error({ func: 'processCandidateDetails', err: candidateDetailsResponse.error }, 'Request Errored');
-                return loadCandidateDetailsP.reject(candidateDetailsResponse.error);
-            }
+            return translateCandidateToUser(candidate);
+        })
+        .catch(function processCandidateSearchError(err) {
+            log.error({ func: 'findCandidateForUser', err: err }, 'Failed to find existing Applicant');
 
-            parseXML(candidateDetailsResponse.body)
-                .then(function xmlParseSuccess(responseObject) {
-
-                    var result = responseObject.root;
-
-                    if (!!result.err) {
-                        log.error({ func: 'processCandidateSearchResults', err: result.errmsg });
-                        return loadCandidateDetailsP.reject(new Error(result.errmsg));
-                    }
-
-                    var candidate = responseObject.root.result;
-
-                    return translateCandidateToUser(candidate);
-                })
-                .then(function processTranslatedCandidate(candidate) {
-                    log.info({ func: 'processTranslatedCandidate', candidate: candidate }, 'Finished processing canddiate from %s server', company);
-
-                });
+            return null;
         });
 }
 
+function getCandidateDetails(candidateId) {
+    var candidateQueryP = Q.defer();
+    var url = baseUrl + 'candidate/' + candidateId;
+    
+    unirest.get(url)
+        .auth(auth)
+        .end(function processCandidateDetails(response) {
+            if (response.error) {
+                log.error({ func: 'getCandidateDetails', err: response.error }, 'Request Errored');
+                return candidateQueryP.reject(response.error);
+            }
+            
+            return parseOutResponseData(response.body)
+                .then(function processCandidate(candidate) {
+
+
+                    log.info({ func: 'getCandidateDetails', candidate: candidate }, 'Got raw candidate');
+
+                    return translateCandidateToUser(candidate);
+                })
+                .then(function finalizeCandidate(translatedCandidate) {
+
+                    log.info({ func: 'getCandidateDetails', candidate: translatedCandidate }, 'Returning translated canddiate');
+
+                    candidateQueryP.resolve(translatedCandidate);
+                })
+                .catch(function (err) {
+                    candidateQueryP.reject(err);
+                });
+        });
+
+    return candidateQueryP.promise;
+}
+
 // TODO: Need to restrict query to show only TruckerLine/Outset Candidates by Default
-function listCandidates(candidateQuery) { }
+/**
+ * Queries the server and returns a list of canddiates, wrapped in an object
+ */
+function listCandidates(candidateQuery) { 
+    var candidateQueryP = Q.defer();
+    
+    var query = translateObjectToProps(candidateQuery);
+    var paramString = encodeParameters(query);
+    var url = baseUrl + 'candidate/' + paramString;
+    
+     unirest.get(url)
+        .auth(auth)
+        .end(function processCandidateList(response) {
+            if (response.error) {
+                log.error({ func: 'processCandidateList', err: response.error }, 'Request Errored');
+                return candidateQueryP.reject(response.error);
+            }
+            
+            parseOutResponseData(response.body)
+                .then(function processParsedResponse(parsedResponse) {             
+                    candidateQueryP.resolve(parsedResponse);
+                });
+        });
+
+     return candidateQueryP.promise;
+}
 
 /***********************************************************************/
+
+var TRUCKERLINE_SOURCE_ID = 1;
+
+function createApplication(candidateId, job) {
+    
+    var deferred = Q.defer();
+    
+    var application = {
+        applicationtype: 2,
+        positionid: job.remoteSystemId,
+        //positionreference: ???
+        sourceid: TRUCKERLINE_SOURCE_ID,
+        //jobadverid: ???,
+        //jobadvertreference: ???
+    };
+    
+    var postData = { params: encodeParameters(application, true) };
+    var url = baseUrl + 'candidate/' + candidateId + '/application/';
+    
+    
+    log.info({ func: 'createCandidate', postData: postData, candidateId: candidateId, url: url }, 'Creating new Job Application with the following info...');
+
+    
+     unirest.post(url)
+        .send(postData)
+        .auth(auth)
+        .end(function processCreatedApplication(response) {
+            if (response.error) {
+                log.error({ func: 'processCreatedApplication', err: response.error }, 'Request Errored');
+                return deferred.reject(response.error);
+            }
+
+            parseXML(response.body, xmlProcessors)
+                .then(function xmlParseSuccess(responseObject) {
+
+                    log.debug({ func: 'processCreatedApplication', response: responseObject }, 'Processing experience JS from XML');
+                    
+                    var responseRoot = responseObject.root;
+
+                    if (!!responseRoot.err) {
+                        log.error({ func: 'processCreatedApplication', err: responseRoot.errmsg });
+                        return deferred.reject(new Error(responseRoot.errmsg));
+                    }
+
+                    var newApplication = responseRoot.result;
+                    log.info({ func: 'processCreatedApplication', application: newApplication });
+
+                    deferred.resolve(newApplication);
+
+                })
+                .catch(function xmlParseError(err) {
+                    log.error({ func: 'processCreatedApplication', err: err }, 'Request Errored');
+                    return deferred.reject(err);
+                });
+
+
+        });
+
+    return deferred.promise.then(function updatePromises(savedExperienceObj) {
+        // TODO: Save Remote ID of Experience to User's experience;
+        
+        return savedExperienceObj;
+    });
+}
+
+function findApplicationsForUser(candidateId, positionId) {
+
+    var deferred = Q.defer();
+    var queryString = !!positionId ? encodeParameters({positionid: positionId}) : '';
+    var url = baseUrl + 'candidate/' + candidateId + '/application/';
+    
+    unirest.get(url + queryString)
+        .auth(auth)
+        .end(function processApplicationQuery(response) {
+            processUnirestAndParseXML(response)
+                .then(function (applicationQueryResult) {
+                
+                    var count = applicationQueryResult.recordCount;
+                    var applications = applicationQueryResult.result;
+                    
+                    return deferred.resolve(applications);
+                })
+                .catch(function xmlParseError(err) {
+                    log.error({ func: 'processCreatedApplication', err: err }, 'Request Errored');
+                    return deferred.reject(err);
+                });
+        
+    });
+    
+    return deferred.promise;
+}
+
+
+/***********************************************************************/
+/*     Private Methods                                                 */
+/***********************************************************************/
+
+function processUnirestAndParseXML(response) {
+    if (response.error) {
+        log.error({ func: 'processUnirestAndParseXML', err: response.error }, 'Request Errored');
+        throw new Error(response.error);
+    }
+    
+    return parseOutResponseData(response.body);
+}
 
 function encodeParameters(query, disableUrlParam) {
     var components = [];
@@ -247,52 +481,149 @@ function encodeParameters(query, disableUrlParam) {
         }
     });
 
+    if(_.isEmpty(components)) {
+        return '';
+    }
+    
     return (!!disableUrlParam ? '' : '?params=') + components.join(';');
 }
+
+function translateObjectToProps(queryObject) {
+    var translatedQuery = {};
+    
+    _.forOwn(queryObject, function (value, key) {
+        var prop = _.find(translation, { key: key });
+
+        if (!!prop) {
+            translatedQuery[prop.ext] = value;
+        }
+    });
+    
+    return translatedQuery;
+}
+
+
+
+/**
+ * @private 
+ * @description Given a response body, extracts the return values, whether returned as an
+ * array or an objet, depending on the nature of the response.
+ */
+function parseOutResponseData(responseBody) {
+    return parseXML(responseBody, xmlProcessors)
+        .then(function xmlParseSuccess(responseObject) {
+
+            log.debug({ func: 'parseOutResponseData', response: responseObject }, 'Processing candidate JS from XML');
+
+            var responseRoot = responseObject.root;
+
+            if (!!responseRoot.err) {
+                log.error({ func: 'parseOutResponseData', err: responseRoot.errmsg });
+                var e = new Error(responseRoot.errmsg);
+                throw e;
+            }
+            
+            // If the response is an 'Array', be sure it is encoded as such;
+            if (!_.isUndefined(responseRoot.recordCount)) {
+                if (responseRoot.recordCount === 0) {
+                    responseRoot.result = [];
+                }
+                if (responseRoot.recordCount === 1 && !_.isArray(responseRoot.result)) {
+                    responseRoot.result = [responseRoot.result];
+                }
+
+                log.debug({ func: 'parseOutResponseData', retval: responseRoot }, 'Returning Processed responseRoot');
+                return responseRoot;
+            }
+
+            log.debug({ func: 'parseOutResponseData', retval: responseRoot.result }, 'Returning Processed Result');
+            return responseRoot.result;
+        })
+        .catch(function xmlParseError(err) {
+            log.error({ func: 'parseOutResponseData', err: err }, 'Request Errored');
+            throw err;
+        });  
+}
+
 /**
  * @param  {any} srcUser
  */
 function translateUserToCandidate(srcUser) {
-    var candidate = [];
-    var promises = _(translation)
-        .map(function translateValueToProp(prop) {
-        
-            var userKey = prop.key;
-
-            if (_.isEmpty(userKey)) {
-                return Q.when(null);
-            }
-
-            var keys = userKey.split('.') || null;
-
-            var val;
-
-            while (keys.lenth > 0) {
-                val = srcUser[keys.shift()];
-            }
-            
-            return getPropForValue(prop, val);
-            
-    }).reject(_.isEmpty);
     
-    return Q.allSettled(promises, function (promiseResults) {
+    log.debug({ func: 'translateUserToCandidate', user: srcUser }, 'START');
+    
+    var candidate = {};
+    var promises = _.map(translation, function translateValueToProp(prop) {
+
+        var userKey = prop.key;
+
+        if (_.isEmpty(userKey)) {
+            return Q.when(null);
+        }
+
+        var keys = userKey.split('.') || null;
+        log.debug({ func: 'translateUserToCandidate', keys: userKey }, 'Keys for Prop');
+
+        var key = keys.shift();
+            var val = srcUser[key];
+        log.debug({ func: 'translateUserToCandidate', val: val }, 'User has value for `%s`', key);
+
+        while (keys.lenth > 0 && _.isObject(val)) {
+            key = keys.shift();
+            val = val[key];
+            log.debug({ func: 'translateUserToCandidate', val: val }, 'Extended...User has value for `%s`', key);
+        }
         
+        if (_.isEmpty(val)) {
+            return Q.when(null);
+        }
+        
+        return getPropForValue(prop, val);
+    });
+    
+    _.reject(promises, _.isEmpty);
+    
+    log.debug({ func: 'translateUserToCandidate', promises: promises }, 'Waiting for %d promises to settle', promises.length);
+    
+    
+    return Q.allSettled(promises).then(function (promiseResults) {
+
+        log.debug({ func: 'translateUserToCandidate', promises: promiseResults }, 'Processing %d promise results', promiseResults.length);
+    
         // Iterate over the remote query promises to get the ids which were
         // translated from values and need to be added to the candidate obj
         // before moving on.
         _.each(promiseResults, function (res) {
-            if (res.isFulfilled() && !!res.value) {
-                candidate.push(res.value);
+
+            log.debug({ func: 'translateUserToCandidate', promises: res }, 'Processing promise results');
+
+            if (res.state === "fulfilled" && !!res.value) {
+                
+                var key = res.value.key;
+                var value = res.value.value;
+
+                var rawVal = res.value.rawValue && res.value.rawValue.id;
+
+                candidate[key] = rawVal || value;
+
+                log.debug({ func: 'translateUserToCandidate', val: rawVal || value }, 'Set value for `%s`', key);
+
             }
-            else if (res.isFulfilled()) {
-                                log.debug({ func: 'translateUserToCandidate' }, 'Ignoring Empty Value');
+            else if (res.state === "fulfilled") {
+                log.debug({ func: 'translateUserToCandidate' }, 'Ignoring Empty Value');
             } else {
                 log.error({ func: 'translateUserToCandidate', err: res.reason }, 'Toolbox Query Failed');
             }
         });
-        
+
+        log.debug({ func: 'translateUserToCandidate', candidate: candidate }, 'Returning Translated Candidate');
+
         return candidate;
-    });
+    })
+        .catch(function (err) {
+            log.error({ func: 'translateUserToCandidate', err: err }, 'Translation Failed ...');
+            throw err;
+        });
 }
 
 function translateCandidateToUser(src) {
@@ -301,14 +632,24 @@ function translateCandidateToUser(src) {
     
     var promises = [];
     
+    
+    
     _.forOwn(src, function (val, propName) {
         var t = _.find(translation, { ext: propName });
 
         if (_.isEmpty(t)) {
             return;
         }
+        
+        if (_.isEmpty(t.key)) {
+            log.trace({ func: 'translateCandidateToUser', prop: propName }, 'No key for prop');
+            return;
+        }
+        
+        
+        log.info({ func: 'translateCandidateToUser', prop: propName, t: t, val: val, }, 'Proc Based on prop');
 
-        candidate[t.key] = _.extend(t, { value: val });
+        candidate[t.key] = val; //_.extend(t, { value: val });
         
         if (!!t.refUrl && !!val) {
             var d = Q.defer();
@@ -320,40 +661,63 @@ function translateCandidateToUser(src) {
                     // because we are not wrapped in a promise, we cannot
                     // do a native return - instead we need to use the deferred
                     // object to pass control
-                    return parseXML(response.body)
+                    return parseXML(response.body, xmlProcessors)
                         .then(function xmlParseSuccess(responseObject) {
-                            var result = responseObject.root;
-                            if (!!result.err) {
-                                log.error({ func: 'processToolboxLookup', err: result.errmsg });
-                                return d.reject(new Error(result.errmsg));
+                            var responseRoot = responseObject.root;
+                            if (!!responseRoot.err) {
+                                log.error({ func: 'translateCandidateToUser.processToolboxLookup', err: responseRoot.errmsg });
+                                return d.reject(new Error(responseRoot.errmsg));
                             }
+                            
+                            var retval = {key : t.key};
+                            var searchScope = responseRoot.result.item;
 
-                            candidate[t.key].options = result.result;
+                            retval.options = searchScope;
 
-                            var lookupVal = _.find(result.result, { id: val });
-                            candidate[t.key].rawValue = lookupVal;
+                            var lookupVal = _.find(searchScope, { id: val });
+                            retval.rawValue = lookupVal;
 
                             if (_.isEmpty(lookupVal)) {
-                                log.warn({ func: 'processToolboxLookup', val: val, searched: result.result }, 'failed to find value in toolbox');
+                                log.warn({ func: 'translateCandidateToUser.processToolboxLookup', val: val, searched: searchScope }, 'failed to find value in toolbox');
                                 return d.resolve(null);
                             }
+                            
+                    log.info({ func: 'translateCandidateToUser', prop: propName, src: val, val: lookupVal.lib, }, 'Found Value in Toolbox');
 
-                            candidate[t.key].value = lookupVal.lib;
+                            retval.value = lookupVal.lib;
 
-                            return d.resolve(candidate[t.key]);
+                            return d.resolve(retval);
                         })
                         .catch(function processToolboxErr(err) {
-                            log.error({ func: 'processToolboxLookup', err: err }, 'Toolbox Query Failed');
+                            log.error({ func: 'translateCandidateToUser.processToolboxLookup', err: err }, 'Toolbox Query Failed');
                             return d.reject(err);
                         });
                     
                 });
                 
             promises.push(d.promise);
+        } 
+        else {
+            log.info({ func: 'translateCandidateToUser', candidate: candidate }, 'Current Candidate State');
         }
     });
     
+    
+        log.info({ func: 'translateCandidateToUser', candidate: candidate, promises: promises }, 'Waiting on promises');
+    
     return Q.allSettled(promises, function (promiseResults) {
+        log.info({ func: 'translateCandidateToUser', candidate: candidate, promises: promiseResults }, 'Retukrning final Candidate');
+        
+        _.each(promiseResults, function (p) {
+            if (p.isFulfilled()) {
+                var retval = p.value;
+
+                log.info({ func: 'translateCandidateToUser', retval: retval, key: retval.key }, 'Adding promise val to candidate');
+
+                candidate[retval.key] = retval.value;
+            }
+        });    
+            
         return candidate;
     });
 }
@@ -361,53 +725,65 @@ function translateCandidateToUser(src) {
     
     
 function getPropForValue(prop, val) {
-        var d = Q.defer();
-            var retval = {};
-            
-            // If there is a refURL, we need to translate the 'value' into an 'id'
-            if (!!prop.refUrl && !!val) {
+    var d = Q.defer();
+    var retval = {
+        key: null,
+        value: null
+    };
+    
+    // If there is a refURL, we need to translate the 'value' into an 'id'
+    if (!!prop.refUrl && !!val) {
+        log.debug({ func: 'getPropForValue', prop: prop.desc, val: val }, 'Looking up Proop for value');
 
-                unirest.get(baseUrl + prop.refUrl)
-                    .auth(auth)
-                    .end(function processToolboxLookup(response) {
-                        // because we are not wrapped in a promise, we cannot
-                        // do a native return - instead we need to use the deferred
-                        // object to pass control
-                        return parseXML(response.body)
-                            .then(function xmlParseSuccess(responseObject) {
-                                var result = responseObject.root;
-                                if (!!result.err) {
-                                    log.error({ func: 'processToolboxLookup', err: result.errmsg });
-                                    return d.reject(new Error(result.errmsg));
-                                }
-                                
-                                // Find the item in the toolbox result based on the 'lib' value (???)
-                                var lookupItem = _.find(result.result, { lib: val });
+        unirest.get(baseUrl + prop.refUrl)
+            .auth(auth)
+            .end(function processToolboxLookup(response) {
+                // because we are not wrapped in a promise, we cannot
+                // do a native return - instead we need to use the deferred
+                // object to pass control
+                return parseXML(response.body, xmlProcessors)
+                    .then(function xmlParseSuccess(responseObject) {
+                        var responseRoot = responseObject.root;
+                        if (!!responseRoot.err) {
+                            log.error({ func: 'getPropForValue.processToolboxLookup', err: responseRoot.errmsg });
+                            return d.reject(new Error(responseRoot.errmsg));
+                        }
+                        
+                        var searchScope = responseRoot.result.item;
+                        
+                        // Find the item in the toolbox result based on the 'lib' value (???)
+                        var lookupItem = _.find(searchScope, { lib: val });
 
-                                if (_.isEmpty(lookupItem)) {
-                                    log.warn({ func: 'processToolboxLookup', val: val, searched: result.result }, 'failed to find value in toolbox');
-                                    return d.resolve(null);
-                                }
+                        if (_.isEmpty(lookupItem)) {
+                            log.warn({ func: 'getPropForValue.processToolboxLookup', val: val, searched: searchScope }, 'failed to find value in toolbox');
+                            return d.resolve(null);
+                        }
 
-                                log.debug({ func: 'processToolboxLookup', val: val, resultId: lookupItem.id }, 'Found ID %s in tooolbox for Value `%s`', lookupItem.id, val);
-                                retval[prop.ext] = lookupItem.id;
-
-                                return d.resolve(retval);
-                            })
-                            .catch(function processToolboxErr(err) {
-                                log.error({ func: 'processToolboxLookup', err: err }, 'Toolbox Query Failed');
-                                return d.reject(err);
-                            });
-
+                        log.debug({ func: 'getPropForValue.processToolboxLookup', val: val, resultId: lookupItem.id }, 'Found ID %s in tooolbox for Value `%s`', lookupItem.id, val);
+                        
+                        retval.key = prop.ext;
+                        retval.value = lookupItem.id;
+                        
+                        return d.resolve(retval);
+                    })
+                    .catch(function processToolboxErr(err) {
+                        log.error({ func: 'getPropForValue.processToolboxLookup', err: err }, 'Toolbox Query Failed');
+                        return d.reject(err);
                     });
-            } else {
-                retval[prop.ext] = val;
 
-                d.resolve(retval);
-            }
-            
-            return d.promise;
-        }
+            });
+    } else {
+        
+                        retval.key = prop.ext;
+                        retval.value = val;
+        
+        log.debug({ func: 'getPropForValue', prop: prop.desc, val: val, retval: retval }, 'Returning Simple value for prop');
+
+        d.resolve(retval);
+    }
+    
+    return d.promise;
+}
     
     
 var translation = [
@@ -461,652 +837,3 @@ var translation = [
     
     
     
-    
-    
-    
-
-/** eVERIFILE Service
- * ----------------------------
- * @description The eVERIFILE service will make requests to the eVERIFILE API and
- * return a promise that will be fulfilled once completed. These methods
- * should not be used directly by any routes, but instead by the base
- * bgchecks/reports controller to manage flow.
- *
- */
-
-/** SECTION: Public, Bound Members 
- *  
- */
-
-exports.GetSession = getSession;
-exports.SetSKUFilter = setSKUFilter;
-exports.GetReportTypeDefinitions = getReportTypeDefinitions;
-
-exports.GetAllApplicants = getAllApplicants;
-exports.GetApplicant = getApplicant;
-exports.CreateApplicant = upsertApplicant;
-exports.SearchForApplicant = searchForApplicant;
-
-exports.RunReport = runReport;
-exports.GetReportStatus = getReportStatus;
-exports.GetReportStatusByApplicant = getReportStatusByApplicant;
-exports.GetPdfReport = function () {
-    throw new Error('Not Implemented');
-};
-exports.GetSummaryReportPDF = getSummaryReportPDF;
-exports.GetRawReport = getRawReport;
-
-
-/**
- * SECTION: Private members
- * TODO: Move to config;
- */
-
-var reportPackages = constants.reportPackages;
-var enabledSKUs = constants.reportPackages.fieldSkus;
-var fieldTranslations = { 'PKG_PREMIUM': ['NBDS', 'SSNVAL', 'CRIMESC', 'FORM_EVER'] };
-
-var server = {
-    baseUrl: 'https://renovo-api-test.everifile.com/renovo',
-    username: 'api@dswheels.com',
-    password: 'Test#123'
-};
-
-server = _.extend(server, config.services.everifile);
-
-var Cookie = {
-    jar: null, // CookieJar
-    created: null, // moment
-    lastAccessed: null, // moment
-    maxAge: null, // long - milliseconds
-    maxKeepalive: 20 * 60 * 1000, // long - milliseconds
-
-    isValid: function () {
-        if (this.jar === null) {
-            return false;
-        }
-
-        var expires;
-
-        if (!!this.maxAge && !!this.created) {
-            expires = this.created.add(this.maxAge, 'milliseconds');
-
-            if (moment().isAfter(expires)) {
-                log.debug('Cookie has expired');
-                this.jar = this.created = this.lastAccessed = null;
-                return false;
-            }
-        }
-
-        if (!!this.maxKeepalive && !!this.lastAccessed) {
-            expires = this.lastAccessed.add(this.maxKeepalive, 'milliseconds');
-
-            if (moment().isAfter(expires)) {
-                log.debug('Cookie keep alive has expired');
-                this.jar = this.created = this.lastAccessed = null;
-                return false;
-            }
-        }
-
-        return true;
-    }
-};
-
-/**
- * GetSession : Returns a promise containing a session cookie to use in subsequent requests
- * @returns {Promise.promise|Cookie}
- */
-
-function getSession() {
-    var deferredGetSessionP = Q.defer();
-
-    if (!Cookie.isValid()) {
-        log.debug('Invalid or no cookie, logging in');
-
-        // Initalize new Cookie Jar
-        var newJar = unirest.jar(true);
-
-        var postData = {
-            'username': server.username,
-            'password': server.password
-        };
-
-        log.debug('[GetSession] with username %j to baseUrl %s', postData.username, server.baseUrl);
-
-        // post login request to get new session;
-        unirest.post(server.baseUrl + '/rest/session')
-            .type('json')
-            .send(postData)
-            .jar(newJar)
-            .end(function (response) {
-                log.debug('[GetSession] Response: %j', response.body);
-
-                if (response.error) {
-                    log.debug('[GetSession] Request Errored: %j', response.error);
-                    return deferredGetSessionP.reject(response.error);
-                }
-
-                log.debug('[GetSession] Success: %j', newJar);
-                Cookie.jar = newJar;
-                Cookie.created = Cookie.lastAccessed = moment();
-
-                return deferredGetSessionP.resolve(Cookie);
-            });
-    } else {
-        log.debug('Cookie is valid, continuing');
-        Cookie.lastAccessed = moment();
-        deferredGetSessionP.resolve(Cookie);
-    }
-
-    return deferredGetSessionP.promise;
-}
-
-/** SECTION : Report Definitions ---------------------------------------------------- */
-
-function setSKUFilter(filter) {
-    enabledSKUs = _.map(filter, function (str) {
-        return str.toUpperCase();
-    });
-
-    return Q.when(enabledSKUs);
-}
-
-function getReportTypeDefinitions(cookie, filter, enable) {
-
-    var getReportTypeDefsP = Q.defer();
-
-    unirest.get(server.baseUrl + '/rest/report')
-        .jar(cookie.jar)
-        .end(function (response) {
-
-            if (response.error) {
-                log.debug('[GetReportTypeDefinitions] Error in response');
-                return getReportTypeDefsP.reject(response.error);
-            }
-
-            var reportTypes = response.body.reports;
-            log.debug('[GetReportTypeDefinitions] Got %d report types from server', reportTypes && reportTypes.length);
-
-            if (!!enabledSKUs) {
-                if (filter) {
-                    reportTypes = reportTypes.filter(filterBySku);
-                }
-
-                if (enable) {
-                    // Set the reports to 'enabled'
-                    _.map(reportTypes, function (rt) {
-                        if (filterBySku(rt)) {
-                            rt.enabled = true;
-                        }
-                    });
-                }
-            }
-
-            updateReportFields(reportTypes, cookie.jar)
-                .then(function (reports) {
-                    return getReportTypeDefsP.resolve(reports);
-                }, function (error) {
-                    log.error('Unable to get updated report fields from the server', error);
-                    log.debug('Returning updated report types without ', error);
-                    return getReportTypeDefsP.resolve(reportTypes);
-                });
-
-        });
-
-    return getReportTypeDefsP.promise;
-}
-
-/** PRIVATE : Report Definitions ---------------------------------------------------- */
-
-function filterBySku(reportTypeData) {
-    return enabledSKUs.indexOf(reportTypeData.sku.toUpperCase()) >= 0;
-}
-
-function updateReportFields(reportTypes, cookieJar) {
-    log.debug('[updateReportFields] updating %d report types', reportTypes.length);
-
-    var fields = reportTypes.map(function (reportType) {
-        return getUpdatedReportFieldsPromise(reportType, cookieJar);
-    });
-
-    var defer = Q.defer();
-
-    Q.allSettled(fields).then(
-        function (processedFields) {
-            defer.resolve(processedFields);
-        },
-        function (error) {
-            defer.reject(error);
-        }
-        );
-
-    return defer.promise;
-}
-
-function getUpdatedReportFieldsPromise(reportType, cookieJar) {
-
-    var sku = reportType.sku;
-    log.debug('Getting Report Fields for SKU "%s"', sku);
-
-    if (!!fieldTranslations[sku]) {
-        log.debug('Translating sku %s into %j', sku, fieldTranslations[sku]);
-
-        var componentFields = fieldTranslations[sku].map(function (reportType) {
-            return getUpdatedReportFieldsPromise(reportType, cookieJar);
-        });
-
-        var defer = Q.defer();
-
-        Q.allSettled(componentFields).then(
-            function (processedFields) {
-                log.debug('[TranslatedReportFields] Coalescing %d field sources: %j', processedFields);
-
-                var retFields = {};
-
-                var i;
-                for (i = 0; i < processedFields.length; i++) {
-                    retFields = _.extend(retFields, processedFields[i]);
-
-                    log.debug('[Coalesce_%d] %j', i, retFields);
-                }
-
-                defer.resolve(retFields);
-            },
-            function (error) {
-                defer.reject(error);
-            }
-            );
-
-        return defer.promise;
-    }
-    else {
-
-        var deferred = Q.defer();
-
-        if (reportType.enabled) {
-            unirest
-                .get(server.baseUrl + '/rest/report/' + sku + '/fields')
-                .jar(cookieJar)
-                .end(function (response) {
-
-                    if (response.error) {
-                        log.debug('[getUpdatedReportFieldsPromise] Error in response: %j', response.body);
-
-                        return deferred.reject(response.body.reason);
-                    }
-
-                    log.debug('[getUpdatedReportFieldsPromise] Got Fields: %j', response.body);
-
-                    reportType.fields = response.body.fields;
-
-                    return deferred.resolve(reportType);
-                });
-        } else {
-            log.debug('Not loading fields for disabled report type: %s', sku);
-            return deferred.resolve(reportType);
-        }
-
-        return deferred.promise;
-    }
-}
-
-/** END : Report Definitions ---------------------------------------------------- */
-
-
-/** SECTION : Remote Applicants ------------------------------------------------- */
-
-function getAllApplicants(cookie) {
-    log.debug('[GetAllApplicants] Requesting all applicants from everifile server');
-
-    var deferred = Q.defer();
-
-    unirest.get(server.baseUrl + '/rest/applicant')
-        .jar(cookie.jar)
-        .end(function (response) {
-            log.debug('[GetAllApplicants] Got response Body: %j', response.body);
-
-            if (response.error) {
-                return deferred.reject(response.body.reason);
-            }
-
-            log.debug('[GetAllApplicants] Got %d applicants', response.body.applicants && response.body.applicants.length);
-
-            var applicantModels = _.map(response.body.applicants, sanitizeReportApplicant);
-
-            deferred.resolve(applicantModels);
-        });
-
-    return deferred.promise;
-}
-
-function sanitizeReportApplicant(model) {
-
-    log.debug({ func: 'sanitizeReportApplicant', applicant: model }, 'Pre-sanitized applicant');
-
-    model.remoteId = model.applicantId;
-
-    if (model.hasOwnProperty('governmentId')) {
-        log.debug('[initReportApplicantModel] Clearing govId from response object');
-        model.governmentId = '';
-    }
-
-    if (model.hasOwnProperty('driversLicense')) {
-        log.debug('[initReportApplicantModel] Clearing dlId from response object');
-        model.driversLicense = '';
-    }
-
-    return model;
-}
-
-function getApplicant(cookie, id, noSanitize) {
-    log.debug('[GetApplicant] Requesting applicant "%d" from everifile server', id);
-
-    var deferred = Q.defer();
-    var endpoint = server.baseUrl + '/rest/applicant/' + (id || '');
-
-    unirest.get(endpoint)
-        .jar(cookie.jar)
-        .end(function (response) {
-            if (response.error) {
-                log.error({ func: 'GetApplicant', error: response.error },
-                    '[%d] Error at endpoint GET `%s`\n\t\tBody: %j', response.error.status, endpoint, response.body);
-                return deferred.reject({ status: response.error.status, message: response.body.reason });
-            }
-
-            log.debug('[GetApplicant] Got response Body for: %j', response.body.firstName + ' ' + response.body.lastName);
-
-            var applicantModel = sanitizeReportApplicant(response.body);
-
-            deferred.resolve(applicantModel);
-        });
-
-    return deferred.promise;
-}
-
-
-function upsertApplicant(cookie, applicantData) {
-    log.debug({ func: 'UpsertApplicant', requestBody: requestBody }, '%s an applicant', !!applicantData.applicantId ? 'Updating' : 'Creating');
-
-    var deferred = Q.defer();
-
-    var method, trailer;
-
-    log.debug({ func: 'UpsertApplicant', applicantData: applicantData }, 'ApplicantData is currently set to');
-
-    if (applicantData.applicantId) {
-        method = 'PUT';
-        trailer = '/' + applicantData.applicantId;
-    } else {
-        method = 'POST';
-        trailer = '';
-    }
-
-    var requestBody = applicantData;
-    var endpoint = server.baseUrl + '/rest/applicant' + trailer;
-
-    log.debug({ func: 'UpsertApplicant', requestBody: requestBody }, '%s %s', method, endpoint);
-
-    // check applicant data. Should we be using applicant.toObject()? merging with the report field def?
-    // Ensure that response Body contains Gov ID
-
-    unirest(method, endpoint)
-        .headers({ 'Content-Type': 'application/json' })
-        .send(requestBody)
-        .jar(cookie.jar)
-        .end(function (response) {
-            log.debug({ func: 'UpsertApplicant', response: response.body }, 'Got response Body');
-
-            if (response.error) {
-                log.error({ func: 'UpsertApplicant', response: response.error }, 'Got response Error');
-                log.debug({ func: 'UpsertApplicant' }, 'Handling Error Code %d', response.statusCode);
-                if (response.statusCode === 406) {
-                    log.debug({ func: 'UpsertApplicant', requestBody: requestBody }, 'Applicant already exists, searching...');
-
-                    searchForApplicant(cookie, requestBody).then(
-                        function (success) {
-                            log.debug({ func: 'UpsertApplicant', requestBody: requestBody }, 'Success! found applicantId: %s! ', success.applicantId);
-                            deferred.resolve(success);
-                        }, function (err) {
-                            log.debug({ func: 'UpsertApplicant', requestBody: requestBody }, 'Applicant search failed');
-                            deferred.reject(err);
-                        });
-                } else {
-                    deferred.reject(response.body.reason + '[' + JSON.stringify(response.error) + ']');
-                }
-            } else {
-
-                response.existingApplicant = method === 'PUT' ? true : false;
-
-                deferred.resolve(response.body);
-            }
-        });
-
-    return deferred.promise;
-}
-
-function searchForApplicant(cookie, applicant) {
-    log.debug('[searchForApplicant] Searching for existing applicant from info');
-
-    if (!applicant.governmentId) {
-        log.error('Will not search for applicant without govId');
-        return Q.reject('Will Not search for applicant without govId');
-    }
-
-    var deferred = Q.defer();
-
-    var query = {
-        'firstName': applicant.firstName,
-        'lastName': applicant.lastName,
-        'birthDate': applicant.birthDate,
-        'governmentId': applicant.governmentId
-    };
-    var method = 'GET';
-
-    log.debug('%s /rest/applicant query:%j', method, query);
-
-    unirest(method, server.baseUrl + '/rest/applicant')
-        .headers({ 'Content-Type': 'application/json' })
-        .query(query)
-        .jar(cookie.jar)
-        .end(function (response) {
-            log.debug('[searchForApplicant] Got response Body: %j', !!response.body); // Use truthy to hide sensitive info
-
-            if (response.error) {
-                log.debug('[searchForApplicant] Full Error Response: \n\n%j\n\n', response);
-
-                deferred.reject(response.body.reason + '[' + JSON.stringify(response.error) + ']');
-            } else if (response.body.applicants && response.body.applicants.length === 1) {
-                log.debug('[searchForApplicant] Found a single match!');
-
-                deferred.resolve(response.body.applicants[0]);
-            } else if (response.body.applicants) {
-                log.error('[searchForApplicant] Found a %d matches - cannot decide on one', response.body.applicants.length);
-                deferred.reject('[searchForApplicant] could not decide on a single result from %d matches', response.body.applicants.length);
-            } else {
-                log.error('[searchForApplicant] Unkown problem: %j', response.body);
-                deferred.reject('Unknown issue with search: ' + response.body);
-            }
-        });
-
-    return deferred.promise;
-}
-/** SECTION : Remote Applicants ------------------------------------------------- */
-
-
-/** SECTION: Report Manipulation ------------------------------------------------------------- */
-
-function runReport(cookie, remoteSku, remoteApplicantId) {
-
-    var reportResponseData = {
-        reportSku: remoteSku,
-        applicantId: remoteApplicantId
-    };
-    log.debug('[RunReport] Executing with parameters: %j', reportResponseData);
-
-    var deferred = Q.defer();
-
-    unirest.post(server.baseUrl + '/rest/report')
-        .jar(cookie.jar)
-        .query(reportResponseData)
-        .end(function (response) {
-            log.debug('[RunReport] Response Body: %j', response.body);
-            log.debug('[RunReport] Response Error: %j', response.error);
-
-            if (response.error) {
-                return deferred.reject(response.body.reason);
-            }
-
-            if (response.status === 204) {
-                log.error('Bastards didn\'t give us any info! - 204:NO CONTENT');
-
-                return deferred.resolve(reportResponseData);
-            }
-
-            var resultId = parseInt(reportResponseData.applicantId);
-            var inherantId = parseInt(response.body.applicant.id);
-
-            if (resultId !== inherantId) {
-                var message = 'Mismatched Applicants : Response report is for different applicant than request!';
-                log.error('ERROR! %s, request: %d vs response: %d', message, reportResponseData.applicantId, response.body.applicant.id);
-                return deferred.reject(new Error(message));
-            }
-
-            var sampleResponse = {
-                'id': 4,
-                'applicant': { 'id': 14 },
-                'report': { 'sku': 'G_EDUVRF' },
-                'reportCheckStatus': {
-                    'timestamp': '2014-12-12',
-                    'status': 'INVOKED',
-                    'requiredData': []
-                },
-                'startDate': 1360959827087,
-                'completedDate': null,
-                'resource_key': 'lastName',
-                'name': 'lastName',
-                'length': 50,
-                'type': 'string',
-                'required': true
-            };
-
-            var resolution = updateReportStatus(reportResponseData, response.body);
-            log.debug('[RunReport] Resolving with data: %j', resolution);
-
-            deferred.resolve(resolution);
-        }
-            );
-
-    return deferred.promise;
-}
-function getReportStatus(cookie, remoteId) {
-    log.debug('[GetReportStatus] for remoteId %s', remoteId);
-
-    var deferred = Q.defer();
-
-    unirest.get(server.baseUrl + '/rest/reportCheck/' + remoteId)
-        .jar(cookie.jar)
-        .end(function (response) {
-            log.debug(response.body);
-
-            if (response.error) {
-                return deferred.reject(response.body.reason);
-            }
-
-            deferred.resolve(response.body);
-        });
-
-    return deferred.promise;
-}
-function getReportStatusByApplicant(cookie, applicantId) {
-    log.debug('[GetReportStatusByApplicant] ');
-
-    var deferred = Q.defer();
-
-    unirest.get(server.baseUrl + '/rest/applicant/' + applicantId + '/reports')
-        .jar(cookie.jar)
-        .end(function (response) {
-            log.debug(response.body);
-
-            if (response.error) {
-                return deferred.reject(response.body.reason);
-            }
-
-            deferred.resolve(response.body);
-        });
-
-    return deferred.promise;
-}
-function getSummaryReportPDF(cookie, remoteApplicantId) {
-
-    var deferred = Q.defer();
-
-    var endpoint = server.baseUrl + '/rest/reportSummary/find/' + remoteApplicantId;
-
-    log.debug({ func: 'GetSummaryReportPDF', endpoint: endpoint }, 'Connectin to endpoint');
-    unirest.get(endpoint)
-        .jar(cookie.jar)
-        .encoding(null) // Set encoding to NULL in order to return a Buffer rather than string :)
-        .end(function (response) {
-            if (response.error) {
-                log.error({ func: 'GetSummaryReportPDF', error: response.error }, 'Error retreiving PDF Report');
-                return deferred.reject(response.body.reason || response.error.message);
-            }
-
-            log.debug({ func: 'GetSummaryReportPDF' }, 'Response headers: %j', response.headers);
-
-            var disposition = contentDisposition.parse(response.headers['content-disposition']);
-
-            log.debug({ func: 'GetSummaryReportPDF', disposition: disposition }, 'Parsed Disposition');
-
-            var retval = {
-                headers: response.headers,
-                contentType: response.headers['content-type'],
-                date: response.headers.date,
-                filename: disposition.parameters.filename,
-                type: disposition.type,
-                content: response.raw_body // jshint ignore:line
-            };
-
-            deferred.resolve(retval);
-        });
-
-    return deferred.promise;
-}
-function getRawReport(cookie, remoteReportId) {
-    var deferred = Q.defer();
-
-    unirest.get(server.baseUrl + '/rest/reportCheck/' + remoteReportId + '/report')
-        .jar(cookie.jar)
-        .end(function (response) {
-
-            if (response.error) {
-                log.debug('[GetRawReport] Error Getting Report Data', response.error);
-                return deferred.reject(response.body.reason);
-            }
-            log.trace('[GetRawReport] ', response.body);
-            deferred.resolve(response.body);
-        });
-
-    return deferred.promise;
-}
-
-/** Report Manipulation : Private Methods ------------------------------------------------------------- */
-
-function updateReportStatus(reportStatusResponse, body) {
-    if (!reportStatusResponse.remoteId) {
-        reportStatusResponse.remoteId = body.id;
-        reportStatusResponse.reportSku = body.report.sku;
-    }
-
-    reportStatusResponse.status = body.reportCheckStatus.status;
-    reportStatusResponse.timestamp = body.reportCheckStatus.timestamp;
-    reportStatusResponse.completed = !!body.completedDate ? moment(body.completedDate) : null;
-    reportStatusResponse.requiredData = body.reportCheckStatus.requiredData;
-
-    return reportStatusResponse;
-}
-/** END: Report Manipulation ------------------------------------------------------------- */
-
-/** SECTION: Private Methods **/
-
-

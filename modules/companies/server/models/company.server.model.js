@@ -90,6 +90,21 @@ var CompanySchema = new Schema({
         type: String,
         default: 'modules/companies/img/profile/default.png'
     },
+    
+    images: {
+        type: {
+            square: {
+                type: String
+            },
+            standard: {
+                type: String
+            },
+            hires: {
+                type: String
+            }
+        },
+        default: {}
+    },
 
     gateway: {
         sku: {

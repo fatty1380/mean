@@ -1014,7 +1014,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '\n' +
   '    <div class="panel-heading overflow-h">\n' +
   '        <span class="panel-title heading-sm">\n' +
-  '        <i class="fa fa-sort mgn-right"></i> Active Jobs\n' +
+  '        <i class="fa fa-sort mgn-right"></i>Active Jobs\n' +
   '        <a ui-sref="jobs.create({companyId: vm.company.id})"><i class="fa fa-plus pull-right"></i></a>\n' +
   '        </span>\n' +
   '    </div>\n' +
@@ -1119,7 +1119,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '<div class="row profile">\n' +
   '    <div class="job-list blog-category-list panel panel-default">\n' +
   '        <div class="panel-heading">\n' +
-  '            Active Jobs\n' +
+  '           Active Jobs\n' +
   '        </div>\n' +
   '\n' +
   '        <div class="panel-body">\n' +
