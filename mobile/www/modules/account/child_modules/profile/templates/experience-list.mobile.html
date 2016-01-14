@@ -1,0 +1,41 @@
+<div name="experience-list">
+    <ion-list ng-if="vm.experience && vm.experience.length">
+        <ion-item class="item card" ng-repeat="exp in (vm.experience) track by $index">
+            <button class="button button-clear edit-btn" ng-if="!!vm.showAddExperienceModal" ng-click="vm.showEditExperienceModal(exp)">
+                <i class="ion-compose"></i>
+            </button>
+            <div class="experience-heading">
+                <div class="title">{{exp.title}}</div>
+                <div class="company" ng-if="!!exp.company"> {{exp.company}}</div>
+            </div>
+
+            <div class="props" ng-if="exp.location || exp.startDate || exp.endDate">
+                <div class="location" ng-if="!!exp.location">{{exp.location}}</div>
+                <div class="time" ng-if="!!exp.startDate || exp.endDate">
+                    <i class="ico ico-timesmall"></i>
+                    <span ng-if="!!exp.startDate">{{exp.startDate | monthDate | date : 'MMM, yyyy'}}</span>
+                    <span ng-if="!!exp.startDate && exp.startDate !== exp.endDate">-</span>
+                    <span ng-if="!!exp.endDate">{{exp.endDate | monthDate | date : 'MMM, yyyy'}}</span>
+                    <span ng-if="!exp.endDate">Present</span>
+                </div>
+            </div>
+
+            <p class="description" ng-if="!!exp.description">{{exp.description}}</p>
+        </ion-item>
+    </ion-list>
+
+    <div ng-if="!vm.experience || !vm.experience.length" class="no-content">
+        <span ng-if="!!vm.canEdit">
+            <span ng-bindhtml="vm.instructText"></span>
+        </span>
+        <span ng-if="!vm.canEdit">No Experience Listed</span>
+    </div>
+
+
+
+    <div class="button content-button" ng-if="vm.canEdit && vm.showAddBtn" ng-click="vm.showAddExperienceModal()">
+        <button type="button" class="button button-block button-positive">
+            <i class="ion-plus"></i> Add Experience
+        </button>
+    </div>
+</div>

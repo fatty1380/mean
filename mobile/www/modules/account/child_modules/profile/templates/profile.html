@@ -62,10 +62,11 @@
                     </div>
                     <div class="no-content" ng-if="!vm.canEdit">
                         <p class="message">
-                            {{::vm.profileData.firstName}} does not have any reviews yet. If you would like to review {{::vm.profileData.firstName}}, 
-                            <a ui-sref="account.messages({recipientId: vm.profileData.id})">send a message</a> and ask them to send you a Review Request. 
+                            {{::vm.profileData.firstName}} does not have any reviews yet. If you would like to review {{::vm.profileData.firstName}},
+                            <a ui-sref="account.messages({recipientId: vm.profileData.id})">send a message</a> and ask them
+                            to send you a Review Request.
                         </p>
-                        
+
                     </div>
 
                 </ion-scroll>
@@ -134,7 +135,9 @@
 
                     <div class="item activity profile-activity" ng-if="vm.feed">
                         <span class="item-label">ACTIVITY:</span>
-                        <div class="text-center item-loading" ng-if="vm.feedLoading"><ion-spinner></ion-spinner></div>
+                        <div class="text-center item-loading" ng-if="vm.feedLoading">
+                            <ion-spinner></ion-spinner>
+                        </div>
                         <oset-feed-item ng-if="vm.feed.length" ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
                         <div ng-if="!vm.feed.length && !vm.feedLoading" class="no-feed-items">{{ vm.feedMessage }}</div>
                     </div>
@@ -160,42 +163,10 @@
             badge="vm.canEdit && vm.getExperienceBadge()" badge-style="badge-energized">
 
                 <ion-scroll class="experience-list">
-                    <ion-list ng-if="vm.experience && vm.experience.length">
-                        <ion-item class="item card" ng-repeat="exp in (vm.experience) track by $index">
-                            <button class="button button-clear edit-btn" ng-if="!!vm.showAddExperienceModal" ng-click="vm.showEditExperienceModal(exp)">
-                                <i class="ion-compose"></i>
-                            </button>
-                            <div class="experience-heading">
-                                <div class="title">{{exp.title}}</div>
-                                <div class="company" ng-if="!!exp.company"> {{exp.company}}</div>
-                            </div>
-
-                            <div class="props" ng-if="exp.location || exp.startDate || exp.endDate">
-                                <div class="location" ng-if="!!exp.location">{{exp.location}}</div>
-                                <div class="time" ng-if="!!exp.startDate || exp.endDate">
-                                    <i class="ico ico-timesmall"></i>
-                                    <span ng-if="!!exp.startDate">{{exp.startDate | monthDate | date : 'MMMM, yyyy'}}</span>
-                                    <span ng-if="!!exp.startDate && exp.endDate">-</span>
-                                    <span ng-if="!!exp.endDate">{{exp.endDate | monthDate | date : 'MMMM, yyyy'}}</span>
-                                </div>
-                            </div>
-
-                            <p class="description" ng-if="!!exp.description">{{exp.description}}</p>
-                        </ion-item>
-                    </ion-list>
-
-                    <div ng-if="!vm.experience || !vm.experience.length" class="no-content">
-                        <span ng-if="!!vm.showEditModal">
-                            <p>This is your profile’s experience section where you can keep a digital record of your work experience - think of it like a digital resume. Add your past jobs here and add details about all your responsibilities to present a full picture of your professional abilities.</p>
-                            
-                        <p class="message">Get started with the <strong>Add Experience</strong> button below</p>
-                        </span>
-                        <span ng-if="!vm.showEditModal">No Experience Listed</span>
-
-                    </div>
+                    <tline-experience-list ng-model="vm.experience" show-add-button="false" can-edit="vm.canEdit" show-add-fn="vm.showAddExperienceModal" instructText="vm.expInstructText"></tline-experience-list>
                 </ion-scroll>
 
-                <div class="button content-button" ng-if="!!vm.showAddExperienceModal" ng-click="vm.showAddExperienceModal()">
+                <div class="button content-button" ng-if="!!vm.canEdit && !!vm.showAddExperienceModal" ng-click="vm.showAddExperienceModal()">
                     <button type="button" class="button button-block button-positive">
                         <i class="ion-plus"></i> Add Experience
                     </button>

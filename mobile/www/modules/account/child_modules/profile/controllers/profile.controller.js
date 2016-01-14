@@ -206,6 +206,9 @@
              */
             vm.showUserSettings = null;
             getExperience();
+            
+            vm.expInstructText = '<p>This is your profile’s experience section where you can keep a digital record of your work experience - think of it like a digital resume. Add your past jobs here and add details about all your responsibilities to present a full picture of your professional abilities.</p>' +
+            '<p class="message">Get started with the <strong>Add Experience</strong> button below</p>';
 
             /**
              * showEditAvatar
@@ -245,7 +248,7 @@
                     },
                         function (err) {
                             logger.debug(err);
-                        })
+                        });
             };
 
             vm.showRequestReviewModal = function (parameters) {
@@ -258,58 +261,23 @@
                     },
                         function (err) {
                             logger.debug(err);
-                        })
-            };
-
-            vm.showAddExperienceModal = function (parameters) {
-                $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'addExperience');
-                profileModalsService
-                    .showAddExperienceModal(parameters)
-                    .then(function (experienceResult) {
-                        if (_.isEmpty(experienceResult)) {
-                            return;
-                        }
-
-                        if (_.isArray(experienceResult)) {
-                            vm.experience = experienceResult;
-                        } else {
-                            vm.experience.push(experienceResult);
-                        }
-                    })
-                    .catch(function (err) {
-                        if (!!err) { logger.debug(err); }
-                    })
-            };
-
-            vm.showEditExperienceModal = function (experienceItem) {
-                $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'editExperience');
-                profileModalsService
-                    .showEditExperienceModal(experienceItem)
-                    .then(function (experienceResult) {
-                        logger.debug('Edited Experience ', experienceResult);
-
-                        if (_.isArray(experienceResult)) {
-                            vm.experience = experienceResult;
-                        } else {
-                            vm.experience.push(experienceResult);
-                        }
-                        
-                        //experienceItem = result;
-                        getExperience();
-                    })
-                    .catch(function (err) {
-                        if (!!err) { logger.debug(err); }
-                    })
+                        });
             };
         }
         // END: vm.canEdit
         
-        vm.showProfileTab = function () {
+        vm.showProfileTab = showProfileTab;
+vm.showReviewTab = showReviewTab;
+vm.showExperienceTab = showExperienceTab;
+vm.getReviewBadge = getReviewBadge;
+vm.getExperienceBadge = getExperienceBadge;
+        
+        function showProfileTab() {
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
             $cordovaGoogleAnalytics.trackView(vm.canEdit ? 'account.profile' : 'user.profile');
         }
 
-        vm.showReviewTab = function () {
+        function showReviewTab() {
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
             $cordovaGoogleAnalytics.trackView((vm.canEdit ? 'account.profile' : 'user.profile') + '.reviews');
             if (vm.canEdit) {
@@ -322,7 +290,7 @@
             }
         }
 
-        vm.showExperienceTab = function () {
+        function showExperienceTab() {
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showExperience');
             $cordovaGoogleAnalytics.trackView((vm.canEdit ? 'account.profile' : 'user.profile') + '.experience');
             if (vm.canEdit && !vm.welcomeExperience) {
@@ -331,7 +299,7 @@
             }
         }
 
-        vm.getReviewBadge = function () {
+        function getReviewBadge() {
             if (vm.canEdit) {
 
                 if (!!vm.updates.reviews) {
@@ -339,20 +307,20 @@
                 }
 
                 if (!vm.welcomeReview) {
-                    return '+'
+                    return '+';
                 }
             }
 
             return null;
         }
 
-        vm.getExperienceBadge = function () {
+        function getExperienceBadge() {
             if (vm.canEdit && !vm.welcomeExperience) {
                 return '+';
             }
 
             return null;
-        }
+        };
 
         function getReviews() {
             reviewService
@@ -364,16 +332,16 @@
                     if (vm.canEdit) {
                         vm.welcomeReview = !_.isEmpty(vm.reviews) || JSON.parse(StorageService.get('welcome.review'));
                     }
-                })
-        };
+                });
+        }
 
         function getExperience() {
             experienceService
                 .getUserExperience()
                 .then(function (response) {
                     vm.experience = response.data || [];
-                })
-        };
+                });
+        }
 
         function openChat() {
             if (!vm.canEdit) {
