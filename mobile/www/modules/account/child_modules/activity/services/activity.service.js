@@ -5,9 +5,9 @@
         .module('activity')
         .service('activityService', activityService);
 
-    activityService.$inject = ['settings', '$http', '$q', '$ionicPopup', 'utilsService', 'userService'];
+    activityService.$inject = ['settings', '$http', '$q', '$ionicPopup', '$cordovaGoogleAnalytics', 'utilsService', 'userService'];
 
-    function activityService(settings, $http, $q, $ionicPopup, utilsService, userService) {
+    function activityService(settings, $http, $q, $ionicPopup, $cordovaGoogleAnalytics, utilsService, userService) {
 
         var service = {
             getFeed: getFeed,
@@ -62,7 +62,7 @@
                 buttonName: 'Activity',
                 loadingText: 'Loading Activity Feed'
             }
-        }
+        };
 
         return service;
         
