@@ -2,19 +2,19 @@
 
     <ion-header-bar align-title="center">
         <button class="button button-clear" ng-click="vm.closeModal()">Close</button>
-        <h1 class="title">{{vm.entry.title || 'Job Details'}}</h1>
+        <h1 class="title">{{vm.job.title || 'Job Details'}}</h1>
         <button class="button button-clear" ng-click="vm.share()" ng-hide="true">Share Job</button>
     </ion-header-bar>
 
-    <ion-content class="pane has-footer has-header">
+    <ion-content class="pane has-footer has-header job-details">
+            <oset-job-item model="vm.job"></oset-job-item>
         <ion-item class="job-item">
 
-            <oset-job-item model="vm.entry"></oset-job-item>
 
             <h1>Job Description</h1>
-            <p ng-bind-html="vm.entry.description"></p>
+            <p ng-bind-html="vm.job.description"></p>
             <h1>Job Requirements</h1>
-            <p ng-bind-html="vm.entry.requirements"></p>
+            <p ng-bind-html="vm.job.requirements"></p>
         </ion-item>
     </ion-content>
     <!--
@@ -24,7 +24,7 @@
             <ion-item class="item">
                 <div class="activity-item">
                     <p>
-                        <pre>{{vm.entry | prettyPrint}}</pre>
+                        <pre>{{vm.job | prettyPrint}}</pre>
                     </p>
 
 
@@ -35,9 +35,10 @@
         </ion-scroll>
     </ion-pane>-->
 
-    <ion-footer-bar ng-if="!vm.isInputVisible">
+    <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button icon ion-ios-plus-outline primary" ng-click="vm.toggleInput($event, true)"> Apply Now!</button>
+            <button class="button icon ion-ios-plus-outline primary" ng-disabled="vm.loading || vm.disableApplication" 
+            ng-click="vm.apply($event)">{{vm.loading ? 'in progress' : 'Apply Now!'}}</button>
         </div>
     </ion-footer-bar>
 

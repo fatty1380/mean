@@ -28,6 +28,7 @@
     settings.friends = settings.api + 'friends/';
     settings.requests = settings.api + 'requests/';
     settings.companies = settings.api + 'companies/';
+    settings.jobs = settings.api + 'jobs/';
 
     // endpoints
     settings.signup = settings.oauth + 'signup/';

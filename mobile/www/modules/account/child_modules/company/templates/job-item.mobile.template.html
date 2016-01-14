@@ -1,5 +1,5 @@
 <section name="job-item" ng-click="vm.itemClick()">
-    <div class="activity-item job-item top" ng-class="{'company-item': !!vm.job.company}">
+    <div class="activity-item job-item top">
         <!--<div class="ico ico-avatarsmall"></div>-->
         <!--<img ng-if="!!vm.avatar" ng-src="{{vm.avatar}}" />-->
         <div class="panel">
@@ -11,13 +11,14 @@
                     <div class="activity-summary">
                         <strong class="title" ng-if="!!vm.title">{{ vm.title }}</strong>
                     </div>
+                </div>
+                <div class="holder last-location" ng-if="vm.placeName">
+                    <i class="ion-location"></i> {{vm.placeName}}
                     <div class="time" ng-if="vm.job.created">
                         <i class="ico ico-timesmall"></i> {{vm.job.created | date:'mediumDate'}}
                     </div>
                 </div>
-                <div class="holder last-location" ng-if="vm.placeName">
-                    <i class="ion-location"></i> {{vm.placeName}}
-                </div>
+                
             </div>
         </div>
 

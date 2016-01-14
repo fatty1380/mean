@@ -41,8 +41,8 @@
   }
 }
 
-.item {
-  &.job-item{
+.job-details {
+  .job-item{
       
       h1 {
           text-align: center;
@@ -69,8 +69,10 @@
         margin: 0;
       }
     }
-
+    
     .title{
+      font-size: 14px;
+      margin: 0;
       padding: 10px 0;
       color: #333;
       text-align: center;
