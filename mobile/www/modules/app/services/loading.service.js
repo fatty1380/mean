@@ -1,5 +1,6 @@
 (function () {
-
+    'use strict';
+    
     angular
         .module(AppConfig.appModuleName)
         .factory('LoadingService', LoadingService);
@@ -20,63 +21,63 @@
         
         return {
             showLoader: function (text, options) {
-                var template = { 
+                var template = {
                     template: spinner + (!!text ? '<h4>' + text + '</h4>' : '')
                 };
                 options = _.extend({}, ld, template, options);
-                
+
                 return $ionicLoading.show(options);
             },
             showSuccess: function (text, options) {
-                var template = { 
+                var template = {
                     template: success + (!!text ? '<h4>' + text + '</h4>' : '')
                 };
                 options = _.extend({}, sd, template, options);
-                
+
                 return $ionicLoading.show(options);
             },
             showFailure: function (text, options) {
                 text = text || 'Sorry, an error occurred';
-                var template = { 
+                var template = {
                     template: failure + '<h4>' + text + '</h4>'
                 };
                 options = _.extend({}, fd, template, options);
-                
+
                 return $ionicLoading.show(options);
             },
             showAlert: function (text, options) {
-                var template = { 
+                var template = {
                     template: alert + (!!text ? '<h4>' + text + '</h4>' : '')
                 };
                 options = _.extend({}, dd, template, options);
-                
+
                 return $ionicLoading.show(options);
             },
             showIcon: function (text, icon, options) {
-                var template = { 
+                var template = {
                     template: '<i class="icon ' + icon + '"></i>'
                     + (!!text ? '<h4>' + text + '</h4>' : '')
                 };
                 options = _.extend({}, dd, template, { duration: 1300 }, options);
-                
+
                 return $ionicLoading.show(options);
             },
             show: function (text, options) {
                 options = options || _.isObject(text) && text || {};
-                
-                var template = { 
+
+                var template = {
                     template: text || success
                 };
                 options = _.extend({}, dd, template, options);
-                
+
                 return $ionicLoading.show(options);
             },
-            
-            
+
+
             hide: function () {
                 return $ionicLoading.hide();
             }
-        }
+        };
     }
 })();
 
