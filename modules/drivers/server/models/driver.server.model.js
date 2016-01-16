@@ -46,9 +46,10 @@ var DriverSchema = UserSchema.extend({
     license: {
         class: {
             type: String,
-            enum: ['A', 'B', 'C', 'D', '', null],
+            enum: ['A', 'B', 'C', 'D', 'Standard', null],
             default: null
         },
+        military: Boolean,
         endorsements: {
             type: [String],
             default: []

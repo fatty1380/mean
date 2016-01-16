@@ -21,7 +21,7 @@ var app, agent, credentials, applicant, article, session;
 /**
  * Article routes tests
  */
-describe.only('Everifile CRUD tests', function (done) {
+describe('Everifile CRUD tests', function (done) {
     this.timeout(10000);
     this.slow(500);
 

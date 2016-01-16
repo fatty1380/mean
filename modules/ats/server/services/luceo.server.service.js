@@ -53,6 +53,11 @@ _.extend(exports, {
     application: {
         create: createApplication,
         find: findApplicationsForUser
+    },
+    // TODO: Move to Utils Files
+    utils: {
+        setValueForKey: setValueForKey,
+        getValueForKey: readValueForKey
     }
 });
 
@@ -545,6 +550,79 @@ function parseOutResponseData(responseBody) {
         });  
 }
 
+function setValueForKey(keys, val, object) {
+    
+    var keys = _.isString(keys) ? keys.split('.') || [] : _.isArray(keys) ? keys : [];
+    
+    log.debug({ func: 'setValueForKey', object: object, keys: keys.join('/'), val: val }, 'Start');
+    if (_.isEmpty(keys)) {
+        log.debug({ func: 'setValueForKey', object: object, val: val }, 'Returning Value');
+        return val;
+    }
+    
+    var key = keys.shift();
+    object = object || {};
+    
+    var matches = key.match(/(\w+)\[(\d+)\]/);
+    if (!_.isEmpty(matches)) {        
+        var k = matches[1];
+        var i = matches[2];
+        
+        object[k] = object[k] || [];
+        
+        if (keys.length === 0) {
+            object[k][i] = val;
+        } else {
+            object[k][i] = setValueForKey(keys, val, object[k][i]);
+        }
+    } else {
+        
+        if (keys.length === 0) {
+            object[key] = val;
+        } else {
+            object[key] = setValueForKey(keys, val, object[key]);
+        }
+    }
+    
+    log.debug({ func: 'setValueForKey', object: object }, 'Returning Object');
+    return object;
+    
+}
+
+function readValueForKey(baseKey, user) {
+    var keys = baseKey.split('.') || [];
+    log.debug({ func: 'readValueForKey', keys: baseKey }, 'Keys for Prop');
+    
+    if (keys.length > 1) {
+        log.info({ func: 'readValueForKey', keyCt: keys.length }, 'Processing Compound Key');
+    }
+
+    var key = keys.shift();
+    var val = user[key];
+    log.debug({ func: 'readValueForKey', val: val }, 'User has value for `%s`', key);
+
+    while (keys.length > 0 && _.isObject(val)) {
+        key = keys.shift();
+        
+        var matches = key.match(/(\w+)\[(\d+)\]/);
+        if (!_.isEmpty(matches)) {
+            key = matches[1];
+            var i = matches[2];
+            
+            val = val[key][i];
+        }
+        else {
+            val = val[key];
+        }
+        
+        if (!_.isEmpty(val)) {
+            log.debug({ func: 'readValueForKey', val: val }, 'Extended...User has value for `%s`', key);
+        }
+    }
+    
+    return !_.isEmpty(val) ? val : null;
+}
+
 /**
  * @param  {any} srcUser
  */
@@ -561,33 +639,7 @@ function translateUserToCandidate(srcUser) {
             return Q.when(null);
         }
 
-        var keys = userKey.split('.') || null;
-        log.debug({ func: 'translateUserToCandidate', keys: userKey }, 'Keys for Prop');
-        
-        if (keys.length > 1) {
-            log.info({ func: 'translateUserToCandidate', keyCt: keys.length }, 'Processing Compound Key');
-        }
-
-        var key = keys.shift();
-        var val = srcUser[key];
-        log.debug({ func: 'translateUserToCandidate', val: val }, 'User has value for `%s`', key);
-
-        while (keys.length > 0 && _.isObject(val)) {
-            key = keys.shift();
-            
-            var matches = key.match(/(\w+)\[(\d+)\]/);
-            if (!_.isEmpty(matches)) {
-                key = matches[1];
-                var i = matches[2];
-                
-                val = val[key][i];
-            }
-            else {
-                val = val[key];
-            }
-            
-            log.debug({ func: 'translateUserToCandidate', val: val }, 'Extended...User has value for `%s`', key);
-        }
+        var val = readValueForKey(userKey, srcUser);
         
         if (_.isEmpty(val)) {
             return Q.when(null);
@@ -598,21 +650,20 @@ function translateUserToCandidate(srcUser) {
     
     _.reject(promises, _.isEmpty);
     
-    log.debug({ func: 'translateUserToCandidate', promises: promises }, 'Waiting for %d promises to settle', promises.length);
+    log.debug({ func: 'translateUserToCandidate'}, 'Waiting for %d promises to settle', promises.length);
     
     
     return Q.allSettled(promises).then(function (promiseResults) {
 
-        log.debug({ func: 'translateUserToCandidate', promises: promiseResults }, 'Processing %d promise results', promiseResults.length);
+        log.debug({ func: 'translateUserToCandidate'}, 'Processing %d promise results', promiseResults.length);
     
         // Iterate over the remote query promises to get the ids which were
         // translated from values and need to be added to the candidate obj
         // before moving on.
         _.each(promiseResults, function (res) {
 
-            log.debug({ func: 'translateUserToCandidate', promises: res }, 'Processing promise results');
-
             if (res.state === "fulfilled" && !!res.value) {
+            log.debug({ func: 'translateUserToCandidate', promises: res }, 'Processing promise results');
                 
                 var key = res.value.key;
                 var value = res.value.value;
@@ -625,7 +676,7 @@ function translateUserToCandidate(srcUser) {
 
             }
             else if (res.state === "fulfilled") {
-                log.debug({ func: 'translateUserToCandidate' }, 'Ignoring Empty Value');
+                log.trace({ func: 'translateUserToCandidate' }, 'Ignoring Empty Value');
             } else {
                 log.error({ func: 'translateUserToCandidate', err: res.reason }, 'Toolbox Query Failed');
             }
@@ -663,8 +714,10 @@ function translateCandidateToUser(src) {
         
         
         log.info({ func: 'translateCandidateToUser', prop: propName, t: t, val: val, }, 'Proc Based on prop');
+        
+        setValueForKey(t.key, val, candidate);
 
-        candidate[t.key] = val; //_.extend(t, { value: val });
+        //candidate[t.key] = val; //_.extend(t, { value: val });
         
         if (!!t.refUrl && !!val) {
             var d = Q.defer();
@@ -676,16 +729,14 @@ function translateCandidateToUser(src) {
                     // because we are not wrapped in a promise, we cannot
                     // do a native return - instead we need to use the deferred
                     // object to pass control
-                    return parseXML(response.body, xmlProcessors)
-                        .then(function xmlParseSuccess(responseObject) {
-                            var responseRoot = responseObject.root;
-                            if (!!responseRoot.err) {
-                                log.error({ func: 'translateCandidateToUser.processToolboxLookup', err: responseRoot.errmsg });
-                                return d.reject(new Error(responseRoot.errmsg));
-                            }
+                    return processUnirestAndParseXML(response)
+                        .then(function (parsedResponse) {
                             
-                            var retval = {key : t.key};
-                            var searchScope = responseRoot.result.item;
+                            var retval = {key : t.key, prop: t};
+                            var searchScope = parsedResponse.result.item;
+                            
+                            
+                            log.warn({ func: 'translateCandidateToUser', prop: propName, search: searchScope, lookup: { id: val } }, 'Searching for Value in Toolbox');
 
                             retval.options = searchScope;
 
@@ -697,9 +748,13 @@ function translateCandidateToUser(src) {
                                 return d.resolve(null);
                             }
                             
-                    log.info({ func: 'translateCandidateToUser', prop: propName, src: val, val: lookupVal.lib, }, 'Found Value in Toolbox');
-
-                            retval.value = lookupVal.lib;
+                            log.info({ func: 'translateCandidateToUser', prop: propName, src: val, val: lookupVal.lib, }, 'Found Value in Toolbox');
+                            
+                            if (_.isFunction(t.translate)) {
+                                retval.value = t.translate(lookupVal.lib);
+                            } else {
+                                retval.value = lookupVal.lib;
+                            }
 
                             return d.resolve(retval);
                         })
@@ -720,16 +775,29 @@ function translateCandidateToUser(src) {
     
         log.info({ func: 'translateCandidateToUser', candidate: candidate, promises: promises }, 'Waiting on promises');
     
-    return Q.allSettled(promises, function (promiseResults) {
-        log.info({ func: 'translateCandidateToUser', candidate: candidate, promises: promiseResults }, 'Retukrning final Candidate');
+    return Q.allSettled(promises).then(function (promiseResults) {
+        log.info({ func: 'translateCandidateToUser', candidate: candidate, promises: promiseResults.length }, 'Retukrning final Candidate');
         
-        _.each(promiseResults, function (p) {
-            if (p.isFulfilled()) {
-                var retval = p.value;
+        _.each(promiseResults, function (res) {
+            if (res.state === "fulfilled" ) {
+            }
+            
+            if (res.state === "fulfilled" && !!res.value) {
+                log.debug({ func: 'translateCandidateToUser', promises: res }, 'Processing promise results');
+            
+                var retval = res.value;
 
                 log.info({ func: 'translateCandidateToUser', retval: retval, key: retval.key }, 'Adding promise val to candidate');
 
-                candidate[retval.key] = retval.value;
+                
+                setValueForKey(retval.key, retval.value, candidate);
+                //candidate[retval.key] = retval.value;
+                
+            }
+            else if (res.state === "fulfilled") {
+                log.trace({ func: 'translateCandidateToUser' }, 'Ignoring Empty Value');
+            } else {
+                log.error({ func: 'translateCandidateToUser', err: res.reason }, 'Toolbox Query Failed');
             }
         });    
             
@@ -746,9 +814,16 @@ function getPropForValue(prop, val) {
         value: null
     };
     
+    if (_.isFunction(prop.transform)) {
+        var tmp = prop.transform(val);
+        log.debug({ func: 'getPropForValue', prop: prop.desc }, 'Transformed value `%s` to `%s`', val, tmp);
+        
+        val = tmp;
+    }
+    
     // If there is a refURL, we need to translate the 'value' into an 'id'
     if (!!prop.refUrl && !!val) {
-        log.debug({ func: 'getPropForValue', prop: prop.desc, val: val }, 'Looking up Proop for value');
+        log.debug({ func: 'getPropForValue', prop: prop.desc, val: val }, 'Looking up Prop for value');
 
         unirest.get(baseUrl + prop.refUrl)
             .auth(auth)
@@ -799,10 +874,45 @@ function getPropForValue(prop, val) {
     
     return d.promise;
 }
+
+
+function transformUserLicenseToToolbox(license) {
+    if (_.isEmpty(license)) {
+        return null;
+    }
+    
+    switch (license.class) {
+        case 'A': return ' US CDL A';
+        case 'B': return 'US CDL B';
+        case 'Standard': return ' US Non Commercial License';
+    }
+    
+    return null;
+}
+
+function translateToolboxToUserLicense(licenseString) {
+    var license = {};
+
+    if (/us cdl a/i.test(licenseString)) {
+        license.class = 'A';
+    }
+    else if (/us cdl b/i.test(licenseString)) {
+        license.class = 'B';
+    }
+    else if (/us cdl c/i.test(licenseString)) {
+        license.class = 'C';
+    }
+    
+    if (/military/i.test(licenseString)) {
+        license.military = true;
+    }
+    
+    return license;
+}
     
     
 var translation = [
-    { ext: 'Prop0', desc: 'Posting ID', key: '', refUrl: null, type: 'text' },
+    { ext: 'Prop0', desc: 'Posting ID', key: 'props.luceoCandidateId', refUrl: null, type: 'text' },
     { ext: 'Prop6', desc: 'First Name', key: 'firstName', refUrl: null, type: 'text' },
     { ext: 'Prop4', desc: 'Last Name', key: 'lastName', refUrl: null, type: 'text' },
     { ext: 'Prop5', desc: 'Preferred Name', key: 'displayName', refUrl: null, type: 'text' },
@@ -815,7 +925,7 @@ var translation = [
     { ext: 'Prop15', desc: 'Email', key: 'email', refUrl: null, type: 'text' },
     { ext: 'Prop16', desc: 'Home Phone', key: 'phones.home', refUrl: null, type: 'text' },
     { ext: 'Prop17', desc: 'Mobile Phone', key: 'phones.mobile', refUrl: null, type: 'text' },
-    { ext: 'Prop22', desc: 'Relevant Work Experience', key: 'experience', refUrl: 'ref/list/?params=type:4', type: 'list' },
+    { ext: 'Prop22', desc: 'Relevant Work Experience', key: 'props.relevantExperience', refUrl: 'ref/list/?params=type:4', type: 'list', eg: '3 - 5 years' },
     { ext: 'Prop23', desc: 'Education Level', key: 'props.education', refUrl: 'ref/list/?params=type:2', type: 'list' },
     { ext: 'Prop65', desc: 'Langue liste', key: 'props.languages', refUrl: ['ref/language/', 'ref/langlevel/'], type: 'languagelist' },
     { ext: 'Prop66', desc: 'Langue liste', key: 'props.languages', refUrl: ['ref/language/', 'ref/langlevel/'], type: 'languagelist' },
@@ -829,7 +939,7 @@ var translation = [
     { ext: 'Prop116', desc: 'Department', key: '', refUrl: 'ref/ref/?params=type:9', type: 'toolbox' },
     { ext: 'Prop118', desc: 'Employment Type', key: '', refUrl: 'ref/list/?params=type:3', type: 'list' },
     { ext: 'Prop121', desc: 'Salary Expectations', key: '', refUrl: null, type: 'text' },
-    { ext: 'Prop127', desc: 'What type of driver license do you hold?', key: '', refUrl: 'ref/list/?params=type:19', type: 'list' },
+    { ext: 'Prop127', desc: 'What type of driver license do you hold?', key: 'license', refUrl: 'ref/list/?params=type:19', transform: transformUserLicenseToToolbox, translate: translateToolboxToUserLicense, type: 'list' },
     { ext: 'Prop133', desc: 'Job Desired', key: '', refUrl: null, type: 'text' },
     { ext: 'Prop135', desc: 'Authorized to work in Canada', key: '', refUrl: null, type: 'bool' },
     { ext: 'Prop160', desc: 'Most Recent Employer', key: '', refUrl: null, type: 'text' },

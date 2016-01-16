@@ -30,7 +30,7 @@ _.isUndefined(supertest).should.not.be.true;
 
 var _test, endpoint;
 
-describe('Luceo Applicant Tests', function () {
+describe.only('Luceo Applicant Tests', function () {
 
     var user;
     
@@ -52,9 +52,9 @@ describe('Luceo Applicant Tests', function () {
         user = new Driver(stubs.user);
         
         user.addresses = [{
-            streetAddresses: ["123 Fake St."],
+            streetAddresses: ['123 Fake St.', 'Suite B'],
             city: 'Fakeville',
-            state: 'AK',
+            state: 'Arkansas',
             zipCode: '44344'
         }];
         
@@ -66,6 +66,19 @@ describe('Luceo Applicant Tests', function () {
             endDate: moment('2014-02-01').format('MM/DD/YYYY'),
             location: 'Testerville, AK'
         }];
+        
+        user.license = {
+            class: 'A'
+        };
+        
+        user.phones = {
+            home: '123-555-1234',
+            mobile: '123-555-3468'
+        };
+        
+        _.extend(user.props, {
+            relevantExperience: '3 - 5 years'
+        });
 
         return Q.all([user.save()]);
     });
@@ -85,7 +98,7 @@ describe('Luceo Applicant Tests', function () {
             });
     });
     
-    it('should be able to load a single remote applicant', function () {
+    it.skip('should be able to load a single remote applicant', function () {
         return Luceo.applicant.get(STATIC_CANDIDATE_ID)
             .then(function examineResults(resultApplicant) {
                 log.debug({ test: _test.title, response: resultApplicant }, 'Got Remote Applicant');
@@ -97,6 +110,8 @@ describe('Luceo Applicant Tests', function () {
     });
 
     it('should be able to create a new applicant', function () {
+        this.timeout(10000);
+        
         return Luceo.applicant.create(user)
             .then(function examineApplicant(remoteApplicant) {
                 log.debug({ test: _test.title, response: remoteApplicant }, 'Got Remote Applicant');
@@ -117,14 +132,31 @@ describe('Luceo Applicant Tests', function () {
                 should.exist(remoteApplicant);
                 remoteApplicant.should.be.Object;
 
-                remoteApplicant.should.have.property('id').and.be.String;
+                remoteApplicant.should.have.property('props').and.be.Object;
                 remoteApplicant.should.have.property('email').and.be.String;
-                remoteApplicant.should.have.property('address').and.be.String;
-                remoteApplicant.should.have.property('employments').and.be.Object;
+                remoteApplicant.should.have.property('address').and.be.Object;
+                remoteApplicant.should.have.property('license').and.be.Object;
                 
-                remoteApplicant.employments.should.have.property('link');
+                remoteApplicant.license.should.have.property('class', 'A');
+                remoteApplicant.props.should.have.property('luceoCandidateId');
             })
             .catch(catchLogAndThrow);
+    });
+    
+    it('should set the value for a nested key', function (done) {
+        var key = 'address.state';
+        var user = {};
+
+        Luceo.utils.setValueForKey(key, 'CA', user);
+        Luceo.utils.setValueForKey('address.streets[0]', '123 Fake St', user);
+
+        user.should.have.property('address');
+        user.address.should.have.property('state', 'CA');
+
+        user.address.should.have.property('streets').and.be.Array;
+        user.address.streets[0].should.equal('123 Fake St');
+
+        done();
     });
     
     it('should be able to update experience for a user');
@@ -133,7 +165,7 @@ describe('Luceo Applicant Tests', function () {
 
     });
 
-    it('should be able to create an application to a pre-defined job requisition', function () {
+    it.skip('should be able to create an application to a pre-defined job requisition', function () {
         
         var owner = new User(stubs.owner);
         var company = new Company(stubs.getCompany(owner));
