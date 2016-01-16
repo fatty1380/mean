@@ -42,42 +42,14 @@
 
                 <div class="item edit-profile-types">
                     <div class="top">
-                        <span class="input-label">Address</span>
+                        <span class="input-label" ng-click="vm.editAddress()">Address</span>
                         <button type="button" class="button button-small" ng-click="vm.addressEditing = !vm.addressEditing">
                             {{vm.addressEditing ? 'done' : 'edit'}}
                         </button>
                     </div>
-
-                    <div ng-if="!vm.addressEditing">
-                        <span ng-bind="vm.profileData.addresses[0].streetAddresses[0]"></span>
-                        <br>
-                        <span ng-if="!!vm.profileData.addresses[0].streetAddresses[1]">
-                            {{vm.profileData.addresses[0].streetAddresses[1]}}<br>
-                        </span>
-                        <span ng-bind="vm.profileData.addresses[0].city"></span>
-                        <span ng-bind="vm.profileData.addresses[0].state"></span>
-                        <span ng-bind="vm.profileData.addresses[0].zipCode"></span>
-                    </div>
-
-                    <span ng-if="!!vm.addressEditing">
-                        <!--<div class="item item-input">
-                            <input type="text" name="addrLine1" ng-model="vm.profileData.addresses[0].streetAddresses[0]" placeholder="Street Address">
-                        </div>
-                        <div class="item item-input">
-                            <input type="text" name="addrLine2" ng-model="vm.profileData.addresses[0].streetAddresses[1]" placeholder="Line 2 (optional)">
-                        </div>
-                        <div class="item item-input">
-                            <input type="text" name="addrCity" ng-model="vm.profileData.addresses[0].city" placeholder="City">
-                        </div>
-                        <div class="item item-input">
-                            <input type="text" name="addrState" ng-model="vm.profileData.addresses[0].state" placeholder="State">
-                        </div>
-                        <div class="item item-input">
-                            <input type="tel" name="addrZip" ng-model="vm.profileData.addresses[0].zipCode" placeholder="Zip">
-                        </div>-->
-                        
-                        <oset-edit-address ng-model="vm.profileData.addresses[0]"></oset-edit-address>
-                    </span>
+                    
+                    <tline-address-toggle ng-model="vm.profileData.address" edit-mode="vm.addressEditing"></tline-address-toggle>
+                    
                 </div>
 
 

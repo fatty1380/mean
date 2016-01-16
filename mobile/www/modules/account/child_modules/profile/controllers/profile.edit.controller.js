@@ -15,6 +15,8 @@
         if (!userService.profileData) {
             return $state.go('home');
         }
+        
+        vm.addressEditing = false;
 
         vm.profileData = userService.profileData;
         vm.profileData.props = vm.profileData.props || {};
@@ -31,6 +33,7 @@
         vm.editAddress = showEditAddress;
         vm.updateTrailers = updateTrailers;
         vm.updateTrucks = updateTrucks;
+        
 
         function updateTrailers(trailers) {
             if (!trailers) return;
@@ -43,6 +46,8 @@
         }
         
         function showEditAddress() {
+            profileModalsService.showProfileEditAddressModal({ address:vm.profileData.address });
+             
             vm.addressEditing = true;
         }
 
@@ -90,6 +95,7 @@
         function save(form, e) {
             e.preventDefault();
             logger.warn(' form --->>>', form);
+            LoadingService.showLoader('Saving Profile');
 
             if (form.$valid) {
                 // Update the started date
@@ -104,8 +110,9 @@
                     .then(function (success) {
                         if (success.id) {
                             vm.closeModal(success);
+                            LoadingService.hide();
                         } else {
-                            $ionicPopup.alert({ title: 'Error', template: 'Profile wasn\'t updated' });
+                            LoadingService.showFailure();
                             //vm.closeModal(null);
                         }
                     });
@@ -120,8 +127,8 @@
                 }
 
                 $timeout(function () {
-                    $('input.ng-invalid').focus()
-                }, 2000);
+                    $('input.ng-invalid').focus();
+                }, 1000);
             }
         }
 
