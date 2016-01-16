@@ -210,7 +210,6 @@ UserSchema.pre('init', function (next, data) {
     next();
 });
 UserSchema.pre('save', function (next) {
-    debugger;
     if (!!this.isModified('props') &&
         !!this.props.avatar &&
         this.props.avatar !== this.profileImageURL) {
@@ -419,6 +418,22 @@ UserSchema.virtual('address')
         }
 
         return _.first(this.addresses);
+    })
+    .set(function (value) {
+        if (_.isEmpty(this.addresses)) {
+            this.addresses = [value];
+        }
+        else {
+            var match = _.find(this.addresses, { type: value.type || 'main' });
+            
+            if (!_.isEmpty(match)) {
+                _.extend(match, value);
+            }
+            else {
+                this.addresses.push(value);
+            }
+        }
+        this.markModified('addresses');
     });
 
 UserSchema.virtual('shortName')
