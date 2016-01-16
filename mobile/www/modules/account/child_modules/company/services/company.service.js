@@ -8,9 +8,9 @@
         .module('profile')
         .factory('CompanyService', CompanyService);
 
-    CompanyService.$inject = ['$http', '$q', 'settings'];
+    CompanyService.$inject = ['$http', '$q', 'settings', 'activityService'];
 
-    function CompanyService($http, $q, settings) {
+    function CompanyService($http, $q, settings, activityService) {
         
         /**
          * Rudimentary Cache for Company Data
@@ -69,15 +69,30 @@
 		}
 
         function loadJobsForCompany(companyId) {
-			if (_.isEmpty(companyId)) {
-				return $q.reject('No Company ID Specified');
-			}
-            return $http.get(settings.companies + companyId + '/jobs').then(
-                function success(response) {
+            if (_.isEmpty(companyId)) {
+                return $q.reject('No Company ID Specified');
+            }
+
+            var jobsUrl = settings.companies + companyId + '/jobs';
+            debugger;
+            activityService.getCurrentCoords()
+                .then(function (coordinates) {
+                    return $http({
+                        url: jobsUrl,
+                        method: 'GET',
+                        params: { lat: coordinates.lat, long: coordinates.long }
+                    });
+                })
+                .catch(function err() {
+                    return $http.get(jobsUrl);
+                })
+                .then(function success(response) {
+                    logger.debug('Found jobs for Company [' + companyId + ']', response.data);
                     return response.data;
                 })
                 .catch(function fail(err) {
-                    return $q.reject(err,'No Jobs found for Company [' + companyId + ']');
+                    logger.error('No Jobs found for Company [' + companyId + ']', err);
+                    return $q.resolve([]);
                 });
         }
         

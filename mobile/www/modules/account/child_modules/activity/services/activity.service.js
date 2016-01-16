@@ -5,9 +5,11 @@
         .module('activity')
         .service('activityService', activityService);
 
-    activityService.$inject = ['settings', '$http', '$q', '$ionicPopup', '$cordovaGoogleAnalytics', 'utilsService', 'userService'];
+    activityService.$inject = ['settings', '$http', '$q', '$ionicPlatform', '$ionicPopup', '$cordovaGoogleAnalytics',
+        'utilsService', 'userService'];
 
-    function activityService(settings, $http, $q, $ionicPopup, $cordovaGoogleAnalytics, utilsService, userService) {
+    function activityService(settings, $http, $q, $ionicPlatform, $ionicPopup, $cordovaGoogleAnalytics,
+        utilsService, userService) {
 
         var service = {
             getFeed: getFeed,
@@ -20,6 +22,8 @@
             postComment: postComment,
             getComments: getComments,
             likeActivity: likeActivity,
+            getCurrentLocation: getCurrentLocation,
+            getCurrentCoords: getCurrentCoords,
             getDistanceBetween: getDistanceBetween,
             getSLDistanceBetween: getSLDistanceBetween,
             showPopup: showPopup,
@@ -283,6 +287,44 @@
                     
                     // Return the existing likes array (if present) or an empty array if not;
                     return index !== -1 && feed[index].likes || [];
+                });
+        }
+        
+        function getCurrentLocation(options) {
+            options = options || {};
+            _.defaults(options, {
+                highAccuracy: false
+            });
+            
+            var deferred = $q.defer();
+            
+            if (navigator.geolocation) {
+                $ionicPlatform.ready(function () {
+                    var posOptions = { timeout: 10000, enableHighAccuracy: options.highAccuracy };
+
+                    var onSuccess = function (position) {
+                        logger.debug('*** Found Location ***', position);
+                        
+                        deferred.resolve(position);
+                    };
+                    function onError(error) {
+                        logger.error('*** Location Search Failed ***', err);
+                        
+                        deferred.reject(err);
+                    }
+                    navigator.geolocation.getCurrentPosition(onSuccess, onError, posOptions);
+                });
+            } else {
+                deferred.reject('Location Not Available');
+            }
+            
+            return deferred.promise;
+        }
+        
+        function getCurrentCoords(options) {
+            return getCurrentLocation(options)
+                .then(function result(position) {
+                    return { lat: position.coords.latitude, long: position.coords.longitude };
                 });
         }
 

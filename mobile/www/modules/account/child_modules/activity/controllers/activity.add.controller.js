@@ -57,33 +57,26 @@
          * @desc geocode current position
          */
         function getCurrentPosition() {
-            if (navigator.geolocation) {
-                $ionicPlatform.ready(function () {
-                    LoadingService.showLoader('Checking 20');
-                    var posOptions = { timeout: 10000, enableHighAccuracy: false };
 
-                    var onSuccess = function (position) {
-                        logger.debug('*** sucess ***');
-                        LoadingService.hide();
-                        var lat = position.coords.latitude;
-                        var long = position.coords.longitude;
-                        myCoordinates = new google.maps.LatLng(lat, long);
-                        vm.activity.location.coordinates = [lat, long];
-                        logger.debug(LoadingService);
-                        initMap();
-                    };
-                    function onError(error) {
-                        logger.debug('*** error ***');
-                        LoadingService.hide();
-                        //show only 1 error message
-                        if (vm.mapIsVisible) {
-                            LoadingService.showAlert('10-7', { duration: 1000 });
-                            vm.mapIsVisible = false;
-                        }
+            LoadingService.showLoader('Checking 20');
+
+            activityService.getCurrentCoords({ highAccuracy: true })
+                .then(function success(coords) {
+                    var lat = coords.lat;
+                    var long = coords.long;
+                    myCoordinates = new google.maps.LatLng(lat, long);
+                    
+                    vm.activity.location.coordinates = [lat, long];
+                    initMap();
+                    LoadingService.hide();
+                })
+                .catch(function failure(err) {
+                    //show only 1 error message
+                    if (vm.mapIsVisible) {
+                        LoadingService.showAlert('10-7', { duration: 1000 });
+                        vm.mapIsVisible = false;
                     }
-                    navigator.geolocation.getCurrentPosition(onSuccess, onError, posOptions);
                 });
-            }
         }
 
         /**
@@ -103,7 +96,7 @@
                 title: 'Point A',
                 map: map,
                 draggable: false
-             });
+            });
 
             vm.mapIsVisible = true;
 
