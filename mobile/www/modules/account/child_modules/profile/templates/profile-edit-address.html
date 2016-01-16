@@ -1,0 +1,22 @@
+<ion-modal-view class="activity view-section min-size">
+
+    <ion-header-bar>
+        <h1 class="title">Edit Address</h1>
+    </ion-header-bar>
+
+    <ion-pane class="pane has-footer">
+        <ion-scroll>
+            <div class="list add-activity-pane">
+                <tline-address-edit ng-model="vm.address"></tline-address-edit>
+            </div>
+        </ion-scroll>
+    </ion-pane>
+
+    <ion-footer-bar>
+        <div class="button-bar action-buttons">
+            <button class="button secondary" ng-click="vm.cancelModal();">Cancel</button>
+            <button class="button primary" ng-disabled="!vm.isValid()" ng-click="vm.save()">Save</button>
+        </div>
+    </ion-footer-bar>
+
+</ion-modal-view>

@@ -21,6 +21,8 @@
             showProfileEditTrailersModal: showProfileEditTrailersModal,
             showProfileEditTrucksModal: showProfileEditTrucksModal,
             showProfileEditLicenseModal: showProfileEditLicenseModal,
+            showProfileEditAddressModal: showProfileEditAddressModal,
+            showListExperienceModal: showListExperienceModal,
             showAddExperienceModal: showAddExperienceModal,
             showEditExperienceModal: showEditExperienceModal
         };
@@ -89,9 +91,19 @@
             
             return showModal(templateUrl, controller, parameters, options);
         }
+
+        function showProfileEditAddressModal (parameters, options) {
+            templateUrl = 'modules/account/child_modules/profile/templates/profile-edit-address.html';
+            controller = 'ProfileEditAddressCtrl as vm';
+            
+            return showModal(templateUrl, controller, parameters, options);
+        }
         
         function showListExperienceModal(parameters, options) {
+            controller = 'ProfileExperienceListCtrl as vm';
+            templateUrl = 'modules/account/child_modules/profile/templates/profile-experience-list.html';
             
+            return showModal(templateUrl, controller, parameters, options);
         }
 
         function showAddExperienceModal (parameters, options) {

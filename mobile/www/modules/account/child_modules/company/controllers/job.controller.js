@@ -5,20 +5,28 @@
         .module('company')
         .controller('JobDetailsCtrl', JobDetailsCtrl);
 
-    JobDetailsCtrl.$inject = ['$state', 'parameters', 'userService', 'CompanyService', 'LoadingService'];
+    JobDetailsCtrl.$inject = ['$state', 'parameters', 'userService', 'CompanyService', 'companyModalService', 'LoadingService'];
 
-    function JobDetailsCtrl($state, parameters, UserService, CompanyService, Loader) {
+    function JobDetailsCtrl($state, parameters, UserService, CompanyService, companyModalService, Loader) {
 
         var vm = this;
 
         vm.job = parameters.entry;
+        vm.user = parameters.user || {};
 
-        vm.apply = validate;
+        vm.apply = launchApplication;
         vm.share = share;
 
         activate();
         
+       // launchApplication();
+        
         /////////////////////////////////////////////////////////////
+        
+        function launchApplication() {
+            //Loader.showLoader('Hello', { duration: 0 });
+            companyModalService.showJobApplicationModal({ user: vm.user, job: vm.job });
+        }
         
         function activate() {
             if (_.isEmpty(vm.job)) {
@@ -28,7 +36,7 @@
 
             UserService.getUserData()
                 .then(function (user) {
-                    vm.user = user;
+                    _.extend(vm.user, user);
                 });
 
         }

@@ -1,0 +1,20 @@
+<ion-modal-view class="experience view-section min-size">
+
+    <ion-header-bar align-title="center" class="bar-stable">
+        <h1 class="title">Your Experience</h1>
+        <button class="button button-clear" ng-if="vm.addExperience" ng-click="vm.addExperience();">Add</button>
+    </ion-header-bar>
+
+    <ion-content class="pane has-header has-footer experience-list">
+        <tline-experience-list ng-model="vm.experience" can-edit="true" show-add-button="true" show-add-fn="vm.addExperience" 
+            instructText="vm.instructText">
+        </tline-experience-list>
+    </ion-content>
+
+    <ion-footer-bar>
+        <div class="button-bar action-buttons">
+            <button class="button primary" ng-click="vm.save()">Done</button>
+        </div>
+    </ion-footer-bar>
+
+</ion-modal-view>
