@@ -1,5 +1,6 @@
 (function () {
-
+    'use strict';
+    
     angular
         .module('signup')
         .factory('tokenService', tokenService);
@@ -8,18 +9,19 @@
 
     function tokenService($window) {
         return {
-            set: function(key, value) {
+            set: function (key, value) {
                 $window.localStorage[key] = value;
             },
-            get: function(key, defaultValue) {
+            get: function (key, defaultValue) {
                 return $window.localStorage[key] || defaultValue;
             }
-        }
+        };
     }
 })();
 
 (function () {
-
+    'use strict';
+    
     angular
         .module('signup')
         .factory('StorageService', StorageService);
@@ -31,13 +33,13 @@
             set: function (key, value, id) {
                 $window.localStorage[id || userService.userId + '.' + key] = value;
             },
-            get: function(key, defaultValue, id) {
+            get: function (key, defaultValue, id) {
                 return $window.localStorage[id || userService.userId + '.' + key] || defaultValue || null;
             },
             remove: function (key, id) {
                 return $window.localStorage.removeItem(id || userService.userId + '.' + key);
             }
-        }
+        };
     }
 })();
 
