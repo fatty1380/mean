@@ -327,7 +327,7 @@
 
             if (!users || !(users instanceof Array) || !users.length) return;
 
-            var removals = angular.map(users, function (user) {
+            var removals = users.map(function (user) {
                 if (user !== id) {
                     logger.warn('removing documents for user --->>>', user);
                     return removeDocumentsByUser(user);
