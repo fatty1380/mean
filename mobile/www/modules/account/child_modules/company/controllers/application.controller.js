@@ -141,7 +141,7 @@
                     });
                 });
 
-                pending
+                return pending
                     .then(function finalSuccess(result) {
                         vm.status = 'valid';
                     })
@@ -240,19 +240,20 @@
             Loader.showLoader('Processing Application');
 
             CompanyService.applyToJob(vm.job.id)
-                .then(function handleSuccess(application) {
-                    logger.info('Applied to Job Successfully!!!', application);
+                .then(function handleSuccess(applicationResult) {
+                    logger.info('Applied to Job Successfully!!!', applicationResult);
                     vm.disableApplication = true;
-                    return Loader.showSuccess('Application Successful!<br><small>Thanks for applying with Core-Mark</small>');
+                    Loader.showSuccess('Application Successful!<br><small>Thanks for applying with Core-Mark</small>');
 
+                    vm.closeModal(applicationResult);
                 })
                 .catch(function handleError(error) {
                     logger.error('Job Application failed', error);
                     vm.loading = false;
-                    return Loader.showFailure('Application Failed<br><small>Please try again later</small>');
+                    Loader.showFailure('Application Failed<br><small>Please try again later</small>');
 
-                })
-                .finally(vm.closeModal);
+                    vm.cancelModal('error');
+                });
         }
         
         //////////////////////////////////////////////////////////////////////////////

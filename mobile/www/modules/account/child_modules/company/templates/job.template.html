@@ -20,8 +20,12 @@
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button icon ion-ios-plus-outline primary" ng-disabled="vm.loading || vm.disableApplication" 
-            ng-click="vm.apply($event)">{{vm.loading ? 'in progress' : 'Apply Now!'}}</button>
+            <button class="button icon ion-ios-plus-outline primary" 
+            ng-if="vm.applicationStatus !== 'applied' && vm.applicationStatus !== 'success'"
+            ng-click="vm.apply($event)">Apply Now!</button>
+            <button class="button primary" ng-if="vm.applicationStatus === 'applied' || vm.applicationStatus === 'success'">
+                {{vm.appliedText}}
+            </button>
         </div>
     </ion-footer-bar>
 

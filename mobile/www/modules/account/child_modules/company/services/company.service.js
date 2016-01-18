@@ -25,6 +25,7 @@
             list: listCompanies,
             loadJobs: loadJobsForCompany,
             applyToJob: applyToJob,
+            getJobApplicationStatus: getJobApplicationStatus,
             loadFeed: loadFeedForCompany,
             follow: followCompany,
             unfollow: unfollowCompany
@@ -73,8 +74,8 @@
             }
 
             var jobsUrl = settings.companies + companyId + '/jobs';
-            debugger;
-            activityService.getCurrentCoords()
+            
+            return activityService.getCurrentCoords()
                 .then(function (coordinates) {
                     return $http({
                         url: jobsUrl,
@@ -102,11 +103,36 @@
 
             return $http.post(settings.jobs + jobId + '/apply').then(
                 function success(response) {
-                    debugger;
                     return response.data;
                 })
                 .catch(function fail(err) {
                     return $q.reject(err, 'Unable to Apply to Job');
+                });
+        }
+        
+        function getJobApplicationStatus(job) {
+            if (_.isEmpty(job)) {
+                return $q.resolve({ status: null });
+            }
+            
+            var jobId = job && job.id || job;
+            
+            return $http.get(settings.jobs + jobId + '/application')
+                .then(function success(response) {
+                    if (_.isObject(response.data) && !!response.data.status) {
+                        return response.data;
+                    }
+                    
+                    throw new Error('Unknown Response');
+                })
+                .catch(function fail(err) {
+                    logger.error('Failed to load application status for job ID ' + jobId, err);
+
+                    if (!!job.applicationStatus) {
+                        return { status: job.applicationStatus };
+                    }
+
+                    return { status: null };
                 });
         }
 
