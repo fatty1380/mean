@@ -86,14 +86,16 @@
 
         function showRequestsModal() {
 
-            if (!vm.newRequests) {
-                LoadingService.show('no pending requests');
-            }
-            
             friendsService
                 .getRequestsList()
                 .then(function (requests) {
                     vm.newRequests = requests.data.length;
+
+                    if (!vm.newRequests) {
+                        LoadingService.show('no pending requests');
+                        return;
+                    }
+
                     profileModalsService
                         .showFriendRequestModal(requests.data)
                         .then(function (updatedFriends) {
