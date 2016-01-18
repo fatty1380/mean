@@ -1,3 +1,7 @@
+/* global _ */
+/* global logger */
+/* global google */
+
 (function () {
     'use strict';
 
@@ -32,10 +36,13 @@
             changeFeedSource: changeFeedSource,
             getFeedData: getFeedData,
             loadMore: loadMore,
-            getAvatar: getAvatar
+            getAvatar: getAvatar,
+            
+            getMap: getMap,
+            getMarker: getMarker
         };
 
-        var vm = this;
+        var vm = {};
 
         var feed = [];
         var items = [];
@@ -121,7 +128,7 @@
 
         function feedRequestError(response) {
             //showPopup('Error', response.message);
-            logger.error('Unable to load Feed', response.data)
+            logger.error('Unable to load Feed', response.data);
             return [];
         }
 
@@ -160,7 +167,7 @@
 
 
             var promises = itemsToResolve.map(function (value, index) {
-                if (!angular.isString(value)) return value;
+                if (!angular.isString(value)) {return value;}
                 return getFeedActivityById(value).then(
                     function (feedItem) {
                         //logger.debug('Loaded Feed item #' + index + '. Feeder: ', feeder);
@@ -174,14 +181,14 @@
                             feedItem.location = {
                                 type: feedItem.location.type,
                                 coordinates: feedItem.location.coordinates
-                            }
+                            };
                         }
 
                         feeder.start = Math.max(feeder.start, index);
 
                         feed[start + index] = feedItem;
                         return feedItem;
-                    })
+                    });
             });
 
             return $q.all(promises).then(function (results) {
@@ -193,12 +200,12 @@
                     var y = x > 0 ? 1 : x < 0 ? -1 : 0;
                     ///var word = y == 1 ? 'after' : 'before';
                     //logger.debug('Feed Item %s is %s than %s (%s %s %s)', a.title, word, b.title, a.created, word, b.created);
-                    return y
+                    return y;
                 });
 
                 logger.debug('Sorted %d feed activities to populated feed', results.length, sorted);
                 return sorted;
-            })
+            });
         }
 
         /**
@@ -276,12 +283,12 @@
                     var likes = response.data || [];
 
                     if (index !== -1) {
-                        feed[index].likes = likes
+                        feed[index].likes = likes;
                     }
                     return likes;
                 }, function (response) {
 
-                    if (response.status != 403) {
+                    if (response.status !== 403) {
                         logger.error('Unable to like Post', response);
                     }
                     
@@ -290,37 +297,64 @@
                 });
         }
         
+        function getMap(element, center, options) {
+            options = _.defaults({
+                    zoom: 8,
+                    center: center,
+                    draggable: false,
+                    zoomControl: true,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+            }, options);
+            
+            return new google.maps.Map(element, options);
+        }
+        
+        function getMarker(map, center, options) {
+            
+            options = _.defaults({
+                position: center,
+                map: map,
+                draggable: false
+            }, options);
+            
+            return new google.maps.Marker(options);
+        }
+
         function getCurrentLocation(options) {
             options = options || {};
             _.defaults(options, {
                 highAccuracy: false
             });
-            
-            var deferred = $q.defer();
-            
-            if (navigator.geolocation) {
-                $ionicPlatform.ready(function () {
-                    var posOptions = { timeout: 10000, enableHighAccuracy: options.highAccuracy };
 
-                    var onSuccess = function (position) {
+            var deferred = $q.defer();
+
+            $ionicPlatform.ready(function () {
+                if (navigator.geolocation) {
+                    var posOptions = { timeout: 30000, enableHighAccuracy: options.highAccuracy };
+
+                    var onSuccess = function onSuccess(position) {
                         logger.debug('*** Found Location ***', position);
-                        
+
                         deferred.resolve(position);
                     };
-                    function onError(error) {
+                    
+                    var onError = function onError(err) {
                         logger.error('*** Location Search Failed ***', err);
-                        
+
                         deferred.reject(err);
-                    }
+                    };
+                    
                     navigator.geolocation.getCurrentPosition(onSuccess, onError, posOptions);
-                });
-            } else {
-                deferred.reject('Location Not Available');
-            }
-            
+
+                } else {
+                    deferred.reject('Location Not Available');
+                }
+
+            });
+
             return deferred.promise;
         }
-        
+
         function getCurrentCoords(options) {
             return getCurrentLocation(options)
                 .then(function result(position) {
@@ -356,8 +390,8 @@
                             resolve(null);
                         }
                     }
-                })
-            })
+                });
+            });
         }
 
         /**
@@ -379,12 +413,11 @@
          */
         function getPlaceName(latlng) {
             logger.debug('getPlaceName()');
-            if (!geocoder) {
-                var geocoder = new google.maps.Geocoder;
-            }
+            
+            vm.geocoder = vm.geocoder || new google.maps.Geocoder;
 
             return $q(function (resolve, reject) {
-                geocoder.geocode({ 'location': latlng }, function (results, status) {
+                vm.geocoder.geocode({ 'location': latlng }, function (results, status) {
                     if (status === google.maps.GeocoderStatus.OK) {
                         if (results[1]) {
                             /*marker.info = new google.maps.InfoWindow({
@@ -429,7 +462,7 @@
                 title: title || 'title',
                 template: text || 'no message'
             });
-        };
+        }
 
         function getAvatar(feedItem) {
             if (_.isEmpty(feedItem.user) || _.isString(feedItem.user)) {

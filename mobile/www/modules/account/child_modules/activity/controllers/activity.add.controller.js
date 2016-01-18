@@ -1,3 +1,5 @@
+/* global logger */
+/* global google */
 (function () {
     'use strict';
 
@@ -42,7 +44,7 @@
         };
 
         vm.saveItemToFeed = saveItemToFeed;
-        vm.close = close;
+        vm.cancel = cancel;
         vm.mapIsVisible = true;
 
         $scope.$watch('vm.where', function () {
@@ -65,7 +67,7 @@
                     var lat = coords.lat;
                     var long = coords.long;
                     myCoordinates = new google.maps.LatLng(lat, long);
-                    
+
                     vm.activity.location.coordinates = [lat, long];
                     initMap();
                     LoadingService.hide();
@@ -85,20 +87,14 @@
          * @desc initialize map
          */
         function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 8,
-                center: myCoordinates,
+
+
+            map = activityService.getMap(document.getElementById('map'), myCoordinates, {
+                zooom: 10,
                 draggable: true,
                 sensor: true,
-                zoomControl: true,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
             });
-            marker = new google.maps.Marker({
-                position: myCoordinates,
-                title: 'Point A',
-                map: map,
-                draggable: false
-            });
+            marker = activityService.getMarker(map, myCoordinates, { title: 'My 20' });
 
             vm.mapIsVisible = true;
 
@@ -132,7 +128,7 @@
             var position = (clickCoordinates) ? clickCoordinates : location;
             vm.activity.location.coordinates = [position.lat, position.lng];
             marker.setPosition(position);
-            infoWindow.setContent(vm.where.formatted_address)
+            infoWindow.setContent(vm.where.formatted_address);
             infoWindow.open(map, marker);
             setDistanceFromLastPost(position);
             clickCoordinates = null;
@@ -160,7 +156,7 @@
                 return;
             }
 
-            LoadingService.showLoader('Saving')
+            LoadingService.showLoader('Saving');
 
             logger.warn('posting vm.activity --->>>', vm.activity);
 
@@ -176,7 +172,7 @@
                 });
         }
 
-        function close(str) {
+        function cancel(str) {
             vm.cancelModal(str);
         }
     }

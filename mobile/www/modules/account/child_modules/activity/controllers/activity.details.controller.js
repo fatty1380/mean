@@ -1,3 +1,7 @@
+/* global _ */
+/* global logger */
+/* global google */
+
 (function () {
     'use strict';
 
@@ -18,7 +22,7 @@
         vm.isInputVisible = false;
         vm.entry = parameters.entry;
 
-        vm.close = close;
+        vm.close = cancel;
         vm.viewUser = viewUser;
         vm.likeActivity = likeActivity;
         vm.toggleInput = toggleInput;
@@ -42,18 +46,9 @@
         function initMap() {
             if (activityService.hasCoordinates(vm.entry)) {
                 var latLng = new google.maps.LatLng(vm.entry.location.coordinates[0], vm.entry.location.coordinates[1]);
-                map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 8,
-                    center: latLng,
-                    draggable: true,
-                    zoomControl: true,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                });
-                marker = new google.maps.Marker({
-                    position: latLng,
-                    map: map,
-                    draggable: false
-                });
+
+                map = activityService.getMap(document.getElementById('map'), latLng, {});
+                marker = activityService.getMarker(map, latLng);
 
                 activityService.getPlaceName(latLng).then(
                     function (result) {
@@ -78,7 +73,7 @@
         function getDelegate(name) {
             var instances = $ionicScrollDelegate.$getByHandle(name)._instances;
             return instances.filter(function (element) {
-                return (element['$$delegateHandle'] == name);
+                return (element['$$delegateHandle'] === name);
             })[0];
         }
 
@@ -133,13 +128,15 @@
                 });
         }
 
-        function close() {
+        function cancel() {
             vm.closeModal(vm.entry);
         }
     }
 })();
 
-angular.module('activity').directive('focusMe', function($timeout) {
+angular.module('activity').directive('focusMe', function ($timeout) {
+    'use strict';
+    
   return {
     scope: { trigger: '=focusMe' },
     link: function(scope, element) {
