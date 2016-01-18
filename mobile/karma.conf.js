@@ -15,7 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      "www/lib/ionic/release/js/ionic.bundle.js",
+      'www/lib/ionic/release/js/ionic.bundle.js',
       'node_modules/angular-mocks/angular-mocks.js',
       'node_modules/jasmine-expect/dist/jasmine-matchers.js',
 
@@ -29,7 +29,7 @@ module.exports = function(config) {
 
       'www/lib/angular-google-staticmaps/angular-google-staticmaps.js',
       'www/lib/ngCordova/dist/ng-cordova.js',
-      'https://maps.googleapis.com/maps/api/js?key=AIzaSyBU1fUj13JDJpKxczSfAHzGSuk8ARoenrk&sensor=true&libraries=geometry,places',
+      'https://maps.googleapis.com/maps/api/js?key=AIzaSyBU1fUj13JDJpKxczSfAHzGSuk8ARoenrk&libraries=geometry,places',
 
       'www/modules/account/account.module.js',
 
