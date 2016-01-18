@@ -75,6 +75,8 @@
                     if (vm.mapIsVisible) {
                         LoadingService.showAlert('10-7', { duration: 1000 });
                         vm.mapIsVisible = false;
+                    } else {
+                        LoadingService.hide();
                     }
                 });
         }
