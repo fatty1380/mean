@@ -4,16 +4,17 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-_            = require('lodash'),
-Q            = require('q'),
-Address      = mongoose.model('Address'),
-Company      = mongoose.model('Company'),
-Schema       = mongoose.Schema,
-path         = require('path'),
-log          = require(path.resolve('./config/lib/logger')).child({
-    module: 'jobs',
-    file: 'Jobs.Model'
-});
+    _ = require('lodash'),
+    Q = require('q'),
+    Address = mongoose.model('Address'),
+    Company = mongoose.model('Company'),
+    Schema = mongoose.Schema,
+    path = require('path'),
+    log = require(path.resolve('./config/lib/logger'))
+        .child({
+            module: 'jobs',
+            file: 'Jobs.Model'
+        });
 
 /**
  * Job Schema
@@ -74,6 +75,17 @@ var JobSchema = new Schema({
             default: null
         }
     },
+    
+    // Remember to use markModified('props')
+    props: {
+        type: Schema.Types.Mixed,
+        default: {
+            text: {
+                experience: 'Please provide details about relevant work experience',
+                confirm: 'This will send an application, including all relevant profile data to a third party for processing.'
+            }
+        }
+    },
 
     // TODO: Determine if used
     views: [{
@@ -110,11 +122,11 @@ var JobSchema = new Schema({
         default: 'draft',
         enum: ['draft', 'posted', 'withdrawn', 'deleted']
     },
-    
+
     remoteSystem: {
         type: String
     },
-    
+
     remoteSystemId: {
         type: String
     },
@@ -134,7 +146,7 @@ var JobSchema = new Schema({
         type: Date,
         default: Date.now
     }
-}, {toJSON: {virtuals: true}});
+}, { toJSON: { virtuals: true } });
 
 
 JobSchema.pre('save', function (next) {
@@ -143,11 +155,11 @@ JobSchema.pre('save', function (next) {
 });
 
 JobSchema.pre('validate', function (next) {
-    log.trace('pre.validate', 'START', {Addresses: this.location});
+    log.trace('pre.validate', 'START', { Addresses: this.location });
 
     this.location = Address.map(this.location);
 
-    log.trace('pre.validate', 'End Result location(s)', {Addresses: this.location});
+    log.trace('pre.validate', 'End Result location(s)', { Addresses: this.location });
 
     next();
 });
@@ -163,7 +175,7 @@ JobSchema.pre('init', function (next, data) {
 });
 
 JobSchema.virtual('payString').get(function () {
-    log.trace('virtual.payString', 'GET', {payRate: this.payRate});
+    log.trace('virtual.payString', 'GET', { payRate: this.payRate });
 
     var retval = '';
 
