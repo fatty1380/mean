@@ -21,7 +21,7 @@ var AppConfig = (function () {
         
     //////////////////////////////////////////////////////////////////////////////////////
     // TODO: Find more appropriate place to put this code (if there is one)
-    var envMode = 'dev';
+    var envMode = 'prod';
     
     var debugModes = {
         dev: true,

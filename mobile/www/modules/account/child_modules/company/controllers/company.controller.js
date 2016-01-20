@@ -61,7 +61,7 @@
         function unfollow() {
             CompanyService.unfollow(vm.company.id).then(
                 function success(result) {
-                    LoadingService.showFailure();
+                    LoadingService.showFailure('Unfollowed');
                     vm.isFollowing = false;
                 });
         }
