@@ -398,8 +398,10 @@ function unfollow(req, res) {
         return res.status(404);
     }
     var followerCt = req.company.followers.length;
+    
+    var followers = _(req.company.followers).map(function (f) { return f.toString(); }).valueOf();
 
-    if (!_.contains(req.company.followers)) {
+    if (!_.contains(followers, req.user.id)) {
         return res.status(304).json(req.company);
     }
 
