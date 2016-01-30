@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		02DFFBD574DD4D4982C8E83E /* BNCDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 22566B4C379643FF9FE52886 /* BNCDevice.m */; };
 		0974C7CECDCF412A9BAEC2D3 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B62CFFEA3D844E43A0A63E69 /* AddressBookUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -610,10 +609,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Truckerline/Truckerline-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"DISABLE_PUSH_NOTIFICATIONS=1",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited) DISABLE_PUSH_NOTIFICATIONS=1";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Truckerline/Truckerline-Info.plist";
@@ -648,10 +644,7 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Truckerline/Truckerline-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"DISABLE_PUSH_NOTIFICATIONS=1",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited) DISABLE_PUSH_NOTIFICATIONS=1";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Truckerline/Truckerline-Info.plist";
@@ -689,10 +682,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"DISABLE_PUSH_NOTIFICATIONS=1",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited) DISABLE_PUSH_NOTIFICATIONS=1";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -737,10 +727,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"DISABLE_PUSH_NOTIFICATIONS=1",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited) DISABLE_PUSH_NOTIFICATIONS=1";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
