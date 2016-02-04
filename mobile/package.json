@@ -14,6 +14,8 @@
     "bower": "^1.3.3",
     "gulp-cordova-plugin": "^1.3.1",
     "gulp-util": "^2.2.14",
+    "ios-deploy": "^1.8.4",
+    "ios-sim": "^5.0.6",
     "jasmine-expect": "^2.0.0-beta1",
     "karma": "^0.12.37",
     "karma-chrome-launcher": "^0.2.0",
@@ -50,10 +52,15 @@
     "cordova-plugin-file@3.0.0",
     "cordova-plugin-geolocation@1.0.1",
     "ionic-plugin-keyboard@1.0.7",
-    "cordova-plugin-statusbar@1.0.1"
+    "cordova-plugin-statusbar@1.0.1",
+    "cordova-plugin-camera@2.0.0"
   ],
   "cordovaPlatforms": [
-    "ios",
-    "android"
+    "android",
+    {
+      "platform": "ios",
+      "version": "3.9.2",
+      "locator": "ios@3.9.2"
+    }
   ]
 }
