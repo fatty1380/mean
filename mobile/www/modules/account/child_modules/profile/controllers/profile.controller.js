@@ -288,15 +288,15 @@
         vm.getExperienceBadge = getExperienceBadge;
         
         function showProfileTab(event) {
-            event.preventDefault()
+            !!event && event.preventDefault();
+            
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
             $cordovaGoogleAnalytics.trackView(vm.canEdit ? 'account.profile' : 'user.profile');
-            
-            $state.go('account.profile', { userId: profile && profile.id });
         }
 
         function showReviewTab(event) {
-            event.preventDefault()
+            !!event && event.preventDefault();
+            
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
             $cordovaGoogleAnalytics.trackView((vm.canEdit ? 'account.profile' : 'user.profile') + '.reviews');
             if (vm.canEdit) {
@@ -307,20 +307,17 @@
                     StorageService.set('welcome.review', 'true');
                 }
             }
-            
-            $state.go('account.profile.reviews', { userId: profile && profile.id });
         }
 
         function showExperienceTab(event) {
-            event.preventDefault()
+            !!event && event.preventDefault();
+            
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showExperience');
             $cordovaGoogleAnalytics.trackView((vm.canEdit ? 'account.profile' : 'user.profile') + '.experience');
             if (vm.canEdit && !vm.welcomeExperience) {
                 vm.welcomeExperience = 'true';
                 StorageService.set('welcome.experience', 'true');
             }
-
-            $state.go('account.profile.experience', { userId: profile && profile.id });
         }
 
         function getReviewBadge() {
