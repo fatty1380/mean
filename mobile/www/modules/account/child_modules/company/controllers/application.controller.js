@@ -99,41 +99,52 @@
 
                 _.each(vm.validators, function processStage(stageValidator) {
 
+                    logger.debug(stageValidator.name + '] START');
+                    
                     // Use a promise to ensure that validators are not running concurrently
                     pending = pending.then(function (previousResult) {
 
                         stageValidator.status = 'loading';
+                        logger.debug(stageValidator.name + '] loading');
+
                         return stageValidator.validator(vm.user, vm.application)
                             .then(function handleSuccess(success) {
+                                logger.debug(stageValidator.name + '] valid');
                                 stageValidator.status = 'valid';
                             })
                             .catch(function HandleReject(reason) {
+                                logger.debug(stageValidator.name + '] reject 1 - invalid: ' + reason);
 
                                 stageValidator.status = 'invalid';
 
-                                if (!_.isFunction(stageValidator.resolver)) {
-                                    vm.reason = reason;
-                                    throw reason;
-                                }
-
                                 var deferred = $q.defer();
+                                if (!_.isFunction(stageValidator.resolver)) {
+                                    logger.debug(stageValidator.name + '] no resolver - fail');
+                                    vm.reason = reason;
+                                    deferred.reject(reason);
+                                }
+                                else {
+                                    logger.debug(stageValidator.name + '] Configuring Resolver');
+                                    stageValidator.action = function resolveStage() {
+                                        
+                                        stageValidator.status = 'loading';
 
-                                stageValidator.action = function resolveStage() {
-                                    stageValidator.action = null;
-                                    stageValidator.status = 'loading';
-                                    stageValidator.resolver(vm.user, vm.application)
-                                        .then(function resolved(result) {
-                                            return stageValidator.validator(vm.user, vm.application);
-                                        })
-                                        .then(function resolved(result) {
-                                            stageValidator.status = 'valid';
-                                            deferred.resolve(result);
-                                        })
-                                        .catch(function failed(err) {
-                                            stageValidator.status = 'failed';
-                                            deferred.reject(err);
-                                        });
-                                };
+                                        logger.debug(stageValidator.name + '] Triggering Resolver');
+                                        stageValidator.resolver(vm.user, vm.application)
+                                            .then(function resolved(result) {
+                                                return stageValidator.validator(vm.user, vm.application);
+                                            })
+                                            .then(function resolved(result) {
+                                                stageValidator.status = 'valid';
+                                                stageValidator.action = null;
+                                                deferred.resolve(result);
+                                            })
+                                            .catch(function failed(err) {
+                                                stageValidator.status = 'invalid';
+                                                //deferred.reject(err);
+                                            });
+                                    };
+                                }
 
                                 return deferred.promise;
 
@@ -143,9 +154,11 @@
 
                 return pending
                     .then(function finalSuccess(result) {
+                        logger.debug('Validators] Complete : Valid', result);
                         vm.status = 'valid';
                     })
                     .catch(function finalFailed(err) {
+                        logger.debug('Validators] Complete : InValid', err);
                         vm.status = 'invalid';
                     });
             });
@@ -159,7 +172,7 @@
         }
 
         function fixUser() {
-
+            return $q.when(true);
         }
 
         function validateAddress(user) {
@@ -181,23 +194,22 @@
                 return $q.reject({ field: 'address', reason: 'incomplete' });
             }
 
-
-            return $timeout(function () {
-                $q.resolve({ field: 'address', result: 'valid' });
+            var d = $q.defer();
+            $timeout(function () {
+                d.resolve({ field: 'address', result: 'valid' });
             }, 500);
+            
+            return d.promise;
         }
 
         function fixAddress(user) {
             return ProfileModals
                 .showProfileEditAddressModal({ address: user.address })
                 .then(function success(result) {
-
                     vm.user.address = result.address;
                     vm.user.addresses = result.addresses;
                 });
         }
-
-        var expFixed = false;
 
         function validateExperience(user, application) {
 
@@ -207,18 +219,18 @@
                 return $timeout(_.noop, 500);
             }
 
-            return $timeout(function reject() {
-                $q.reject({ field: 'experience', reason: 'required', min: minLength });
+            var d = $q.defer();
+            $timeout(function reject() {
+                d.reject({ field: 'experience', reason: 'required', min: minLength });
             }, 100);
+            return d.promise;
         }
 
         function fixExperience(user, application) {
             return ProfileModals
                 .showListExperienceModal({ experience: user.experience, instructText: vm.text.experience })
                 .then(function success(experience) {
-                    debugger;
                     vm.user.experience = experience;
-                    expFixed = true;
                 });
         }
 
@@ -227,7 +239,7 @@
         }
 
         function fixProps() {
-
+            return $q.when(true);
         }
 
         function doConfirm(user, application) {

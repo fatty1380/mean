@@ -18,13 +18,20 @@
                 Fix
             </button>
         </ion-item>
+
+        <ion-item class="item-icon-center" ng-if="vm.status !== 'valid' && vm.status !== 'invalid'">
+            <button type="button" ng-click="vm.cancelModal(vm.status)" class="button button-dark button-block">cancel</button>
+        </ion-item>
+
         <ion-item class="item-icon-center" ng-if="vm.status === 'valid'">
             <i class="icon icon-xl ion-checkmark-circled button-positive"></i>
         </ion-item>
+
         <ion-item class="item-message item-footer" ng-if="vm.status === 'invalid'">
             Sorry, we are unable to complete your application at this time.
             <button type="button" ng-click="vm.cancelModal(vm.status)" class="button button-dark button-block">OK</button>
         </ion-item>
+
         <ion-item class="item-message item-footer" ng-if="vm.status === 'valid'">
             <span ng-bind-html="vm.text.confirm"></span>
             <br ng-if="!!vm.text.confirm" />
