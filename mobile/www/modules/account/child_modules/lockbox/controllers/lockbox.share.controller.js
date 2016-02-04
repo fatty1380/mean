@@ -28,7 +28,7 @@
             vm.contact = {};
             vm.shareStep = 1;
 
-            return lockboxDocuments.checkAccess({ redirect: false, setNew: false })
+            return lockboxDocuments.checkAccess({ setNew: false })
                 .then(function (isAccessible) {
                     vm.canAccess = isAccessible;
 

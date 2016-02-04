@@ -120,12 +120,15 @@
                                             logger.error('[LockboxDocResolve] Couldn\'t retrieve documents err --->>>', err);
 
                                             if (/no access/i.test(err)) {
-                                                debugger;
-                                                return -1; // $q.reject(err);
+                                                return -1;
                                             }
 
-                                            return lockboxDocuments.getDocuments(true, { redirect: true });
-                                        })
+                                            return lockboxDocuments.getDocuments(true)
+                                                .catch(function (err) {
+                                                    logger.error('Caught error on secondary Lockbox doc access attempt', err);
+                                                    return -1;
+                                                });
+                                        });
                                 }],
                             welcome: ['welcomeService', function (welcomeService) {
                                 return welcomeService.showModal('account.lockbox');
