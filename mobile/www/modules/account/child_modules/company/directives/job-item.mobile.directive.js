@@ -54,8 +54,8 @@
         }
     }
 
-    JobItemCtrl.$inject = ['activityService', 'companyModalService', '$state', '$ionicPopup', 'LoadingService', 'CompanyService'];
-    function JobItemCtrl(activityService, companyModalService, $state, $ionicPopup, LoadingService, Companies) {
+    JobItemCtrl.$inject = ['activityService', 'companyModalService', '$state', '$ionicPopup', '$sce', 'LoadingService', 'CompanyService'];
+    function JobItemCtrl(activityService, companyModalService, $state, $ionicPopup, $sce, LoadingService, Companies) {
         var vm = this;
 
         vm.stringify = function (obj) {
@@ -64,6 +64,7 @@
 
         vm.activate = activate;
         vm.apply = apply;
+        vm.trust = trustMe;
         
         //////////////////////////////////////////////////////////////////
 
@@ -124,6 +125,11 @@
                     logger.debug('You are not sure');
                 }
             });
+        }
+        
+        
+        function trustMe(html) {
+            return $sce.trustAsHtml(html.replace(/\<br\>/gi, ' '));
         }
     }
 })();

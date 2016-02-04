@@ -90,8 +90,9 @@
 				});
         }
 
-		function showDetailsModal(entry) {
-			if (!!entry.company && entry.company.id) {
+        function showDetailsModal(entry) {
+            
+			if (!!entry.company && entry.company.id && !$state.is('company')) {
 				return $state.go('company', { companyId: entry.company.id });
 			}
 			

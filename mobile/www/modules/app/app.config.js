@@ -10,6 +10,7 @@ var AppConfig = (function () {
             'ngCordova.plugins.file',
             'ngCordova.plugins.fileTransfer',
             'ngIOS9UIWebViewPatch',
+            'ngSanitize',
             'monospaced.elastic'
         ],
         registerModule = function (moduleName, dependencies) {

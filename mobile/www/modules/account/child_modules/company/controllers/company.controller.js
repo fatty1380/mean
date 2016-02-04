@@ -5,17 +5,17 @@
         .module('company')
         .controller('CompanyCtrl', CompanyCtrl);
 
-    CompanyCtrl.$inject = ['LoadingService', '$ionicPopup', '$ionicHistory', '$state',
-        'company', 'jobs', 'feed', 'userService', 'CompanyService'];
+    CompanyCtrl.$inject = ['$ionicPopup', '$ionicHistory', '$state', '$sce',
+        'company', 'jobs', 'feed', 'userService', 'LoadingService', 'CompanyService'];
 
-    function CompanyCtrl(LoadingService, $ionicPopup, $ionicHistory, $state,
-        company, jobs, feed, userService, CompanyService) {
+    function CompanyCtrl( $ionicPopup, $ionicHistory, $state, $sce,
+        company, jobs, feed, userService, LoadingService, CompanyService) {
         var vm = this;
 
         vm.follow = follow;
         vm.unfollow = unfollow;
         vm.goBack = goBack;
-
+        vm.trust = trustMe;
 
         initialize();
         
@@ -43,7 +43,6 @@
 
         function goBack() {
             if (_.isEmpty($ionicHistory.backTitle())) {
-                debugger;
                 return $state.go('account.activity');
             }
 
@@ -64,6 +63,10 @@
                     LoadingService.showFailure('Unfollowed');
                     vm.isFollowing = false;
                 });
+        }
+        
+        function trustMe(html) {
+            return $sce.trustAsHtml(html.replace(/\<br\>/gi, ' '));
         }
     }
 

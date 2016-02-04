@@ -79,7 +79,10 @@
     }
   }
 
-  .company-about {
+  
+}
+
+.company-about {
     .item {
       padding: $item-padding;
       
@@ -97,6 +100,16 @@
         text-align: justify;
         padding: $item-padding 0;
       }
+      
+      li {
+        white-space: normal;
+        line-height: 1.3em;
+        
+        &.item {
+            font-size: 1.1em;
+            padding-top: 0.8em;
+            padding-bottom: 0.8em;
+        }
+      }
     }
   }
-}

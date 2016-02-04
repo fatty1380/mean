@@ -9,7 +9,10 @@
             <div class="text">
                 <div class="holder">
                     <div class="activity-summary">
-                        <strong class="title" ng-if="!!vm.title">{{ vm.title }}</strong>
+                        <span class="title" ng-if="!!vm.title">
+                            <span ng-bind-html="vm.trust(vm.title)"></span>
+                        </span>
+                        
                     </div>
                 </div>
                 <div class="holder last-location" ng-if="vm.placeName">
@@ -18,27 +21,12 @@
                         <i class="ico ico-timesmall"></i> {{vm.job.created | date:'mediumDate'}}
                     </div>
                 </div>
-                
-            </div>
-        </div>
 
-        <div class="clearfix props" ng-if="!vm.job.company">
-            <div class="left notes" ng-if="!!vm.job.notes">
-                <i class="ion ion-document-text"></i>
-                <span class="lbl">notes</span>
-            </div>
-            <div class="right dist driven" ng-if="!!vm.job.props.distance">
-                <i class="ico ico-milestraveledsmall"></i>
-                <span class="dist mi">{{vm.job.props.distance}}</span>
-            </div>
-            <div class="right freight" ng-if="!!vm.job.props.freight">
-                <i class="ico ico-freight"></i>
-                <span>{{vm.job.props.freight}}</span>
             </div>
         </div>
 
         <div class="clearfix notes-content" ng-if="!!vm.job.company && !!vm.job.message">
-            <span ng-bind="vm.job.message"></span>
+            <span ng-bind-html="vm.trust(vm.job.message)"></span>
         </div>
     </div>
 
@@ -52,7 +40,7 @@
 		</a>
 	</div>-->
 
-    <static-gmap ng-if="!!vm.location.coordinates" class="static-map" size="400x200" sensor="true" zoom="14" markers="{{vm.markers}}">
+    <static-gmap ng-if="!vm.job.imageURL && !!vm.markers" class="static-map" size="400x200" sensor="true" zoom="14" markers="{{vm.markers}}">
     </static-gmap>
 
     <div class="activity-item bottom">
