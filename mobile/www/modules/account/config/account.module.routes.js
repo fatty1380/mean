@@ -55,7 +55,6 @@
                                         if (response.success) {
                                             return response.message.data;
                                         }
-                                        debugger;
                                         return null;
                                     })
                                     .then(function (profile) {
@@ -67,7 +66,6 @@
                                         return profile;
                                     })
                                     .catch(function reject(error) {
-                                        debugger;
                                         return null;
                                     });
                             }

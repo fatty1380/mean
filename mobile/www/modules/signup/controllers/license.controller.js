@@ -1,3 +1,4 @@
+/* global angular */
 (function () {
     'use strict';
 
@@ -41,7 +42,7 @@
                     LoadingService.hide();
                 })
                 .catch(function fail(err) {
-                    logger.error("license response update user ERROR: ", response);
+                    logger.error("license response update user ERROR: ", err);
                     $cordovaGoogleAnalytics.trackEvent('signup', 'license', 'error');
 
                     LoadingService.showFailure('Sorry, unable to save at this time');

@@ -5,9 +5,9 @@
         .module('signup')
         .controller('EngagementCtrl', EngagementCtrl)
 
-    EngagementCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', 'userService', 'avatarService', 'LoadingService'];
+    EngagementCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', '$ionicHistory', 'userService', 'avatarService', 'LoadingService'];
 
-    function EngagementCtrl($scope, $state, $cordovaGoogleAnalytics, userService, avatarService, LoadingService) {
+    function EngagementCtrl($scope, $state, $cordovaGoogleAnalytics, $ionicHistory, userService, avatarService, LoadingService) {
 
         var vm = this;
 
