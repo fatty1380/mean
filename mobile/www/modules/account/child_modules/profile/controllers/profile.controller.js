@@ -5,11 +5,11 @@
         .module('account')
         .controller('ProfileCtrl', ProfileCtrl);
 
-    ProfileCtrl.$inject = ['$rootScope', '$scope', 'StorageService', 'updateService', 'appCache', '$state', '$cordovaGoogleAnalytics',
+    ProfileCtrl.$inject = ['$rootScope', '$scope', 'StorageService', 'updateService', 'appCache', '$state', '$cordovaGoogleAnalytics', '$ionicHistory',
         'activityService', 'reviewService', 'LoadingService', 'experienceService', 'utilsService',
         'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl($rootScope, $scope, StorageService, updateService, appCache, $state, $cordovaGoogleAnalytics,
+    function ProfileCtrl($rootScope, $scope, StorageService, updateService, appCache, $state, $cordovaGoogleAnalytics, $ionicHistory,
         activityService, reviewService, LoadingService, experienceService, utilsService,
         friendsService, avatarService, profileModalsService, cameraService, user, profile) {
 
@@ -32,6 +32,17 @@
         vm.showFriends = showFriends;
         vm.openChat = openChat;
         vm.friendStatus = null;
+        
+        vm.goBack = function () {
+            //ui-sref="account.profile({userId: null})" ui-sref-opts="{reload: true}"
+            function goBack() {
+            if (_.isEmpty($ionicHistory.backTitle())) {
+                return $state.go('account.profile', { userId: null }, { reload: true });
+            }
+
+            return $ionicHistory.goBack();
+        }
+        }
 
         vm.ab = function () {
             var profi = appCache.getCachedProfiles();
@@ -74,7 +85,9 @@
         
         //////////////////////////////////////////////////////////////////////////////////////////////
 
-        function showFriends() {
+        function showFriends(event) {
+            event.stopPropagation();
+            LoadingService.showLoader('Loading');
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showFriends');
             logger.debug('TODO: Edit friends to adhere to \'profile\' resolve parameter');
             $state.go('account.profile.friends', { userId: profile && profile.id });
@@ -99,6 +112,7 @@
             LoadingService.show(title + endorsements, { noBackdrop: true });
         }
 
+        /** ------ Viewing Profile User Configuration -------------------- */
         if (!vm.canEdit) {
 
             vm.feed = [];
@@ -197,6 +211,7 @@
             }
         }
 
+        /** -------- Viewing own-user configuration ------------------------ */
         if (vm.canEdit) { // TODO: Restore this || vm.profileData.id === vm.user.id) {
 
             /**
@@ -267,17 +282,21 @@
         // END: vm.canEdit
         
         vm.showProfileTab = showProfileTab;
-vm.showReviewTab = showReviewTab;
-vm.showExperienceTab = showExperienceTab;
-vm.getReviewBadge = getReviewBadge;
-vm.getExperienceBadge = getExperienceBadge;
+        vm.showReviewTab = showReviewTab;
+        vm.showExperienceTab = showExperienceTab;
+        vm.getReviewBadge = getReviewBadge;
+        vm.getExperienceBadge = getExperienceBadge;
         
-        function showProfileTab() {
+        function showProfileTab(event) {
+            event.preventDefault()
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
             $cordovaGoogleAnalytics.trackView(vm.canEdit ? 'account.profile' : 'user.profile');
+            
+            $state.go('account.profile', { userId: profile && profile.id });
         }
 
-        function showReviewTab() {
+        function showReviewTab(event) {
+            event.preventDefault()
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
             $cordovaGoogleAnalytics.trackView((vm.canEdit ? 'account.profile' : 'user.profile') + '.reviews');
             if (vm.canEdit) {
@@ -288,15 +307,20 @@ vm.getExperienceBadge = getExperienceBadge;
                     StorageService.set('welcome.review', 'true');
                 }
             }
+            
+            $state.go('account.profile.reviews', { userId: profile && profile.id });
         }
 
-        function showExperienceTab() {
+        function showExperienceTab(event) {
+            event.preventDefault()
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showExperience');
             $cordovaGoogleAnalytics.trackView((vm.canEdit ? 'account.profile' : 'user.profile') + '.experience');
             if (vm.canEdit && !vm.welcomeExperience) {
                 vm.welcomeExperience = 'true';
                 StorageService.set('welcome.experience', 'true');
             }
+
+            $state.go('account.profile.experience', { userId: profile && profile.id });
         }
 
         function getReviewBadge() {
