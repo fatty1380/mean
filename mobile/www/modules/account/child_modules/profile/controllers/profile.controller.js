@@ -35,13 +35,13 @@
         
         vm.goBack = function () {
             //ui-sref="account.profile({userId: null})" ui-sref-opts="{reload: true}"
-            function goBack() {
-            if (_.isEmpty($ionicHistory.backTitle())) {
+            var backView = $ionicHistory.backView();
+            
+            if (_.isEmpty(backView) || _.isEmpty(backView.stateName)) {
                 return $state.go('account.profile', { userId: null }, { reload: true });
             }
 
             return $ionicHistory.goBack();
-        }
         }
 
         vm.ab = function () {

@@ -50,11 +50,6 @@
         
         function goBack() {
             return null;
-            // if (_.isEmpty($ionicHistory.backTitle())) {
-            //     return $state.go('signup.engagement');
-            // }
-
-            // return $ionicHistory.goBack();
         }
     }
 
