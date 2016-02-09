@@ -60,6 +60,8 @@
                         }
 
                         return;
+                    } else {
+                        return goBack();
                     }
                     $cordovaGoogleAnalytics.trackEvent('Lockbox', 'init', 'inaccessible', vm.documents.length);
                 })
@@ -67,12 +69,14 @@
                     $cordovaGoogleAnalytics.trackEvent('Lockbox', 'init', 'fail', vm.documents.length);
                     logger.debug('Failed to access lockbox due to `%s`', err);
                     vm.canAccess = false;
-                    
+
                     return goBack();
                 });
         }
 
         function goBack() {
+            documents = null;
+
             var backView = $ionicHistory.backView();
             if (_.isEmpty(backView) || _.isEmpty(backView.stateName)) {
                 return $state.go('account.profile');
