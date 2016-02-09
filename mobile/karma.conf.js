@@ -56,8 +56,8 @@ module.exports = function(config) {
       'www/modules/account/child_modules/messages/controllers/*.js',
       'www/modules/account/child_modules/messages/services/*.js',
 
-      'tests/**/*.js',
-      'tests/!**!/!**!/!*.js'
+      'tests/e2e/**/*.js',
+      'tests/e2e/!**!/!**!/!*.js'
     ],
 
 
