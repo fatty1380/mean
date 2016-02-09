@@ -9,6 +9,9 @@ var sh = require('shelljs');
 var karma = require('karma').server;
 var plugin = require('gulp-cordova-plugin');
 var packageJSON = require('./package.json');
+var protractor = require('gulp-protractor').protractor;
+var webdriver_update = require('gulp-protractor').webdriver_update;
+
 
 var paths = {
   sass: ['scss/styles.scss', 'scss/**/*.scss'],
@@ -16,6 +19,7 @@ var paths = {
 };
 
 gulp.task('default', ['sass']);
+
 
 gulp.task('sass', function(done) {
   gulp.src('./scss/styles.scss')
@@ -56,13 +60,15 @@ gulp.task('git-check', function(done) {
 });
 
 
-gulp.task('test', function(done) {
-    karma.start({
-        configFile: __dirname + '/karma.conf.js',
-        singleRun: true
-    }, function() {
-        done();
-    });
+
+gulp.task('webdriver_update', webdriver_update);
+
+gulp.task('test', ['webdriver_update'], function(done) {
+    gulp.src([]).pipe(protractor({
+        configFile: 'protractor.conf.js',
+    })).on('error', function(e) {
+        console.log(e)
+    }).on('end', done);        
 });
 
 

@@ -8,7 +8,9 @@
     "ngCordova": "~0.1.20-alpha",
     "pdfjs-dist": "~1.1.343",
     "angular-elastic": "~2.5.0",
-    "moment": "~2.10.6"
+    "moment": "~2.10.6",
+    "angular-messages": "~1.4.9", 
+    "lodash": "~3.10.1"
   },
   "resolutions": {
     "angular": "1.4.3"
