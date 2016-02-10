@@ -36,7 +36,7 @@ function LockboxObject() {
     this.trucksContinueButton = $('[ng-click="vm.continueToTrailers(true)"]');
     this.trailersContinueButton = $('[ng-click="vm.continue(true)"]');
     this.skipButton = $('[ng-click="vm.skipToProfile();"]');
-    this.acknowledgeButton = $('[ng-click="vm.acknowledge();"]')
+    this.acknowledgeButton = $('[ng-click="vm.acknowledge();"]');
 
     function fillRandomFields() {
         function rand() { return Math.floor(Math.random() * alpha.length) };
