@@ -5,9 +5,9 @@
         .module(AppConfig.appModuleName)
         .service('timerService', timerService);
 
-    timerService.$inject = ['$rootScope', '$timeout'];
+    timerService.$inject = ['$rootScope', '$interval'];
 
-    function timerService($rootScope, $timeout) {
+    function timerService($rootScope, $interval) {
         var vm = this;
 
         vm.timers = [];
@@ -27,9 +27,9 @@
             initTimer: initTimer,
             cancelTimer: cancelTimer
         };
-        
-        function initTimer (name, intervalSeconds, callback) {
-            if(vm[name]) return false;
+
+        function initTimer(name, intervalSeconds, callback) {
+            if (vm[name]) return false;
 
             var timer = {};
             timer.name = name;
@@ -37,7 +37,7 @@
             timer.interval = intervalSeconds || vm.defaultInterval;
             timer.running = false;
             timer.callback = callback;
-            
+
             vm[name] = timer;
 
             vm.timers.push(name);
@@ -45,14 +45,16 @@
             return startTimer(vm[name]);
         }
 
-        function startTimer (timer) {
-            if(!timer) return false;
+        
+        function startTimer(timer) {
+            if (!timer) return false;
 
             if (!timer.running) {
-                timer.timeOut = $timeout(onTimeout, timer.interval * 1000, true, timer);
+                // timer.timeOut = $timeout(onTimeout, timer.interval * 1000, true, timer);
+                timer.timeOut = $interval(onTimeout, timer.interval * 1000, true, timer);
                 timer.running = true;
             }
-            
+
             return timer.running;
         }
 
@@ -68,18 +70,18 @@
             $rootScope.$broadcast(timer.name + '-stopped');
 
             if (_.isFunction(timerObj.callback)) {
-                    timerObj.callback();
-                }
+                timerObj.callback();
+            }
 
-                return;
+            return;
         }
 
-        function restartTimer (name) {
-            if(!name) return;
+        function restartTimer(name) {
+            if (!name) return;
 
             var timer = vm[name];
 
-            if(!timer) {
+            if (!timer) {
                 initTimer(name);
                 return;
             }
@@ -89,12 +91,13 @@
 
             startTimer(timer);
         }
+         
 
         function cancelTimer(timer) {
             if (_.isString(timer)) { timer = vm[timer]; }
-            if(!timer) return;
+            if (!timer) return;
 
-            $timeout.cancel(timer.timeOut);
+            $interval.cancel(timer.timeOut);
 
             timer.running = false;
             timer.interval = null;
