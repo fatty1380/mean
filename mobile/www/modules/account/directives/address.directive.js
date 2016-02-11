@@ -40,7 +40,7 @@
         //
         var directive = {
             template: editTemplate,
-            controller: AddressCtrl,
+            controller: StubCtrl,
             bindToController: true,
             controllerAs: 'vm',
             restrict: 'E',
@@ -51,24 +51,7 @@
 
         return directive;
     }
-    
-    AddressCtrl.$inject = ['Config'];
-    function AddressCtrl(Config) {
-        var vm = this;
-        
-        Config.getStates().then(function (states) {
-            vm.states = states;
-        });
-    }
 
-    var stateSelect = '<select ng-options="state.id as state.name for state in vm.states"' +
-        'ng-model="vm.address.state" autocomplete="off">' +
-        '</select>';
-        
-    var oldStateSelect = '<div class="item item-input">' +
-        '<input type="text" name="addrState" ng-model="vm.address.state" placeholder="State">' +
-        '</div>';
-        
     var editTemplate = '<div class="item item-input"> ' +
         '<input type="text" name="addrLine1" ng-model="vm.address.streetAddresses[0]" placeholder="Street Address"> ' +
         '</div>' +
@@ -78,11 +61,14 @@
         '<div class="item item-input">' +
         '<input type="text" name="addrCity" ng-model="vm.address.city" placeholder="City">' +
         '</div>' +
-        stateSelect +
+        '<div class="item item-input">' +
+        '<input type="text" name="addrState" ng-model="vm.address.state" placeholder="State">' +
+        '</div>' +
         '<div class="item item-input">' +
         '<input type="tel" name="addrZip" ng-model="vm.address.zipCode" placeholder="Zip">' +
         '</div>';
         
+    
     
 
     angular
