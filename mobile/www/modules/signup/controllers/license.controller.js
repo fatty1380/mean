@@ -65,14 +65,14 @@
         vm.class = null;
         vm.endorsement = endorsementStub;
 
-        vm.header = 'Edit License'
+        vm.header = 'Edit License';
         vm.backTxt = 'Cancel';
         vm.saveTxt = 'Save';
         vm.showCancel = true;
         vm.canGoBack = true;
 
         vm.save = save;
-        vm.cancel = vm.cancelModal;
+        vm.cancel = function() { vm.cancelModal(); }
 
         activate();
         

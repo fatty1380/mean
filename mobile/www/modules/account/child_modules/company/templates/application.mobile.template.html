@@ -4,20 +4,28 @@
         <ion-item class="item-header item-divider">
             {{vm.status | capitalize }} Application
         </ion-item>
-        <ion-item class="item-icon-left item-button-right" ng-if="vm.status !== 'valid'" ng-repeat="validator in vm.validators">
-            <i class="icon" ng-show="validator.status === 'loading'">
-                <ion-spinner></ion-spinner>
-            </i>
+        <div ng-repeat="validator in vm.validators" ng-if="!validator.hidden">
+            <ion-item class="item-icon-left item-button-right" ng-if="vm.status !== 'valid'">
+                <i class="icon" ng-show="validator.status === 'loading'">
+                    <ion-spinner></ion-spinner>
+                </i>
 
-            <i class="icon ion-checkmark" ng-show="validator.status === 'valid'"></i>
-            <i class="icon ion-alert" ng-show="validator.status === 'invalid'"></i>
-            <i class="icon ion-close" ng-show="validator.status === 'failed'"></i>
-            <span>Validating {{validator.name}}</span>
+                <i class="icon ion-checkmark" ng-show="validator.status === 'valid'"></i>
+                <i class="icon ion-alert" ng-show="validator.status === 'invalid'"></i>
+                <i class="icon ion-close" ng-show="validator.status === 'failed'"></i>
+                <span>Validating {{validator.name}}</span>
 
-            <button type="button" class="button button-positive" ng-if="validator.action" ng-click="validator.action()">
-                Fix
-            </button>
-        </ion-item>
+                <button type="button" class="button button-positive" ng-if="!validator.note && validator.action" ng-click="validator.action()">
+                    Fix
+                </button>
+            </ion-item>
+            <ion-item ng-if="validator.note" class="item-button-right item-body padding">
+                {{validator.note}}
+                <button type="button" class="button button-positive" ng-if="validator.action" ng-click="validator.action()">
+                    Fix
+                </button>
+            </ion-item>
+        </div>
 
         <ion-item class="item-icon-center" ng-if="vm.status !== 'valid' && vm.status !== 'invalid'">
             <button type="button" ng-click="vm.cancelModal(vm.status)" class="button button-dark button-block">cancel</button>

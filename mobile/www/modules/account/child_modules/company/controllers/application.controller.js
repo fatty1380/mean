@@ -9,7 +9,7 @@
         .module('company')
         .filter('capitalize', function () {
             return function (input, scope) {
-                if (input != null) {
+                if (input !== null) {
                     input = input.toLowerCase();
                 }
                 return input.substring(0, 1).toUpperCase() + input.substring(1);
@@ -32,8 +32,8 @@
             { name: 'User', validator: validateUser, resolver: null, status: null },
             { name: 'Address', validator: validateAddress, resolver: fixAddress, status: null },
             { name: 'Experience', validator: validateExperience, resolver: fixExperience, status: null },
-            { name: 'Props', validator: validateProps, resolver: fixProps, status: null },
-            { name: 'Confirm', validator: doConfirm, status: null },
+            { name: 'License', validator: validateLicense, resolver: fixLicense, status: null },
+            { name: 'Confirm', hidden: true, validator: doConfirm, status: null },
 
         ];
 
@@ -53,7 +53,8 @@
 
         _.defaults(vm.requirements, {
             experience: 1,
-            address: 1
+            address: 1,
+            license: true,
         });
 
         activate();
@@ -114,6 +115,11 @@
                             })
                             .catch(function HandleReject(reason) {
                                 logger.debug(stageValidator.name + '] reject 1 - invalid: ' + reason);
+                                stageValidator.reason = reason;
+
+                                if (!!reason.note) {
+                                    stageValidator.note = reason.note;
+                                }
 
                                 stageValidator.status = 'invalid';
 
@@ -126,20 +132,25 @@
                                 else {
                                     logger.debug(stageValidator.name + '] Configuring Resolver');
                                     stageValidator.action = function resolveStage() {
-                                        
+
                                         stageValidator.status = 'loading';
 
                                         logger.debug(stageValidator.name + '] Triggering Resolver');
-                                        stageValidator.resolver(vm.user, vm.application)
+                                        stageValidator.resolver(vm.user, vm.application, stageValidator.reason)
                                             .then(function resolved(result) {
                                                 return stageValidator.validator(vm.user, vm.application);
                                             })
                                             .then(function resolved(result) {
+                                                stageValidator.note = null;
                                                 stageValidator.status = 'valid';
                                                 stageValidator.action = null;
                                                 deferred.resolve(result);
                                             })
-                                            .catch(function failed(err) {
+                                            .catch(function failed(reason) {
+                                                stageValidator.reason = reason;
+                                                if (!!reason.note) {
+                                                    stageValidator.note = reason.note;
+                                                }
                                                 stageValidator.status = 'invalid';
                                                 //deferred.reject(err);
                                             });
@@ -197,8 +208,8 @@
             var d = $q.defer();
             $timeout(function () {
                 d.resolve({ field: 'address', result: 'valid' });
-            }, 500);
-            
+            }, 250);
+
             return d.promise;
         }
 
@@ -222,7 +233,7 @@
             var d = $q.defer();
             $timeout(function reject() {
                 d.reject({ field: 'experience', reason: 'required', min: minLength });
-            }, 100);
+            }, 250);
             return d.promise;
         }
 
@@ -234,16 +245,76 @@
                 });
         }
 
-        function validateProps(user, application) {
-            return $timeout(_.noop, 2000);
+        function validateLicense(user, application) {
+
+            var d = $q.defer();
+            $timeout(function reject() {
+                if (!vm.requirements.license) {
+                    return d.resolve();
+                }
+
+                if (_.isEmpty(user.license) || _.isEmpty(user.license.class)) {
+                    return d.reject({ field: 'license', reason: 'required' });
+                }
+
+                var note;
+
+                if (!!vm.requirements.licenseClass) {
+                    var licenseClass = (user.license.class || ' ').toLowerCase().charAt(0);
+                    var requiredClass = vm.requirements.licenseClass.toLowerCase();
+                        
+                    // License class will be in [a,b,c,d,standard,null];
+                    if (licenseClass > requiredClass) {
+                        note = 'This job requires a Class ' + requiredClass.toUpperCase() + ' license';
+                        return d.reject({ field: 'license', reason: 'insufficient', note: note });
+                    }
+                }
+
+                if (!!vm.requirements.licenseEndorsements) {
+                    var licenseEndorsements = _.map((user.license.endorsements || []), toLower);
+                    var requiredEndorsements = _.map(vm.requirements.licenseEndorsements, toLower); // eg: ['X']
+                    
+                    var missing = [];
+
+                    _.each(requiredEndorsements, function (e) {
+                        if (!_.contains(licenseEndorsements, e)) {
+                            missing.push(e.toUpperCase());
+                        }
+                    });
+
+                    if (missing.length) {
+                        note = 'This job requires the following license endorsements: ' + missing.join(', ');
+
+                        return d.reject({ field: 'license', reason: 'insufficient', note: note });
+                    }
+                }
+
+                return d.resolve();
+
+            }, 250);
+            return d.promise;
+
         }
 
-        function fixProps() {
-            return $q.when(true);
+        function toLower(string) {
+            return string.toLowerCase();
+        }
+
+        function fixLicense(user, application, reason) {
+            return ProfileModals
+                .showProfileEditLicenseModal({ license: user.license, note: reason && reason.note })
+                .then(function success(license) {
+                    logger.debug('Updated License to ', license);
+                    vm.user.license = license;
+                });
         }
 
         function doConfirm(user, application) {
-            return $q.when(true);
+            var d = $q.defer();
+            $timeout(function reject() {
+                d.resolve(true);
+            }, 250);
+            return d.promise;
         }
 
         function apply() {
