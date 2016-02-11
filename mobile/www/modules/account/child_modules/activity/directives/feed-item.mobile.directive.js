@@ -54,9 +54,9 @@
 	function FeedItemCtrl(activityService, activityModalsService, $state, $ionicPopup, LoadingService) {
 		var vm = this;
 
-		vm.stringify = function (obj) {
-			return JSON.stringify(obj, null, 2);
-		}
+        vm.stringify = function (obj) {
+            return JSON.stringify(obj, null, 2);
+        };
 
 		vm.activate = activate;
 		vm.likeActivity = likeActivity;
@@ -99,11 +99,11 @@
             activityModalsService
                 .showActivityDetailsModal({ entry: entry })
                 .then(function (res) {
-					logger.debug('Details Complete', res);
+                    logger.debug('Details Complete', res);
                 }, function (err) {
                     activityService.showPopup("10-7", "Please try later");
-                })
-        };
+                });
+        }
 
 
 

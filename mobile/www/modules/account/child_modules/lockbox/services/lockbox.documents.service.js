@@ -141,7 +141,7 @@
                                 sku: doc.sku
                             });
                         });
-                    } else { debugger; }
+                    } 
 
                     return vm.documents;
                 })

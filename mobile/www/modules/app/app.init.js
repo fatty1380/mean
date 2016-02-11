@@ -171,7 +171,10 @@
                         if (AppConfig.debug) {
                             $cordovaGoogleAnalytics.debugMode();
                         }
-                        $cordovaGoogleAnalytics.enableUncaughtExceptionReporting(true);
+                        
+                        if (_.isFunction($cordovaGoogleAnalytics.enableUncaughtExceptionReporting)) {
+                            $cordovaGoogleAnalytics.enableUncaughtExceptionReporting(true);
+                        }
 
                         $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'launch', location.hash)
                             .catch(function (e) {
