@@ -39,6 +39,11 @@
                     </div>
                 </div>
             </div>
+
+
+            <div class="button-bar action-buttons" ng-if="vm.deleteExperience">
+                <button class="button button-icon ion-close-circled " ng-click="vm.deleteExperience();"> delete</button>
+            </div>
         </ion-scroll>
     </ion-pane>
 

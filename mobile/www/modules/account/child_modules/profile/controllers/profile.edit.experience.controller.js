@@ -22,6 +22,7 @@
         }
 
         vm.saveExperience = saveExperience;
+        vm.deleteExperience = deleteExperience;
 
         function saveExperience() {
             logger.debug(' ');
@@ -49,6 +50,27 @@
                 });
         }
 
+        function deleteExperience() {
+            return $ionicPopup
+                .confirm({
+                    template: 'This will permanently delete this experience from your profile',
+                    title: 'Remove Experience?',
+                    okText: 'Remove',
+                    okType: 'button-assertive'
+                })
+                .then(function (res) {
+                    if (!!res) {
+                        return experienceService.deleteUserExperience(vm.experience._id);
+                    }
+
+                    return $q.reject('Deletion Canceled');
+                })
+                .then(function (deleted) {
+                    logger.debug('Experience Deleted', deleted);
+
+                    vm.closeModal(null);
+                });
+        }
 
         function getFormattedDate(date) {
             return $filter('date')($filter('monthDate')(date), 'MMMM, yyyy');

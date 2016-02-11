@@ -19,13 +19,20 @@
 
                 var url = settings.usersExperience + id;
                 return $http.put(url, experience);
+            },
+            deleteUserExperience = function (id) {
+                if (!id) { return $q.reject('No Experience ID Specified'); }
+
+                var url = settings.usersExperience + id;
+                return $http.delete(url);
             };
 
         return {
             getUserExperience: getUserExperience,
             postUserExperience: postUserExperience,
-            updateUserExperience: updateUserExperience
-        }
+            updateUserExperience: updateUserExperience,
+            deleteUserExperience: deleteUserExperience
+        };
     }
 
 })();
