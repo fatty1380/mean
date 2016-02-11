@@ -59,7 +59,7 @@
         function onTimeout(timer) {
             logger.debug('[onTimeout] %s timed out', timer.name);
 
-            if (timer.name === 'security-timer') debugger;
+            //if (timer.name === 'security-timer') debugger;
 
             var timerObj = vm[timer.name];
 
