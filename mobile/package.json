@@ -40,28 +40,23 @@
     "cordova-plugin-file",
     "cordova-plugin-inappbrowser",
     "cordova-plugin-file-transfer",
-    {
-      "locator": "https://github.com/BranchMetrics/Cordova-Ionic-PhoneGap-Deferred-Deep-Linking-SDK",
-      "id": "io.branch.sdk"
-    },
     "cordova-plugin-google-analytics",
     "cordova-plugin-camera",
     "cordova-plugin-geolocation",
     "ionic-plugin-keyboard",
     "cordova-plugin-statusbar",
-    "cordova-plugin-crosswalk-webview"
+    "cordova-plugin-crosswalk-webview",
+    {
+      "locator": "https://github.com/BranchMetrics/Cordova-Ionic-PhoneGap-Deferred-Deep-Linking-SDK",
+      "id": "io.branch.sdk"
+    }
   ],
   "cordovaPlatforms": [
-    "android",
     {
       "platform": "ios",
       "version": "3.9.2",
       "locator": "ios@3.9.2"
     },
-    {
-      "platform": "android",
-      "version": "",
-      "locator": "android"
-    }
+    "android"
   ]
 }
