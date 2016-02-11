@@ -10,7 +10,7 @@
     function ProfileAddExperienceCtrl($q, experienceService) {
         var vm = this;
         
-        vm.stateAction = 'Add'
+        vm.stateAction = 'Add';
 
         vm.experience = {
             title: '',
@@ -26,6 +26,14 @@
             logger.debug(' ');
             logger.debug('saveExperience()');
             logger.debug(vm.experience);
+
+            if (/\d{4,4}-\d{2,2}/.test(vm.startDate)) {
+                vm.experience.startDate = vm.startDate;
+            }
+
+            if (/\d{4,4}-\d{2,2}/.test(vm.endDate)) {
+                vm.experience.endDate = vm.endDate;
+            }
 
             experienceService.postUserExperience(vm.experience)
             .then(function (resp) {
