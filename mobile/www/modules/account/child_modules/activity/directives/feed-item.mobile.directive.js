@@ -42,7 +42,7 @@
 			}
 			else if (!!vm.entry.company) {
 				vm.avatar = vm.entry.company.profileImageURL;
-				vm.username = vm.entry.company.name;
+				//vm.username = vm.entry.company.name;
 				vm.title = vm.entry.title;
 			} else if (!!vm.entry.user) {
 				vm.activate();
