@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00A4B84BCC494EC7AEEC8314 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADB4BF71903B4B7C9BE7EA38 /* CoreLocation.framework */; };
 		08FAC8610BC541A6A79A7E2C /* CDVInAppBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B24696B840C413C9C38BA8D /* CDVInAppBrowser.m */; };
@@ -39,6 +40,7 @@
 		4C143D33D12243FDB5CA00B8 /* CDVSplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 5817C5FF61C940A0845B872F /* CDVSplashScreen.m */; };
 		5B1594DD16A7569C00FEF299 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */; };
 		60D307D293884BBAAACBAE69 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82DB03A9FD6147F892EC411A /* CoreData.framework */; };
+		66330C4535024CB1BD6B92D5 /* BNCDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C98A60AD8E0490A8D6FD4AA /* BNCDevice.m */; };
 		6B38BFB3C99D42DFA6218645 /* CDVFile.m in Sources */ = {isa = PBXBuildFile; fileRef = AB65F71E4EEE4225AE3DD2CC /* CDVFile.m */; };
 		6B6C11DD672441B39CE5306C /* CDVAssetLibraryFilesystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B6737E35CE74359A5BD20A8 /* CDVAssetLibraryFilesystem.m */; };
 		711434C700DE47C8A0CAB141 /* IonicKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E1DDE88F6C4F9580E60C74 /* IonicKeyboard.m */; };
@@ -69,7 +71,6 @@
 		E164CD8B0D7143CF82B6DD17 /* CDVLocalFilesystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 02AEA3CC2A514AFDB958EFFD /* CDVLocalFilesystem.m */; };
 		F32BEE5471ED4546A2EA4B86 /* CDVStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 67338FF6AFBD4C05B7EDC88A /* CDVStatusBar.m */; };
 		FBE2546D5D1949B8AA672A05 /* YoikScreenOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F7203F4DDEF42EF8609A647 /* YoikScreenOrientation.m */; };
-		66330C4535024CB1BD6B92D5 /* BNCDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C98A60AD8E0490A8D6FD4AA /* BNCDevice.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +105,7 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2B6737E35CE74359A5BD20A8 /* CDVAssetLibraryFilesystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDVAssetLibraryFilesystem.m; path = "cordova-plugin-file/CDVAssetLibraryFilesystem.m"; sourceTree = "<group>"; };
 		2BBC41C94D40428DBDA9E5E3 /* CDVInAppBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDVInAppBrowser.h; path = "cordova-plugin-inappbrowser/CDVInAppBrowser.h"; sourceTree = "<group>"; };
+		2C98A60AD8E0490A8D6FD4AA /* BNCDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BNCDevice.m; path = io.branch.sdk/BNCDevice.m; sourceTree = "<group>"; };
 		2CA6A4E797D046CFBC34913F /* CDVFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDVFileTransfer.m; path = "cordova-plugin-file-transfer/CDVFileTransfer.m"; sourceTree = "<group>"; };
 		2EFF5194FDC04D77A05F69B0 /* GAIEcommerceProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GAIEcommerceProduct.h; path = "cordova-plugin-google-analytics/GAIEcommerceProduct.h"; sourceTree = "<group>"; };
 		301BF52D109A57CC0062928A /* CordovaLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CordovaLib.xcodeproj; path = CordovaLib/CordovaLib.xcodeproj; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 		DC3BB47C857A4D09948B4082 /* CDVViewController+SplashScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDVViewController+SplashScreen.m"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.m"; sourceTree = "<group>"; };
 		DE59C776058847918F13F9EA /* IonicKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IonicKeyboard.h; path = "ionic-plugin-keyboard/IonicKeyboard.h"; sourceTree = "<group>"; };
 		E276263C039342FFB4E1471A /* CDVLocalFilesystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDVLocalFilesystem.h; path = "cordova-plugin-file/CDVLocalFilesystem.h"; sourceTree = "<group>"; };
+		E9E18F29230E4B65949DE36C /* BNCDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BNCDevice.h; path = io.branch.sdk/BNCDevice.h; sourceTree = "<group>"; };
 		EB1A1A20995F4550801C0D7C /* GAI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GAI.h; path = "cordova-plugin-google-analytics/GAI.h"; sourceTree = "<group>"; };
 		EB87FDF21871DA7A0020F90C /* merges */ = {isa = PBXFileReference; lastKnownFileType = folder; name = merges; path = ../../merges; sourceTree = "<group>"; };
 		EB87FDF31871DA8E0020F90C /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../../www; sourceTree = "<group>"; };
@@ -196,8 +199,6 @@
 		FAC733E868BA4E0782EFC069 /* AddressBook.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		FE728208465A40AF8CA35C82 /* CDVJpegHeaderWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDVJpegHeaderWriter.h; path = "cordova-plugin-camera/CDVJpegHeaderWriter.h"; sourceTree = "<group>"; };
 		FF9159E0E7014A20BC5D9AA4 /* CDVStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDVStatusBar.h; path = "cordova-plugin-statusbar/CDVStatusBar.h"; sourceTree = "<group>"; };
-		2C98A60AD8E0490A8D6FD4AA /* BNCDevice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "BNCDevice.m"; path = "io.branch.sdk/BNCDevice.m"; sourceTree = "<group>"; fileEncoding = 4; };
-		E9E18F29230E4B65949DE36C /* BNCDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "BNCDevice.h"; path = "io.branch.sdk/BNCDevice.h"; sourceTree = "<group>"; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -609,12 +610,16 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = Truckerline/Truckerline.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Truckerline/Truckerline-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited) DISABLE_PUSH_NOTIFICATIONS=1";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DISABLE_PUSH_NOTIFICATIONS=1",
+				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Truckerline/Truckerline-Info.plist";
@@ -646,10 +651,14 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = Truckerline/Truckerline.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Truckerline/Truckerline-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited) DISABLE_PUSH_NOTIFICATIONS=1";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DISABLE_PUSH_NOTIFICATIONS=1",
+				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Truckerline/Truckerline-Info.plist";
@@ -687,7 +696,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited) DISABLE_PUSH_NOTIFICATIONS=1";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DISABLE_PUSH_NOTIFICATIONS=1",
+				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -732,7 +744,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited) DISABLE_PUSH_NOTIFICATIONS=1";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DISABLE_PUSH_NOTIFICATIONS=1",
+				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
