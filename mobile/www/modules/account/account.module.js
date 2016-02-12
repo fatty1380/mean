@@ -8,6 +8,6 @@
         'imageviewer',
         'wu.staticGmap',
         'ion-google-place',
-        'ngCordova'
+        'ngCordovaMocks'
     ]);
 })();
