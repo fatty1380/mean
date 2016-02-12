@@ -129,13 +129,6 @@
                 .then(function (response) {
                     logger.debug('AppUpdates: Checked for Updates: Processing', updates);
                     getUpdates(response);
-
-                    // if (!!event){
-                    //     //allow for manual canceling of timer for whatever reason
-                    //     logger.debug('Timer Canceled')
-                    //     // timerService.cancelTimer(timerName)
-                    //     // timerService.restartTimer(timerName);
-                    // }
                 });
         }
         //MODIFIED

@@ -102,23 +102,7 @@
 
             return;
         }
-
-        function restartTimer(name) {
-            if (!name) return;
-
-            var timer = vm[name];
-
-            if (!timer) {
-                initTimer(name);
-                return;
-            }
-
-            timer.timeOut = null;
-            timer.running = false;
-
-            startTimer(timer);
-        }
-
+        
         function cancelTimer(timer) {
             if (_.isString(timer)) { timer = vm[timer]; }
             if (!timer) return;
