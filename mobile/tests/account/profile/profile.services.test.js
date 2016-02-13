@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    describe("Profile Service:", function() {
+    describe('Profile Service:', function () {
         // mock app module
         beforeEach(module(AppConfig.appModuleName));
 

@@ -1,24 +1,24 @@
 (function () {
     'use strict';
-    
+
     angular
         .module(AppConfig.appModuleName)
         .factory('LoadingService', LoadingService);
 
     LoadingService.$inject = ['$ionicLoading', 'userService'];
 
-    function LoadingService($ionicLoading, userService) {
-        
+    function LoadingService ($ionicLoading, userService) {
+
         var spinner = '<ion-spinner class="spinner-stable"></ion-spinner>';
         var success = '<i class="icon ion-checkmark"></i>';
         var failure = '<i class="icon ion-close"></i>';
         var alert = '<i class="icon ion-alert"></i>';
-        
+
         var ld = { duration: 20000, delay: 250, template: spinner };
         var sd = { duration: 2000, template: success };
         var fd = { duration: 2000, template: failure };
         var dd = { duration: 2000 };
-        
+
         return {
             showLoader: function (text, options) {
                 var template = {

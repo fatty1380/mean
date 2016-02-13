@@ -7,7 +7,7 @@
 
     companyModuleConfig.$inject = ['$stateProvider'];
 
-    function companyModuleConfig($stateProvider) {
+    function companyModuleConfig ($stateProvider) {
 
         $stateProvider
 
@@ -21,12 +21,12 @@
                             LoadingService.showLoader('Loading');
                             return CompanyService.get($stateParams.companyId)
                                 .then(
-                                    function success(result) {
+                                    function success (result) {
                                         logger.debug('Company Result: ', result);
                                         return result;
                                     })
                                 .catch(
-                                    function reject(err) {
+                                    function reject (err) {
                                         logger.error('Company result failed', err);
                                         return {};
                                     });
@@ -37,11 +37,11 @@
 
                             return CompanyService.loadJobs($stateParams.companyId)
                                 .then(
-                                    function success(result) {
+                                    function success (result) {
                                         logger.debug('Company Jobs Result: ', result);
                                         return result;
                                     })
-                                .catch(function reject(err) {
+                                .catch(function reject (err) {
                                     logger.error('Company Jobs result failed', err);
                                     return [];
                                 });
@@ -51,18 +51,18 @@
 
                             return CompanyService.loadFeed($stateParams.companyId)
                                 .then(
-                                    function success(result) {
+                                    function success (result) {
                                         logger.debug('Company Feed Result: ', result);
                                         return result;
                                     })
-                                .catch(function reject(err) {
+                                .catch(function reject (err) {
                                     logger.error('Company Feed result failed', err);
                                     return [];
                                 });
                         }]
                 }
 
-            })
+            });
 
     }
 

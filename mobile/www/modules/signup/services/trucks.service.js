@@ -9,23 +9,26 @@
 
     function truckService ($q, $ionicPopup, $rootScope) {
         var TRUCKS = [
-            {name: 'Peterbilt', logoClass: 'ico ico-peterbilt-logo'},
-            {name: 'International', logoClass: 'ico ico-international-logo'},
-            {name: 'Freightliner', logoClass: 'ico ico-freightliner-logo'},
-            {name: 'Mack Trucks', logoClass: 'ico ico-mack-logo'},
-            {name: 'Kenworth', logoClass: 'ico ico-kenworth-logo'},
-            {name: 'Volvo', logoClass: 'ico ico-volvo-logo'}
+            { name: 'Peterbilt', logoClass: 'ico ico-peterbilt-logo' },
+            { name: 'International', logoClass: 'ico ico-international-logo' },
+            { name: 'Freightliner', logoClass: 'ico ico-freightliner-logo' },
+            { name: 'Mack Trucks', logoClass: 'ico ico-mack-logo' },
+            { name: 'Kenworth', logoClass: 'ico ico-kenworth-logo' },
+            { name: 'Volvo', logoClass: 'ico ico-volvo-logo' }
         ];
 
+        return {
+            getTrucks: getTrucks,
+            addTruck: addTruck
+        };
+
         function getTrucks () {
-            var deferred = $q.defer();
+            if (TRUCKS.length) { return $q.when(TRUCKS); }
 
-            if(TRUCKS.length) deferred.resolve(TRUCKS);
-
-            return deferred.promise;
+            return $q.when([]);
         }
 
-        function addTruck() {
+        function addTruck () {
             var scope = $rootScope.$new();
             scope.vm = {};
 
@@ -36,7 +39,7 @@
                 buttons: [
                     {
                         text: 'Cancel',
-                        onTap: function (e) {
+                        onTap: function () {
                             scope.vm.truck = '';
                             return null;
                         }
@@ -44,25 +47,18 @@
                     {
                         text: 'Save',
                         type: 'button-positive',
-                        onTap: function(e) {
+                        onTap: function (e) {
                             if (!scope.vm.truck) {
                                 e.preventDefault();
                             } else {
-                                return {name:scope.vm.truck, logoClass: ''};
+                                return { name: scope.vm.truck, logoClass: '' };
                             }
                         }
                     }
                 ]
             });
         }
-
-        return {
-            getTrucks: getTrucks,
-            addTruck: addTruck
-        };
-
     }
-    
 })();
 
 

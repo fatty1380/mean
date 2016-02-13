@@ -7,10 +7,10 @@
 
     HomeCtrl.$inject = ['$scope', '$cordovaGoogleAnalytics'];
 
-    function HomeCtrl($scope, $cordovaGoogleAnalytics) {
+    function HomeCtrl ($scope, $cordovaGoogleAnalytics) {
 
         var then = Date.now();
-        
+
         $scope.$on('$ionicView.enter', function () {
             then = Date.now();
         });

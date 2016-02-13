@@ -3,19 +3,19 @@ angular
     .factory('lockboxSecurity', lockboxSecurity);
 
 lockboxSecurity.$inject = ['$rootScope', '$state', '$ionicPopup', 'LoadingService', '$q', '$timeout', '$cordovaGoogleAnalytics', 'securityService'];
-function lockboxSecurity($rootScope, $state, $ionicPopup, LoadingService, $q, $timeout, $cordovaGoogleAnalytics, securityService) {
+function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $timeout, $cordovaGoogleAnalytics, securityService) {
 
     return {
         checkAccess: checkAccess
     };
 
-    function checkAccess(options) {
+    function checkAccess (options) {
         // TODO: refactor and move to service
         // Step 1: Pulled out into standalone function
-            
+
         options = _.defaults({}, options, {
             setNew: true
-        })
+        });
 
         var $scope = $rootScope.$new();
 
@@ -31,9 +31,9 @@ function lockboxSecurity($rootScope, $state, $ionicPopup, LoadingService, $q, $t
         var pinPopup;
         scopeData.closePopup = closePINPopup;
         scopeData.pinChange = pinChanged;
-            
-        /////////////////////////////////////////////
-            
+
+        // ///////////////////////////////////////////
+
         return securityService
             .getPin()
             .then(function (pin) {
@@ -42,7 +42,7 @@ function lockboxSecurity($rootScope, $state, $ionicPopup, LoadingService, $q, $t
 
                 if (!!state.secured) {
                     scopeData.title = 'Enter PIN';
-                    scopeData.subTitle = 'Enter your PIN to unlock'
+                    scopeData.subTitle = 'Enter your PIN to unlock';
                 }
                 else if (!state.secured && !options.setNew) {
                     return $q.reject('Lockbox not secured and securing is disabled');
@@ -52,11 +52,11 @@ function lockboxSecurity($rootScope, $state, $ionicPopup, LoadingService, $q, $t
             .then(function () {
                 if (!state.accessible) {
                     LoadingService.hide();
-                    $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'locked')
+                    $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'locked');
                     return (pinPopup = $ionicPopup.show(getPinObject()));
                 }
 
-                $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'unlocked')
+                $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'unlocked');
                 return state.accessible;
             })
             .then(function (accessGranted) {
@@ -70,7 +70,7 @@ function lockboxSecurity($rootScope, $state, $ionicPopup, LoadingService, $q, $t
                 LoadingService.hide();
             });
 
-        function getPinObject() {
+        function getPinObject () {
             return {
                 template: '<input class="pin-input" type="tel" ng-model="data.pin" ng-change="data.pinChange(this)" maxlength="4" autofocus>',
                 title: scopeData.title,
@@ -82,11 +82,11 @@ function lockboxSecurity($rootScope, $state, $ionicPopup, LoadingService, $q, $t
             };
         }
 
-        function closePINPopup(data) {
+        function closePINPopup (data) {
             pinPopup.close(data);
         }
 
-        function pinChanged(popup) {
+        function pinChanged (popup) {
             if (scopeData.pin.length !== 4) return;
 
             if (!scopeData.confirm && !state.secured) {
@@ -96,13 +96,13 @@ function lockboxSecurity($rootScope, $state, $ionicPopup, LoadingService, $q, $t
                 scopeData.pin = '';
                 popup.subTitle = 'Please confirm your PIN';
                 popup.title = 'Confirm New PIN';
-                
+
                 $cordovaGoogleAnalytics.trackEvent('Lockbox', 'secure', 'init');
 
             } else if (state.secured && PIN && (scopeData.pin === PIN)) {
                 // Successfully unlocked Lockbox
                 scopeData.closePopup(securityService.unlock(scopeData.pin));
-                
+
                 $cordovaGoogleAnalytics.trackEvent('Lockbox', 'unlock', 'success');
                 LoadingService.showIcon('Unlocked', 'ion-unlocked');
             } else if (state.secured && PIN && scopeData.pin != PIN) {
@@ -114,7 +114,7 @@ function lockboxSecurity($rootScope, $state, $ionicPopup, LoadingService, $q, $t
                     // Set new PIN
                     securityService.setPin(scopeData.pin);
                     scopeData.closePopup(securityService.unlock(scopeData.pin));
-                    
+
                     $cordovaGoogleAnalytics.trackEvent('Lockbox', 'secure', 'confirmed');
 
                     LoadingService.showIcon('Documents Secured', 'ion-locked');
@@ -124,7 +124,7 @@ function lockboxSecurity($rootScope, $state, $ionicPopup, LoadingService, $q, $t
                     scopeData.pin = '';
 
                     delete scopeData.newPin;
-                    
+
                     $cordovaGoogleAnalytics.trackEvent('Lockbox', 'secure', 'invalid');
 
                     popup.subTitle = 'Secure your Lockbox with a 4 digit PIN';

@@ -3,11 +3,11 @@
 
     angular
         .module('signup')
-        .controller('EngagementCtrl', EngagementCtrl)
+        .controller('EngagementCtrl', EngagementCtrl);
 
     EngagementCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', '$ionicHistory', 'userService', 'avatarService', 'LoadingService'];
 
-    function EngagementCtrl($scope, $state, $cordovaGoogleAnalytics, $ionicHistory, userService, avatarService, LoadingService) {
+    function EngagementCtrl ($scope, $state, $cordovaGoogleAnalytics, $ionicHistory, userService, avatarService, LoadingService) {
 
         var vm = this;
 
@@ -17,24 +17,24 @@
             company: '',
             avatar: null,
             owner: null
-        }
+        };
 
         vm.initEngagementForm = initEngagementForm;
         vm.continue = continueToLicense;
         vm.goBack = goBack;
 
-        function initEngagementForm(scope) {
+        function initEngagementForm (scope) {
             vm.form = scope;
         }
 
         /**
          * Load User Data
          * ---------------
-         * Load the user's profile data from the server and extend the 
+         * Load the user's profile data from the server and extend the
          * local profile object.
          */
         userService.getUserData().then(
-            function success(userData) {
+            function success (userData) {
                 vm.profileData = userData;
 
                 if (!vm.profileData.props) {
@@ -42,7 +42,7 @@
                 }
 
                 _.extend(vm.userProps, vm.profileData.props);
-                
+
                 // if (/\d{4}\-\d{2}/.test(vm.userProps.started)) {
                 //     vm.userProps.started = vm.createStartedDateObject(vm.userProps.started);
                 // }
@@ -60,8 +60,8 @@
 
             return new Date(year, month);
         };
-        
-        
+
+
 
         /**
          * showEditAvatar
@@ -76,7 +76,7 @@
 
 
             avatarService.getNewAvatar(parameters, vm.profileData)
-                .then(function processNewAvatar(avatarResult) {
+                .then(function processNewAvatar (avatarResult) {
                     if (_.isEmpty(avatarResult)) {
                         $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'engagement', 'newAvatar:cancel');
                         return;
@@ -91,33 +91,33 @@
                 });
         };
 
-        function continueToLicense() {
+        function continueToLicense () {
 
             var then = Date.now();
             LoadingService.showLoader('Saving');
-            
+
             // Set standard Properties
             var userProps = {
                 owner: vm.userProps.owner,
                 started: vm.createStartedDateObject(vm.userProps.started),
-                //avatar: avatarService.getImage(),
+                // avatar: avatarService.getImage(),
                 company: vm.userProps.company
-            }
-            
-            // Events for Props: 
+            };
+
+            // Events for Props:
             if (userProps.owner !== null) { $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'setOwner'); }
             if (!!userProps.started) { $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'setStarted'); }
             if (!!userProps.handle) { $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'setHandle'); }
             if (!!userProps.company) { $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'setCompany'); }
 
             userService.updateUserProps(userProps)
-                .then(function success(propsResult) {
+                .then(function success (propsResult) {
                     logger.debug('Updated User Props ...', propsResult);
                     $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'saveProps');
 
                     return userService.updateUserData({ handle: vm.handle });
                 })
-                .then(function success(result) {
+                .then(function success (result) {
                     // TODO: Check for success/fail
                     logger.debug('Saved changes to user', result);
                     $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'save', Date.now() - then);
@@ -125,7 +125,7 @@
                     LoadingService.hide();
                     $state.go('signup.trucks');
                 })
-                .catch(function failure(err) {
+                .catch(function failure (err) {
                     logger.error('Unable to save changes to user: %o', userProps, err);
                     $cordovaGoogleAnalytics.trackEvent('signup', 'engagement', 'error');
 
@@ -133,10 +133,10 @@
                 });
 
         }
-        
-        function goBack() {
+
+        function goBack () {
             var backView = $ionicHistory.backView();
-            
+
             if (_.isEmpty(backView) || _.isEmpty(backView.stateName)) {
                 return $state.go('signup.license');
             }

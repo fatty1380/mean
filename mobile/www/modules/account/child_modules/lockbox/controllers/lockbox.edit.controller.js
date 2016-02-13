@@ -7,7 +7,7 @@
 
     LockboxEditCtrl.$inject = ['$scope', '$ionicPopup', 'lockboxDocuments', 'parameters'];
 
-    function LockboxEditCtrl($scope, $ionicPopup, lockboxDocuments, parameters) {
+    function LockboxEditCtrl ($scope, $ionicPopup, lockboxDocuments, parameters) {
         var vm = this;
 
         vm.close = close;
@@ -17,22 +17,22 @@
         vm.deleteDocuments = deleteDocuments;
 
         init();
-        
-        ////////////////////////////////////////////////////////////////////////
 
-        function init() {
+        // //////////////////////////////////////////////////////////////////////
+
+        function init () {
             vm.unselectedDocuments = null;
             vm.deleteDisabled = true;
             vm.renameDisabled = true;
 
-            
+
             if (_.isEmpty(vm.documents)) {
                 logger.debug('Documents not included in parameters - looking up');
                 getDocs();
             }
         }
 
-        function getDocs() {
+        function getDocs () {
             lockboxDocuments
                 .getDocuments()
                 .then(function (response) {
@@ -46,7 +46,7 @@
                 });
         }
 
-        function close() {
+        function close () {
             vm.closeModal(vm.documents);
         }
 
@@ -58,17 +58,17 @@
             vm.renameDisabled = (totalLength - currentUnselectedLength !== 1);
         });
 
-        function getUnselectedItems(object) {
+        function getUnselectedItems (object) {
             if (!object || !object.hasOwnProperty('checked')) return false;
             return !object.checked;
         }
 
-        function getSelected(object) {
+        function getSelected (object) {
             if (!object || !object.hasOwnProperty('checked')) return false;
             return object.checked;
         }
 
-        function rename(selectedIndex) {
+        function rename (selectedIndex) {
             vm.index = selectedIndex;
 
             if (vm.index === null || vm.index === undefined) {
@@ -114,14 +114,14 @@
 
                             vm.index = null;
                         })
-                        .catch(function failure(err) {
+                        .catch(function failure (err) {
                             logger.error('Problem updating document: ', err);
-                        })
+                        });
                 }
             });
         }
 
-        function deleteDocuments() {
+        function deleteDocuments () {
             vm.unselectedDocuments = vm.documents.filter(vm.getUnselectedItems);
             if (vm.unselectedDocuments.length !== vm.documents.length) {
                 var confirmPopup = $ionicPopup.confirm({
@@ -135,7 +135,7 @@
                     .then(function (res) {
                         if (res) {
                             lockboxDocuments.removeDocuments(vm.documents.filter(getSelected));
-                            //vm.documents = vm.unselectedDocuments;
+                            // vm.documents = vm.unselectedDocuments;
                         }
                     })
                     .then(function () {

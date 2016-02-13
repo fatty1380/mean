@@ -7,14 +7,14 @@
 
     utilsService.$inject = ['$interval'];
 
-    function utilsService($interval) {
+    function utilsService ($interval) {
         var clock = null;
 
         /**
          * @desc start interval
          * */
-        function startClock(fn, time){
-            if(clock === null){
+        function startClock (fn, time) {
+            if (clock === null) {
                 clock = $interval(fn, time);
             }
         }
@@ -22,8 +22,8 @@
         /**
          * @desc stop interval
          * */
-        function stopClock(){
-            if(clock !== null){
+        function stopClock () {
+            if (clock !== null) {
                 $interval.cancel(clock);
                 clock = null;
             }
@@ -33,5 +33,5 @@
             startClock : startClock,
             stopClock : stopClock
         };
-    };
+    }
 })();

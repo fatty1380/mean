@@ -7,16 +7,16 @@
 
     ImageCropController.$inject = ['parameters', 'userService', 'LoadingService', 'avatarService', 'settings'];
 
-    function ImageCropController(parameters, userService, LoadingService, avatarService, settings) {
+    function ImageCropController (parameters, userService, LoadingService, avatarService, settings) {
         var vm = this;
 
         vm.close = close;
 
         activate();
-        
-        ////////////////////////////////////////////////////////////////
-        
-        function activate() {
+
+        // //////////////////////////////////////////////////////////////
+
+        function activate () {
             vm.profileData = userService.profileData;
             vm.rawImage = '';
             vm.croppedImage = '';
@@ -27,7 +27,7 @@
             vm.areaType = parameters.areaType || 'circle';
             vm.imgType = parameters.imgType || 'image/jpeg';
 
-            logger.debug('Initializng Image Cropper with size: ' + vm.imgSize + ', area: ' + vm.areaType + ', type: ' + vm.imgType)
+            logger.debug('Initializng Image Cropper with size: ' + vm.imgSize + ', area: ' + vm.areaType + ', type: ' + vm.imgType);
 
             if (parameters.rawImage) {
                 vm.rawImage = 'data:' + inputImageType + ';base64,' + parameters.rawImage;
@@ -39,7 +39,7 @@
             }
         }
 
-        function close(save) {
+        function close (save) {
             if (!save) {
                 return vm.cancelModal({ error: false, message: 'Image Crop Cancelled' });
             }
@@ -51,10 +51,10 @@
             };
 
             userService.updateUserProps(dataProps)
-                .then(function success(profileDataProps) {
+                .then(function success (profileDataProps) {
                     vm.closeModal(profileDataProps.avatar);
                 })
-                .catch(function reject(err) {
+                .catch(function reject (err) {
                     logger.error('Unable to save props', err, dataProps);
                     vm.cancelModal(err);
                 })

@@ -8,7 +8,7 @@
     CompanyCtrl.$inject = ['$ionicPopup', '$ionicHistory', '$state', '$sce',
         'company', 'jobs', 'feed', 'userService', 'LoadingService', 'CompanyService'];
 
-    function CompanyCtrl( $ionicPopup, $ionicHistory, $state, $sce,
+    function CompanyCtrl ($ionicPopup, $ionicHistory, $state, $sce,
         company, jobs, feed, userService, LoadingService, CompanyService) {
         var vm = this;
 
@@ -18,10 +18,10 @@
         vm.trust = trustMe;
 
         initialize();
-        
-        /////////////////////////////////////////////////////////////////////////////////////
 
-        function initialize() {
+        // ///////////////////////////////////////////////////////////////////////////////////
+
+        function initialize () {
 
             if (_.isEmpty(company)) {
                 LoadingService.showAlert('Not Found');
@@ -41,9 +41,9 @@
             LoadingService.hide();
         }
 
-        function goBack() {
+        function goBack () {
             var backView = $ionicHistory.backView();
-            
+
             if (_.isEmpty(backView) || _.isEmpty(backView.stateName)) {
                 return $state.go('account.activity');
             }
@@ -51,23 +51,23 @@
             return $ionicHistory.goBack();
         }
 
-        function follow() {
+        function follow () {
             CompanyService.follow(vm.company.id)
-                .then(function success(result) {
+                .then(function success (result) {
                     LoadingService.showSuccess('Following');
                     vm.isFollowing = true;
                 });
         }
 
-        function unfollow() {
+        function unfollow () {
             CompanyService.unfollow(vm.company.id).then(
-                function success(result) {
+                function success (result) {
                     LoadingService.showFailure('Unfollowed');
                     vm.isFollowing = false;
                 });
         }
-        
-        function trustMe(html) {
+
+        function trustMe (html) {
             return $sce.trustAsHtml(html.replace(/\<br\>/gi, ' '));
         }
     }

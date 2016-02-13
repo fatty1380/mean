@@ -7,7 +7,7 @@
 
     ProfileEditTrailersCtrl.$inject = ['$scope', 'parameters', 'registerService', 'trailerService', 'userService'];
 
-    function ProfileEditTrailersCtrl($scope, parameters, registerService, trailerService, userService) {
+    function ProfileEditTrailersCtrl ($scope, parameters, registerService, trailerService, userService) {
         var vm = this;
 
         vm.newTrailer = '';
@@ -16,7 +16,7 @@
         vm.save = save;
         vm.addTrailer = trailerService.addTrailer;
 
-        function getTrailers() {
+        function getTrailers () {
             var trailers = parameters.trailers,
                 props = userService.profileData && userService.profileData.props,
                 selectedTrailers = props && props.trailer || [],
@@ -47,7 +47,7 @@
             return trailers;
         }
 
-        function save() {
+        function save () {
             var trailers = getNameKeys(vm.trailers);
             registerService.userProps.trailer = trailers;
             return registerService.updateUserProps({ trailer: trailers })
@@ -60,7 +60,7 @@
                 });
         }
 
-        function getNameKeys(obj) {
+        function getNameKeys (obj) {
             var keys = [];
             for (var i in obj) {
                 if (obj.hasOwnProperty(i)) {
@@ -73,8 +73,8 @@
         }
 
 
-        //vm.addTrailer = addTrailer;
-        //vm.trailers = getTrailers();
+        // vm.addTrailer = addTrailer;
+        // vm.trailers = getTrailers();
 
     }
 

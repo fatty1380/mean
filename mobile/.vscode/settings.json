@@ -16,7 +16,7 @@
 	// The folders to exclude when doing a full text search in the workspace.
 	"search.exclude": {
 		"www/lib": false,
-		"www/lib/**/*.min.*": true,
+		"**/*.min.*": true,
 		"**/*.bundle.*": true
 	},
 	

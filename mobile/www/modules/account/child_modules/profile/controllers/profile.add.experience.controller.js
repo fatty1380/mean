@@ -1,15 +1,15 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('account')
         .controller('ProfileAddExperienceCtrl', ProfileAddExperienceCtrl);
 
-    ProfileAddExperienceCtrl.$inject = ['$q', 'experienceService' ];
+    ProfileAddExperienceCtrl.$inject = ['$q', 'experienceService'];
 
-    function ProfileAddExperienceCtrl($q, experienceService) {
+    function ProfileAddExperienceCtrl ($q, experienceService) {
         var vm = this;
-        
+
         vm.stateAction = 'Add';
 
         vm.experience = {
@@ -22,7 +22,7 @@
 
         vm.saveExperience = saveExperience;
 
-        function saveExperience() {
+        function saveExperience () {
             logger.debug(' ');
             logger.debug('saveExperience()');
             logger.debug(vm.experience);

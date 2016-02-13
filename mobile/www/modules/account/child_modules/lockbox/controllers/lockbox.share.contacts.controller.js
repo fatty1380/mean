@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -7,7 +7,7 @@
 
     LockboxShareContactsCtrl.$inject = ['$scope', 'contactsService'];
 
-    function LockboxShareContactsCtrl($scope, contactsService) {
+    function LockboxShareContactsCtrl ($scope, contactsService) {
         var vm = this;
         vm.selectedContact = '';
 

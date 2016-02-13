@@ -15,7 +15,7 @@
         '$rootScope',
         '$document'];
 
-    function ionGooglePlace($ionicTemplateLoader, $ionicBackdrop, $ionicPlatform, $q, $timeout, $rootScope, $document) {
+    function ionGooglePlace ($ionicTemplateLoader, $ionicBackdrop, $ionicPlatform, $q, $timeout, $rootScope, $document) {
         return {
             require: '?ngModel',
             restrict: 'E',
@@ -28,7 +28,7 @@
             link: link
         };
 
-        function link(scope, element, attrs, ngModel) {
+        function link (scope, element, attrs, ngModel) {
             var unbindBackButtonAction;
 
             scope.locations = [];
@@ -83,12 +83,12 @@
                 }, true);
 
                 scope.$watch('searchQuery', function (query) {
-                    if (searchEventTimeout) { $timeout.cancel(searchEventTimeout);}
+                    if (searchEventTimeout) { $timeout.cancel(searchEventTimeout); }
                     searchEventTimeout = $timeout(function () {
                         if (!query) { return; }
-                        if (query.length < 3);
+                        if (query.length < 3)
 
-                        var req = scope.geocodeOptions || {};
+                            var req = scope.geocodeOptions || {};
                         req.address = query;
                         geocoder.geocode(req, function (results, status) {
                             if (status === google.maps.GeocoderStatus.OK) {
@@ -151,7 +151,7 @@
 
 
             ngModel.$formatters.unshift(function (modelValue) {
-                if (!modelValue) {return '';}
+                if (!modelValue) { return ''; }
                 return modelValue;
             });
 

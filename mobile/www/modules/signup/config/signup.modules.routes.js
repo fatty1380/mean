@@ -82,7 +82,7 @@
                     url: '/manually',
                     templateUrl: 'modules/signup/templates/add-friend-manually.html',
                     controller: 'AddFriendManuallyCtrl as vm'
-                })
+                });
 
         }]);
 
@@ -91,7 +91,7 @@
      * @desc check user logged in
     */
     loginCheckAndRedirect.$inject = ['$q', 'userService', '$state', 'tokenService', 'registerService', 'securityService'];
-    function loginCheckAndRedirect($q, userService, $state, tokenService, registerService, securityService) {
+    function loginCheckAndRedirect ($q, userService, $state, tokenService, registerService, securityService) {
         if (tokenService.get('access_token')) {
             return registerService.me()
                 .then(function (response) {

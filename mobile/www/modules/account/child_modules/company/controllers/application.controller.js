@@ -22,7 +22,7 @@
 
     JobApplicationCtrl.$inject = ['$state', '$q', '$timeout', 'parameters', 'userService', 'profileModalsService', 'CompanyService', 'LoadingService'];
 
-    function JobApplicationCtrl($state, $q, $timeout, parameters, UserService, ProfileModals, CompanyService, Loader) {
+    function JobApplicationCtrl ($state, $q, $timeout, parameters, UserService, ProfileModals, CompanyService, Loader) {
 
         var vm = this;
 
@@ -58,10 +58,10 @@
         });
 
         activate();
-        
-        /////////////////////////////////////////////////////////////
-        
-        function activate() {
+
+        // ///////////////////////////////////////////////////////////
+
+        function activate () {
             if (_.isEmpty(vm.job)) {
                 logger.error('No Job has been loaded into the Controller', parameters);
                 return vm.close();
@@ -72,36 +72,36 @@
                     .then(function (user) {
                         vm.user = user;
                     });
-                
+
             /**
              * Validation Lifecycle:
              * 1. null
              * 2. loading
              * 3. success: 'valid'
              *    failure: 'invalid' || fix && goto(2)
-             * 
+             *
              * Each validation step first runs the validator, and if it passes, it sets
              * its status to 'valid' and continues. However, if it fails, *and* there is
-             * a resolver defined on that step, it will attempt to resolve the issue. 
+             * a resolver defined on that step, it will attempt to resolve the issue.
              * Once the resolver returns, the validator is run one more time, and will result
              * either succeed, set its status to 'valid', or fail, set its status to 'failed',
              * and exit out of the validation cycle. If that step had *no* resolver defined,
              * it would immedately jump to the 'failed' state and exit out of the cycle.
-             * 
+             *
              * Depending on the output of the validation lifecycle, the overall status will be
-             * set to either 'valid' or 'failed' depending respectively on whether the 
+             * set to either 'valid' or 'failed' depending respectively on whether the
              * validation resolved or was rejected..
              */
 
-            p.then(function processValidation() {
+            p.then(function processValidation () {
 
                 // Initialize the promise to true to kiskstart the process
                 var pending = $q.when(true);
 
-                _.each(vm.validators, function processStage(stageValidator) {
+                _.each(vm.validators, function processStage (stageValidator) {
 
                     logger.debug(stageValidator.name + '] START');
-                    
+
                     // Use a promise to ensure that validators are not running concurrently
                     pending = pending.then(function (previousResult) {
 
@@ -109,11 +109,11 @@
                         logger.debug(stageValidator.name + '] loading');
 
                         return stageValidator.validator(vm.user, vm.application)
-                            .then(function handleSuccess(success) {
+                            .then(function handleSuccess (success) {
                                 logger.debug(stageValidator.name + '] valid');
                                 stageValidator.status = 'valid';
                             })
-                            .catch(function HandleReject(reason) {
+                            .catch(function HandleReject (reason) {
                                 logger.debug(stageValidator.name + '] reject 1 - invalid: ' + reason);
                                 stageValidator.reason = reason;
 
@@ -131,28 +131,28 @@
                                 }
                                 else {
                                     logger.debug(stageValidator.name + '] Configuring Resolver');
-                                    stageValidator.action = function resolveStage() {
+                                    stageValidator.action = function resolveStage () {
 
                                         stageValidator.status = 'loading';
 
                                         logger.debug(stageValidator.name + '] Triggering Resolver');
                                         stageValidator.resolver(vm.user, vm.application, stageValidator.reason)
-                                            .then(function resolved(result) {
+                                            .then(function resolved (result) {
                                                 return stageValidator.validator(vm.user, vm.application);
                                             })
-                                            .then(function resolved(result) {
+                                            .then(function resolved (result) {
                                                 stageValidator.note = null;
                                                 stageValidator.status = 'valid';
                                                 stageValidator.action = null;
                                                 deferred.resolve(result);
                                             })
-                                            .catch(function failed(reason) {
+                                            .catch(function failed (reason) {
                                                 stageValidator.reason = reason;
                                                 if (!!reason.note) {
                                                     stageValidator.note = reason.note;
                                                 }
                                                 stageValidator.status = 'invalid';
-                                                //deferred.reject(err);
+                                                // deferred.reject(err);
                                             });
                                     };
                                 }
@@ -164,29 +164,29 @@
                 });
 
                 return pending
-                    .then(function finalSuccess(result) {
+                    .then(function finalSuccess (result) {
                         logger.debug('Validators] Complete : Valid', result);
                         vm.status = 'valid';
                     })
-                    .catch(function finalFailed(err) {
+                    .catch(function finalFailed (err) {
                         logger.debug('Validators] Complete : InValid', err);
                         vm.status = 'invalid';
                     });
             });
 
         }
-        
+
         /** Validators and Fixers */
 
-        function validateUser(user, application) {
+        function validateUser (user, application) {
             return $timeout(_.noop, 1000);
         }
 
-        function fixUser() {
+        function fixUser () {
             return $q.when(true);
         }
 
-        function validateAddress(user) {
+        function validateAddress (user) {
 
             if (_.isEmpty(user.address)) {
                 return $q.reject('Address is Required');
@@ -213,16 +213,16 @@
             return d.promise;
         }
 
-        function fixAddress(user) {
+        function fixAddress (user) {
             return ProfileModals
                 .showProfileEditAddressModal({ address: user.address })
-                .then(function success(result) {
+                .then(function success (result) {
                     vm.user.address = result.address;
                     vm.user.addresses = result.addresses;
                 });
         }
 
-        function validateExperience(user, application) {
+        function validateExperience (user, application) {
 
             var minLength = Number(vm.requirements.experience);
 
@@ -231,24 +231,24 @@
             }
 
             var d = $q.defer();
-            $timeout(function reject() {
+            $timeout(function reject () {
                 d.reject({ field: 'experience', reason: 'required', min: minLength });
             }, 250);
             return d.promise;
         }
 
-        function fixExperience(user, application) {
+        function fixExperience (user, application) {
             return ProfileModals
                 .showListExperienceModal({ experience: user.experience, instructText: vm.text.experience })
-                .then(function success(experience) {
+                .then(function success (experience) {
                     vm.user.experience = experience;
                 });
         }
 
-        function validateLicense(user, application) {
+        function validateLicense (user, application) {
 
             var d = $q.defer();
-            $timeout(function reject() {
+            $timeout(function reject () {
                 if (!vm.requirements.license) {
                     return d.resolve();
                 }
@@ -262,7 +262,7 @@
                 if (!!vm.requirements.licenseClass) {
                     var licenseClass = (user.license.class || ' ').toLowerCase().charAt(0);
                     var requiredClass = vm.requirements.licenseClass.toLowerCase();
-                        
+
                     // License class will be in [a,b,c,d,standard,null];
                     if (licenseClass > requiredClass) {
                         note = 'This job requires a Class ' + requiredClass.toUpperCase() + ' license';
@@ -273,7 +273,7 @@
                 if (!!vm.requirements.licenseEndorsements) {
                     var licenseEndorsements = _.map((user.license.endorsements || []), toLower);
                     var requiredEndorsements = _.map(vm.requirements.licenseEndorsements, toLower); // eg: ['X']
-                    
+
                     var missing = [];
 
                     _.each(requiredEndorsements, function (e) {
@@ -296,41 +296,41 @@
 
         }
 
-        function toLower(string) {
+        function toLower (string) {
             return string.toLowerCase();
         }
 
-        function fixLicense(user, application, reason) {
+        function fixLicense (user, application, reason) {
             return ProfileModals
                 .showProfileEditLicenseModal({ license: user.license, note: reason && reason.note })
-                .then(function success(license) {
+                .then(function success (license) {
                     logger.debug('Updated License to ', license);
                     vm.user.license = license;
                 });
         }
 
-        function doConfirm(user, application) {
+        function doConfirm (user, application) {
             var d = $q.defer();
-            $timeout(function reject() {
+            $timeout(function reject () {
                 d.resolve(true);
             }, 250);
             return d.promise;
         }
 
-        function apply() {
+        function apply () {
             vm.loading = true;
 
             Loader.showLoader('Processing Application');
 
             CompanyService.applyToJob(vm.job.id)
-                .then(function handleSuccess(applicationResult) {
+                .then(function handleSuccess (applicationResult) {
                     logger.info('Applied to Job Successfully!!!', applicationResult);
                     vm.disableApplication = true;
                     Loader.showSuccess('Application Successful!<br><small>Thanks for applying with Core-Mark</small>');
 
                     vm.closeModal(applicationResult);
                 })
-                .catch(function handleError(error) {
+                .catch(function handleError (error) {
                     logger.error('Job Application failed', error);
                     vm.loading = false;
                     Loader.showFailure('Application Failed<br><small>Please try again later</small>');
@@ -338,7 +338,7 @@
                     vm.cancelModal('error');
                 });
         }
-        
-        //////////////////////////////////////////////////////////////////////////////
+
+        // ////////////////////////////////////////////////////////////////////////////
     }
 })();

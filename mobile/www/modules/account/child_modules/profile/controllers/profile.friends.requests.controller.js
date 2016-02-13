@@ -13,7 +13,7 @@
 
     ProfileFriendRequestCtrl.$inject = ['$scope', '$state', 'friendsService', 'userService', 'parameters', 'registerService', 'updateService'];
 
-    function ProfileFriendRequestCtrl($scope, $state, friendsService, userService, parameters, registerService, updateService) {
+    function ProfileFriendRequestCtrl ($scope, $state, friendsService, userService, parameters, registerService, updateService) {
         var vm = this;
 
         vm.back = back;
@@ -21,14 +21,14 @@
         vm.viewUser = viewUser;
         vm.extendWithUserObject = extendWithUserObject;
 
-        //////////////////////////////////////////////////////////////////
+        // ////////////////////////////////////////////////////////////////
         vm.requests = parameters || [];
         var initialFriendLength = userService.profileData.friends.length;
         vm.updatedProfle = false;
 
-        //////////////////////////////////////////////////////////////////
-        
-        function handleRequest(request, action) {
+        // ////////////////////////////////////////////////////////////////
+
+        function handleRequest (request, action) {
             var data = { action: action },
                 friends = userService.profileData.friends.indexOf(request.from) >= 0,
                 index = vm.requests.indexOf(request);
@@ -51,7 +51,7 @@
                 });
         }
 
-        function extendWithUserObject(request) {
+        function extendWithUserObject (request) {
             var index = vm.requests.indexOf(request);
 
             registerService
@@ -67,13 +67,13 @@
 
         }
 
-        function viewUser(user, e) {
-            logger.debug('Routing to User Profile Page for `%s`', user.displayName)
+        function viewUser (user, e) {
+            logger.debug('Routing to User Profile Page for `%s`', user.displayName);
             $state.go('account.profile', { userId: user.id });
             vm.closeModal();
         }
 
-        function back() {
+        function back () {
 
             if (initialFriendLength !== userService.profileData.friends.length) {
                 updateService.resetUpdates('requests');

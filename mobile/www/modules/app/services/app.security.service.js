@@ -7,7 +7,7 @@
 
     securityService.$inject = ['$rootScope', 'timerService', 'userService', 'StorageService', '$q'];
 
-    function securityService($rootScope, timerService, userService, StorageService, $q) {
+    function securityService ($rootScope, timerService, userService, StorageService, $q) {
 
         var PIN;
         var state = {
@@ -24,71 +24,71 @@
             getPin: getPin,
             getState: getState,
             logout: logout
-        }
-        
-        /////////////////////////////////////////////////////////////////////////////
+        };
 
-        function initialize() {
+        // ///////////////////////////////////////////////////////////////////////////
+
+        function initialize () {
             state = {
                 secured: false,
                 accessible: false
             };
             PIN = null;
-            
+
             $rootScope.$on('security-timer-stopped', function (event) {
                 debugger;
                 lock();
             });
-            
+
             state.initialized = true;
         }
 
-        function lock() {
+        function lock () {
             logger.debug('Locking Lockbox');
             state.accessible = false;
         }
 
-        function unlock(pin) {
+        function unlock (pin) {
             logger.debug('UnLocking Lockbox');
             if (PIN === pin) {
                 state.accessible = true;
                 // lock lockbox documents every 15 minutes
-                timerService.initTimer('security-timer', 15*60, false);
+                timerService.initTimer('security-timer', 15 * 60, false);
             }
             return state.accessible;
         }
 
-        function setPin(pin) {
+        function setPin (pin) {
             PIN = pin;
             userService.updateUserProps({ pin: pin });
-            StorageService.set('lockbox_pin', pin)
+            StorageService.set('lockbox_pin', pin);
         }
 
-        function getPin() {
+        function getPin () {
             if (!state.initialized) {
                 initialize();
             }
-            
-            if (PIN) {return $q.when(PIN);}
+
+            if (PIN) { return $q.when(PIN); }
 
             return userService.getUserData()
                 .then(function (data) {
                     if (_.isEmpty(data)) {
                         return null;
                     }
-                    
+
                     PIN = data.props.pin || null;
                     state.secured = (!!PIN ? true : false);
-                    
+
                     return PIN;
                 });
         }
 
-        function getState() {
+        function getState () {
             return state;
         }
 
-        function logout() {
+        function logout () {
             timerService.cancelTimer('security-timer');
             state.accessible = false;
             state.initialized = false;

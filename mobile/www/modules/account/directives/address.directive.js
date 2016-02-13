@@ -5,7 +5,7 @@
         .module('account')
         .directive('tlineAddressToggle', tlineAddressToggle);
 
-    function tlineAddressToggle() {
+    function tlineAddressToggle () {
         // Usage:
         //
         // Creates:
@@ -33,7 +33,7 @@
         .module('account')
         .directive('tlineAddressEdit', tlineAddressEdit);
 
-    function tlineAddressEdit() {
+    function tlineAddressEdit () {
         // Usage:
         //
         // Creates:
@@ -67,15 +67,15 @@
         '<div class="item item-input">' +
         '<input type="tel" name="addrZip" ng-model="vm.address.zipCode" placeholder="Zip">' +
         '</div>';
-        
-    
-    
+
+
+
 
     angular
         .module('account')
         .directive('tlineAddress', tlineAddress);
 
-    function tlineAddress() {
+    function tlineAddress () {
         // Usage:
         //
         // Creates:
@@ -93,18 +93,18 @@
 
         return directive;
     }
-    
+
 
     var viewTemplate = '<span ng-bind="vm.address.streetAddresses[0]"></span><br>' +
                         '<span ng-if="!!vm.address.streetAddresses[1]">' +
                             '{{vm.address.streetAddresses[1]}}<br>' +
-                        '</span>' + 
+                        '</span>' +
                         '<span ng-bind="vm.address.city"></span>' +
                         '<span ng-bind="vm.address.state"></span>' +
         '<span ng-bind="vm.address.zipCode"></span>';
-                        
 
-    function StubCtrl() {
+
+    function StubCtrl () {
         var vm = this;
-    }                        
+    }
 })();

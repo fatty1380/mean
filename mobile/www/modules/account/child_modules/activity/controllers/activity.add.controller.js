@@ -9,7 +9,7 @@
 
     ActivityAddCtrl.$inject = ['$scope', 'activityService', 'parameters', '$filter', 'LoadingService', '$ionicPopup', '$ionicPlatform'];
 
-    function ActivityAddCtrl($scope, activityService, parameters, $filter, LoadingService, $ionicPopup, $ionicPlatform) {
+    function ActivityAddCtrl ($scope, activityService, parameters, $filter, LoadingService, $ionicPopup, $ionicPlatform) {
         angular.element(document).ready(
             getCurrentPosition
             );
@@ -35,8 +35,8 @@
                 created: ''
             },
             props: {
-                avatar: user.profileImageURL,  /// TODO: WRONG - Use Cache Service
-                handle: user.handle,        /// WRONG
+                avatar: user.profileImageURL,  // / TODO: WRONG - Use Cache Service
+                handle: user.handle,        // / WRONG
                 freight: '',
                 slMiles: ''
             },
@@ -58,12 +58,12 @@
         /**
          * @desc geocode current position
          */
-        function getCurrentPosition() {
+        function getCurrentPosition () {
 
             LoadingService.showLoader('Checking 20');
 
             activityService.getCurrentCoords({ highAccuracy: true })
-                .then(function success(coords) {
+                .then(function success (coords) {
                     var lat = coords.lat;
                     var long = coords.long;
                     myCoordinates = new google.maps.LatLng(lat, long);
@@ -72,8 +72,8 @@
                     initMap();
                     LoadingService.hide();
                 })
-                .catch(function failure(err) {
-                    //show only 1 error message
+                .catch(function failure (err) {
+                    // show only 1 error message
                     if (vm.mapIsVisible) {
                         LoadingService.showAlert('10-7', { duration: 1000 });
                         vm.mapIsVisible = false;
@@ -86,7 +86,7 @@
         /**
          * @desc initialize map
          */
-        function initMap() {
+        function initMap () {
 
 
             map = activityService.getMap(document.getElementById('map'), myCoordinates, {
@@ -112,7 +112,7 @@
                 content: ''
             });
 
-            //get location name after init
+            // get location name after init
             activityService.getPlaceName(myCoordinates)
                 .then(function (result) {
                     vm.where = result;
@@ -122,9 +122,9 @@
         /**
          * @desc set marker position
          */
-        function setMarkerPosition() {
+        function setMarkerPosition () {
             var location = { lat: vm.where.geometry.location.lat(), lng: vm.where.geometry.location.lng() };
-            //click coordinates more accurate than geocoded by place coordinates
+            // click coordinates more accurate than geocoded by place coordinates
             var position = (clickCoordinates) ? clickCoordinates : location;
             vm.activity.location.coordinates = [position.lat, position.lng];
             marker.setPosition(position);
@@ -138,7 +138,7 @@
          * @desc calulate distance from last post and set to vm.activity.props.slMiles
          * @param {Object} position - current coordinates
          */
-        function setDistanceFromLastPost(position) {
+        function setDistanceFromLastPost (position) {
             var lastActivity = activityService.getLastActivityWithCoord();
             if (lastActivity) {
                 var startPos = new google.maps.LatLng(lastActivity.location.coordinates[0], lastActivity.location.coordinates[1]);
@@ -150,7 +150,7 @@
             }
         }
 
-        function saveItemToFeed() {
+        function saveItemToFeed () {
             if (!vm.activity.title) {
                 LoadingService.showAlert('Please enter a title for your activity');
                 return;
@@ -172,7 +172,7 @@
                 });
         }
 
-        function cancel(str) {
+        function cancel (str) {
             vm.cancelModal(str);
         }
     }

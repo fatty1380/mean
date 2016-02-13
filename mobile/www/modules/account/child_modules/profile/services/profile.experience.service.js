@@ -9,7 +9,7 @@
 
     function experienceService ($http, $q, settings, utilsService) {
         var getUserExperience = function () {
-            return $http.get(settings.usersExperience);
+                return $http.get(settings.usersExperience);
             },
             postUserExperience = function (experience) {
                 return $http.post(settings.usersExperience, experience);
