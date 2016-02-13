@@ -10,6 +10,7 @@ var AppConfig = (function () {
             'ngCordova.plugins.file',
             'ngCordova.plugins.fileTransfer',
             'ngIOS9UIWebViewPatch',
+            'ngSanitize',
             'monospaced.elastic'
         ],
         registerModule = function (moduleName, dependencies) {
@@ -21,7 +22,7 @@ var AppConfig = (function () {
         
     //////////////////////////////////////////////////////////////////////////////////////
     // TODO: Find more appropriate place to put this code (if there is one)
-    var envMode = 'dev';
+    var envMode = 'prod';
     
     var debugModes = {
         dev: true,

@@ -14,7 +14,7 @@
         //
         var directive = {
             bindToController: true,
-            templateUrl: '/modules/account/child_modules/profile/templates/experience-list.mobile.html',
+            templateUrl: 'modules/account/child_modules/profile/templates/experience-list.mobile.html',
             controller: ExperienceListController,
             controllerAs: 'vm',
             link: link,

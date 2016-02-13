@@ -1,3 +1,4 @@
+/* global AppConfig */
 (function () {
     'use strict';
 
@@ -8,11 +9,10 @@
     settings.uriScheme = 'truckerline';
     settings.branchKey = AppConfig.getBranchKey();
     settings.gaKey = AppConfig.getGAKey();
-    
-    
 
     // controllers
     settings.oauth = settings.baseUrl + 'oauth/';
+    settings.config = settings.baseUrl + 'config/';
     settings.api = settings.baseUrl + 'api/';
 
     settings.auth = settings.api + 'auth/';

@@ -8,9 +8,9 @@
         .module('company')
         .controller('JobDetailsCtrl', JobDetailsCtrl);
 
-    JobDetailsCtrl.$inject = ['$state', 'parameters', 'userService', 'LoadingService', 'CompanyService', 'companyModalService', 'LoadingService'];
+    JobDetailsCtrl.$inject = ['$state', '$sce', 'parameters', 'userService', 'LoadingService', 'CompanyService', 'companyModalService', 'LoadingService'];
 
-    function JobDetailsCtrl($state, parameters, UserService, LoadingService, CompanyService, companyModalService, Loader) {
+    function JobDetailsCtrl($state, $sce, parameters, UserService, LoadingService, CompanyService, companyModalService, Loader) {
 
         var vm = this;
 
@@ -21,6 +21,7 @@
 
         vm.apply = launchApplication;
         vm.share = share;
+        vm.trust = trustMe;
 
         activate();
         
@@ -61,6 +62,10 @@
 
         function share() {
 
+        }
+        
+        function trustMe(html) {
+            return $sce.trustAsHtml(html.replace(/\<br\>/gi, ' '));
         }
     }
 })();

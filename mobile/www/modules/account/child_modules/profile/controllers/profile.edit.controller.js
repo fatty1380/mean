@@ -143,10 +143,10 @@
                     vm.cancelModal('logout');
 
                     //clear controllers data
-                    $rootScope.$broadcast("clear");
+                    $rootScope.$broadcast('clear');
 
                     $state.go('login');
-                })
+                });
         }
     }
 

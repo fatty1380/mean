@@ -117,7 +117,7 @@
             
             var jobId = job && job.id || job;
             
-            return $http.get(settings.jobs + jobId + '/application')
+            return $http.get(settings.jobs + jobId + '/apply')
                 .then(function success(response) {
                     if (_.isObject(response.data) && !!response.data.status) {
                         return response.data;

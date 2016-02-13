@@ -26,7 +26,7 @@
 
     <div ng-if="!vm.experience || !vm.experience.length" class="no-content">
         <span ng-if="!!vm.canEdit">
-            <span ng-bindhtml="vm.instructText"></span>
+            <span ng-bind-html="vm.instructText"></span>
         </span>
         <span ng-if="!vm.canEdit">No Experience Listed</span>
     </div>

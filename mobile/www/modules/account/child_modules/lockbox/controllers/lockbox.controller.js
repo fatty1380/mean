@@ -5,9 +5,9 @@
         .module('lockbox', ['pdf'])
         .controller('LockboxCtrl', LockboxCtrl);
 
-    LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', 'securityService', 'user', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup', '$cordovaGoogleAnalytics', 'welcome'];
+    LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', '$ionicHistory', 'securityService', 'user', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup', '$cordovaGoogleAnalytics', 'welcome'];
 
-    function LockboxCtrl($scope, $state, $rootScope, securityService, user, documents, lockboxDocuments, lockboxModalsService, $ionicPopup, $cordovaGoogleAnalytics, welcome) {
+    function LockboxCtrl($scope, $state, $rootScope, $ionicHistory, securityService, user, documents, lockboxDocuments, lockboxModalsService, $ionicPopup, $cordovaGoogleAnalytics, welcome) {
 
 
         var vm = this;
@@ -26,12 +26,12 @@
         vm.lockboxClear = false;
 
         $scope.$on("$ionicView.beforeEnter", function () {
-            logger.debug('Reactivate Lockbox Controller');
-
             if (documents === -1) {
-                logger.debug('docs equals negative 1 - fail1')
-                return;
+                logger.debug('docs equals negative 1 - fail')
+                return goBack();
             }
+
+            logger.debug('Reactivate Lockbox Controller');
 
             init();
         });
@@ -48,7 +48,7 @@
         function init() {
             $cordovaGoogleAnalytics.trackEvent('Lockbox', 'init', 'start', vm.documents.length);
 
-            return lockboxDocuments.checkAccess({ redirect: true, setNew: true })
+            return lockboxDocuments.checkAccess({ setNew: true })
                 .then(function (isAccessible) {
                     vm.canAccess = isAccessible;
 
@@ -60,6 +60,8 @@
                         }
 
                         return;
+                    } else {
+                        return goBack();
                     }
                     $cordovaGoogleAnalytics.trackEvent('Lockbox', 'init', 'inaccessible', vm.documents.length);
                 })
@@ -67,7 +69,20 @@
                     $cordovaGoogleAnalytics.trackEvent('Lockbox', 'init', 'fail', vm.documents.length);
                     logger.debug('Failed to access lockbox due to `%s`', err);
                     vm.canAccess = false;
+
+                    return goBack();
                 });
+        }
+
+        function goBack() {
+            documents = null;
+
+            var backView = $ionicHistory.backView();
+            if (_.isEmpty(backView) || _.isEmpty(backView.stateName)) {
+                return $state.go('account.profile');
+            }
+
+            return $ionicHistory.goBack();
         }
 
         function getDocs() {

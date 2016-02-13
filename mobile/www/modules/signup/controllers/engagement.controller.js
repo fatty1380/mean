@@ -5,9 +5,9 @@
         .module('signup')
         .controller('EngagementCtrl', EngagementCtrl)
 
-    EngagementCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', 'userService', 'avatarService', 'LoadingService'];
+    EngagementCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', '$ionicHistory', 'userService', 'avatarService', 'LoadingService'];
 
-    function EngagementCtrl($scope, $state, $cordovaGoogleAnalytics, userService, avatarService, LoadingService) {
+    function EngagementCtrl($scope, $state, $cordovaGoogleAnalytics, $ionicHistory, userService, avatarService, LoadingService) {
 
         var vm = this;
 
@@ -135,7 +135,9 @@
         }
         
         function goBack() {
-            if (_.isEmpty($ionicHistory.backTitle())) {
+            var backView = $ionicHistory.backView();
+            
+            if (_.isEmpty(backView) || _.isEmpty(backView.stateName)) {
                 return $state.go('signup.license');
             }
 

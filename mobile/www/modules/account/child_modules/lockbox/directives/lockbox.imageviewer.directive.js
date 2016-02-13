@@ -22,13 +22,13 @@ function viewer() {
             img = new Image();
             img.src = attrs.src;
             var el = angular.element('<image src="' + attrs.src + '" style="width:100%; vertical-align:top;"/>');
-            img.onload = function() {
+            img.onload = function(result) {
                 element.append(el);
                 
                 scope.onImageEvent({type:'loadComplete'});
             };
-            img.onerror = function() {
-                scope.onImageEvent({type:'loadError'});
+            img.onerror = function(err, a2, a3) {
+                scope.onImageEvent({type:'loadError', err: err});
             };
         };
 

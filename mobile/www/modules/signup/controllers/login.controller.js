@@ -34,10 +34,12 @@
         /**
          * @description Submit form if last field in focus
         */
-        function submitForm() {
+        function submitForm(event) {
+            debugger;
             vm.error = '';
-            vm.mainLoginForm.$submitted = true;
+            
             if (vm.lastElementFocused) {
+                vm.mainLoginForm.$submitted = true;
                 return signIn();
             }
             

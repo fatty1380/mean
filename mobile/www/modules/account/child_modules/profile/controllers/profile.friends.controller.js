@@ -77,6 +77,8 @@
                 logger.debug('FriendsCtrl: %d New updates available: ', updates.requests);
                 vm.newRequests = updates.requests;
             });
+            
+            LoadingService.hide();
 
         }
 

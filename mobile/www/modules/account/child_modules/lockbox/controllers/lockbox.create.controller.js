@@ -86,7 +86,7 @@
             namePopup.then(function(res) {
                 if(res && !_.isEmpty(res)) {
                     vm.document.name = res;
-                    vm.document.sku = 'misc'
+                    vm.document.sku = 'misc';
                 } else {
                     vm.document.sku = originalValue;
                 }

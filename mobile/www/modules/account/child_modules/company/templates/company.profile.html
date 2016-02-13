@@ -3,7 +3,7 @@
     <div class="bar bar-header bar-calm" align-title="center">
         <button class="button button-clear" ng-click="vm.goBack()">Back</button>
         <button class="button button-clear" ng-if="!vm.isFollowing" ng-click="vm.follow()">Follow</button>
-        <button class="button button-clear" ng-if="vm.isFollowing" ng-click="vm.unfollow()">Follow</button>
+        <button class="button button-clear" ng-if="vm.isFollowing" ng-click="vm.unfollow()">Following</button>
     </div>
 
     <div class="bar bar-subheader bar-brand">
@@ -44,8 +44,8 @@
                 <ion-scroll class="company-about">
                     <ion-list>
                         <ion-item class="card" ng-repeat="about in vm.company.details">
-                            <h3 ng-bind-html="about.title"></h3>
-                            <span ng-bind-html="about.bodyHTML" ng-if="!!about.bodyHTML"></span>
+                            <h3 ng-bind-html="vm.trust(about.title)"></h3>
+                            <span ng-bind-html="vm.trust(about.bodyHTML)" ng-if="!!about.bodyHTML"></span>
                         </ion-item>
                         <br/>
                     </ion-list>

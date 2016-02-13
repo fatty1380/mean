@@ -2,7 +2,7 @@
     <!--Profile Main Heading START-->
     <ion-header-bar align-title="center">
         <button ng-if="!!vm.showEditModal" class="button button-clear" ng-click="vm.showEditModal()"><i class="ion-compose"></i> Edit</button>
-        <button ng-if="!vm.showEditModal" class="button button-clear" ui-sref="account.profile({userId: null})" ui-sref-opts="{reload: true}">
+        <button ng-if="!vm.showEditModal" class="button button-clear" ng-click="vm.goBack()">
             <i class="ion-ios-arrow-back"></i>
             <span class="ico ico-avatarsmall ico-middle"></span>
         </button>
@@ -22,10 +22,10 @@
         <div class="photo" ng-click="vm.showEditAvatar()">
             <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt="" />
         </div>
-        <div class="contacts-amount" ng-click="vm.showFriends();">
-            <span class="ico ico-friends ico-middle"></span>
-            <span ng-if="vm.canEdit && vm.updates.requests" class="badge badge-assertive">{{vm.updates.requests}}</span>
-            <strong>{{vm.profileData.friends.length}}</strong>
+        <div class="contacts-amount" ng-click="vm.showFriends($event);">
+            <span class="ico ico-friends ico-middle" ng-click="vm.showFriends($event);"></span>
+            <span ng-if="vm.canEdit && vm.updates.requests" class="badge badge-assertive" ng-click="vm.showFriends($event);">{{vm.updates.requests}}</span>
+            <strong ng-click="vm.showFriends($event);">{{vm.profileData.friends.length}}</strong>
         </div>
         <div class="handle" ng-if="!!vm.profileData.handle">
             <strong><i class="ico ico-radio"></i> {{vm.profileData.handle}}</strong>
@@ -35,9 +35,11 @@
 
     <!--Profile Main Body START-->
     <ion-pane class="profile-pane">
-        <ion-tabs class="profile-tabs tabs-top content-pane" delegate-handle="profile-tabs">
-            <ion-tab title="REVIEWS" ui-sref="account.profile.reviews" on-select="vm.showReviewTab()" ng-class="{'has-button': !!vm.showRequestReviewModal}"
-            badge="vm.canEdit && vm.getReviewBadge()" badge-style="{{!vm.welcomeReview ? 'badge-energized' : 'badge-assertive'}}">
+        <ion-tabs class="profile-tabs tabs-top content-pane">
+            
+            <ion-tab title="REVIEWS" ui-sref="account.profile.reviews({userId: vm.profileData && vm.profileData.id || null})" 
+            on-select="vm.showReviewTab()" 
+            ng-class="{'has-button': !!vm.showRequestReviewModal}" badge="vm.canEdit && vm.getReviewBadge()" badge-style="{{!vm.welcomeReview ? 'badge-energized' : 'badge-assertive'}}">
 
                 <ion-scroll class="reviews-list">
                     <ion-list ng-if="vm.reviews && vm.reviews.length">
@@ -78,8 +80,9 @@
                 </div>
 
             </ion-tab>
-            <ion-tab title="PROFILE" ui-sref="account.profile" class="content-pane" on-select="vm.showProfileTab()" ng-class="{'has-button': !!vm.showShareModal || !vm.canEdit}"
-            on-select="logger.debug('Load Tab %s', this)" on-deselect="logger.debug('Leave Tab %s', this)">
+            <ion-tab title="PROFILE" ui-sref="account.profile({userId: vm.profileData && vm.profileData.id || null})" class="content-pane"
+            on-select="vm.showProfileTab()"  
+            ng-class="{'has-button': !!vm.showShareModal || !vm.canEdit}">
                 <ion-scroll class="profile-list">
                     <div class="list">
                         <div class="item" ng-if="!!vm.profileData.props.title">
@@ -101,10 +104,10 @@
                     </div>
                     <div class="item">
                         <span class="item-label">TRAILER:</span>
-                        <span class="item-note">
-                                        <span ng-repeat="trailer in vm.profileData.props.trailer">
-                                            {{trailer}}<span ng-if="!$last">, </span>
-                        </span>
+                            <span class="item-note">
+                                <span ng-repeat="trailer in vm.profileData.props.trailer">
+                                    {{trailer}}<span ng-if="!$last">, </span>
+                            </span>
                         </span>
                     </div>
                     <div class="item" ng-if="!!vm.profileData.props.started">
@@ -121,7 +124,7 @@
                         <span class="item-note">{{vm.profileData.props.freight}}</span>
                     </div>
                     <div class="item endorsements-row">
-                        <span class="item-label">ENDORSEMENTS:</span>
+                        <span class="item-label">LICENSE:</span>
                         <!--<i class="ico extra-small-size {{'ico-license' + vm.profileData.license.class.toLowerCase() + 'active' }}"></i>-->
                         <ul class="endorsements-list" ng-click="vm.showEndorsements()">
                             <li ng-if="vm.profileData.license.class" class="license"><span class="ltxt">{{vm.profileData.license.class}}</span></li>
@@ -159,11 +162,13 @@
 
             </ion-tab>
 
-            <ion-tab title="EXPERIENCE" ui-sref="account.profile.experience" on-select="vm.showExperienceTab()" ng-class="{'has-button': !!vm.showAddExperienceModal}"
-            badge="vm.canEdit && vm.getExperienceBadge()" badge-style="badge-energized">
+            <ion-tab title="EXPERIENCE" ui-sref="account.profile.experience({userId: vm.profileData && vm.profileData.id || null})" 
+            on-select="vm.showExperienceTab()" 
+            ng-class="{'has-button': !!vm.showAddExperienceModal}" badge="vm.canEdit && vm.getExperienceBadge()" badge-style="badge-energized">
 
                 <ion-scroll class="experience-list">
-                    <tline-experience-list ng-model="vm.experience" show-add-button="false" can-edit="vm.canEdit" show-add-fn="vm.showAddExperienceModal" instructText="vm.expInstructText"></tline-experience-list>
+                    <tline-experience-list ng-model="vm.experience" show-add-button="false" can-edit="vm.canEdit" show-add-fn="vm.showAddExperienceModal"
+                    instructText="vm.expInstructText"></tline-experience-list>
                 </ion-scroll>
 
                 <div class="button content-button" ng-if="!!vm.canEdit && !!vm.showAddExperienceModal" ng-click="vm.showAddExperienceModal()">

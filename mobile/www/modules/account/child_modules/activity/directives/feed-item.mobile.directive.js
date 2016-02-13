@@ -42,7 +42,7 @@
 			}
 			else if (!!vm.entry.company) {
 				vm.avatar = vm.entry.company.profileImageURL;
-				vm.username = vm.entry.company.name;
+				//vm.username = vm.entry.company.name;
 				vm.title = vm.entry.title;
 			} else if (!!vm.entry.user) {
 				vm.activate();
@@ -54,9 +54,9 @@
 	function FeedItemCtrl(activityService, activityModalsService, $state, $ionicPopup, LoadingService) {
 		var vm = this;
 
-		vm.stringify = function (obj) {
-			return JSON.stringify(obj, null, 2);
-		}
+        vm.stringify = function (obj) {
+            return JSON.stringify(obj, null, 2);
+        };
 
 		vm.activate = activate;
 		vm.likeActivity = likeActivity;
@@ -90,19 +90,20 @@
 				});
         }
 
-		function showDetailsModal(entry) {
-			if (!!entry.company && entry.company.id) {
+        function showDetailsModal(entry) {
+            
+			if (!!entry.company && entry.company.id && !$state.is('company')) {
 				return $state.go('company', { companyId: entry.company.id });
 			}
 			
             activityModalsService
                 .showActivityDetailsModal({ entry: entry })
                 .then(function (res) {
-					logger.debug('Details Complete', res);
+                    logger.debug('Details Complete', res);
                 }, function (err) {
                     activityService.showPopup("10-7", "Please try later");
-                })
-        };
+                });
+        }
 
 
 

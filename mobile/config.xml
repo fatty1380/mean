@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget android-versionCode="0332" id="com.joinoutset.mobile" ios-CFBundleVersion="0017" version="1.2.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="0335" id="com.joinoutset.mobile" ios-CFBundleVersion="0100" version="1.2.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Truckerline</name>
   <description>
         Mobile tools for Truckers
@@ -8,8 +8,10 @@
       Outset Team
   </author>
   <content src="index.html"/>
-  <access origin="*"/>
-  <allow-navigation href="http://*/*"/>
+  <access origin="*" subdomains="true"/>
+  <allow-navigation href="https://*/*"/>
+  <allow-navigation href="http://localhost:3000/*"/>
+  <allow-navigation href="http://localhost:*/*"/>
   <allow-navigation href="*://*.googleapis.com/*"/>
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
@@ -22,11 +24,11 @@
   <preference name="Orientation" value="portrait"/>
   <preference name="fullscreen" value="false"/>
   <preference name="KeyboardShrinksView" value="true"/>
+  <preference name="iosExtraFilesystems" value="library,library-nosync,documents,documents-nosync,cache,bundle,root"/>
+  <preference name="AndroidExtraFilesystems" value="files,files-external,documents,sdcard,cache,cache-external,root"/>
   <preference name="xwalkVersion" value="14+"/>
   <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect"/>
   <preference name="xwalkMode" value="embedded"/>
-  <preference name="iosExtraFilesystems" value="library,library-nosync,documents,documents-nosync,cache,bundle,root"/>
-  <preference name="AndroidExtraFilesystems" value="files,files-external,documents,sdcard,cache,cache-external,root"/>
   <preference name="xwalkMultipleApk" value="true"/>
   <feature name="StatusBar">
     <param name="ios-package" onload="true" value="CDVStatusBar"/>

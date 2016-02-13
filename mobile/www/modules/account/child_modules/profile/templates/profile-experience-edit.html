@@ -23,21 +23,26 @@
                     <span class="input-label">Location</span>
                     <input type="text" ng-model="vm.experience.location" placeholder="Location or Region">
                 </label>
-                
+
                 <div class="row">
                     <div class="col">
                         <label class="item item-input item-floating-label">
-                            <span class="input-label" ng-show="vm.experience.startDate || vm.experience.endDate">Start Date</span>
-                            <input type="text" ng-model="vm.experience.startDate" placeholder="Start Date" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
+                            <span class="input-label" ng-show="vm.startDate || vm.endDate">Start Date</span>
+                            <input type="text" ng-model="vm.startDate" placeholder="Start Date" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
                         </label>
                     </div>
                     <div class="col">
                         <label class="item item-input item-floating-label">
-                            <span class="input-label" ng-show="vm.experience.startDate || vm.experience.endDate">End Date</span>
-                            <input type="text" ng-model="vm.experience.endDate" placeholder="End Date" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
+                            <span class="input-label" ng-show="vm.startDate || vm.endDate">End Date</span>
+                            <input type="text" ng-model="vm.endDate" placeholder="End Date" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
                         </label>
                     </div>
                 </div>
+            </div>
+
+
+            <div class="button-bar action-buttons" ng-if="vm.deleteExperience">
+                <button class="button button-icon ion-close-circled " ng-click="vm.deleteExperience();"> delete</button>
             </div>
         </ion-scroll>
     </ion-pane>

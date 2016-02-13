@@ -14,7 +14,6 @@ function lockboxSecurity($rootScope, $state, $ionicPopup, LoadingService, $q, $t
         // Step 1: Pulled out into standalone function
             
         options = _.defaults({}, options, {
-            redirect: true,
             setNew: true
         })
 
@@ -61,15 +60,8 @@ function lockboxSecurity($rootScope, $state, $ionicPopup, LoadingService, $q, $t
                 return state.accessible;
             })
             .then(function (accessGranted) {
-                if (!accessGranted && options.redirect) {
-                    //debugger;
-                        
-                    $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'no-access')
-                    
-                    $timeout(function () {
-                        logger.debug('[LockboxDocsService] No access ... Redirecting to account profile');
-                        $state.go('account.profile');
-                    }, 100);
+                if (!accessGranted) {
+                    $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'no-access');
                 }
 
                 return !!accessGranted;

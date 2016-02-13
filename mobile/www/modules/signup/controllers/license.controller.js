@@ -1,3 +1,4 @@
+/* global angular */
 (function () {
     'use strict';
 
@@ -41,7 +42,7 @@
                     LoadingService.hide();
                 })
                 .catch(function fail(err) {
-                    logger.error("license response update user ERROR: ", response);
+                    logger.error("license response update user ERROR: ", err);
                     $cordovaGoogleAnalytics.trackEvent('signup', 'license', 'error');
 
                     LoadingService.showFailure('Sorry, unable to save at this time');
@@ -50,11 +51,6 @@
         
         function goBack() {
             return null;
-            // if (_.isEmpty($ionicHistory.backTitle())) {
-            //     return $state.go('signup.engagement');
-            // }
-
-            // return $ionicHistory.goBack();
         }
     }
 
@@ -69,14 +65,14 @@
         vm.class = null;
         vm.endorsement = endorsementStub;
 
-        vm.header = 'Edit License'
+        vm.header = 'Edit License';
         vm.backTxt = 'Cancel';
         vm.saveTxt = 'Save';
         vm.showCancel = true;
         vm.canGoBack = true;
 
         vm.save = save;
-        vm.cancel = vm.cancelModal;
+        vm.cancel = function() { vm.cancelModal(); }
 
         activate();
         
