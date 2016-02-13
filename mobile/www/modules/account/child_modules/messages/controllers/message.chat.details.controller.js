@@ -17,7 +17,7 @@
         vm.recipientName = parameters.recipientName || parameters.recipient && parameters.recipient.handle ||  parameters.recipient && parameters.recipient.firstName;
 
         vm.viewUser = viewUser;
-        vm.close  = close; 
+        vm.close  = close;
         vm.createMessage  = createMessage;
 
         updateService.resetUpdates('messages', vm.recipientId);
@@ -86,8 +86,8 @@
                     logger.error('MESSAGES WASN\'T CREATED ERROR ----- >>>', err);
                 });
         }
-        
-        function viewUser(e) {
+
+        function viewUser() {
             logger.debug('Routing to User Profile Page for `%s`', vm.recipientName);
             vm.closeModal(null);
             $state.go('account.profile', { userId: vm.recipientId });
