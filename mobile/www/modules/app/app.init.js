@@ -34,7 +34,7 @@
                     if (_.isFunction(prop)) {
                         $delegate[key] = function () {
                             var args = [].slice.call(arguments),
-                                now = moment().format('HH:MM:SS');
+                                now = moment(Date.now()).format('HH:mm:ss');
  
                             // Prepend timestamp
                             args[0] = now + ' - ' + args[0];
