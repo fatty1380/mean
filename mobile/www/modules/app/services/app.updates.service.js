@@ -28,11 +28,16 @@
                 reviews: 0
             };
 
-        $rootScope.$on(timerName + '-stopped', runUpdateProcess);
-
+         // NOTE - this is the deprecated route of manually restarting `$timeout`-based interval service
+        // $rootScope.$on(timerName + '-stopped', runUpdateProcess);
+  
+        $rootScope.$on(timerName + '-refresh', runUpdateProcess);
+     
         return {
             getLastUpdates: getLastUpdates,
-            checkForUpdates: initializeUpdateTimerProcess,
+            //FIX ME - should be changed to `intializeUpdateIntervalProcess` for clarity
+            // checkForUpdates: initializeUpdateInterval,
+            checkForUpdates: intializeUpdateTimerProcess,
             resetUpdates: resetUpdates
         };
         
@@ -44,16 +49,28 @@
             return updates;
         }
 
-        function initializeUpdateTimerProcess(profileData) {
-            user = profileData;
+        // function initializeUpdateTimerProcess(profileData) {
+        //     user = profileData;
 
-            if (timerService.initTimer(timerName, 15) && !initialized) { // 'updates-timer'
-                // if the timer is not already running
-                // kick of an early update process;
+        //     if (timerService.initTimer(timerName, 15) && !initialized) { // 'updates-timer'
+        //         // if the timer is not already running
+        //         // kick of an early update process;
+        //         runUpdateProcess();
+        //         initialized = true;
+        //     }
+        // }
+        
+        
+        // NOTE - the second call of `timer.intitInterval` perhaps is messing things up
+        function intializeUpdateTimerProcess (profileData) {
+            user = profileData;
+            
+            if (timerService.initInterval(timerName, 15) && !initialized) {
                 runUpdateProcess();
                 initialized = true;
             }
         }
+ 
 
         function resetUpdates(data, value) {
             if (!data) {
@@ -75,7 +92,31 @@
         
         /////////////////////////////////////////////////
         
+        // function runUpdateProcess(event) {
+        //     logger.debug('AppUpdates: Checking for Updates: ', updates);
+        //     var promises = [
+        //         getLatestMessages(),
+        //         getLatestActivity(),
+        //         getLatestFriendRequests(),
+        //         getLatestReviews()
+        //     ]
+
+        //     return $q.all(promises)
+        //         .then(function (response) {
+        //             logger.debug('AppUpdates: Checked for Updates: Processing', updates);
+        //             getUpdates(response);
+                    
+        //             if (!!event) {
+        //                 timerService.restartTimer(timerName);
+        //             }
+        //         });
+        // }
+        
+        
+        // MODIFIED
         function runUpdateProcess(event) {
+            // debugger;
+            logger.debug('this should be the event', event)
             logger.debug('AppUpdates: Checking for Updates: ', updates);
             var promises = [
                 getLatestMessages(),
@@ -88,12 +129,9 @@
                 .then(function (response) {
                     logger.debug('AppUpdates: Checked for Updates: Processing', updates);
                     getUpdates(response);
-                    
-                    if (!!event) {
-                        timerService.restartTimer(timerName);
-                    }
                 });
         }
+        //MODIFIED
 
         function getUpdates(response) {
             var messages, activities, requests, reviews;

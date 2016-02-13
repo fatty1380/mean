@@ -23,12 +23,12 @@ var AppConfig = (function () {
     //////////////////////////////////////////////////////////////////////////////////////
     // TODO: Find more appropriate place to put this code (if there is one)
     var envMode = 'prod';
-    
+
     var debugModes = {
         dev: true,
         local: true,
         prod: false
-    };    
+    };
 
     var URLs = {
         prod: 'https://app.truckerline.com/',           // PRODUCTION USE
@@ -42,13 +42,13 @@ var AppConfig = (function () {
         dev: 'key_test_djoMGBQ5jCINia7eaPxrmocbtqjS2VLX',
         local: 'key_test_djoMGBQ5jCINia7eaPxrmocbtqjS2VLX'
     };
-    
+
     var gaKeys = {
         prod: 'UA-52626400-2',
-        dev:  'UA-52626400-3',
-        local:  'UA-52626400-3'
+        dev: 'UA-52626400-3',
+        local: 'UA-52626400-3'
     };
-    
+
     var debug = debugModes[envMode] || false;
 
     return {
@@ -62,7 +62,7 @@ var AppConfig = (function () {
         },
         getBranchKey: function (env) {
             env = env || envMode || debug ? 'dev' : 'prod';
-            
+
             return branchKeys[env] || branchKeys['dev'];
         },
         getGAKey: function (env) {
