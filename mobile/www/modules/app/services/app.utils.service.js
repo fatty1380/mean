@@ -5,10 +5,12 @@
         .module(AppConfig.appModuleName)
         .service('utilsService', utilsService);
 
-    utilsService.$inject = ['$interval'];
+    utilsService.$inject = ['$interval', '$rootScope'];
 
-    function utilsService($interval) {
+    function utilsService($interval, $rootScope) {
         var clock = null;
+        
+        $rootScope.on('clear', stopClock);
 
         /**
          * @desc start interval

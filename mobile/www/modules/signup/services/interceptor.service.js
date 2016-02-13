@@ -5,7 +5,8 @@
  * @license   The MIT License {@link http://opensource.org/licenses/MIT}
  */
 (function () {
-
+    'use strict';
+    
     angular
         .module('signup')
         .factory('AuthenticationInterceptor', AuthenticationInterceptor)
@@ -17,7 +18,6 @@
 
     AuthenticationInterceptor.$inject = ['$q', '$rootScope', '$location', 'tokenService'];
 
-    'use strict';
     /**
      * @description
      * The http interceptor that listens for authentication failures.

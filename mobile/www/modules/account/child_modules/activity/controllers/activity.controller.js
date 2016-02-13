@@ -66,7 +66,7 @@
             return (/my/i.test(vm.feedData && vm.feedData.buttonName)) ? 'ion-chevron-up' : 'ion-chevron-down'
         }
 
-        function addFriends() {
+        function addFriends () {
             $cordovaGoogleAnalytics.trackEvent('Activity', 'add-friends');
             $state.go('account.profile.friends');
         }
@@ -82,8 +82,8 @@
 
             if (vm.feedData && welcomeService.isAckd($state.$current.name)) {
                 LoadingService.showLoader(vm.feedData.loadingText);
-            }
-
+                }
+                
             //get all feed
             return activityService.getFeed()
                 .then(function (result) {
@@ -92,13 +92,13 @@
                     updateService.resetUpdates('activities');
                     logger.debug('getFeed() ', result);
 
-                }, function () {
-                    vm.feed = [];
+            }, function () {
+                vm.feed = [];
                 })
                 .finally(function () {
                     LoadingService.hide();
                     $cordovaGoogleAnalytics.trackEvent('Activity', 'init', 'complete', vm.feed.length);
-                });
+            });
         }
 
         /**
@@ -174,9 +174,9 @@
                             logger.debug(' vm.feed --->>>', vm.feed);
                         }
                         else {
-                            // TODO: Determine if the extra trip to the server is required
-                            refreshFeedActivityById(res);
-                        }
+                        // TODO: Determine if the extra trip to the server is required
+                        refreshFeedActivityById(res);
+                    }
                     }
 
                     $cordovaGoogleAnalytics.trackTiming('Activity', Date.now() - then, 'addActivity', 'complete');
@@ -184,6 +184,6 @@
                 .catch(function (err) {
                     $cordovaGoogleAnalytics.trackTiming('Activity', Date.now() - then, 'addActivity', 'cancel');
                 })
-        }
+    }
     }
 })();

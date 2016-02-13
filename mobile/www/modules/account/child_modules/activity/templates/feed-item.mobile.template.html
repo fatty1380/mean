@@ -1,54 +1,54 @@
 <ion-item class="card" ng-show="!!vm.entry.id" ng-click='vm.showActivityDetailsModal(vm.entry)'>
 
-	<div class="activity-item top" ng-class="{'company-item': !!vm.entry.company}">
-		<!--<div class="ico ico-avatarsmall"></div>-->
-		<!--<img ng-if="!!vm.avatar" ng-src="{{vm.avatar}}" />-->
-		<div class="panel">
-			<div class="visual" ng-if="!!vm.avatar || !!vm.entry.props.avatar">
-				<img class="avatar" ng-src="{{vm.avatar || vm.entry.props.avatar}}" />
-			</div>
-			<div class="text">
-				<div class="holder">
-					<div class="activity-summary">
-						<a ng-if="!!vm.username" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: vm.entry.user.id})">
-							<strong>{{vm.username}}</strong>
-						</a>
-					</div>
-					<div class="time" ng-if="vm.entry.created">
-						<i class="ico ico-timesmall"></i> {{vm.entry.created | date:'mediumDate'}}
-					</div>
-				</div>
-				<div class="holder last-location" ng-if="vm.entry.location.placeName || vm.entry._location[0].placeName">
-					<i class="ion-location"></i> {{vm.entry.location.placeName || vm.entry._location[0].placeName}}
-				</div>
-			</div>
-		</div>
+    <div class="activity-item top" ng-class="{'company-item': !!vm.entry.company}">
+        <!--<div class="ico ico-avatarsmall"></div>-->
+        <!--<img ng-if="!!vm.avatar" ng-src="{{vm.avatar}}" />-->
+        <div class="panel">
+            <div class="visual" ng-if="!!vm.avatar || !!vm.entry.props.avatar">
+                <img class="avatar" ng-src="{{vm.avatar || vm.entry.props.avatar}}" />
+            </div>
+            <div class="text">
+                <div class="holder">
+                    <div class="activity-summary">
+                        <a ng-if="!!vm.username" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: vm.entry.user.id})">
+                            <strong>{{vm.username}}</strong>
+                        </a>
+                    </div>
+                    <div class="time" ng-if="vm.entry.created">
+                        <i class="ico ico-timesmall"></i> {{vm.entry.created | date:'mediumDate'}}
+                    </div>
+                </div>
+                <div class="holder last-location" ng-if="vm.entry.location.placeName || vm.entry._location[0].placeName">
+                    <i class="ion-location"></i> {{vm.entry.location.placeName || vm.entry._location[0].placeName}}
+                </div>
+            </div>
+        </div>
 
-		<strong class="title" ng-if="!!vm.title">{{ vm.title }}</strong>
+        <strong class="title" ng-if="!!vm.title">{{ vm.title }}</strong>
 
-		<div class="clearfix props" ng-if="!vm.entry.company">
-			<div class="left notes" ng-if="!!vm.entry.notes">
-				<i class="ion ion-document-text"></i>
-				<span class="lbl">notes</span>
-			</div>
-			<div class="right dist driven" ng-if="!!vm.entry.props.distance">
-				<i class="ico ico-milestraveledsmall"></i>
-				<span class="dist mi">{{vm.entry.props.distance}}</span>
-			</div>
-			<div class="right freight" ng-if="!!vm.entry.props.freight">
-				<i class="ico ico-freight"></i>
-				<span>{{vm.entry.props.freight}}</span>
-			</div>
-		</div>
-		
-		<div class="clearfix notes-content" ng-if="!!vm.entry.company && !!vm.entry.message">
-			<span ng-bind="vm.entry.message"></span>
-		</div>
-	</div>
+        <div class="clearfix props" ng-if="!vm.entry.company">
+            <div class="left notes" ng-if="!!vm.entry.notes">
+                <i class="ion ion-document-text"></i>
+                <span class="lbl">notes</span>
+            </div>
+            <div class="right dist driven" ng-if="!!vm.entry.props.distance">
+                <i class="ico ico-milestraveledsmall"></i>
+                <span class="dist mi">{{vm.entry.props.distance}}</span>
+            </div>
+            <div class="right freight" ng-if="!!vm.entry.props.freight">
+                <i class="ico ico-freight"></i>
+                <span>{{vm.entry.props.freight}}</span>
+            </div>
+        </div>
 
-	<img ng-if="vm.entry.imageURL" ng-src="{{vm.entry.imageURL}}" class="static-pic">
+        <div class="clearfix notes-content" ng-if="!!vm.entry.company && !!vm.entry.message">
+            <span ng-bind="vm.entry.message"></span>
+        </div>
+    </div>
 
-	<!--<div class="button-holder company-link" ng-if="!!vm.entry.company">
+    <img ng-if="vm.entry.imageURL" ng-src="{{vm.entry.imageURL}}" class="static-pic">
+
+    <!--<div class="button-holder company-link" ng-if="!!vm.entry.company">
 		<a class="button button-block button-small" 
 			ui-sref="company({companyId: vm.entry.company.id || vm.entry.company})"
 			ng-click="$event.stopPropagation()">
@@ -56,36 +56,36 @@
 		</a>
 	</div>-->
 
-	<static-gmap ng-if="!!vm.entry.location.coordinates" class="static-map" size="400x200" sensor="true" zoom="14" markers="{{vm.markers}}">
-	</static-gmap>
+    <static-gmap ng-if="!!vm.entry.location.coordinates" class="static-map" size="400x200" sensor="true" zoom="14" markers="{{vm.markers}}">
+    </static-gmap>
 
-	<div class="activity-item bottom">
-		<div class="clearfix props">
+    <div class="activity-item bottom">
+        <div class="clearfix props">
 
-			<div class="driven" ng-if="!!vm.entry.props.slMiles">
-				<i class="ion-checkmark"></i>
-				<span class="dist mi">{{vm.entry.props.slMiles}}</span>
-			</div>
-			<div class="likes" ng-if="!!vm.entry.likes" ng-click="vm.likeActivity(vm.entry.id, $event)">
-				<i class="ion-star"></i>
-				{{vm.entry.likes.length}}<span class="lbl">like{{vm.entry.likes.length != 1 ? 's' : ''}}</span>
-			</div>
-			<div class="comments" ng-if="!!vm.entry.comments">
-				<i class="ion ion-chatboxes"></i>
-				{{vm.entry.comments.length}}<span class="lbl">comments</span>
-			</div>
-		</div>
+            <div class="driven" ng-if="!!vm.entry.props.slMiles">
+                <i class="ion-checkmark"></i>
+                <span class="dist mi">{{vm.entry.props.slMiles}}</span>
+            </div>
+            <div class="likes" ng-if="!!vm.entry.likes" ng-click="vm.likeActivity(vm.entry.id, $event)">
+                <i class="ion-star"></i> {{vm.entry.likes.length}}
+                <span class="lbl">like{{vm.entry.likes.length != 1 ? 's' : ''}}</span>
+            </div>
+            <div class="comments" ng-if="!!vm.entry.comments">
+                <i class="ion ion-chatboxes"></i> {{vm.entry.comments.length}}
+                <span class="lbl">comments</span>
+            </div>
+        </div>
 
-		<button ng-if="!!vm.isJob" class="button button-block button-calm" ng-click="$event.stopPropagation(); vm.apply(vm.entry)">
-			Apply!
-		</button>
-		
-		<!--<div class="clearfix">
+        <button ng-if="!!vm.isJob" class="button button-block button-calm" ng-click="$event.stopPropagation(); vm.apply(vm.entry)">
+            Apply!
+        </button>
+
+        <!--<div class="clearfix">
 			<pre>
 				{{vm.stringify(vm.entry.props)}}
 			</pre>
 		</div>-->
-	</div>
+    </div>
 
 
 </ion-item>

@@ -17,7 +17,7 @@
         vm.recipientName = parameters.recipientName || parameters.recipient && parameters.recipient.handle ||  parameters.recipient && parameters.recipient.firstName;
 
         vm.viewUser = viewUser;
-        //vm.close  = vm.closeModal; 
+        vm.close  = close; 
         vm.createMessage  = createMessage;
 
         updateService.resetUpdates('messages', vm.recipientId);

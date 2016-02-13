@@ -78,7 +78,7 @@
         }
 
         function createComment(event) {
-            
+
             if (_.isEmpty(vm.message)) {
                 return;
             }
@@ -106,13 +106,13 @@
 
         function toggleInput(event, direction) {
             vm.isInputVisible = _.isUndefined(direction) ? !vm.isInputVisible : !!direction;
-            
+
             if (!!vm.isInputVisible) { vm.focusComment = true; }
         }
-        
+
         function viewUser() {
             event.stopPropagation();
-            
+
             $state.go('account.profile', { userId: vm.entry.user.id });
             vm.closeModal(vm.entry);
         }
@@ -136,19 +136,19 @@
 
 angular.module('activity').directive('focusMe', function ($timeout) {
     'use strict';
-    
-  return {
-    scope: { trigger: '=focusMe' },
-    link: function(scope, element) {
-      scope.$watch('trigger', function(value) {
-        if(value === true) { 
-          //logger.debug('trigger',value);
-          $timeout(function() {
-            element[0].focus();
-            scope.trigger = false;
-          }, 100);
+
+    return {
+        scope: { trigger: '=focusMe' },
+        link: function (scope, element) {
+            scope.$watch('trigger', function (value) {
+                if (value === true) { 
+                    //logger.debug('trigger',value);
+                    $timeout(function () {
+                        element[0].focus();
+                        scope.trigger = false;
+                    }, 100);
+                }
+            });
         }
-      });
-    }
-  };
+    };
 });
