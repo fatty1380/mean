@@ -7,38 +7,38 @@
 
     userService.$inject = ['registerService', '$q', '$cordovaGoogleAnalytics'];
 
-    function userService(registerService, $q, $cordovaGoogleAnalytics) {
+    function userService (registerService, $q, $cordovaGoogleAnalytics) {
         var vm = this;
 
         vm.profileData = {};
-        
+
         vm.signOut = signOut;
         vm.getUserData = getUserData;
         vm.updateUserData = updateUserData;
         vm.getAvatar = getAvatar;
         vm.updateUserProps = updateUserProps;
-        
+
         Object.defineProperty(vm, 'userId', {
             enumerable: true,
             get: function () {
                 return _.isEmpty(vm.profileData) ? null : vm.profileData.id;
             }
         });
-        
-        //////////////////////////////////////////////////////////////////////////
-        
-        function signOut() {
+
+        // ////////////////////////////////////////////////////////////////////////
+
+        function signOut () {
             return registerService.signOut().then(
                 function (response) {
-                    if(response.success) {vm.profileData = {};
-                            $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'signout');
+                    if (response.success) { vm.profileData = {};
+                        $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'signout');
                         $cordovaGoogleAnalytics.setUserId();
                     }
                 }
-            )
+            );
         }
-        
-        function getUserData() {
+
+        function getUserData () {
             if (!vm.profileData || !vm.profileData.id) {
                 return registerService.me()
                     .then(function (response) {
@@ -61,10 +61,10 @@
          * @dataProps object containing new or updated properties for the user
          * @note This should not be used for the 'props' object. See `updateUserProps`
          */
-        function updateUserData(dataProps) {
+        function updateUserData (dataProps) {
             return registerService.updateUser(dataProps)
                 .then(function (data) {
-                    if(data.success && data.message.data.id){
+                    if (data.success && data.message.data.id) {
                         _.extend(vm.profileData, data.message.data);
                     }
                     return vm.profileData;
@@ -75,12 +75,12 @@
          * Makes a request to the server to update the user's props object.
          * @dataProps object containing new or updated properties for the user
          */
-        function updateUserProps(dataProps) {
+        function updateUserProps (dataProps) {
             return registerService.updateUserProps(dataProps)
                 .then(function (data) {
                     if (data.success) {
                         vm.profileData.props = vm.profileData.props || {};
-                        _.extend(vm.profileData.props, data.message.data)
+                        _.extend(vm.profileData.props, data.message.data);
                         return vm.profileData.props;
                     }
                     else {
@@ -88,25 +88,25 @@
                     }
                 });
         }
-        
-        function getAvatar(userProfile) {
-            
+
+        function getAvatar (userProfile) {
+
             if (!userProfile || _.isString(userProfile)) { return null; }
-            
+
             var avatar = filterAvatar(userProfile.profileImageURL) || filterAvatar(userProfile.props && userProfile.props.avatar);
 
             userProfile.profileImageURL = userProfile.avatar = avatar;
 
             return avatar;
         }
-        
-        function filterAvatar(input) {
-            
+
+        function filterAvatar (input) {
+
             if (!input || input === 'modules/users/img/profile/default.png'
                 || /4AAQSkZJRgABAQAAAQABAAD\/2wBDAAoHBwgHBgoICAgLCgoLDhg/.test(input)) {
                 return null;
             }
-            
+
             return input;
         }
     }

@@ -8,7 +8,7 @@
     ActivityCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', '$state', '$cordovaGoogleAnalytics',
         'activityModalsService', 'activityService', 'LoadingService', 'user', 'settings', 'welcomeService'];
 
-    function ActivityCtrl($rootScope, updates, updateService, $scope, $state, $cordovaGoogleAnalytics,
+    function ActivityCtrl ($rootScope, updates, updateService, $scope, $state, $cordovaGoogleAnalytics,
         activityModalsService, activityService, LoadingService, user, settings, welcomeService) {
         var vm = this;
         vm.feed = [];
@@ -56,14 +56,14 @@
             vm.lastUpdate = Date.now();
         });
 
-        function changeFeedSource() {
+        function changeFeedSource () {
             activityService.changeFeedSource();
             updateFeedData();
             initialize();
         }
 
-        function getFeedButtonClass() {
-            return (/my/i.test(vm.feedData && vm.feedData.buttonName)) ? 'ion-chevron-up' : 'ion-chevron-down'
+        function getFeedButtonClass () {
+            return (/my/i.test(vm.feedData && vm.feedData.buttonName)) ? 'ion-chevron-up' : 'ion-chevron-down';
         }
 
         function addFriends () {
@@ -71,20 +71,20 @@
             $state.go('account.profile.friends');
         }
 
-        function updateFeedData() {
+        function updateFeedData () {
             vm.feedData = activityService.getFeedData();
         }
 
-        function initialize() {
+        function initialize () {
             vm.feed = [];
 
             $cordovaGoogleAnalytics.trackEvent('Activity', 'init', 'start');
 
             if (vm.feedData && welcomeService.isAckd($state.$current.name)) {
                 LoadingService.showLoader(vm.feedData.loadingText);
-                }
-                
-            //get all feed
+            }
+
+            // get all feed
             return activityService.getFeed()
                 .then(function (result) {
 
@@ -92,23 +92,23 @@
                     updateService.resetUpdates('activities');
                     logger.debug('getFeed() ', result);
 
-            }, function () {
-                vm.feed = [];
+                }, function () {
+                    vm.feed = [];
                 })
                 .finally(function () {
                     LoadingService.hide();
                     $cordovaGoogleAnalytics.trackEvent('Activity', 'init', 'complete', vm.feed.length);
-            });
+                });
         }
 
         /**
          *  @TODO update only new items
         */
-        function updateWithNewActivities() {
+        function updateWithNewActivities () {
             initialize();
         }
 
-        function refresh() {
+        function refresh () {
             initialize()
                 .finally(function () {
                     // Stop the ion-refresher from spinning
@@ -116,18 +116,18 @@
                 });
         }
 
-        function loadMore() {
+        function loadMore () {
             $cordovaGoogleAnalytics.trackEvent('Activity', 'loadMore', 'start', vm.feed.length);
             if (vm.feed && vm.feed.length > 2) {
                 logger.debug('[loadMore] Loading Updates');
 
                 activityService.loadMore()
-                    .then(function success(updates) {
+                    .then(function success (updates) {
                         logger.debug('[loadMore] got Updates: ' + updates);
                         angular.forEach(updates, function (val, key) {
                             logger.debug('[loadMore] Pushing item #' + key);
                             vm.feed.push(val);
-                        })
+                        });
                     })
                     .finally(function () {
                         // Stop the ion-refresher from spinning
@@ -142,9 +142,9 @@
          * @desc update feed item
          * @param {Number} id - feed id
          */
-        function refreshFeedActivityById(id) {
+        function refreshFeedActivityById (id) {
             $cordovaGoogleAnalytics.trackEvent('Activity', 'refreshFeedActivityById', id, vm.feed.length);
-            LoadingService.showLoader('Updating Feed')
+            LoadingService.showLoader('Updating Feed');
 
             activityService.getFeedActivityById(id).then(function (result) {
                 logger.warn('get feed by id result --->>>', result);
@@ -157,7 +157,7 @@
             });
         }
 
-        function showAddActivityModal() {
+        function showAddActivityModal () {
             $cordovaGoogleAnalytics.trackEvent('Activity', 'addActivity', 'start');
             var then = Date.now();
 
@@ -174,16 +174,16 @@
                             logger.debug(' vm.feed --->>>', vm.feed);
                         }
                         else {
-                        // TODO: Determine if the extra trip to the server is required
-                        refreshFeedActivityById(res);
-                    }
+                            // TODO: Determine if the extra trip to the server is required
+                            refreshFeedActivityById(res);
+                        }
                     }
 
                     $cordovaGoogleAnalytics.trackTiming('Activity', Date.now() - then, 'addActivity', 'complete');
                 })
                 .catch(function (err) {
                     $cordovaGoogleAnalytics.trackTiming('Activity', Date.now() - then, 'addActivity', 'cancel');
-                })
-    }
+                });
+        }
     }
 })();

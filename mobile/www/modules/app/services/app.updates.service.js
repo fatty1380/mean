@@ -30,7 +30,7 @@
 
          // NOTE - this is the deprecated route of manually restarting `$timeout`-based interval service
         // $rootScope.$on(timerName + '-stopped', runUpdateProcess);
-  
+
         $rootScope.$on(timerName + '-refresh', runUpdateProcess);
      
         return {
@@ -40,8 +40,8 @@
             checkForUpdates: intializeUpdateTimerProcess,
             resetUpdates: resetUpdates
         };
-        
-        /////////////////////////////////////////////
+
+        // ///////////////////////////////////////////
 
 
         function getLastUpdates() {
@@ -64,13 +64,13 @@
         // NOTE - the second call of `timer.intitInterval` perhaps is messing things up
         function intializeUpdateTimerProcess (profileData) {
             user = profileData;
-            
+
             if (timerService.initInterval(timerName, 15) && !initialized) {
                 runUpdateProcess();
                 initialized = true;
             }
         }
- 
+
 
         function resetUpdates(data, value) {
             if (!data) {
@@ -89,9 +89,9 @@
             }
             $rootScope.$broadcast('updates-available', updates);
         }
-        
-        /////////////////////////////////////////////////
-        
+
+        // ///////////////////////////////////////////////
+
         // function runUpdateProcess(event) {
         //     logger.debug('AppUpdates: Checking for Updates: ', updates);
         //     var promises = [
@@ -123,7 +123,7 @@
                 getLatestActivity(),
                 getLatestFriendRequests(),
                 getLatestReviews()
-            ]
+            ];
 
             return $q.all(promises)
                 .then(function (response) {
@@ -136,13 +136,13 @@
         function getUpdates(response) {
             var messages, activities, requests, reviews;
 
-            if (!response) return;
+            if (!response) { return; }
 
             for (var i = 0; i < response.length; i++) {
-                var responseObject = response[i],
-                    url = responseObject && responseObject.config && responseObject.config.url;
+                var responseObject = response[i];
+                var url = responseObject && responseObject.config && responseObject.config.url;
 
-                if (!url) return;
+                if (!url) { return; }
 
                 if (url.indexOf('messages/') >= 0) {
                     messages = responseObject.data;
@@ -168,8 +168,8 @@
         }
 
         function getMessagesUpdates(messages) {
-            var messagesArray = filterOutUsersMessages(messages),
-                latestMessage = getMostRecentItem(messagesArray);
+            var messagesArray = filterOutUsersMessages(messages);
+            var latestMessage = getMostRecentItem(messagesArray);
 
             if (!currentMessage) {
                 currentMessage = latestMessage;
@@ -182,11 +182,11 @@
         }
 
         function getActivitiesUpdates(activities) {
-            var uniqueItems = _.uniq(activities.items),
-                uniqueActivities = _.uniq(activities.activity),
-                itemCount = uniqueItems && uniqueItems.length || 0,
-                ownActivityCount = uniqueActivities && uniqueActivities.length || 0,
-                modifiedDate = new Date(activities.modified).getTime();
+            var uniqueItems = _.uniq(activities.items);
+            var uniqueActivities = _.uniq(activities.activity);
+            var itemCount = uniqueItems && uniqueItems.length || 0;
+            var ownActivityCount = uniqueActivities && uniqueActivities.length || 0;
+            var modifiedDate = new Date(activities.modified).getTime();
 
             if (!currentActivity.date) {
                 currentActivity.date = modifiedDate;
@@ -196,14 +196,14 @@
                 if (itemCount === 1 && ownActivityCount === 0) {
                     // This represents the 'welcome' state, where we need to
                     // show a badge on the activities tab;
-                    
+
                     updates.activities = 1;
                     updateAvailable = true;
                 }
             } else if (modifiedDate > currentActivity.date && itemCount > currentActivity.amount) {
                 if (currentActivity.ownActivities !== activities.activity.length) {
-                    return
-                };
+                    return;
+                }
 
                 updates.activities = itemCount - currentActivity.amount;
 
@@ -215,7 +215,7 @@
 
             }
         }
-        
+
         /**
          * getReviewUpdates
          * STUB: This will check for newly posted reviews;
@@ -315,7 +315,7 @@
             return messageObject;
         }
 
-        //function getNewElementsAmount (elements, offset) {
+        // function getNewElementsAmount (elements, offset) {
         //    var sortedDates, amount, dates;
         //
         //    dates = elements.map(function (el) {
@@ -327,10 +327,10 @@
         //    amount = sortedDates.indexOf(offset);
         //
         //    return amount > 0 ? amount : 0;
-        //}
+        // }
 
         function getMostRecentItem(items) {
-            if (!angular.isArray(items)) return;
+            if (!angular.isArray(items)) { return; }
 
             var datesArray = items.map(function (item) {
                 return new Date(item.created).getTime();
@@ -357,11 +357,11 @@
                 newItems: tempArray,
                 byIds: messages.byIds,
                 amount: tempArray.length
-            }
+            };
 
         }
-        
-        /////////////////////////////////////////
+
+        // ///////////////////////////////////////
 
         function getLatestReviews() {
             return reviewService.getUserReviews();

@@ -8,7 +8,7 @@
     MessagesCtrl.$inject = ['$rootScope', '$scope', 'updates', 'updateService', '$cordovaGoogleAnalytics',
         'messageService', 'messageModalsService', 'LoadingService', 'friendsService', 'recipientChat'];
 
-    function MessagesCtrl($rootScope, $scope, updates, updateService, $cordovaGoogleAnalytics,
+    function MessagesCtrl ($rootScope, $scope, updates, updateService, $cordovaGoogleAnalytics,
         messageService, messageModalsService, LoadingService, friendsService, recipientChat) {
 
         var vm = this;
@@ -20,7 +20,7 @@
         vm.createNewChat = createNewChat;
         vm.getChats = getChats;
 
-        $rootScope.$on("clear", function () {
+        $rootScope.$on('clear', function () {
             $cordovaGoogleAnalytics.trackEvent('Messages', 'clear', null, vm.chats.length);
             logger.debug('MessagesCtrl clear');
             vm.messages = [];
@@ -35,23 +35,23 @@
             }
         });
 
-        function createNewChat() {
+        function createNewChat () {
             $cordovaGoogleAnalytics.trackEvent('Messages', 'createChat', 'start');
             var then = Date.now();
 
             friendsService
                 .retrieveFriends()
-                .then(function retrieveFriendsSuccess(friends) {
+                .then(function retrieveFriendsSuccess (friends) {
                     return messageModalsService
                         .selectChatRecipient({ friends: friends });
                 })
-                .then(function selectedChatRecipientSuccess(friend) {
+                .then(function selectedChatRecipientSuccess (friend) {
                     if (!!friend) {
                         $cordovaGoogleAnalytics.trackTiming('Messages', Date.now() - then, 'createChat', 'recipientSelected');
                         return messageService.getChatByUserId(friend.id);
                     }
                 })
-                .then(function getChatSuccess(chat) {
+                .then(function getChatSuccess (chat) {
                     if (!!chat) {
                         $cordovaGoogleAnalytics.trackTiming('Messages', Date.now() - then, 'createChat', 'loadedChat');
                         return showChatDetailsModal(chat);
@@ -62,21 +62,21 @@
                 });
         }
 
-        function loadProfileAvatars() {
+        function loadProfileAvatars () {
 
         }
 
-        function showChatDetailsModal(chat) {
+        function showChatDetailsModal (chat) {
             $cordovaGoogleAnalytics.trackEvent('Messages', 'openChat', 'start');
             var then = Date.now();
 
             logger.debug('showChatDetailsModal() ', chat);
             messageModalsService
                 .showNewMessageModal(chat)
-                .then(function messageModalSuccess() {
+                .then(function messageModalSuccess () {
                     getChats();
                 })
-                .catch(function messageModalFailure(err) {
+                .catch(function messageModalFailure (err) {
                     logger.error('Messages.showChatDetails failed', err);
                 })
                 .finally(function () {
@@ -84,7 +84,7 @@
                 });
         }
 
-        function getChats() {
+        function getChats () {
             var then = Date.now();
 
             LoadingService.showLoader('Loading');

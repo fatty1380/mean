@@ -7,7 +7,7 @@
 
     accountModuleRouting.$inject = ['$stateProvider'];
 
-    function accountModuleRouting($stateProvider) {
+    function accountModuleRouting ($stateProvider) {
 
         $stateProvider
             .state('account', {
@@ -23,7 +23,7 @@
                     updates: ['updateService', function (updateService) {
                         return updateService.getLastUpdates();
                     }],
-                    profile: function () { return null }
+                    profile: function () { return null; }
                 }
             })
 
@@ -43,7 +43,7 @@
                 },
                 resolve: {
                     profile: ['$stateParams', 'registerService', 'user', 'userService', 'appCache',
-                        function resolveUserProfile($stateParams, registerService, user, userService, appCache) {
+                        function resolveUserProfile ($stateParams, registerService, user, userService, appCache) {
                             var id = $stateParams.userId;
                             if (!!id && id != user.id) {
 
@@ -51,7 +51,7 @@
                                 if (!!cachedProfile && cachedProfile.id === id) return cachedProfile;
 
                                 return registerService.getProfileById(id)
-                                    .then(function success(response) {
+                                    .then(function success (response) {
                                         if (response.success) {
                                             return response.message.data;
                                         }
@@ -65,7 +65,7 @@
 
                                         return profile;
                                     })
-                                    .catch(function reject(error) {
+                                    .catch(function reject (error) {
                                         return null;
                                     });
                             }
@@ -157,7 +157,7 @@
                             return null;
                         }
 
-                        logger.debug('Looking up chat for recipient ID `%s`', $stateParams.recipientId)
+                        logger.debug('Looking up chat for recipient ID `%s`', $stateParams.recipientId);
                         return messageService.getChatByUserId($stateParams.recipientId);
                     }],
                     welcome: ['welcomeService', function (welcomeService) {
@@ -182,7 +182,7 @@
                         welcomeService.showModal('account.activity');
                     }]
                 }
-            })
+            });
     }
 
 })();

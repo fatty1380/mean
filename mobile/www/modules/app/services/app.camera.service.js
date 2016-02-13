@@ -6,15 +6,15 @@
 
     cameraService.$inject = ['$q', '$ionicActionSheet'];
 
-    function cameraService($q, $ionicActionSheet) {
-        
+    function cameraService ($q, $ionicActionSheet) {
+
         return {
             showActionSheet: showActionSheet
-        }
-        
-        //////////////////////////////////////////////////////////
-        
-        function getDefaults() {
+        };
+
+        // ////////////////////////////////////////////////////////
+
+        function getDefaults () {
             return {
                 quality: 60,
                 destinationType: Camera.DestinationType.DATA_URL,
@@ -30,10 +30,10 @@
             };
         }
 
-        function getPicture(photoSource, options) {
+        function getPicture (photoSource, options) {
             var q = $q.defer();
             if (!navigator.camera) {
-                logger.warn("******* Not a device. Using fake image *********");
+                logger.warn('******* Not a device. Using fake image *********');
                 q.resolve(null);
                 return q.promise;
             }
@@ -42,22 +42,22 @@
 
             navigator.camera.getPicture(onSuccess, onFail, options);
 
-            function onSuccess(getPictureResult) {
+            function onSuccess (getPictureResult) {
                 q.resolve(getPictureResult);
             }
 
-            function onFail(getPictureError) {
+            function onFail (getPictureError) {
                 q.reject(getPictureError);
             }
 
             return q.promise;
         }
 
-        function showActionSheet(options) {
+        function showActionSheet (options) {
             options = options || {};
 
             if (_.isObject(options.sourceType)) {
-                return getPicture(options.sourceType, options)
+                return getPicture(options.sourceType, options);
             }
 
             var deferred = $q.defer();
@@ -74,11 +74,11 @@
                 buttonClicked: function (index) {
                     switch (index) {
                         case 0:
-                            logger.debug("Take a photo");
+                            logger.debug('Take a photo');
                             deferred.resolve(getPicture(1, options)); // Camera.PictureSourceType.CAMERA
                             break;
                         case 1:
-                            logger.debug("Take photo from album");
+                            logger.debug('Take photo from album');
                             deferred.resolve(getPicture(0, options)); // Camera.PictureSourceType.PHOTOLIBRARY
                             break;
                     }

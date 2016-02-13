@@ -5,7 +5,7 @@
         .module(AppConfig.appModuleName)
         .filter('getChecked', getChecked);
 
-    function getChecked() {
+    function getChecked () {
         return function (itemsToFilter, params) {
             if (!itemsToFilter) return;
             var filteredItems = [],
@@ -31,7 +31,7 @@
 
     angular.module(AppConfig.appModuleName)
         .filter('prettyPrint', prettyPrint);
-    function prettyPrint() {
+    function prettyPrint () {
         return function (input) {
             return (!!input) ? JSON.stringify(input, undefined, 2) : '';
         };

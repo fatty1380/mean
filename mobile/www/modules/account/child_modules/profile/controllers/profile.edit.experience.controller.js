@@ -7,7 +7,7 @@
 
     ProfileEditExperienceCtrl.$inject = ['$q', '$filter', '$ionicPopup', 'experienceService', 'parameters'];
 
-    function ProfileEditExperienceCtrl($q, $filter, $ionicPopup, experienceService, parameters) {
+    function ProfileEditExperienceCtrl ($q, $filter, $ionicPopup, experienceService, parameters) {
         var vm = this;
 
         vm.stateAction = 'Edit';
@@ -24,7 +24,7 @@
         vm.saveExperience = saveExperience;
         vm.deleteExperience = deleteExperience;
 
-        function saveExperience() {
+        function saveExperience () {
             logger.debug(' ');
             logger.debug('saveExperience()');
             logger.debug(vm.experience);
@@ -50,7 +50,7 @@
                 });
         }
 
-        function deleteExperience() {
+        function deleteExperience () {
             return $ionicPopup
                 .confirm({
                     template: 'This will permanently delete this experience from your profile',
@@ -72,7 +72,7 @@
                 });
         }
 
-        function getFormattedDate(date) {
+        function getFormattedDate (date) {
             return $filter('date')($filter('monthDate')(date), 'MMMM, yyyy');
         }
     }

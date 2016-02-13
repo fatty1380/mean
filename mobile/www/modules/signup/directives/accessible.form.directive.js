@@ -1,8 +1,8 @@
 (function () {
     angular.module('signup')
         .directive('accessibleForm', accessibleFormDirective);
-        
-    function accessibleFormDirective() {
+
+    function accessibleFormDirective () {
         return {
             restrict: 'A',
             link: function (scope, elem) {

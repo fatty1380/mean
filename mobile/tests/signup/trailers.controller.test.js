@@ -1,7 +1,7 @@
 'use strict';
 
-(function() {
-    describe('trailersCtrl ', function() {
+(function () {
+    describe('trailersCtrl ', function () {
 
         var trailersCtrl,
             registerService,
@@ -9,20 +9,20 @@
 
         beforeEach(module(AppConfig.appModuleName));
 
-        beforeEach(inject(function($injector) {
+        beforeEach(inject(function ($injector) {
             var $controller = $injector.get('$controller');
             $httpBackend = $injector.get('$httpBackend');
             registerService = $injector.get('registerService');
         }));
 
-        beforeEach(inject(function($rootScope, $controller){
+        beforeEach(inject(function ($rootScope, $controller) {
             var scope = $rootScope.$new();
             trailersCtrl = $controller('TrailersCtrl', {
                 $scope: scope
             });
         }));
 
-        it('has at least one trailer', function() {
+        it('has at least one trailer', function () {
             expect(trailersCtrl.trailers.length).toBeGreaterThan(0);
         });
 

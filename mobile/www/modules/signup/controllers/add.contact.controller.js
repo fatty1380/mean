@@ -8,7 +8,7 @@
     AddContactFriendsCtrl.$inject = ['contacts', '$state', '$q', '$cordovaGoogleAnalytics', '$ionicPopup', '$http',
         'settings', 'utilsService', 'LoadingService', 'contactsService', '$filter'];
 
-    function AddContactFriendsCtrl(contacts, $state, $q, $cordovaGoogleAnalytics, $ionicPopup, $http,
+    function AddContactFriendsCtrl (contacts, $state, $q, $cordovaGoogleAnalytics, $ionicPopup, $http,
         settings, utilsService, LoadingService, contactsService, $filter) {
         var vm = this;
 
@@ -19,24 +19,24 @@
         vm.back = goBack;
         vm.loadContacts = loadContacts;
         vm.sendInvitations = sendInvitations;
-        
-        ///////////////////////////////////////////////////////////////////
 
-        function skip() {
+        // /////////////////////////////////////////////////////////////////
+
+        function skip () {
             $cordovaGoogleAnalytics.trackEvent('signup', 'addContacts', 'skip');
             $state.go('account.profile');
         }
 
-        function goBack() {
+        function goBack () {
             $cordovaGoogleAnalytics.trackEvent('signup', 'addContacts', 'gotBack');
             return $state.go('signup.friends');
         }
 
-        function loadContacts() {
+        function loadContacts () {
             LoadingService.showLoader('Loading Contacts');
             var then = Date.now();
             return contactsService.resolveContacts()
-                .then(function handleResolvedContacts(resolvedContacts) {
+                .then(function handleResolvedContacts (resolvedContacts) {
                     vm.contacts = resolvedContacts; // contactsService.getContacts();
                     vm.contactsResolved = contactsService.isResolved();
 
@@ -45,7 +45,7 @@
                 .finally(LoadingService.hide);
         }
 
-        function sendInvitations() {
+        function sendInvitations () {
             var filter = $filter('getChecked');
             var selectedContacts = filter(vm.contacts, { clearChecked: false });
 
@@ -65,9 +65,9 @@
                     if (res) {
                         LoadingService.showLoader('Sending Invitations');
                         // TODO: COMBINE w/ profile.add.friends.controller
-                        //return friendsService.sendRequests(selectedContacts);
+                        // return friendsService.sendRequests(selectedContacts);
 
-                        ///////
+                        // /////
                         var reqs = [];
                         for (var i = 0; i < selectedContacts.length; i++) {
                             logger.warn('selectedContacts --->>>', selectedContacts);

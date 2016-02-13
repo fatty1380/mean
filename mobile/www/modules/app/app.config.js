@@ -19,8 +19,8 @@ var AppConfig = (function () {
             // Add the module to the AngularJS configuration file
             angular.module(appModuleName).requires.push(moduleName);
         };
-        
-    //////////////////////////////////////////////////////////////////////////////////////
+
+    // ////////////////////////////////////////////////////////////////////////////////////
     // TODO: Find more appropriate place to put this code (if there is one)
     var envMode = 'prod';
 

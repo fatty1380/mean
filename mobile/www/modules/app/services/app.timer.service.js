@@ -15,7 +15,7 @@
         // default interval in seconds
         vm.defaultInterval = 30;
 
-        $rootScope.$on("clear", function () {
+        $rootScope.$on('clear', function () {
             for (var i = 0; i < vm.timers.length; i++) {
                 var timer = vm[vm.timers[i]];
                 cancelTimer(timer);
@@ -29,7 +29,7 @@
             cancelTimer: cancelTimer, 
         };
 
-        function initTimer(name, intervalSeconds, callback) {
+        function initTimer (name, intervalSeconds, callback) {
             if (vm[name]) return false;
 
             var timer = {};
@@ -63,7 +63,7 @@
             return startInterval(vm[name]);
         }
 
-        function startTimer(timer) {
+        function startTimer (timer) {
             if (!timer) return false;
 
             if (!timer.running) {
@@ -73,7 +73,7 @@
 
             return timer.running;
         }
-   
+
         function startInterval(timer) {
             if (!timer) return false;
 
@@ -89,7 +89,7 @@
             $rootScope.$broadcast(timer.name + '-refresh');
         }
 
-        function onTimeout(timer) {
+        function onTimeout (timer) {
             logger.debug('[onTimeout] %s timed out', timer.name);
 
             var timerObj = vm[timer.name];
@@ -102,18 +102,18 @@
 
             return;
         }
-        
+
         function cancelTimer(timer) {
             if (_.isString(timer)) { timer = vm[timer]; }
             if (!timer) return;
 
             $timeout.cancel(timer.timeOut);
-            
+
             timer.running = false;
             timer.interval = null;
             timer.timeOut = null;
-        }
-        
+            }
+
         function cancelInterval (timer) {
 
             if (_.isString(timer)) { timer = vm[timer]; }

@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    
+
     /**
      * showRequestReviewModal
      * template: modules/account/child_modules/profile/templates/profile-request.html
@@ -12,7 +12,7 @@
 
     ProfileRequestReviewCtrl.$inject = ['userService', 'reviewService', 'utilsService', 'LoadingService'];
 
-    function ProfileRequestReviewCtrl(userService, reviewService, utilsService, LoadingService) {
+    function ProfileRequestReviewCtrl (userService, reviewService, utilsService, LoadingService) {
         var vm = this;
         vm.profileData = userService.profileData;
         vm.contact = {};
@@ -20,7 +20,7 @@
 
         vm.sendRequest = sendRequest;
 
-        function sendRequest() {
+        function sendRequest () {
             logger.debug(vm.contact);
             var data = {
                 contactInfo: vm.contact,
@@ -41,7 +41,7 @@
                     logger.debug(resp);
                     vm.contact = {};
                     vm.message = '';
-                    
+
                     return vm.closeModal(resp.data);
                 })
                 .catch(function (resp) {

@@ -7,7 +7,7 @@
         .directive('tlineExperienceList', tlineExperienceList);
 
     tlineExperienceList.$inject = [];
-    function tlineExperienceList() {
+    function tlineExperienceList () {
         // Usage:
         //
         // Creates:
@@ -21,7 +21,7 @@
             restrict: 'E',
             scope: {
                 experience: '=ngModel',
-                //profile: '=?',
+                // profile: '=?',
                 showAddBtn: '=showAddButton',
                 canEdit: '=',
                 instructText: '=',
@@ -30,14 +30,14 @@
         };
         return directive;
 
-        function link(scope, element, attrs) {
+        function link (scope, element, attrs) {
             scope.vm.activate();
         }
     }
     /* @ngInject */
 
     ExperienceListController.$inject = ['$cordovaGoogleAnalytics', 'profileModalsService', 'experienceService'];
-    function ExperienceListController($cordovaGoogleAnalytics, profileModalsService, experienceService) {
+    function ExperienceListController ($cordovaGoogleAnalytics, profileModalsService, experienceService) {
         var vm = this;
 
         vm.activate = activate;
@@ -47,15 +47,15 @@
             vm.showEditExperienceModal = showEditExperienceModal;
         }
 
-        /////////////////////////////////////////////////////////////////////////////////
+        // ///////////////////////////////////////////////////////////////////////////////
 
-        function activate() {
+        function activate () {
             if (vm.canEdit) {
                 getExperience();
             }
         }
 
-        function showAddExperienceModal(parameters) {
+        function showAddExperienceModal (parameters) {
             $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'addExperience');
             profileModalsService
                 .showAddExperienceModal(parameters)
@@ -75,7 +75,7 @@
                 });
         }
 
-        function showEditExperienceModal(experienceItem) {
+        function showEditExperienceModal (experienceItem) {
             $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'editExperience');
             profileModalsService
                 .showEditExperienceModal(experienceItem)
@@ -87,8 +87,8 @@
                     } else {
                         vm.experience.push(experienceResult);
                     }
-                        
-                    //experienceItem = result;
+
+                    // experienceItem = result;
                     getExperience();
                 })
                 .catch(function (err) {
@@ -98,7 +98,7 @@
 
 
 
-        function getExperience() {
+        function getExperience () {
             experienceService
                 .getUserExperience()
                 .then(function (response) {

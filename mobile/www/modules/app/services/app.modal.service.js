@@ -7,13 +7,13 @@
 
     modalService.$inject = ['$ionicModal', '$rootScope', '$q', '$controller', '$cordovaGoogleAnalytics'];
 
-    function modalService($ionicModal, $rootScope, $q, $controller, $cordovaGoogleAnalytics) {
+    function modalService ($ionicModal, $rootScope, $q, $controller, $cordovaGoogleAnalytics) {
 
         return {
             show: show
         };
 
-        function show(templateUrl, controller, parameters, options) {
+        function show (templateUrl, controller, parameters, options) {
 
             var start = Date.now();
             var ctrl = _.first(controller.split(' '));
@@ -47,21 +47,21 @@
                 hardwareBackButtonClose: options.hardwareBackButtonClose
             })
                 .then(
-                    function success(modal) {
+                    function success (modal) {
                         modalScope.modal = modal;
 
-                        modalScope.openModal = function openModal() {
+                        modalScope.openModal = function openModal () {
                             return modalScope.modal.show();
                         };
-                        modalScope.cancelModal = function cancelModal(result) {
+                        modalScope.cancelModal = function cancelModal (result) {
                             deferred.reject(result);
 
                             $cordovaGoogleAnalytics.trackTiming('ModalView', Date.now() - start, 'cancel', evt);
                             $cordovaGoogleAnalytics.trackView(location.hash);
 
                             return modalScope.modal.hide();
-                        }
-                        modalScope.closeModal = function closeModal(result) {
+                        };
+                        modalScope.closeModal = function closeModal (result) {
                             deferred.resolve(result);
                             $cordovaGoogleAnalytics.trackTiming('ModalView', Date.now() - start, 'close', evt);
                             $cordovaGoogleAnalytics.trackView(location.hash);
@@ -99,7 +99,7 @@
 
                     })
                 .catch(
-                    function rejection(err) {
+                    function rejection (err) {
                         deferred.reject(err);
                         modalScope.modal && modalScope.modal.hide();
                     });
@@ -107,14 +107,14 @@
             return deferred.promise;
         }
 
-        function _cleanup(scope) {
+        function _cleanup (scope) {
             scope.$destroy();
             if (scope.modal) {
                 scope.modal.remove();
             }
         }
 
-        function _evalController(ctrlName) {
+        function _evalController (ctrlName) {
             var result = {
                 isControllerAs: false,
                 controllerName: '',

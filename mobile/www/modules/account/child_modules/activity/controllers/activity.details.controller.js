@@ -1,7 +1,3 @@
-/* global _ */
-/* global logger */
-/* global google */
-
 (function () {
     'use strict';
 
@@ -11,7 +7,7 @@
 
     ActivityDetailsCtrl.$inject = ['parameters', 'activityService', '$state', '$timeout', '$ionicScrollDelegate'];
 
-    function ActivityDetailsCtrl(parameters, activityService, $state, $timeout, $ionicScrollDelegate) {
+    function ActivityDetailsCtrl (parameters, activityService, $state, $timeout, $ionicScrollDelegate) {
         angular.element(document).ready(initMap);
 
         var vm = this;
@@ -29,10 +25,10 @@
         vm.createComment = createComment;
 
         return activate();
-        
-        /////////////////////////////////////////////////////////////
-        
-        function activate() {
+
+        // ///////////////////////////////////////////////////////////
+
+        function activate () {
             if (_.isEmpty(vm.entry)) {
                 logger.error('No Activity has been loaded into the Controller', parameters);
 
@@ -43,7 +39,7 @@
             vm.avatar = activityService.getAvatar(vm.entry);
         }
 
-        function initMap() {
+        function initMap () {
             if (activityService.hasCoordinates(vm.entry)) {
                 var latLng = new google.maps.LatLng(vm.entry.location.coordinates[0], vm.entry.location.coordinates[1]);
 
@@ -58,26 +54,26 @@
                         infoWindow.setContent(result.formatted_address);
                         infoWindow.open(map, marker);
                     }, function (err) {
-                        logger.error('getPlaceName error', err);
-                    });
+                    logger.error('getPlaceName error', err);
+                });
             }
         }
 
-        function scrollToBottom() {
+        function scrollToBottom () {
             $timeout(function () {
                 getDelegate('mainScroll').scrollBottom();
             }, 100);
         }
 
-        //fix for scrollDelegate in modals
-        function getDelegate(name) {
+        // fix for scrollDelegate in modals
+        function getDelegate (name) {
             var instances = $ionicScrollDelegate.$getByHandle(name)._instances;
             return instances.filter(function (element) {
                 return (element['$$delegateHandle'] === name);
             })[0];
         }
 
-        function createComment(event) {
+        function createComment (event) {
 
             if (_.isEmpty(vm.message)) {
                 return;
@@ -104,31 +100,31 @@
                     });
         }
 
-        function toggleInput(event, direction) {
+        function toggleInput (event, direction) {
             vm.isInputVisible = _.isUndefined(direction) ? !vm.isInputVisible : !!direction;
 
             if (!!vm.isInputVisible) { vm.focusComment = true; }
         }
 
-        function viewUser() {
+        function viewUser () {
             event.stopPropagation();
 
             $state.go('account.profile', { userId: vm.entry.user.id });
             vm.closeModal(vm.entry);
         }
 
-        function likeActivity() {
+        function likeActivity () {
             activityService
                 .likeActivity(vm.entry.id)
                 .then(function (result) {
-                    //update like in feed
+                    // update like in feed
                     vm.entry.likes = result || [];
                 }, function (err) {
                     logger.error('Activity Details.LikeActivity Failed', err);
                 });
         }
 
-        function cancel() {
+        function cancel () {
             vm.closeModal(vm.entry);
         }
     }
@@ -141,8 +137,8 @@ angular.module('activity').directive('focusMe', function ($timeout) {
         scope: { trigger: '=focusMe' },
         link: function (scope, element) {
             scope.$watch('trigger', function (value) {
-                if (value === true) { 
-                    //logger.debug('trigger',value);
+                if (value === true) {
+          // logger.debug('trigger',value);
                     $timeout(function () {
                         element[0].focus();
                         scope.trigger = false;

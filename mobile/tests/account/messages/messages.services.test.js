@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    describe("Messages Service:", function() {
+    describe('Messages Service:', function () {
 
         // mock app module
         beforeEach(module(AppConfig.appModuleName));

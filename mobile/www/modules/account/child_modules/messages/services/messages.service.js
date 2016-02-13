@@ -16,24 +16,24 @@
             createMessage: createMessage
         };
 
-        function getMessages() {
+        function getMessages () {
             return $http.get(settings.messages);
         }
 
-        function getChatByUserId(userId) {
+        function getChatByUserId (userId) {
             return $http.get(settings.chats + userId)
-                .then(function success(response) {
+                .then(function success (response) {
                     if (!!response.data) {
                         return response.data;
                     }
                 });
         }
 
-        function getChats() {
+        function getChats () {
             return $http.get(settings.chats);
         }
 
-        function createMessage(message) {
+        function createMessage (message) {
             return $http.post(settings.messages, message);
         }
     }

@@ -7,7 +7,7 @@
 
     LockboxShareCtrl.$inject = ['$filter', '$ionicPopup', 'parameters', 'contactsService', 'lockboxModalsService', 'lockboxDocuments', 'requestService', 'utilsService'];
 
-    function LockboxShareCtrl($filter, $ionicPopup, parameters, contactsService, lockboxModalsService, lockboxDocuments, requestService, utilsService) {
+    function LockboxShareCtrl ($filter, $ionicPopup, parameters, contactsService, lockboxModalsService, lockboxDocuments, requestService, utilsService) {
 
         var vm = this;
         vm.selectedContact = {};
@@ -21,10 +21,10 @@
         vm.shareDocuments = shareDocuments;
 
         activate();
-        
-        ////////////////////////////////////////////////////////////
 
-        function activate() {
+        // //////////////////////////////////////////////////////////
+
+        function activate () {
             vm.contact = {};
             vm.shareStep = 1;
 
@@ -33,55 +33,55 @@
                     vm.canAccess = isAccessible;
 
                     if (isAccessible) {
-                        
+
                         if (_.isEmpty(vm.documents)) {
                             logger.debug('Documents not included in parameters - looking up');
                             getDocs();
                         }
-                        
+
                         return;
                     }
 
                     return skipDocs();
                 })
-                .catch(function fail(err) {
+                .catch(function fail (err) {
                     logger.error('Failed to access lockbox due to error', err);
                     vm.canAccess = false;
                 });
         }
 
-        function getDocs() {
+        function getDocs () {
             return lockboxDocuments
                 .getDocuments()
                 .then(function (response) {
                     logger.debug('Documents List', response);
                     vm.documents = getRealDocs(_.isArray(response) ? response : []);
-                    
+
                     if (_.isEmpty(vm.documents)) {
                         return skipDocs();
                     }
                 });
         }
 
-        function back() {
+        function back () {
             vm.shareStep = 1;
         }
 
-        function cancel() {
+        function cancel () {
             var self = this;
             self.shareStep = 1;
             vm.cancelModal(null);
         }
-        
-        function getRealDocs(source) {
+
+        function getRealDocs (source) {
             return _.filter(source, function (src) { return !!src.id; });
         }
 
-        function skipDocs() {
+        function skipDocs () {
             return addDocumentsToShare(true);
         }
 
-        function addDocumentsToShare(skip) {
+        function addDocumentsToShare (skip) {
             if (!skip) {
                 var filter = $filter('getChecked'),
                     selectedDocs = filter(vm.documents);
@@ -95,7 +95,7 @@
         }
 
 
-        function shareDocuments() {
+        function shareDocuments () {
             var requestObj = {};
 
             if (!vm.contact || !vm.contact.email) {
@@ -110,7 +110,7 @@
             requestObj.contents = {
                 documents: _.pluck(vm.docsToShare, 'id')
             };
-            
+
             var sentRequest = null;
 
             requestService
@@ -130,7 +130,7 @@
                     });
                 });
 
-            function getModifiedContactInfo(contact) {
+            function getModifiedContactInfo (contact) {
                 logger.debug(' contact --->>>', contact);
                 if (!contact) return;
 
@@ -139,11 +139,11 @@
                 angular.copy(contact, contactInfo);
 
                 /**
-                 * TODO: Determine 
+                 * TODO: Determine
                  */
                 // if(contact.checked) delete contact.checked;
                 // if(contact.message) delete contact.message;
-                
+
                 if (angular.isDefined(contact.email && (!contact.emails || !contact.emails.length))) {
                     contactInfo.emails = [{ value: contact.email, type: 'manual' }];
                 }
@@ -154,7 +154,7 @@
                 return contactInfo;
             }
 
-            function showSuccessPopup() {
+            function showSuccessPopup () {
                 var config = {},
                     displayName = requestObj.contactInfo.displayName;
 

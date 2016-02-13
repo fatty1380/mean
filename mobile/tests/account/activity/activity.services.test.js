@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    describe("Activity Service: ", function() {
+    describe('Activity Service: ', function () {
 
         // mock app module
         beforeEach(module(AppConfig.appModuleName));
@@ -26,7 +26,7 @@
         }));
 
         it('should return getDistanceBetween promise', inject(function (activityService) {
-            expect(activityService.getDistanceBetween({},{}).then).toBeDefined();
+            expect(activityService.getDistanceBetween({}, {}).then).toBeDefined();
         }));
 
         it('should contain showPopup method', inject(function (activityService) {
@@ -38,7 +38,7 @@
         }));
 
         it('hasCoordinates should return TRUE', inject(function (activityService) {
-            var activity =  {
+            var activity = {
                 location: {
                     coordinates: ['1', '2']
                 }
@@ -47,7 +47,7 @@
         }));
 
         it('hasCoordinates should return FALSE', inject(function (activityService) {
-            var activity =  {
+            var activity = {
                 location: {
                     coordinates: ''
                 }

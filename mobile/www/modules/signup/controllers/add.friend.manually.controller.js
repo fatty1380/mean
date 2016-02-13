@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    
+
     /**
      * Part of Signup Flow --> TODO: Replace with Add Friends Modal
      */
@@ -11,7 +11,7 @@
 
     AddFriendManuallyCtrl.$inject = ['$scope', '$state', 'contactsService', '$ionicPopup', '$cordovaGoogleAnalytics'];
 
-    function AddFriendManuallyCtrl($scope, $state, contactsService, $ionicPopup, $cordovaGoogleAnalytics) {
+    function AddFriendManuallyCtrl ($scope, $state, contactsService, $ionicPopup, $cordovaGoogleAnalytics) {
         var vm = this;
 
         vm.invite = invite;
@@ -24,15 +24,15 @@
             init();
         });
 
-        function init(newContact) {
+        function init (newContact) {
             vm.contact = newContact || { type: 'manual' };
         }
 
-        function registerForm(form) {
+        function registerForm (form) {
             vm.contactForm = form;
         }
 
-        function invite() {
+        function invite () {
             if (!!vm.contactForm) {
                 vm.contactForm.$setSubmitted(true);
                 vm.contactForm.validate();
@@ -51,7 +51,7 @@
                 });
         }
 
-        function cancel() {
+        function cancel () {
             init();
             $cordovaGoogleAnalytics.trackEvent('signup', 'addManualContact', 'cancel');
             return $state.go('signup.friends-contacts');

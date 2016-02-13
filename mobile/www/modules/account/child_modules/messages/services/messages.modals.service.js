@@ -18,8 +18,8 @@
         /**
          * selectChatRecipient
          * Opens up a list of the user's friedns, and allows them to select from the list.
-         * 
-         * This is Step #1 in selecting 
+         *
+         * This is Step #1 in selecting
          */
         function selectChatRecipient (parameters) {
             templateUrl = 'modules/account/child_modules/messages/templates/message-friends.html';
@@ -27,16 +27,16 @@
             params = parameters || {};
 
             return modalService
-                .show(templateUrl, controller, params)
+                .show(templateUrl, controller, params);
         }
-        
+
         function showNewMessageModal (parameters) {
             templateUrl = 'modules/account/child_modules/messages/templates/message-chat-details.html';
             controller = 'MessageChatDetailsCtrl as vm';
             params = parameters || {};
 
             return modalService
-                .show(templateUrl, controller, params)
+                .show(templateUrl, controller, params);
         }
 
     }

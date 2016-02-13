@@ -1,0 +1,11 @@
+!www/modules/**/*
+*.min.js
+www/lib*
+platforms/
+plugins/
+.vscode/
+hooks/
+resources/
+scss/
+typings
+www/modules/signup/directives/ng-img-crop.js
