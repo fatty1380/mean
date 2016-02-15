@@ -36,7 +36,7 @@
             2,
             "function"
         ],
-        "angular/di-order": 2,
+        "angular/di-order": 1,
         "angular/di-unused": 2,
         "angular/directive-name": [
             2,
@@ -50,7 +50,13 @@
         ],
         "angular/document-service": 2,
         "angular/empty-controller": 2,
-        "angular/file-name": [2, {"typeSeparator":"dot", "ignoreTypeSuffix": true}],
+        "angular/file-name": [
+            2,
+            {
+                "typeSeparator": "dot",
+                "ignoreTypeSuffix": true
+            }
+        ],
         "angular/filter-name": 2,
         "angular/foreach": 0,
         "angular/function-type": [

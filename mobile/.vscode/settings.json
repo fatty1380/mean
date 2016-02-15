@@ -20,5 +20,8 @@
 		"**/*.bundle.*": true
 	},
 	
-	"editor.formatOnType": true
+	"editor.formatOnType": true,
+    
+    "eslint.enable": true,
+    "jshint.enable": false
 }

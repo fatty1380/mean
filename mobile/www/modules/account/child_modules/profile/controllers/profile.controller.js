@@ -6,11 +6,11 @@
         .controller('ProfileCtrl', ProfileCtrl);
 
     ProfileCtrl.$inject = ['$rootScope', '$scope', 'StorageService', 'updateService', 'appCache', '$state', '$cordovaGoogleAnalytics', '$ionicHistory',
-        'activityService', 'reviewService', 'LoadingService', 'experienceService', 'utilsService',
+        'activityService', 'reviewService', 'LoadingService', 'experienceService',
         'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
     function ProfileCtrl ($rootScope, $scope, StorageService, updateService, appCache, $state, $cordovaGoogleAnalytics, $ionicHistory,
-        activityService, reviewService, LoadingService, experienceService, utilsService,
+        activityService, reviewService, LoadingService, experienceService,
         friendsService, avatarService, profileModalsService, cameraService, user, profile) {
 
         var vm = this;

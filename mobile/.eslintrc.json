@@ -287,7 +287,7 @@
     "wrap-regex": 0,
     "max-depth": 0,
     "max-len": [
-      2,
+      1,
       120,
       4,
       {

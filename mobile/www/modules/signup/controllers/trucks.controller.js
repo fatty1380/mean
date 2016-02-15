@@ -29,7 +29,7 @@
                 buttons: [
                     {
                         text: 'Cancel',
-                        onTap: function (e) {
+                        onTap: function () {
                             vm.newTruck = '';
                             $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'addCustom:cancel');
                             $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trucks', 'addCustom:cancel');
@@ -49,7 +49,6 @@
                                 vm.trucks.push({ name: vm.newTruck, logoClass: '' });
                                 vm.currentTruck = vm.newTruck;
                                 vm.newTruck = '';
-                                debugger;
                                 return vm.currentTruck;
                             }
                         }
@@ -66,9 +65,10 @@
 
                 return userService.updateUserProps({ truck: vm.currentTruck })
                     .then(function success (propsResponse) {
+                        logger.debug('Saved User Props Successfully', propsResponse);
                         $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'save');
                         $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trucks', 'save');
-                        logger.debug('Trucks: Saved Successfully');
+                        logger.info('Trucks: Saved Successfully');
                     })
                     .catch(function fail (err) {
                         $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'err: ' + err);
