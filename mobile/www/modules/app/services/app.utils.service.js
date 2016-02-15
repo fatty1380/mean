@@ -7,7 +7,7 @@
 
     utilsService.$inject = ['$interval', '$rootScope'];
 
-    function utilsService($interval, $rootScope) {
+    function utilsService ($interval, $rootScope) {
         var clock = null;
 
         $rootScope.on('clear', stopClock);

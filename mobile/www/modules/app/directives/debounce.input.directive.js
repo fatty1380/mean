@@ -11,23 +11,23 @@
     angular.module(AppConfig.appModuleName)
         .directive('debounce', DebounceDirective);
 
-	                                                    function DebounceDirective () {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link: function (scope, element, attrs, controller) {
-            if (!controller.$options) {
-                controller.$options = {
-                    updateOn: 'default blur',
-                    debounce: {
-                        'default': 500,
-                        'blur': 0
-                    },
-                    updateOnDefault: true
-                };
+    function DebounceDirective () {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function (scope, element, attrs, controller) {
+                if (!controller.$options) {
+                    controller.$options = {
+                        updateOn: 'default blur',
+                        debounce: {
+                            default: 500,
+                            blur: 0
+                        },
+                        updateOnDefault: true
+                    };
+                }
             }
-        }
-    };
-}
+        };
+    }
 
 })();

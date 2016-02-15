@@ -70,7 +70,7 @@
     "no-extra-bind": 2,
     "no-fallthrough": 2,
     "no-floating-decimal": 2,
-    "no-implicit-coercion": 2,
+    "no-implicit-coercion": 0,
     "no-implied-eval": 2,
     "no-iterator": 2,
     "no-labels": 2,
@@ -163,7 +163,7 @@
       2,
       "never"
     ],
-    "consistent-this": 2,
+    "consistent-this": [2, "vm"],
     "eol-last": 2,
     "func-names": 0,
     "func-style": [

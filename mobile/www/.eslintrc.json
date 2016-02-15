@@ -3,15 +3,16 @@
         "angular"
     ],
     "env": {
-        "node": false
+        "browser": true
     },
     "globals": {
-        "browser": true,
-        "angular": true,
-        "ionic": true,
-        "_": true,
-        "logger": false,
-        "AppConfig": false
+        "angular": false,
+        "ionic": false,
+        "branch": false,
+        "_": false,
+        "moment": false,
+        "logger": true,
+        "AppConfig": true
     },
     "rules": {
         "angular/angularelement": 2,

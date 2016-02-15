@@ -243,13 +243,14 @@
              * editing of user's name, properties, etc
              */
             vm.showEditModal = function (parameters) {
-            				                                                            $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showEdit');
+                $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showEdit');
 
                 profileModalsService
                     .showProfileEditModal(parameters)
                     .then(function (result) {
-                        if (!!result) {
-																									                                                                                                                                                                                                                                                                                                                                                                                                                                    vm.profileData = result; }
+                        if (result) {
+                            vm.profileData = result;
+                        }
                     });
             };
 

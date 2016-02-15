@@ -1,24 +1,18 @@
 'use strict';
 
-var AppConfig = (function () {
-    var appModuleName = 'truckerline',
-        appModuleDependencies = [
-            'ionic',
-            'ngMessages',
-            'ui.router',
-            'ionic.rating',
-            'ngCordova.plugins.file',
-            'ngCordova.plugins.fileTransfer',
-            'ngIOS9UIWebViewPatch',
-            'ngSanitize',
-            'monospaced.elastic'
-        ],
-        registerModule = function (moduleName, dependencies) {
-            // create angular module
-            angular.module(moduleName, dependencies || []);
-            // Add the module to the AngularJS configuration file
-            angular.module(appModuleName).requires.push(moduleName);
-        };
+var AppConfig = (function () { // eslint-disable-line no-unused-vars
+    var appModuleName = 'truckerline';
+    var appModuleDependencies = [
+        'ionic',
+        'ngMessages',
+        'ui.router',
+        'ionic.rating',
+        'ngCordova.plugins.file',
+        'ngCordova.plugins.fileTransfer',
+        'ngIOS9UIWebViewPatch',
+        'ngSanitize',
+        'monospaced.elastic'
+    ];
 
     // ////////////////////////////////////////////////////////////////////////////////////
     // TODO: Find more appropriate place to put this code (if there is one)
@@ -58,18 +52,26 @@ var AppConfig = (function () {
         debug: debug,
         getUrl: function (env) {
             env = env || envMode;
-            return URLs[env] || URLs['dev'];
+            return URLs[env] || URLs.dev;
         },
         getBranchKey: function (env) {
             env = env || envMode || debug ? 'dev' : 'prod';
 
-            return branchKeys[env] || branchKeys['dev'];
+            return branchKeys[env] || branchKeys.dev;
         },
         getGAKey: function (env) {
             env = env || envMode || debug ? 'dev' : 'prod';
-            return gaKeys[env] || gaKeys['dev'];
+            return gaKeys[env] || gaKeys.dev;
         }
     };
+    /** ---------------------------------------------------------- */
+
+    function registerModule (moduleName, dependencies) {
+        // create angular module
+        angular.module(moduleName, dependencies || []);
+        // Add the module to the AngularJS configuration file
+        angular.module(appModuleName).requires.push(moduleName);
+    }
 })();
 
 

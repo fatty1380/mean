@@ -1,7 +1,8 @@
 (function () {
-	                                                    'use strict';
+    'use strict';
 
-	                                                    angular.module(AppConfig.appModuleName)
+    angular
+        .module(AppConfig.appModuleName)
         .filter('monthDate', function () {
             return function (input) {
                 if (!input) {
@@ -13,8 +14,7 @@
                     var d = (new Date(input));
 
                     return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
-                }
-                catch (err) {
+                } catch (err) {
                     logger.error('Unable to parse monthDate: ', err);
                 }
 

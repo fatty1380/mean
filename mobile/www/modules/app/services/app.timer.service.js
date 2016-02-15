@@ -29,7 +29,7 @@
         };
 
         function initTimer (name, intervalSeconds, callback) {
-            if (vm[name]) return false;
+            if (vm[name]) { return false; }
 
             var timer = {};
             timer.name = name;
@@ -46,7 +46,7 @@
         }
 
         function initInterval (name, intervalSeconds, callback) {
-            if (vm[name]) return false;
+            if (vm[name]) { return false; }
 
             var timer = {};
             timer.name = name;
@@ -63,7 +63,7 @@
         }
 
         function startTimer (timer) {
-            if (!timer) return false;
+            if (!timer) { return false; }
 
             if (!timer.running) {
                 timer.timeOut = $interval(onTimeout, timer.interval * 1000, 1, true, timer);
@@ -74,7 +74,7 @@
         }
 
         function startInterval (timer) {
-            if (!timer) return false;
+            if (!timer) { return false; }
 
             if (!timer.running) {
                 timer.timeOut = $interval(requestUpdate, timer.interval * 1000, 0, false, timer);
