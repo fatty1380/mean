@@ -6,7 +6,7 @@
         .module(AppConfig.appModuleName, AppConfig.appModuleDependencies)
         .config([
             '$urlRouterProvider', function ($urlRouterProvider) {
-                // logger.warn('unknown route or url: ' + location.hash);
+                //logger.warn('unknown route or url: ' + location.hash);
                 $urlRouterProvider.otherwise('home');
             }
         ])
@@ -26,19 +26,18 @@
             // original service instance; @see angular-mocks for more examples....
             // @attribution http://solutionoptimist.com/2013/10/07/enhance-angularjs-logging-using-decorators/
             // TODO: Implement additional points from article regarding per-class invocation and initailziation.
-
+ 
             $provide.decorator('$log', ['$delegate', function ($delegate) {
                 // Save the original $log.debug()
-
+                
                 _.forOwn($delegate, function (prop, key) {
                     if (_.isFunction(prop)) {
                         $delegate[key] = function () {
-                            var args = [].slice.call(arguments),
-                                now = moment(Date.now()).format('HH:mm:ss');
-
+                            var args = [].slice.call(arguments);
+ 
                             // Prepend timestamp
-                            args[0] = now + ' - ' + args[0];
-
+                            args[0] = moment().format('HH:mm:ss') + ' - ' + args[0];
+ 
                             // Call the original with the output prepended with formatted timestamp
                             prop.apply(null, args);
                         };
@@ -56,7 +55,7 @@
     initializePlatform.$inject = ['$ionicPlatform', '$window', 'settings', '$log', '$q',
         '$cordovaGoogleAnalytics', '$cordovaKeyboard', '$cordovaStatusbar', '$cordovaDevice'];
 
-    function initializePlatform ($ionicPlatform, $window, settings, $log, $q,
+    function initializePlatform($ionicPlatform, $window, settings, $log, $q,
         $cordovaGoogleAnalytics, $cordovaKeyboard, $cordovaStatusbar, $cordovaDevice) {
 
         if (!!$window) {
@@ -88,7 +87,7 @@
 
             if ($window.cordova && $window.cordova.plugins && $window.cordova.plugins.Keyboard) {
                 $cordovaKeyboard.hideAccessoryBar(false);
-                // cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+                //cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
             } else if ($window.cordova) {
                 logger.error('Cordova Plugins are not Defined - not configuring keyboard');
             }
@@ -108,7 +107,7 @@
     }
 
     initializeBranch.$inject = ['$ionicPlatform', '$window', 'settings'];
-    function initializeBranch ($ionicPlatform, $window, settings) {
+    function initializeBranch($ionicPlatform, $window, settings) {
 
         $ionicPlatform.ready(function (e) {
             readBranchData();
@@ -116,7 +115,7 @@
             $ionicPlatform.on('resume', readBranchData);
         });
 
-        function readBranchData () {
+        function readBranchData() {
             logger.debug('readBranchData');
             if (!!$window.cordova && !!branch) {
 
@@ -156,7 +155,7 @@
 
     initializeStateChangeListeners.$inject = ['$rootScope', '$window', '$state', '$ionicPlatform', '$cordovaGoogleAnalytics', 'settings'];
 
-    function initializeStateChangeListeners ($rootScope, $window, $state, $ionicPlatform, $cordovaGoogleAnalytics, settings) {
+    function initializeStateChangeListeners($rootScope, $window, $state, $ionicPlatform, $cordovaGoogleAnalytics, settings) {
 
 
         return $ionicPlatform.ready(function (e) {
@@ -171,7 +170,7 @@
                         if (AppConfig.debug) {
                             $cordovaGoogleAnalytics.debugMode();
                         }
-
+                        
                         if (_.isFunction($cordovaGoogleAnalytics.enableUncaughtExceptionReporting)) {
                             $cordovaGoogleAnalytics.enableUncaughtExceptionReporting(true);
                         }
@@ -180,14 +179,14 @@
                             .catch(function (e) {
                                 logger.error('Unable to track Lifecycle Launch Event: ', e, event);
                             });
-
-                        $cordovaGoogleAnalytics.trackView($state.current && $state.current.name || location.hash);
-
+																												
+						$cordovaGoogleAnalytics.trackView($state.current && $state.current.name || location.hash);
+                        
                         return true;
-                    },
-                        function startTrackerFailed (e) {
-                            logger.error('Unable to Initialize GA Tracker', e);
-                            return false;
+                    }, 
+                    function startTrackerFailed(e) {
+                        logger.error('Unable to Initialize GA Tracker', e);
+                        return false;
                         });
 
 
@@ -212,11 +211,11 @@
             }
 
             return initializeAnalyticsPromise.then(function (response) {
-                if (!response) {
+                if(!response) {
                     logger.error('GA Tracker not Initialized', response);
                     return;
                 }
-
+                
                 $ionicPlatform.on('pause', function (event) {
                     logger.debug('Lifecycle Event: pause', event);
                     $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'pause', location.hash)
@@ -241,7 +240,7 @@
                         .catch(function (e) {
                             logger.error('Unable to track Lifecycle StateChange Event: ', e, event);
                         });
-                    // $window.ga('send', 'pageview', { page: $location.path() });
+                    //$window.ga('send', 'pageview', { page: $location.path() });
                 });
 
             });

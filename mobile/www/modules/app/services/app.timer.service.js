@@ -23,7 +23,6 @@
         });
 
         return {
-            restartTimer: restartTimer,
             initTimer: initTimer,
             initInterval: initInterval,
             cancelTimer: cancelTimer, 
