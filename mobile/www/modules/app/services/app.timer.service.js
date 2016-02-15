@@ -5,9 +5,9 @@
         .module(AppConfig.appModuleName)
         .service('timerService', timerService);
 
-    timerService.$inject = ['$rootScope', '$timeout', '$interval'];
+    timerService.$inject = ['$interval', '$rootScope', '$timeout'];
 
-    function timerService($rootScope, $timeout, $interval) {
+    function timerService ($interval, $rootScope, $timeout) {
         var vm = this;
 
         vm.timers = [];
@@ -25,7 +25,7 @@
         return {
             initTimer: initTimer,
             initInterval: initInterval,
-            cancelTimer: cancelTimer, 
+            cancelTimer: cancelTimer
         };
 
         function initTimer (name, intervalSeconds, callback) {
@@ -45,7 +45,7 @@
             return startTimer(vm[name]);
         }
 
-        function initInterval(name, intervalSeconds, callback) {
+        function initInterval (name, intervalSeconds, callback) {
             if (vm[name]) return false;
 
             var timer = {};
@@ -73,7 +73,7 @@
             return timer.running;
         }
 
-        function startInterval(timer) {
+        function startInterval (timer) {
             if (!timer) return false;
 
             if (!timer.running) {
@@ -84,7 +84,7 @@
             return timer.running;
         }
 
-        function requestUpdate(timer) {
+        function requestUpdate (timer) {
             $rootScope.$broadcast(timer.name + '-refresh');
         }
 
@@ -102,7 +102,7 @@
             return;
         }
 
-        function cancelTimer(timer) {
+        function cancelTimer (timer) {
             if (_.isString(timer)) { timer = vm[timer]; }
             if (!timer) return;
 
@@ -111,7 +111,7 @@
             timer.running = false;
             timer.interval = null;
             timer.timeOut = null;
-            }
+        }
 
         function cancelInterval (timer) {
 
