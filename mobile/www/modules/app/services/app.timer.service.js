@@ -11,14 +11,35 @@
         var vm = this;
 
         vm.timers = [];
+        vm.intervals = [];
 
         // default interval in seconds
         vm.defaultInterval = 30;
 
         $rootScope.$on('clear', function () {
-            for (var i = 0; i < vm.timers.length; i++) {
-                var timer = vm[vm.timers[i]];
-                cancelTimer(timer);
+
+            _.each(vm.timers, function (t) {
+                if (cancelTimer(t)) {
+                    logger.debug('Stopped Timer `%s`', t.name);
+                    _.remove(vm.timers, t);
+                }
+            });
+
+            _.each(vm.intervals, function (i) {
+                if (cancelInterval(i)) {
+                    logger.debug('Stopped Interval `%s`', i.name);
+                    _.remove(vm.intervals, i);
+                }
+            });
+
+            if (vm.timers.length > 0) {
+                logger.error('Active Timers remain after clear event: ', vm.timers);
+                vm.timers = [];
+            }
+
+            if (vm.intervals.length > 0) {
+                logger.error('Active intervals remain after clear event: ', vm.intervals);
+                vm.intervals = [];
             }
         });
 
@@ -48,16 +69,16 @@
         function initInterval (name, intervalSeconds, callback) {
             if (vm[name]) { return false; }
 
-            var timer = {};
-            timer.name = name;
-            timer.timeOut = null;
-            timer.interval = intervalSeconds || vm.defaultInterval;
-            timer.running = false;
-            timer.callback = callback;
+            var interval = {};
+            interval.name = name;
+            interval.timeOut = null;
+            interval.interval = intervalSeconds || vm.defaultInterval;
+            interval.running = false;
+            interval.callback = callback;
 
-            vm[name] = timer;
+            vm[name] = interval;
 
-            vm.timers.push(name);
+            vm.intervals.push(name);
 
             return startInterval(vm[name]);
         }
@@ -73,15 +94,15 @@
             return timer.running;
         }
 
-        function startInterval (timer) {
-            if (!timer) { return false; }
+        function startInterval (interval) {
+            if (!interval) { return false; }
 
-            if (!timer.running) {
-                timer.timeOut = $interval(requestUpdate, timer.interval * 1000, 0, false, timer);
-                timer.running = true;
+            if (!interval.running) {
+                interval.timeOut = $interval(requestUpdate, interval.interval * 1000, 0, false, interval);
+                interval.running = true;
             }
 
-            return timer.running;
+            return interval.running;
         }
 
         function requestUpdate (timer) {
@@ -104,25 +125,31 @@
 
         function cancelTimer (timer) {
             if (_.isString(timer)) { timer = vm[timer]; }
-            if (!timer) return;
+            if (!timer) { return; }
 
-            $timeout.cancel(timer.timeOut);
+            if ($timeout.cancel(timer.timeOut)) {
+                timer.running = false;
+                timer.interval = null;
+                timer.timeOut = null;
+                return true;
+            }
 
-            timer.running = false;
-            timer.interval = null;
-            timer.timeOut = null;
+            return false;
         }
 
-        function cancelInterval (timer) {
+        function cancelInterval (interval) {
 
-            if (_.isString(timer)) { timer = vm[timer]; }
-            if (!timer) return;
+            if (_.isString(interval)) { interval = vm[interval]; }
+            if (!interval) { return; }
 
-            $interval.cancel(timer.timeOut);
+            if ($interval.cancel(interval.timeOut)) {
+                interval.running = false;
+                interval.interval = null;
+                interval.timeOut = null;
+                return true;
+            }
 
-            timer.running = false;
-            timer.interval = null;
-            timer.timeOut = null;
+            return false;
         }
     }
 })();
