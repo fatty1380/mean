@@ -91,6 +91,9 @@
                         modalScope.modal.show()
                             .then(function () {
                                 modalScope.$broadcast('modal.afterShow', modalScope.modal);
+
+                                logger.debug('Modal Did finish loading', ctrlInstance);
+                                LoadingService.hide();
                             });
 
                         if (angular.isFunction(options.modalCallback)) {

@@ -136,6 +136,10 @@
             userService
                 .signOut()
                 .then(function (data) {
+                    logger.debug('Logout Successful with Result: ', data);
+
+                    LoadingService.showLoader('Logging Out');
+
                     tokenService.set('access_token', '');
                     tokenService.set('refresh_token', '');
                     tokenService.set('token_type', '');
@@ -145,7 +149,14 @@
                     // clear controllers data
                     $rootScope.$broadcast('clear');
 
-                    $state.go('login');
+                    $state.go('login')
+                        .then(function () {
+                            LoadingService.hide();
+                        })
+                        .catch(function (err) {
+                            logger.error(err, 'Failed to change state to login');
+                            LoadingService.showFailure('Sorry, Logout Failed');
+                        });
                 });
         }
     }

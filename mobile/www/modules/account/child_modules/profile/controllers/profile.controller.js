@@ -243,6 +243,7 @@
              * editing of user's name, properties, etc
              */
             vm.showEditModal = function (parameters) {
+                LoadingService.showLoader();
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showEdit');
 
                 profileModalsService
@@ -255,6 +256,7 @@
             };
 
             vm.showShareModal = function (parameters) {
+                LoadingService.showLoader();
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showShare');
 
                 profileModalsService
@@ -268,6 +270,7 @@
             };
 
             vm.showRequestReviewModal = function (parameters) {
+                LoadingService.showLoader();
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showRequestReview');
 
                 profileModalsService
