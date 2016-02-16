@@ -1,18 +1,18 @@
-<ion-view class="company-screen view-section min-size" cache-view="false">
+<ion-view class="company-screen view-section compact-size" cache-view="false">
 
-    <div class="bar bar-header bar-calm" align-title="center">
+    <ion-header-bar align-title="center">
         <button class="button button-clear" ng-click="vm.goBack()">Back</button>
         <button class="button button-clear" ng-if="!vm.isFollowing" ng-click="vm.follow()">Follow</button>
         <button class="button button-clear" ng-if="vm.isFollowing" ng-click="vm.unfollow()">Following</button>
-    </div>
+    </ion-header-bar>
 
-    <div class="bar bar-subheader bar-brand">
+    <ion-header-bar class="bar-subheader bar-brand">
         <h3><img class="brand-img" ng-if="vm.company.profileImageURL" ng-src="{{vm.company.profileImageURL}}" alt="" /></h3>
-    </div>
+    </ion-header-bar>
 
     <ion-pane class="pane profile-pane has-subheader">
         <ion-tabs class="profile-tabs tabs-top">
-            
+
             <ion-tab title="JOBS" ui-sref="company.jobs">
                 <ion-scroll class="jobs-list">
                     <ion-list class="activity">
@@ -27,19 +27,19 @@
                     </div>
                 </ion-scroll>
             </ion-tab>
-            
+
             <ion-tab title="FEED" ui-sref="company.feed">
                 <ion-scroll>
                     <ion-list class="activity">
                         <oset-feed-item ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
                     </ion-list>
-                    
+
                     <div ng-if="!vm.feed || !vm.feed.length" class="no-content">
                         <p class="message">{{vm.company.name}} has not posted anything to their feed yet. Check back again soon!</p>
                     </div>
                 </ion-scroll>
             </ion-tab>
-            
+
             <ion-tab title="ABOUT" ui-sref="company.about">
                 <ion-scroll class="company-about">
                     <ion-list>
@@ -51,7 +51,7 @@
                     </ion-list>
                 </ion-scroll>
             </ion-tab>
-            
+
         </ion-tabs>
     </ion-pane>
 
