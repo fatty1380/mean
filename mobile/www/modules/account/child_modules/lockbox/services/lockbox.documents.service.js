@@ -644,8 +644,6 @@
                 });
             } else {
                 docObject = parseDocFromFilename(entry.name);
-                debugger;
-
                 docObject.url = entry.nativeURL;
                 docObject.user = userID;
 

@@ -40,7 +40,7 @@
         "angular/di-unused": 2,
         "angular/directive-name": [
             2,
-            "<directive prefix>"
+            "oset"
         ],
         "angular/directive-restrict": [
             2,

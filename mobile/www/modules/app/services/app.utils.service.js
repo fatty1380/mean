@@ -10,7 +10,7 @@
     function utilsService ($interval, $rootScope) {
         var clock = null;
 
-        $rootScope.on('clear', stopClock);
+        $rootScope.$on('clear', stopClock);
 
         /**
          * @desc start interval
@@ -32,8 +32,8 @@
         }
 
         return {
-            startClock : startClock,
-            stopClock : stopClock
+            startClock: startClock,
+            stopClock: stopClock
         };
     }
 })();

@@ -35,7 +35,6 @@
          * @description Submit form if last field in focus
         */
         function submitForm (event) {
-            debugger;
             vm.error = '';
 
             if (vm.lastElementFocused) {

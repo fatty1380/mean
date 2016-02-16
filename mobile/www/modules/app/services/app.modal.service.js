@@ -5,9 +5,9 @@
         .module(AppConfig.appModuleName)
         .factory('modalService', modalService);
 
-    modalService.$inject = ['$ionicModal', '$rootScope', '$q', '$controller', '$cordovaGoogleAnalytics'];
+    modalService.$inject = ['$ionicModal', '$rootScope', '$q', '$controller', '$cordovaGoogleAnalytics', 'LoadingService'];
 
-    function modalService ($ionicModal, $rootScope, $q, $controller, $cordovaGoogleAnalytics) {
+    function modalService ($ionicModal, $rootScope, $q, $controller, $cordovaGoogleAnalytics, LoadingService) {
 
         return {
             show: show

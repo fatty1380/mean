@@ -132,7 +132,6 @@
     function mapEndorsementKeys (keys) {
         var endorsements = _.clone(endorsementStub);
         _.each(keys, function (key) {
-            debugger;
             endorsements[key] = true;
         });
 

@@ -29,7 +29,6 @@
 
             userService.updateUserData(postData)
                 .then(function success (result) {
-                    debugger;
                     Loader.hide();
                     logger.info('Updated User with new address');
 

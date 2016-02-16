@@ -32,7 +32,7 @@
             vm.showPhone = vm.showPhone !== false;
             vm.showMessage = vm.showMessage !== false;
             vm.showName = vm.showName !== false;
-            debugger;
+
             var fn = _.isFunction(vm.formInit()) && vm.formInit() || _.noop;
             fn(vm.contactForm);
 
@@ -55,8 +55,6 @@
             contactsService
                 .pickContact()
                 .then(function (selectedContact) {
-                    debugger;
-
                     // alert(JSON.stringify(selectedContact, null, 2));
                     logger.debug('Selected Contact: ', selectedContact);
 
@@ -86,7 +84,6 @@
         }
 
         function validate () {
-            debugger;
             if (!!vm.contact.phone) {
                 vm.contactForm.phone.$setValidity('phone', vm.contact.phone.replace(/\D/g, '').length >= 10);
             }

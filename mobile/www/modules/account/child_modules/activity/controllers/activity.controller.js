@@ -166,7 +166,6 @@
                 .then(function (res) {
                     logger.debug(' res --->>>', res);
                     if (res) {
-                        debugger;
                         if (angular.isObject(res)) {
                             logger.debug('Pushing newly created feed item onto the front of the array', res);
                             logger.debug(' vm.feed --->>>', vm.feed.length);

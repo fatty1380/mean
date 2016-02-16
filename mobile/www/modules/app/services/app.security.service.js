@@ -35,8 +35,7 @@
             };
             PIN = null;
 
-            $rootScope.$on('security-timer-stopped', function (event) {
-                debugger;
+            $rootScope.$on('security-timer-stopped', function () {
                 lock();
             });
 

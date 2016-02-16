@@ -130,7 +130,6 @@
 
         function loadMore () {
             logger.debug('[activityService.loadMore] Loading Updates');
-            debugger;
             return populateActivityFeed(items, feeder.start, feeder.step);
         }
 

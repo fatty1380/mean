@@ -28,7 +28,7 @@
                                 if (_.isEmpty(e)) {
                                     throw new Error('Unable to locate password in parent or parent\'s parent');
                                 }
-                                debugger;
+
                                 event.preventDefault();
                                 e[0].focus();
                             } catch (error) {
@@ -66,7 +66,6 @@
          * @description Submit form if last field in focus
          */
         function submitForm (event) {
-            debugger;
             if (vm.lastElementFocused) {
                 return continueToEngagement();
             }
@@ -81,7 +80,6 @@
         function continueToEngagement () {
 
             if (vm.user.confirmPassword !== vm.user.password) {
-                debugger;
                 // vm.user.confirmPassword = '';
                 // vm.user.password = '';
                 // vm.error = 'Passwords do not match';
@@ -93,7 +91,6 @@
             }
 
             if (!vm.mainForm.$valid) {
-                debugger;
                 vm.error = vm.error || 'Please correct errors above';
                 return;
             }

@@ -3,11 +3,11 @@
 
     angular
         .module(AppConfig.appModuleName)
-        .service('timerService', timerService);
+        .service('timerService', TimerService);
 
-    timerService.$inject = ['$interval', '$rootScope', '$timeout'];
+    TimerService.$inject = ['$interval', '$rootScope', '$timeout'];
 
-    function timerService ($interval, $rootScope, $timeout) {
+    function TimerService ($interval, $rootScope, $timeout) {
         var vm = this;
 
         vm.timers = [];

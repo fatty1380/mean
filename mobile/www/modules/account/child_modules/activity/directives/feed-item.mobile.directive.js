@@ -44,7 +44,8 @@
                 vm.avatar = vm.entry.company.profileImageURL;
                 // vm.username = vm.entry.company.name;
                 vm.title = vm.entry.title;
-            } else if (!!vm.entry.user) {
+            }
+            else if (!!vm.entry.user) {
                 vm.activate();
             }
         }
@@ -101,21 +102,22 @@
                 .then(function (res) {
                     logger.debug('Details Complete', res);
                 }, function (err) {
+                    logger.error(err, 'Failed to show Actiivty Details Modal');
                     activityService.showPopup('10-7', 'Please try later');
                 });
         }
 
-
-
         function apply (entry) {
             var applyPopup = $ionicPopup.confirm({
                 title: 'Send Application',
-                template: 'This will send your profile to ' + (entry.company.name || 'the employer') + ' for review. Continue?'
+                template: 'This will send your profile to ' +
+                    (entry.company.name || 'the employer') + ' for review. Continue?'
             });
             applyPopup.then(function (res) {
                 if (res) {
                     LoadingService.showSuccess('Thanks for Applying');
-                } else {
+                }
+                else {
                     logger.debug('You are not sure');
                 }
             });

@@ -25,12 +25,10 @@
         }
 
         function registerForm (form) {
-            debugger;
             vm.contactForm = form;
         }
 
         function addFriend () {
-            debugger; // chck for vm.form
             if (!!vm.contactForm) {
                 vm.contactForm.$setSubmitted(true);
                 vm.contactForm.validate();
