@@ -82,6 +82,8 @@
 
                                     LoadingService.hide();
                                     $state.go('account.profile');
+
+                                    vm.user.password = '';
                                 },
                                 function fail (err) {
                                     logger.error('Unable to retrieve user information', err);
