@@ -74,7 +74,6 @@ $photo-dimension : $profile-subheader-height * 1.1;
     }
   }
   
-  
   .contacts-amount{
     position: absolute;
     left: 0;
@@ -84,9 +83,9 @@ $photo-dimension : $profile-subheader-height * 1.1;
     padding-right: 15px;
     color: #fff;
     
-    &:after {
-        content: none;
-    }
+    // &:after {
+    //     content: none;
+    // }
 
     // &:after{
     //   content: 'Friends';
@@ -98,6 +97,15 @@ $photo-dimension : $profile-subheader-height * 1.1;
     //   text-align: center;
     //   margin-top: -1px;
     // }
+    
+    &:after{
+      content: 'friends';
+      position: absolute;
+      top: 35px;
+      left: 4px;
+      font-size: 11px;
+      text-align: left;
+    }
 
     .badge{
       position: absolute;
@@ -332,6 +340,33 @@ $photo-dimension : $profile-subheader-height * 1.1;
   .experience-list {
       .item.activity.profile-activity {
           max-height: 18px;
+      }
+  }
+  
+  
+  .hanger {
+    
+    margin-left: 1em;
+    text-indent: -1em;
+      
+    .wrap-col {
+        white-space: normal;
+        
+        span {
+            line-height: 1.3em;
+        }
+    }
+  }
+  
+  .profile-list {
+      .card {
+         & > .row {
+              position: relative;
+	          top: -15px;
+          }
+      
+        padding-bottom: 0!important;
+      
       }
   }
 

@@ -17,11 +17,10 @@
             <span ng-if="vm.friendStatus === 'friends'" class="badge badge-positive">in convoy</span>
         </button>
 
-        <button class="button button-clear contacts-amount" ng-click="vm.showFriends($event);">
+        <!--<button class="button button-clear contacts-amount" ng-click="vm.showFriends($event);">
              <span class="ico ico-friends ico-middle"></span>
             <span ng-if="vm.canEdit && vm.updates.requests" class="badge badge-assertive">{{vm.updates.requests}}</span>
-            <!--<strong ng-click="vm.showFriends($event);">{{vm.profileData.friends.length}}</strong>-->
-        </button>
+        </button>-->
 
         <!--<button class="button button-clear" ng-click="vm.showFriends($event);">
 
@@ -75,6 +74,7 @@
                                                 <i class="ico extra-small-size {{ vm.endorsementsMap[endorsement].ico}}"></i>
                                             </li>
                                         </ul>
+                                        <span ng-if="!vm.profileData.license || (!vm.profileData.license.class && !vm.profileData.endorsements.length)">none</span>
                                     </div>
                                 </div>
                                 <div class="row nested" ng-if="vm.profileData.props.started">
@@ -98,10 +98,12 @@
                             </div>
                         </div>
                         <div class="row" ng-if="!!vm.profileData.props.trailer">
-                            <div class="col">
-                                <span class="item-label">EQUIPMENT:&nbsp;</span>
+                            <div class="col hanger">
+                                <span class="item-label">TRAILER:&nbsp;</span>
+                                <span class="wrap-col">
                                 <span ng-repeat="trailer in vm.profileData.props.trailer">
                                     {{trailer}}<span ng-if="!$last">, </span>
+                                </span>
                             </div>
                         </div>
                         <div class="row" ng-if="!!vm.profileData.props.freight">
@@ -111,6 +113,18 @@
                         </div>
                     </ion-item>
                 </div>
+
+                <div class="experience-list">
+                    <div class="item activity profile-activity" ng-if="vm.experience">
+                        <span class="item-label">EXPERIENCE:</span> 
+                        <button ng-if="vm.canEdit &&  !!vm.experience.length" class="button button-icon ion-compose button-pos-tr" ng-click="vm.showExperienceListModal()">&nbsp; edit</button>
+                        <button ng-if="vm.canEdit && !vm.experience.length" class="button button-icon ion-ios-plus-outline button-pos-tr" ng-click="vm.showAddExperienceModal()">&nbsp; add</button>
+                    </div>
+
+                    <tline-experience-list ng-model="vm.experience" show-add-button="false" can-edit="vm.canEdit" show-add-fn="vm.showAddExperienceModal"
+                    instructText="vm.expInstructText"></tline-experience-list>
+                </div>
+                
 
                 <div name="activity-list">
 
@@ -125,17 +139,6 @@
                         <div ng-if="!vm.feed.length && !vm.feedLoading" class="no-feed-items">{{ vm.feedMessage }}</div>
                     </div>
 
-                </div>
-
-                <div class="experience-list">
-                    <div class="item activity profile-activity" ng-if="vm.experience">
-                        <span class="item-label">EXPERIENCE:</span> 
-                        <button ng-if="vm.canEdit &&  !!vm.experience.length" class="button button-icon ion-compose button-pos-tr" ng-click="vm.showExperienceListModal()">&nbsp; edit</button>
-                        <button ng-if="vm.canEdit && !vm.experience.length" class="button button-icon ion-ios-plus-outline button-pos-tr" ng-click="vm.showAddExperienceModal()">&nbsp; add</button>
-                    </div>
-
-                    <tline-experience-list ng-model="vm.experience" show-add-button="false" can-edit="vm.canEdit" show-add-fn="vm.showAddExperienceModal"
-                    instructText="vm.expInstructText"></tline-experience-list>
                 </div>
             </ion-scroll>
 
