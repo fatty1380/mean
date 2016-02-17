@@ -59,7 +59,7 @@
 
                         <div class="item-divider item-heading">
                             <span class="item-label item-title text-center">
-                                    {{vm.profileData.props.title || 'Driver'}}<span ng-if="!!vm.profileData.props.company"> at </span>{{vm.profileData.props.company}}
+                                    <span ng-if="vm.profileData.props.company || vm.profileData.props.title">{{vm.profileData.props.title || 'Driver'}}<span ng-if="!!vm.profileData.props.company"> at </span>{{vm.profileData.props.company}}</span>
                             <span ng-if="!vm.profileData.props.company && !vm.profileData.props.title">About {{vm.profileData.firstName}}</span>
                             </span>
                             <button class="button button-icon ion-compose button-pos-tr" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()">&nbsp; edit</button>
@@ -77,7 +77,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="row nested">
+                                <div class="row nested" ng-if="vm.profileData.props.started">
                                     <div class="col">
                                         <span class="item-label">DRIVING SINCE:</span>
                                         <span class="item-note">{{vm.profileData.props.started | monthDate | date : 'MMMM, yyyy'}}</span>
@@ -129,7 +129,9 @@
 
                 <div class="experience-list">
                     <div class="item activity profile-activity" ng-if="vm.experience">
-                        <span class="item-label">EXPERIENCE:</span>
+                        <span class="item-label">EXPERIENCE:</span> 
+                        <button ng-if="vm.canEdit &&  !!vm.experience.length" class="button button-icon ion-compose button-pos-tr" ng-click="vm.showExperienceListModal()">&nbsp; edit</button>
+                        <button ng-if="vm.canEdit && !vm.experience.length" class="button button-icon ion-ios-plus-outline button-pos-tr" ng-click="vm.showAddExperienceModal()">&nbsp; add</button>
                     </div>
 
                     <tline-experience-list ng-model="vm.experience" show-add-button="false" can-edit="vm.canEdit" show-add-fn="vm.showAddExperienceModal"

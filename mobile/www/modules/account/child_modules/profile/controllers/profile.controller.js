@@ -9,9 +9,9 @@
         'activityService', 'reviewService', 'LoadingService', 'experienceService',
         'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl ($rootScope, $scope, StorageService, updateService, appCache, $state, $cordovaGoogleAnalytics, $ionicHistory,
+    function ProfileCtrl($rootScope, $scope, StorageService, updateService, appCache, $state, $cordovaGoogleAnalytics, $ionicHistory,
         activityService, reviewService, LoadingService, experienceService,
-        friendsService, avatarService, profileModalsService, cameraService, user, profile) {
+        friendsService, avatarService, ProfileModals, cameraService, user, profile) {
 
         var vm = this;
 
@@ -50,7 +50,7 @@
         };
 
         var unbindUpdatesHandler = null;
-        function destroy () {
+        function destroy() {
             _.isFunction(unbindUpdatesHandler) && unbindUpdatesHandler();
         }
 
@@ -85,15 +85,15 @@
 
         // ////////////////////////////////////////////////////////////////////////////////////////////
 
-        function showFriends (event) {
-            event.stopPropagation();
+        function showFriends(event) {
             LoadingService.showLoader('Loading');
+            event.stopPropagation();
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showFriends');
             logger.debug('TODO: Edit friends to adhere to \'profile\' resolve parameter');
             $state.go('account.profile.friends', { userId: profile && profile.id });
         }
 
-        function showEndorsements () {
+        function showEndorsements() {
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showEndorsements');
             if (_.isEmpty(vm.profileData.license) ||
                 _.isEmpty(vm.profileData.license.class) && _.isEmpty(vm.profileData.license.endorsements)) {
@@ -104,6 +104,7 @@
 
             var listItems = _.map(vm.profileData.license.endorsements,
                 function (e) {
+                    debugger;
                     return '<li>' + vm.endorsementsMap[e].title + '</li>';
                 });
 
@@ -179,7 +180,7 @@
                     });
             };
 
-            vm.doFriendAction = function doFriendAction (parameters) {
+            vm.doFriendAction = function doFriendAction(parameters) {
                 switch (vm.friendStatus) {
                     case 'none':
                         vm.addUserToFriends();
@@ -196,7 +197,7 @@
                 }
             };
 
-            vm.acceptFriend = function acceptFriend () {
+            vm.acceptFriend = function acceptFriend() {
                 $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'acceptFriend');
                 friendsService
                     .updateRequest(vm.friendRequest.id, { action: 'accept' })
@@ -246,7 +247,7 @@
                 LoadingService.showLoader();
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showEdit');
 
-                profileModalsService
+                ProfileModals
                     .showProfileEditModal(parameters)
                     .then(function (result) {
                         if (result) {
@@ -255,11 +256,20 @@
                     });
             };
 
+            vm.showExperienceListModal = function showExperienceListModal() {
+                debugger;
+                return ProfileModals
+                    .showListExperienceModal({ experience: vm.experience })
+                    .then(function success(experience) {
+                        vm.experience = experience;
+                    });
+            };
+
             vm.showShareModal = function (parameters) {
                 LoadingService.showLoader();
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showShare');
 
-                profileModalsService
+                ProfileModals
                     .showProfileShareModal(parameters)
                     .then(function (result) {
                         logger.debug(result);
@@ -273,7 +283,7 @@
                 LoadingService.showLoader();
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showRequestReview');
 
-                profileModalsService
+                ProfileModals
                     .showRequestReviewModal(parameters)
                     .then(function (result) {
                         logger.debug(result);
@@ -291,14 +301,14 @@
         vm.getReviewBadge = getReviewBadge;
         vm.getExperienceBadge = getExperienceBadge;
 
-        function showProfileTab (event) {
+        function showProfileTab(event) {
             !!event && event.preventDefault();
 
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
             $cordovaGoogleAnalytics.trackView(vm.canEdit ? 'account.profile' : 'user.profile');
         }
 
-        function showReviewTab (event) {
+        function showReviewTab(event) {
             !!event && event.preventDefault();
 
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
@@ -313,7 +323,7 @@
             }
         }
 
-        function showExperienceTab (event) {
+        function showExperienceTab(event) {
             !!event && event.preventDefault();
 
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showExperience');
@@ -324,7 +334,7 @@
             }
         }
 
-        function getReviewBadge () {
+        function getReviewBadge() {
             if (vm.canEdit) {
 
                 if (!!vm.updates.reviews) {
@@ -339,7 +349,7 @@
             return null;
         }
 
-        function getExperienceBadge () {
+        function getExperienceBadge() {
             if (vm.canEdit && !vm.welcomeExperience) {
                 return '+';
             }
@@ -347,7 +357,7 @@
             return null;
         }
 
-        function getReviews () {
+        function getReviews() {
             reviewService
                 .getReviewsByUserID(vm.profileData.id)
                 .then(function (response) {
@@ -360,7 +370,7 @@
                 });
         }
 
-        function getExperience () {
+        function getExperience() {
             experienceService
                 .getUserExperience()
                 .then(function (response) {
@@ -368,7 +378,7 @@
                 });
         }
 
-        function openChat () {
+        function openChat() {
             if (!vm.canEdit) {
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'openChat');
                 $state.go('account.messages', { recipientId: vm.profileData.id });
