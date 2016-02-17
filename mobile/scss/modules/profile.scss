@@ -6,6 +6,38 @@ $profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
 
 $photo-dimension : $profile-subheader-height * 1.1;
 
+.profile-screen {
+    
+
+  .contacts-amount{
+    color: #fff;
+    
+    &:after{
+      content: 'convoy';
+      position: absolute;
+      top: 15px;
+      left: 0;
+      font-size: 11px;
+      text-align: left;
+    }
+
+    .badge{
+      position: absolute;
+      left: -5px;
+      top: 8px;
+      font-size: 10px;
+      min-width: 0;
+      padding: 3px 5px;
+      line-height: 10px;
+    }
+
+    strong{
+      vertical-align: middle;
+      font-size: 13px;
+    }
+  }
+}
+
 .profile-visual{
   position: absolute;
   top: $bar-height; 
@@ -41,7 +73,8 @@ $photo-dimension : $profile-subheader-height * 1.1;
       vertical-align: top;
     }
   }
-
+  
+  
   .contacts-amount{
     position: absolute;
     left: 0;
@@ -50,6 +83,10 @@ $photo-dimension : $profile-subheader-height * 1.1;
     padding-top: 15px;
     padding-right: 15px;
     color: #fff;
+    
+    &:after {
+        content: none;
+    }
 
     // &:after{
     //   content: 'Friends';
@@ -264,64 +301,150 @@ $photo-dimension : $profile-subheader-height * 1.1;
   }
 }
 
-.profile-list{
-  height: 100%;
-
-  .list{
-    margin: 0 20px;
-    padding-top: 20px;
-  }
-
-  .item{
-    background: none;
-    padding: 10px 0 15px;
-    border: none;
-
-    &.endorsements-row{
-      padding-top: 0;
-      line-height: 31px;
+.button {
+    &.button-pos-tr {
+        // position: relative;
+        // top: 10px;
+        // right: 10px;
+        float: right;
+        top: -15px;
+        // max-height: 20px;
+        // min-height: 18px;
     }
-
-    &.item-divider{
-      padding: 0;
-      height: 1px;
-      margin-bottom: 15px;
-      min-height: 0;
-      background: #D2D2D2;
-    }
-    
-    .item-label{
-      font-weight: bold;
-      color: $gradient-bottom;
-    }
-
-    .item-note{
-      width: 40%;
-      text-align: right;
-      color: $content-body-text;
-      white-space: normal;
-      
-      .logo {
-        position: relative;
-
-        > div {
-          margin-right: 0;
-        }
-        .badge{
-          top: auto;
-          bottom: -13px;
-          right: 0;
-        }
-      }
-    }
-    
-    .item-loading ion-spinner svg {
-        width: 48px;
-        height: 48px;
-    }
-  }
 }
 
+.profile-pane {
+   .view-section & .list.scroll-view {
+        top: 0px;
+    }
+    
+  .list{
+    margin: 0 0;
+    padding-top: 20px;
+  }
+  
+  .experience-list .list {
+      .item:last-child {
+          margin-bottom: 50px;
+      }
+  }
+
+  .profile-list, .experience-list, activity-list {
+      .row {
+        margin-bottom: 0px;
+        
+            .row {
+                margin-bottom: 10px;
+            }
+          
+          & > div {
+            // border: 1px solid purple;
+            padding: 10px;
+        }
+      }
+      
+      .row.nested > div {
+          padding: 0;
+      }
+      
+      margin-left: 20px;
+      margin-right: 20px;
+      
+      > .item {
+        //background: none;
+        padding: 10px 0 15px;
+        border: none;
+          
+        
+        .item-label{
+            font-weight: bold;
+            color: $gradient-bottom;
+        }
+        .item-title {
+            font-size: 1.1em;
+        }
+      }
+      
+      .list {
+          padding-top: 0;
+      }
+      
+      
+      
+         
+        .card {
+            &.has-title {
+                padding-top: 0;
+            }
+            
+            margin-left: 0;
+            margin-right: 0;
+            
+            .item-heading {
+                background-color: $gradient-bottom;
+                margin-top: 0;
+                padding-left: 10px;
+                
+                .item-title, .button {
+                    color: $stable!important;
+                }
+            }
+         }
+      
+      
+ 	  .item {
+              
+        .license-lbl {
+            line-height: 36px;
+        }
+        
+        .endorsements-list{
+            float: right;
+            width: auto;
+        }
+ 
+        endorsements-row{
+            padding-top: 0;
+            line-height: 31px;
+        }
+
+        &.item-divider{
+            padding: 0;
+            height: 1px;
+            margin-bottom: 15px;
+            min-height: 0;
+            background: #D2D2D2;
+        }
+
+        .item-note{
+            //width: 40%;
+            text-align: right;
+            color: $content-body-text;
+            white-space: normal;
+            
+            .equipment-logo {
+                position: relative;
+
+                > div {
+                    margin-right: 0;
+                }
+                .badge{
+                    top: auto;
+                    bottom: -13px;
+                    right: 0;
+                }
+            }
+        }
+        
+        .item-loading ion-spinner svg {
+            width: 48px;
+            height: 48px;
+        }
+    }
+  }    
+  
+}
+    
 .experience-list{
   .center{
     text-align: center;
@@ -408,16 +531,20 @@ $photo-dimension : $profile-subheader-height * 1.1;
     display: inline-block;
     
     &.license {
-      border: 1px solid darken($positive, 10%);
+      //border: 1px solid lighten($positive, 10%);
       font-weight: 800;
       border-radius: 50%;
       background-color: $positive;
       color: $light;
-      height: 30px;
-      width: 30px !important;
+      height: 29px;
+      width: 29px !important;
       text-align: center;
-      padding-left: 0;
+      padding-left: 5px;
       
+      position: relative;
+      top: 2px;
+      left: 4px;
+            
       .ltxt {
         position: relative;
         left: -0.5px;
