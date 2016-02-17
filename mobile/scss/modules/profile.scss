@@ -328,6 +328,12 @@ $photo-dimension : $profile-subheader-height * 1.1;
           margin-bottom: 50px;
       }
   }
+  
+  .experience-list {
+      .item.activity.profile-activity {
+          max-height: 18px;
+      }
+  }
 
   .profile-list, .experience-list, activity-list {
       .row {
@@ -449,6 +455,7 @@ $photo-dimension : $profile-subheader-height * 1.1;
   .center{
     text-align: center;
   }
+  
   .item {
     //background: none;
     padding: 10px 15px 3px;
@@ -547,8 +554,8 @@ $photo-dimension : $profile-subheader-height * 1.1;
             
       .ltxt {
         position: relative;
-        left: -0.5px;
-        top: -1px;
+        left: -2px;
+        top: 6px;
       }
     }
 
