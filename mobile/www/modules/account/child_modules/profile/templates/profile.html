@@ -49,7 +49,7 @@
 
     <!--Profile Main Body START-->
     <ion-pane class="profile-pane">
-        <div title="PROFILE" class="profile-tabs content-pane" ng-class="{'has-button': !!vm.showShareModal || !vm.canEdit}">
+        <div title="PROFILE" class="profile-tabs content-pane" ng-class="{'has-button': !!vm.showShareModal || !vm.canEdit, 'view-only': !vm.canEdit}">
 
             <ion-scroll class="list">
 

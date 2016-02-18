@@ -358,11 +358,19 @@ $photo-dimension : $profile-subheader-height * 1.1;
     }
   }
   
+  .content-pane.view-only {
+      .profile-list .card {
+          & > .row {
+            top: 0;   
+          }
+      }
+  }
+  
   .profile-list {
       .card {
          & > .row {
               position: relative;
-	          top: -15px;
+	          top: -20px;
           }
       
         padding-bottom: 0!important;
