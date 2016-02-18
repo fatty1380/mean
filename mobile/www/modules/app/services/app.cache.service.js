@@ -7,10 +7,10 @@
 
     AppCache.$inject = ['outsetCache'];
 
-    function AppCache(outsetCache) {
+    function AppCache (outsetCache) {
 
-        function cacheProfile(profile) {
-            var cachedProfiles = outsetCache.get('userProfiles')
+        function cacheProfile (profile) {
+            var cachedProfiles = outsetCache.get('userProfiles');
             var cacheIndex;
 
             if (cachedProfiles instanceof Array && cachedProfiles.length) {
@@ -25,15 +25,15 @@
                 }
                 outsetCache.put('userProfiles', cachedProfiles);
             } else {
-                outsetCache.put('userProfiles', [profile])
+                outsetCache.put('userProfiles', [profile]);
             }
         }
 
-        function getCachedProfiles() {
+        function getCachedProfiles () {
             return outsetCache.get('userProfiles');
         }
 
-        function getProfile(id) {
+        function getProfile (id) {
             var profiles = getCachedProfiles(),
                 profile;
 

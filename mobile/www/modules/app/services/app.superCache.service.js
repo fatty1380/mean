@@ -7,7 +7,7 @@
 
     OutsetCache.$inject = ['$cacheFactory'];
 
-    function OutsetCache($cacheFactory) {
+    function OutsetCache ($cacheFactory) {
         return $cacheFactory('outsetCache');
     }
 

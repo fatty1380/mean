@@ -3,11 +3,11 @@
 
     angular
         .module('signup')
-        .controller('TrailersCtrl', TrailersCtrl)
+        .controller('TrailersCtrl', TrailersCtrl);
 
     TrailersCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', '$ionicHistory', 'userService', 'LoadingService', '$ionicPopup'];
 
-    function TrailersCtrl($scope, $state, $cordovaGoogleAnalytics, $ionicHistory, userService, LoadingService, $ionicPopup) {
+    function TrailersCtrl ($scope, $state, $cordovaGoogleAnalytics, $ionicHistory, userService, LoadingService, $ionicPopup) {
         var vm = this;
         vm.newTrailer = '';
 
@@ -16,7 +16,7 @@
         vm.continue = goNext;
         vm.trailers = getTrailers();
 
-        function addTrailer() {
+        function addTrailer () {
             var then = Date.now();
             $ionicPopup.show({
                 template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.newTrailer" autofocus>',
@@ -52,18 +52,18 @@
             });
         }
 
-        function goNext(isSave) {
+        function goNext (isSave) {
             if (isSave) {
                 var then = Date.now();
                 LoadingService.showLoader('Saving');
 
                 return userService.updateUserProps({ trailer: getNameKeys(vm.trailers) })
-                    .then(function success(propsResponse) {
+                    .then(function success (propsResponse) {
                         $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'save');
                         $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trailers', 'save');
                         logger.debug('Trailers: Saved Successfully');
                     })
-                    .catch(function fail(err) {
+                    .catch(function fail (err) {
                         $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'err: ' + err);
                         $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trailers', 'err: ' + err);
                         logger.error('Trailers: Save Failed', err);
@@ -77,17 +77,19 @@
             $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'skip');
             $state.go('signup.friends');
         }
-        
-        
-        function goBack() {
-            if (_.isEmpty($ionicHistory.backTitle())) {
+
+
+        function goBack () {
+            var backView = $ionicHistory.backView();
+
+            if (_.isEmpty(backView) || _.isEmpty(backView.stateName)) {
                 return $state.go('signup.trucks');
             }
 
             return $ionicHistory.goBack();
         }
 
-        function getNameKeys(obj) {
+        function getNameKeys (obj) {
             var keys = [];
             for (var i in obj) {
                 if (obj.hasOwnProperty(i)) {
@@ -99,10 +101,10 @@
             return keys;
         }
 
-        function getTrailers() {
+        function getTrailers () {
             return TRAILERS;
         }
-    };
+    }
 
     var TRAILERS = [
         { name: 'Box', checked: false },

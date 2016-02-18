@@ -10,12 +10,12 @@
     </ion-header-bar>
 
     <div class="bar bar-subheader">
-        <h3 class="title">Log in to your TruckerLine account</h3>
+        <h3 class="title">Log in to your account</h3>
     </div>
 
     <ion-content class="has-subheader has-footer">
         <div class="login-content">
-            <form name="vm.mainLoginForm" id="vm.mainLoginForm" class="list signup-form" ng-submit="vm.submitForm()" accessible-form
+            <form name="vm.mainLoginForm" id="vm.mainLoginForm" class="list signup-form" ng-submit="vm.submitForm($event)" accessible-form
             novalidate>
                 <div class="form-row">
                     <label class="item item-input">
@@ -32,7 +32,7 @@
                     <i class="icon ion-backspace-outline" ng-if="vm.user.password.length > 0" ng-click="vm.user.password = ''"></i>
                 </div>
                 <input style="position:absolute; left:9999px" type="submit" />
-                <div ng-if="vm.mainLoginForm.$submitted && (vm.mainLoginForm.$invalid || vm.error)" class="error">
+                <div ng-if="vm.mainLoginForm.$submitted && (vm.mainLoginForm.$invalid || !!vm.error)" class="error">
                     <span ng-if="!vm.error && vm.mainLoginForm.password.$error.required && vm.mainLoginForm.email.$error.required">Please enter your email and password</span>
                     <span ng-if="!vm.error && !vm.mainLoginForm.password.$error.required && !vm.mainLoginForm.email.$error.required && vm.mainLoginForm.email.$invalid">Please enter a valid email address</span>
                     <span ng-if="!vm.error && !vm.mainLoginForm.password.$error.required && vm.mainLoginForm.email.$error.required">Please enter your email address</span>
@@ -49,7 +49,7 @@
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button primary" ng-click="vm.submitForm();" event-focus="click" event-focus-id="password">Login</button>
+            <button class="button primary" ng-click="vm.submitForm($event);" event-focus="click" event-focus-id="password">Login</button>
         </div>
     </ion-footer-bar>
 </ion-view>

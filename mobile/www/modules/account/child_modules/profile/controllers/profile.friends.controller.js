@@ -4,35 +4,35 @@
     angular
         .module('account')
         .controller('FriendsCtrl', FriendsCtrl);
-        
+
     /**
      * Friends Controller
      * ------------------
      * @resolve updates - get last updtaes from the updates service
      * @resolve profile - get the logged in (or visible) user's profile
      * @resolve friends - Gets a list of the `profile` user's friends
-     * 
+     *
      * @inject Angular and Ionic Services ___________________________
      * @inject $rootScope
      * @injecct $state
      * @injecct $filter
      * @injecct LoadingService
      * @injecct $ionicScrollDelegate
-     * 
+     *
      * @section Outset/TruckerLine Services _________________________
      * @inject $osetUsersService
      * @inject utilsService
      * @inject friendsService
      * @inject contactsService
      * @inject profileModalsService
-     * 
+     *
      */
 
     FriendsCtrl.$inject = ['updates', 'user', 'profile', 'friends',
         '$rootScope', '$state', '$filter', 'LoadingService', '$ionicScrollDelegate', '$timeout',
         'userService', 'outsetUsersService', 'utilsService', 'friendsService', 'contactsService', 'profileModalsService'];
 
-    function FriendsCtrl(updates, user, profile, friends,
+    function FriendsCtrl (updates, user, profile, friends,
         $rootScope, $state, $filter, LoadingService, $ionicScrollDelegate, $timeout,
         userService, outsetUsersService, utilsService, friendsService, contactsService, profileModalsService) {
 
@@ -40,7 +40,7 @@
 
         vm.friends = friends;
         vm.users = [];
-        vm.searchText = "";
+        vm.searchText = '';
 
         vm.addManually = addManually;
         vm.showAddFriendsModal = showAddFriendsModal;
@@ -56,10 +56,10 @@
         vm.initUser = initUser;
 
         initialize();
-        
-        ////////////////////////
-        
-        function initialize() {
+
+        // //////////////////////
+
+        function initialize () {
             vm.canEdit = !profile;
             vm.profile = profile;
             vm.newRequests = updates.requests || 0;
@@ -78,13 +78,15 @@
                 vm.newRequests = updates.requests;
             });
 
+            LoadingService.hide();
+
         }
 
-        function exitState() {
+        function exitState () {
             return $state.go('^');
         }
 
-        function showRequestsModal() {
+        function showRequestsModal () {
 
             friendsService
                 .getRequestsList()
@@ -106,12 +108,12 @@
                 });
         }
 
-        function viewUser(user, e) {
-            logger.debug('Routing to User Profile Page for `%s`', user.displayName)
+        function viewUser (user, e) {
+            logger.debug('Routing to User Profile Page for `%s`', user.displayName);
             $state.go('account.profile', { userId: user.id });
         }
 
-        function addFriend(friend, e) {
+        function addFriend (friend, e) {
             e.stopPropagation();
             if (!friend) return;
 
@@ -132,7 +134,7 @@
                 });
         }
 
-        function acceptFriend(friend, e) {
+        function acceptFriend (friend, e) {
             e.stopPropagation();
             if (!friend) return;
 
@@ -152,14 +154,14 @@
                 });
         }
 
-        function messageFriend(friend, e) {
+        function messageFriend (friend, e) {
             e.stopPropagation();
-            
-            /// TODO: Configure this properly
+
+            // / TODO: Configure this properly
             $state.go('account.messages', { recipientId: friend.id });
         }
 
-        function showAddFriendsModal() {
+        function showAddFriendsModal () {
             LoadingService.showLoader('Loading Contacts<br><small>(this may take a moment)</small>');
 
             contactsService
@@ -178,7 +180,7 @@
                             logger.error('[ProfileFriends.showAddFriends] err --->>>', err);
                         });
                 })
-                .catch(function reject(err) {
+                .catch(function reject (err) {
                     logger.error('[ProfileFriends.showAddFriends] Unable to resolve Contacts: ', err);
 
                     LoadingService.hide();
@@ -187,21 +189,21 @@
                 });
         }
 
-        function addManually() {
+        function addManually () {
             return profileModalsService
                 .showFriendManualAddModal()
-                .then(function success(contact) {
+                .then(function success (contact) {
                     logger.debug('Manual Add Friend Rusult: ', contact);
 
                     return friendsService.createRequest({
                         contactInfo: contact
                     });
                 })
-                .then(function sendInviteSuccess(result) {
+                .then(function sendInviteSuccess (result) {
                     logger.debug('Sent Invite', result.data);
                     LoadingService.showSuccess('Invitation Sent!');
                 })
-                .catch(function failure(err) {
+                .catch(function failure (err) {
                     LoadingService.showError('Unable to Send Invitation');
                     return null;
                 });
@@ -211,14 +213,14 @@
 
         var statii = {};
 
-        function initFriendStatuses() {
+        function initFriendStatuses () {
             statii = {};
             statii[user.id] = 'me';
         }
         initFriendStatuses();
 
 
-        function getOutsetUsers(query) {
+        function getOutsetUsers (query) {
 
             if (!!timer) {
                 $timeout.cancel(timer);
@@ -242,14 +244,14 @@
                                     statii[tlUser.id] = tlUser.friendStatus = response.data.status;
                                     tlUser.request = response.request;
                                 });
-                        })
+                        });
 
                         timer = null;
                     }, 500);
                 });
         }
 
-        function searchHandler() {
+        function searchHandler () {
             var length = vm.searchText.length;
 
             if (length >= 2) {
@@ -261,10 +263,10 @@
             $ionicScrollDelegate.$getByHandle('main-content-scroll').scrollTop();
         }
 
-        function initUser(userProfile) {
+        function initUser (userProfile) {
             userProfile.avatar = userService.getAvatar(userProfile);
 
-            userProfile.isFriend = _.contains(user.friends, userProfile.id)
+            userProfile.isFriend = _.contains(user.friends, userProfile.id);
             userProfile.isSelf = userProfile.id === user.id;
 
             userProfile.displayName = userProfile.isFriend || userProfile.isSelf ?

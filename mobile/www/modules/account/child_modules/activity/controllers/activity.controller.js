@@ -8,7 +8,7 @@
     ActivityCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', '$state', '$cordovaGoogleAnalytics',
         'activityModalsService', 'activityService', 'LoadingService', 'user', 'settings', 'welcomeService'];
 
-    function ActivityCtrl($rootScope, updates, updateService, $scope, $state, $cordovaGoogleAnalytics,
+    function ActivityCtrl ($rootScope, updates, updateService, $scope, $state, $cordovaGoogleAnalytics,
         activityModalsService, activityService, LoadingService, user, settings, welcomeService) {
         var vm = this;
         vm.feed = [];
@@ -56,26 +56,26 @@
             vm.lastUpdate = Date.now();
         });
 
-        function changeFeedSource() {
+        function changeFeedSource () {
             activityService.changeFeedSource();
             updateFeedData();
             initialize();
         }
 
-        function getFeedButtonClass() {
-            return (/my/i.test(vm.feedData && vm.feedData.buttonName)) ? 'ion-chevron-up' : 'ion-chevron-down'
+        function getFeedButtonClass () {
+            return (/my/i.test(vm.feedData && vm.feedData.buttonName)) ? 'ion-chevron-up' : 'ion-chevron-down';
         }
 
-        function addFriends() {
+        function addFriends () {
             $cordovaGoogleAnalytics.trackEvent('Activity', 'add-friends');
             $state.go('account.profile.friends');
         }
 
-        function updateFeedData() {
+        function updateFeedData () {
             vm.feedData = activityService.getFeedData();
         }
 
-        function initialize() {
+        function initialize () {
             vm.feed = [];
 
             $cordovaGoogleAnalytics.trackEvent('Activity', 'init', 'start');
@@ -84,7 +84,7 @@
                 LoadingService.showLoader(vm.feedData.loadingText);
             }
 
-            //get all feed
+            // get all feed
             return activityService.getFeed()
                 .then(function (result) {
 
@@ -104,11 +104,11 @@
         /**
          *  @TODO update only new items
         */
-        function updateWithNewActivities() {
+        function updateWithNewActivities () {
             initialize();
         }
 
-        function refresh() {
+        function refresh () {
             initialize()
                 .finally(function () {
                     // Stop the ion-refresher from spinning
@@ -116,18 +116,18 @@
                 });
         }
 
-        function loadMore() {
+        function loadMore () {
             $cordovaGoogleAnalytics.trackEvent('Activity', 'loadMore', 'start', vm.feed.length);
             if (vm.feed && vm.feed.length > 2) {
                 logger.debug('[loadMore] Loading Updates');
 
                 activityService.loadMore()
-                    .then(function success(updates) {
+                    .then(function success (updates) {
                         logger.debug('[loadMore] got Updates: ' + updates);
                         angular.forEach(updates, function (val, key) {
                             logger.debug('[loadMore] Pushing item #' + key);
                             vm.feed.push(val);
-                        })
+                        });
                     })
                     .finally(function () {
                         // Stop the ion-refresher from spinning
@@ -142,9 +142,9 @@
          * @desc update feed item
          * @param {Number} id - feed id
          */
-        function refreshFeedActivityById(id) {
+        function refreshFeedActivityById (id) {
             $cordovaGoogleAnalytics.trackEvent('Activity', 'refreshFeedActivityById', id, vm.feed.length);
-            LoadingService.showLoader('Updating Feed')
+            LoadingService.showLoader('Updating Feed');
 
             activityService.getFeedActivityById(id).then(function (result) {
                 logger.warn('get feed by id result --->>>', result);
@@ -157,7 +157,7 @@
             });
         }
 
-        function showAddActivityModal() {
+        function showAddActivityModal () {
             $cordovaGoogleAnalytics.trackEvent('Activity', 'addActivity', 'start');
             var then = Date.now();
 
@@ -166,7 +166,6 @@
                 .then(function (res) {
                     logger.debug(' res --->>>', res);
                     if (res) {
-                        debugger;
                         if (angular.isObject(res)) {
                             logger.debug('Pushing newly created feed item onto the front of the array', res);
                             logger.debug(' vm.feed --->>>', vm.feed.length);
@@ -183,7 +182,7 @@
                 })
                 .catch(function (err) {
                     $cordovaGoogleAnalytics.trackTiming('Activity', Date.now() - then, 'addActivity', 'cancel');
-                })
+                });
         }
     }
 })();

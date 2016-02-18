@@ -1,16 +1,16 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('account')
         .controller('ProfileAddExperienceCtrl', ProfileAddExperienceCtrl);
 
-    ProfileAddExperienceCtrl.$inject = ['$q', 'experienceService' ];
+    ProfileAddExperienceCtrl.$inject = ['$q', 'experienceService'];
 
-    function ProfileAddExperienceCtrl($q, experienceService) {
+    function ProfileAddExperienceCtrl ($q, experienceService) {
         var vm = this;
-        
-        vm.stateAction = 'Add'
+
+        vm.stateAction = 'Add';
 
         vm.experience = {
             title: '',
@@ -22,10 +22,18 @@
 
         vm.saveExperience = saveExperience;
 
-        function saveExperience() {
+        function saveExperience () {
             logger.debug(' ');
             logger.debug('saveExperience()');
             logger.debug(vm.experience);
+
+            if (/\d{4,4}-\d{2,2}/.test(vm.startDate)) {
+                vm.experience.startDate = vm.startDate;
+            }
+
+            if (/\d{4,4}-\d{2,2}/.test(vm.endDate)) {
+                vm.experience.endDate = vm.endDate;
+            }
 
             experienceService.postUserExperience(vm.experience)
             .then(function (resp) {

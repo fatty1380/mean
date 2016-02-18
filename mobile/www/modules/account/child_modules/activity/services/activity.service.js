@@ -1,7 +1,3 @@
-/* global _ */
-/* global logger */
-/* global google */
-
 (function () {
     'use strict';
 
@@ -12,7 +8,7 @@
     activityService.$inject = ['settings', '$http', '$q', '$ionicPlatform', '$ionicPopup', '$cordovaGoogleAnalytics',
         'utilsService', 'userService'];
 
-    function activityService(settings, $http, $q, $ionicPlatform, $ionicPopup, $cordovaGoogleAnalytics,
+    function activityService (settings, $http, $q, $ionicPlatform, $ionicPopup, $cordovaGoogleAnalytics,
         utilsService, userService) {
 
         var service = {
@@ -37,7 +33,7 @@
             getFeedData: getFeedData,
             loadMore: loadMore,
             getAvatar: getAvatar,
-            
+
             getMap: getMap,
             getMarker: getMarker
         };
@@ -46,8 +42,8 @@
 
         var feed = [];
         var items = [];
-        var activityItems = []; //my posts
-        
+        var activityItems = []; // my posts
+
         Object.defineProperty(vm, 'FEEDER_CONFIG', {
             enumerable: true,
             get: function () {
@@ -76,10 +72,10 @@
         };
 
         return service;
-        
-        /////////////////////////////////////////////////////////////////////////////////
 
-        function changeFeedSource(source) {
+        // ///////////////////////////////////////////////////////////////////////////////
+
+        function changeFeedSource (source) {
             var src = feedSource;
             source = /activity|items/i.test(source) ? source : null;
             feedSource = source || (feedSource === 'activity') ? 'items' : 'activity';
@@ -89,7 +85,7 @@
             return src !== feedSource;
         }
 
-        function getFeedData() {
+        function getFeedData () {
             return feedData[feedSource];
         }
 
@@ -97,12 +93,12 @@
          * @desc Get all feed, then load all posts by ids
          * @returns {Promise} promise with all feed items
          */
-        function getFeed() {
+        function getFeed () {
             return $http.get(settings.feed)
                 .then(feedRequestSuccess, feedRequestError);
         }
 
-        function getCompanyFeed(company) {
+        function getCompanyFeed (company) {
             var id = !!company && company.id || company;
             return $http.get(settings.companies + id + '/feed').then(
                 feedRequestSuccess,
@@ -110,7 +106,7 @@
                 );
         }
 
-        function feedRequestSuccess(response) {
+        function feedRequestSuccess (response) {
             logger.debug(response);
 
             feeder = vm.FEEDER_CONFIG;
@@ -126,27 +122,26 @@
             });
         }
 
-        function feedRequestError(response) {
-            //showPopup('Error', response.message);
+        function feedRequestError (response) {
+            // showPopup('Error', response.message);
             logger.error('Unable to load Feed', response.data);
             return [];
         }
 
-        function loadMore() {
+        function loadMore () {
             logger.debug('[activityService.loadMore] Loading Updates');
-            debugger;
             return populateActivityFeed(items, feeder.start, feeder.step);
         }
-        
+
         /**
          * Populate Activity Feed
          * @param rawFeedActivities - An array of FeedActivity Objects. Differnet from the local var 'feed'
          * @param start - Integer representing at which index to start population (default: 0)
          * @param count - Integer representing how many items to populate (default: all)
-         * 
-         * @description This method will map over the IDs in teh activity array of the 
+         *
+         * @description This method will map over the IDs in teh activity array of the
          */
-        function populateActivityFeed(rawFeedActivities, start, count) {
+        function populateActivityFeed (rawFeedActivities, start, count) {
             feed = rawFeedActivities;
             start = start + 1 || 0;
             count = count || undefined;
@@ -155,7 +150,7 @@
             logger.debug('Iterating over ' + feed.length + ' feed IDs to populate ' + count + ' from ' + start);
 
             /**
-             * Look at feed IDs `start` to `start+count` and 
+             * Look at feed IDs `start` to `start+count` and
              */
             var itemsToResolve = feed.slice(start, count);
             feed = [];
@@ -167,10 +162,10 @@
 
 
             var promises = itemsToResolve.map(function (value, index) {
-                if (!angular.isString(value)) {return value;}
+                if (!angular.isString(value)) { return value; }
                 return getFeedActivityById(value).then(
                     function (feedItem) {
-                        //logger.debug('Loaded Feed item #' + index + '. Feeder: ', feeder);
+                        // logger.debug('Loaded Feed item #' + index + '. Feeder: ', feeder);
                         feeder.loaded++;
 
                         if (_.isEmpty(feedItem)) {
@@ -198,8 +193,8 @@
                     if (angular.isString(a) && angular.isString(b)) { return 0; }
                     var x = Date.parse(b.created) - Date.parse(a.created);
                     var y = x > 0 ? 1 : x < 0 ? -1 : 0;
-                    ///var word = y == 1 ? 'after' : 'before';
-                    //logger.debug('Feed Item %s is %s than %s (%s %s %s)', a.title, word, b.title, a.created, word, b.created);
+                    // /var word = y == 1 ? 'after' : 'before';
+                    // logger.debug('Feed Item %s is %s than %s (%s %s %s)', a.title, word, b.title, a.created, word, b.created);
                     return y;
                 });
 
@@ -213,7 +208,7 @@
          * @param {Number} id - feed id
          * @returns {Promise} promise feed data
          */
-        function getFeedActivityById(id) {
+        function getFeedActivityById (id) {
             return $http.get(settings.feed + id)
                 .then(function (response) {
                     return response.data;
@@ -223,7 +218,7 @@
                 });
         }
 
-        function getFeedIds() {
+        function getFeedIds () {
             return $http.get(settings.feed)
                 .then(function (response) {
                     return response.data[feedSource];
@@ -233,7 +228,7 @@
                 });
         }
 
-        function getMyFeedIds() {
+        function getMyFeedIds () {
             return $http.get(settings.feed)
                 .then(function (response) {
                     return response.data.activity;
@@ -243,7 +238,7 @@
                 });
         }
 
-        function postFeed(data) {
+        function postFeed (data) {
 
             return $http.post(settings.feed, data)
                 .then(function (response) {
@@ -254,7 +249,7 @@
                 });
         }
 
-        function postComment(id, data) {
+        function postComment (id, data) {
             return $http.post(settings.feed + id + '/comments', data)
                 .then(function (response) {
                     return response;
@@ -265,7 +260,7 @@
                 });
         }
 
-        function getComments() {
+        function getComments () {
             return $http.get(settings.feed)
                 .then(function (response) {
                     return response.data;
@@ -275,7 +270,7 @@
                 });
         }
 
-        function likeActivity(id) {
+        function likeActivity (id) {
             var index = _.findIndex(feed, { id: id });
 
             return $http.post(settings.feed + id + '/likes', null)
@@ -291,36 +286,36 @@
                     if (response.status !== 403) {
                         logger.error('Unable to like Post', response);
                     }
-                    
+
                     // Return the existing likes array (if present) or an empty array if not;
                     return index !== -1 && feed[index].likes || [];
                 });
         }
-        
-        function getMap(element, center, options) {
+
+        function getMap (element, center, options) {
             options = _.defaults({
-                    zoom: 8,
-                    center: center,
-                    draggable: false,
-                    zoomControl: true,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                zoom: 8,
+                center: center,
+                draggable: false,
+                zoomControl: true,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
             }, options);
-            
+
             return new google.maps.Map(element, options);
         }
-        
-        function getMarker(map, center, options) {
-            
+
+        function getMarker (map, center, options) {
+
             options = _.defaults({
                 position: center,
                 map: map,
                 draggable: false
             }, options);
-            
+
             return new google.maps.Marker(options);
         }
 
-        function getCurrentLocation(options) {
+        function getCurrentLocation (options) {
             options = options || {};
             _.defaults(options, {
                 highAccuracy: false
@@ -332,18 +327,18 @@
                 if (navigator.geolocation) {
                     var posOptions = { timeout: 30000, enableHighAccuracy: options.highAccuracy };
 
-                    var onSuccess = function onSuccess(position) {
+                    var onSuccess = function onSuccess (position) {
                         logger.debug('*** Found Location ***', position);
 
                         deferred.resolve(position);
                     };
-                    
-                    var onError = function onError(err) {
+
+                    var onError = function onError (err) {
                         logger.error('*** Location Search Failed ***', err);
 
                         deferred.reject(err);
                     };
-                    
+
                     navigator.geolocation.getCurrentPosition(onSuccess, onError, posOptions);
 
                 } else {
@@ -355,9 +350,9 @@
             return deferred.promise;
         }
 
-        function getCurrentCoords(options) {
+        function getCurrentCoords (options) {
             return getCurrentLocation(options)
-                .then(function result(position) {
+                .then(function result (position) {
                     return { lat: position.coords.latitude, long: position.coords.longitude };
                 });
         }
@@ -368,7 +363,7 @@
          * @param {Object} finish - finish coordinates
          * @returns {Promise} promise with distance in miles
          */
-        function getDistanceBetween(start, finish) {
+        function getDistanceBetween (start, finish) {
             var service = new google.maps.DistanceMatrixService;
             return $q(function (resolve, reject) {
                 service.getDistanceMatrix({
@@ -380,12 +375,12 @@
                     avoidTolls: false
                 }, function (response, status) {
                     if (status !== google.maps.DistanceMatrixStatus.OK) {
-                        //activityService.showPopup('Google maps failed', status);
+                        // activityService.showPopup('Google maps failed', status);
                         reject('error');
                     } else {
                         if (response.rows[0].elements[0].distance) {
-                            resolve((response.rows[0].elements[0].distance.value / 1609.344).toFixed(0));//miles
-                            //resolve(response.rows[0].elements[0].distance.value / 1000);// km
+                            resolve((response.rows[0].elements[0].distance.value / 1609.344).toFixed(0));// miles
+                            // resolve(response.rows[0].elements[0].distance.value / 1000);// km
                         } else {
                             resolve(null);
                         }
@@ -400,7 +395,7 @@
          * @param {Object} finish - finish coordinates
          * @returns {Promise} promise with distance in miles
          */
-        function getSLDistanceBetween(start, finish) {
+        function getSLDistanceBetween (start, finish) {
             var dist = google.maps.geometry.spherical.computeDistanceBetween(start, finish);
 
             return $q.when((dist / 1609.344).toFixed(0));
@@ -411,34 +406,34 @@
          * @param {Object} latlng - coordinates
          * @returns {Promise} promise with formatted address
          */
-        function getPlaceName(latlng) {
+        function getPlaceName (latlng) {
             logger.debug('getPlaceName()');
-            
+
             vm.geocoder = vm.geocoder || new google.maps.Geocoder;
 
             return $q(function (resolve, reject) {
                 vm.geocoder.geocode({ 'location': latlng }, function (results, status) {
                     if (status === google.maps.GeocoderStatus.OK) {
                         if (results[1]) {
-                            /*marker.info = new google.maps.InfoWindow({
+                            /* marker.info = new google.maps.InfoWindow({
                              content:  results[1].formatted_address
                              });*/
                             resolve(results[1]);
                         } else if (results[0]) {
                             resolve(results[0]);
                         } else {
-                            //showPopup('Geocoder failed', 'No results found');
+                            // showPopup('Geocoder failed', 'No results found');
                             reject('Geocoder failed');
                         }
                     } else {
-                        //showPopup('Geocoder failed', status);
+                        // showPopup('Geocoder failed', status);
                         reject('Geocoder failed');
                     }
                 });
             });
         }
 
-        function hasCoordinates(activity) {
+        function hasCoordinates (activity) {
             return (!!activity && !!activity.location && !!activity.location.coordinates && !!activity.location.coordinates.length);
         }
 
@@ -446,7 +441,7 @@
          * @desc get last item of array with coordinates
          * @returns {Object} last item
          */
-        function getLastActivityWithCoord() {
+        function getLastActivityWithCoord () {
             for (var i = 0; i < feed.length; i++) {
                 if (feed[i].user && feed[i].user.id === userService.profileData.id) {
                     if (hasCoordinates(feed[i])) {
@@ -457,14 +452,14 @@
             return null;
         }
 
-        function showPopup(title, text) {
+        function showPopup (title, text) {
             $ionicPopup.alert({
                 title: title || 'title',
                 template: text || 'no message'
             });
         }
 
-        function getAvatar(feedItem) {
+        function getAvatar (feedItem) {
             if (_.isEmpty(feedItem.user) || _.isString(feedItem.user)) {
                 return null;
             }

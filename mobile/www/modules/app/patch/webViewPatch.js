@@ -34,10 +34,10 @@
  * License: MIT
  */
 
-angular.module('ngIOS9UIWebViewPatch', ['ng']).config(['$provide', function($provide) {
+angular.module('ngIOS9UIWebViewPatch', ['ng']).config(['$provide', function ($provide) {
     'use strict';
 
-    $provide.decorator('$browser', ['$delegate', '$window', function($delegate, $window) {
+    $provide.decorator('$browser', ['$delegate', '$window', function ($delegate, $window) {
 
         if (isIOS9UIWebView($window.navigator.userAgent)) {
             return applyIOS9Shim($delegate);
@@ -45,15 +45,15 @@ angular.module('ngIOS9UIWebViewPatch', ['ng']).config(['$provide', function($pro
 
         return $delegate;
 
-        function isIOS9UIWebView(userAgent) {
+        function isIOS9UIWebView (userAgent) {
             return /(iPhone|iPad|iPod).* OS 9_\d/.test(userAgent) && !/Version\/9\./.test(userAgent);
         }
 
-        function applyIOS9Shim(browser) {
+        function applyIOS9Shim (browser) {
             var pendingLocationUrl = null;
-            var originalUrlFn= browser.url;
+            var originalUrlFn = browser.url;
 
-            browser.url = function() {
+            browser.url = function () {
                 if (arguments.length) {
                     pendingLocationUrl = arguments[0];
                     return originalUrlFn.apply(browser, arguments);
@@ -65,7 +65,7 @@ angular.module('ngIOS9UIWebViewPatch', ['ng']).config(['$provide', function($pro
             window.addEventListener('popstate', clearPendingLocationUrl, false);
             window.addEventListener('hashchange', clearPendingLocationUrl, false);
 
-            function clearPendingLocationUrl() {
+            function clearPendingLocationUrl () {
                 pendingLocationUrl = null;
             }
 

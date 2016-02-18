@@ -8,9 +8,9 @@
         .module('company')
         .controller('JobDetailsCtrl', JobDetailsCtrl);
 
-    JobDetailsCtrl.$inject = ['$state', 'parameters', 'userService', 'LoadingService', 'CompanyService', 'companyModalService', 'LoadingService'];
+    JobDetailsCtrl.$inject = ['$state', '$sce', 'parameters', 'userService', 'LoadingService', 'CompanyService', 'companyModalService', 'LoadingService'];
 
-    function JobDetailsCtrl($state, parameters, UserService, LoadingService, CompanyService, companyModalService, Loader) {
+    function JobDetailsCtrl ($state, $sce, parameters, UserService, LoadingService, CompanyService, companyModalService, Loader) {
 
         var vm = this;
 
@@ -21,14 +21,15 @@
 
         vm.apply = launchApplication;
         vm.share = share;
+        vm.trust = trustMe;
 
         activate();
-        
+
        // launchApplication();
-        
-        /////////////////////////////////////////////////////////////
-        
-        function activate() {
+
+        // ///////////////////////////////////////////////////////////
+
+        function activate () {
             if (_.isEmpty(vm.job)) {
                 logger.error('No Job has been loaded into the Controller', parameters);
                 LoadingService.showAlert('Sorry, job not available');
@@ -39,19 +40,19 @@
                 .then(function (user) {
                     _.extend(vm.user, user);
                 });
-                
+
             CompanyService.getJobApplicationStatus(vm.job)
-                .then(function success(res) {
+                .then(function success (res) {
                     vm.applicationStatus = res.status;
                     if (!_.isEmpty(res.buttonText)) {
                         vm.appliedText = res.buttonText;
                     }
                 });
         }
-        
-        function launchApplication() {
+
+        function launchApplication () {
             companyModalService.showJobApplicationModal({ user: vm.user, job: vm.job })
-                .then(function modalResult(res) {
+                .then(function modalResult (res) {
                     vm.applicationStatus = res.status;
                     if (!_.isEmpty(res.buttonText)) {
                         vm.appliedText = res.buttonText;
@@ -59,8 +60,12 @@
                 });
         }
 
-        function share() {
+        function share () {
 
+        }
+
+        function trustMe (html) {
+            return $sce.trustAsHtml(html.replace(/\<br\>/gi, ' '));
         }
     }
 })();

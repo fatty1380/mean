@@ -1,25 +1,25 @@
 'use strict';
 
-(function() {
-    describe('engagementCtrl ', function() {
+(function () {
+    describe('engagementCtrl ', function () {
 
         var engagementCtrl;
 
         beforeEach(module(AppConfig.appModuleName));
 
-        beforeEach(inject(function($injector) {
+        beforeEach(inject(function ($injector) {
             var $controller = $injector.get('$controller');
         }));
 
-        beforeEach(inject(function($rootScope, $controller){
+        beforeEach(inject(function ($rootScope, $controller) {
             var scope = $rootScope.$new();
             engagementCtrl = $controller('EngagementCtrl', {
                 $scope: scope
             });
         }));
 
-        it('set form', function() {
-            var form = {testKey: "testValue"};
+        it('set form', function () {
+            var form = { testKey: 'testValue' };
 
             engagementCtrl.initEngagementForm(form);
             expect(engagementCtrl.form).toEqual(form);

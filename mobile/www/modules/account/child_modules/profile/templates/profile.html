@@ -1,8 +1,8 @@
 <ion-view class="profile-screen view-section mid-size" cache-view="false">
     <!--Profile Main Heading START-->
     <ion-header-bar align-title="center">
-        <button ng-if="!!vm.showEditModal" class="button button-clear" ng-click="vm.showEditModal()"><i class="ion-compose"></i> Edit</button>
-        <button ng-if="!vm.showEditModal" class="button button-clear" ui-sref="account.profile({userId: null})" ui-sref-opts="{reload: true}">
+        <!--<button ng-if="!!vm.showEditModal" class="button button-clear" ng-click="vm.showEditModal()"><i class="ion-compose"></i> Edit</button>-->
+        <button ng-if="!vm.showEditModal" class="button button-clear" ng-click="vm.goBack()">
             <i class="ion-ios-arrow-back"></i>
             <span class="ico ico-avatarsmall ico-middle"></span>
         </button>
@@ -16,16 +16,30 @@
             <span ng-if="vm.friendStatus === 'pending'" class="badge badge-balanced"><i class="ion-plus"></i> Accept</span>
             <span ng-if="vm.friendStatus === 'friends'" class="badge badge-positive">in convoy</span>
         </button>
+
+        <!--<button class="button button-clear contacts-amount" ng-click="vm.showFriends($event);">
+             <span class="ico ico-friends ico-middle"></span>
+            <span ng-if="vm.canEdit && vm.updates.requests" class="badge badge-assertive">{{vm.updates.requests}}</span>
+        </button>-->
+
+        <!--<button class="button button-clear" ng-click="vm.showFriends($event);">
+
+            <span class="contacts-amount">
+                <span class="ico ico-friends ico-middle" ng-click="vm.showFriends($event);"></span>
+                <span ng-if="vm.canEdit && vm.updates.requests" class="badge badge-assertive" ng-click="vm.showFriends($event);">{{vm.updates.requests}}</span>
+                <strong ng-click="vm.showFriends($event);">{{vm.profileData.friends.length}}</strong>
+            </span>
+        </button>-->
     </ion-header-bar>
 
     <div class="profile-visual">
         <div class="photo" ng-click="vm.showEditAvatar()">
             <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt="" />
         </div>
-        <div class="contacts-amount" ng-click="vm.showFriends();">
-            <span class="ico ico-friends ico-middle"></span>
-            <span ng-if="vm.canEdit && vm.updates.requests" class="badge badge-assertive">{{vm.updates.requests}}</span>
-            <strong>{{vm.profileData.friends.length}}</strong>
+        <div class="contacts-amount" ng-click="vm.showFriends($event);">
+            <span class="ico ico-friends ico-middle" ng-click="vm.showFriends($event);"></span>
+            <span ng-if="vm.canEdit && vm.updates.requests" class="badge badge-assertive" ng-click="vm.showFriends($event);">{{vm.updates.requests}}</span>
+            <strong ng-click="vm.showFriends($event);">{{vm.profileData.friends.length}}</strong>
         </div>
         <div class="handle" ng-if="!!vm.profileData.handle">
             <strong><i class="ico ico-radio"></i> {{vm.profileData.handle}}</strong>
@@ -35,101 +49,84 @@
 
     <!--Profile Main Body START-->
     <ion-pane class="profile-pane">
-        <ion-tabs class="profile-tabs tabs-top content-pane" delegate-handle="profile-tabs">
-            <ion-tab title="REVIEWS" ui-sref="account.profile.reviews" on-select="vm.showReviewTab()" ng-class="{'has-button': !!vm.showRequestReviewModal}"
-            badge="vm.canEdit && vm.getReviewBadge()" badge-style="{{!vm.welcomeReview ? 'badge-energized' : 'badge-assertive'}}">
+        <div title="PROFILE" class="profile-tabs content-pane" ng-class="{'has-button': !!vm.showShareModal || !vm.canEdit, 'view-only': !vm.canEdit}">
 
-                <ion-scroll class="reviews-list">
-                    <ion-list ng-if="vm.reviews && vm.reviews.length">
-                        <ion-item class="item" ng-repeat="review in vm.reviews track by $index">
-                            <div class="ico ico-avatarsmall"></div>
-                            <div class="review">
-                                <div class="top">
-                                    <rating ng-if="!!review.rating" readonly="true" ng-model="review.rating" max="5"></rating>
-                                    <div class="time"><i class="ico ico-timesmall"></i> {{review.created | date : 'mediumDate'}}</div>
-                                </div>
-                                <strong class="title">{{review.name}} - {{review.title}}</strong>
-                                <div class="message">{{review.text}}</div>
-                            </div>
-                        </ion-item>
-                    </ion-list>
+            <ion-scroll class="list">
 
-                    <div ng-if="vm.canEdit && (!vm.reviews || !vm.reviews.length)" class="no-content">
-                        <p class="message">This is your Reviews Section where you can request reviews from people you have worked with previously.
-                            Use reviews as your place to show your professionalism and work ethic in ways that traditional
-                            driver reports can’t!</p>
-                        <p class="message">Get started with the <strong>Request Review</strong> button below</p>
-                    </div>
-                    <div class="no-content" ng-if="!vm.canEdit">
-                        <p class="message">
-                            {{::vm.profileData.firstName}} does not have any reviews yet. If you would like to review {{::vm.profileData.firstName}},
-                            <a ui-sref="account.messages({recipientId: vm.profileData.id})">send a message</a> and ask them
-                            to send you a Review Request.
-                        </p>
+                <div class="profile-list">
+                    <ion-item class="card has-title">
 
-                    </div>
-
-                </ion-scroll>
-
-                <div class="button content-button" ng-if="!!vm.showRequestReviewModal" ng-click="vm.showRequestReviewModal()">
-                    <button type="button" class="button button-block button-positive">
-                        <i class="ion-clipboard"></i> Request Review
-                    </button>
-                </div>
-
-            </ion-tab>
-            <ion-tab title="PROFILE" ui-sref="account.profile" class="content-pane" on-select="vm.showProfileTab()" ng-class="{'has-button': !!vm.showShareModal || !vm.canEdit}"
-            on-select="logger.debug('Load Tab %s', this)" on-deselect="logger.debug('Leave Tab %s', this)">
-                <ion-scroll class="profile-list">
-                    <div class="list">
-                        <div class="item" ng-if="!!vm.profileData.props.title">
-                            <span class="item-label">CURENT JOB TITLE:</span>
-                            <span class="item-note">{{vm.profileData.props.title}}</span>
+                        <div class="item-divider item-heading">
+                            <span class="item-label item-title text-center">
+                                    <span ng-if="vm.profileData.props.company || vm.profileData.props.title">{{vm.profileData.props.title || 'Driver'}}<span ng-if="!!vm.profileData.props.company"> at </span>{{vm.profileData.props.company}}</span>
+                            <span ng-if="!vm.profileData.props.company && !vm.profileData.props.title">About {{vm.profileData.firstName}}</span>
+                            </span>
+                            <button class="button button-icon ion-compose button-pos-tr" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()">&nbsp; edit</button>
                         </div>
-                        <div class="item">
-                            <span class="item-label" ng-click="vm.ab()">TRUCK:</span>
-                            <span class="item-note">
-                                <div class="logo">
-                                    <i ng-if="vm.trucksMap[vm.profileData.props.truck]" class="{{vm.trucksMap[vm.profileData.props.truck]}}"></i>
-                                    <div ng-if="!!vm.profileData.props.truck && !vm.trucksMap[vm.profileData.props.truck]">{{vm.profileData.props.truck}} {{vm.profileData.props.model}}</div>
-                                    <div ng-if="!vm.profileData.props.truck && vm.profileData.props.model">{{vm.profileData.props.model}}</div>
-                                    <span ng-if="vm.trucksMap[vm.profileData.props.truck] && vm.profileData.props.model" class="badge badge-positive">
+                        <div class="row">
+                            <div class="col-67">
+                                <div class="row nested">
+                                    <div class="col">
+                                        <span class="item-label license-lbl" ng-click="vm.ab()">LICENSE:</span>
+                                        <ul class="endorsements-list" ng-click="vm.showEndorsements()">
+                                            <li ng-if="vm.profileData.license.class" class="license"><span class="ltxt">{{vm.profileData.license.class}}</span></li>
+                                            <li ng-repeat="endorsement in vm.profileData.license.endorsements">
+                                                <i class="ico extra-small-size {{ vm.endorsementsMap[endorsement].ico}}"></i>
+                                            </li>
+                                        </ul>
+                                        <span ng-if="!vm.profileData.license || (!vm.profileData.license.class && !vm.profileData.endorsements.length)">none</span>
+                                    </div>
+                                </div>
+                                <div class="row nested" ng-if="vm.profileData.props.started">
+                                    <div class="col">
+                                        <span class="item-label">DRIVING SINCE:</span>
+                                        <span class="item-note">{{vm.profileData.props.started | monthDate | date : 'MMMM, yyyy'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-33">
+                                <div class="item-note">
+                                    <div class="equipment-logo">
+                                        <i ng-if="vm.trucksMap[vm.profileData.props.truck]" class="{{vm.trucksMap[vm.profileData.props.truck]}}"></i>
+                                        <div ng-if="!!vm.profileData.props.truck && !vm.trucksMap[vm.profileData.props.truck]">{{vm.profileData.props.truck}} {{vm.profileData.props.model}}</div>
+                                        <div ng-if="!vm.profileData.props.truck && vm.profileData.props.model">{{vm.profileData.props.model}}</div>
+                                        <span ng-if="vm.trucksMap[vm.profileData.props.truck] && vm.profileData.props.model" class="badge badge-positive">
                                         {{vm.profileData.props.model}}
                                     </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        </span>
+                        <div class="row" ng-if="!!vm.profileData.props.trailer">
+                            <div class="col hanger">
+                                <span class="item-label">TRAILER:&nbsp;</span>
+                                <span class="wrap-col">
+                                <span ng-repeat="trailer in vm.profileData.props.trailer">
+                                    {{trailer}}<span ng-if="!$last">, </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="!!vm.profileData.props.freight">
+                            <div class="col">
+                                <span class="item-label"><span class="ico ico-freight"></span> FREIGHT:&nbsp;</span>
+                                <span class="item-note">{{vm.profileData.props.freight}}</span></div>
+                        </div>
+                    </ion-item>
+                </div>
+
+                <div class="experience-list">
+                    <div class="item activity profile-activity" ng-if="vm.experience">
+                        <span class="item-label">EXPERIENCE:</span> 
+                        <button ng-if="vm.canEdit &&  !!vm.experience.length" class="button button-icon ion-compose button-pos-tr" ng-click="vm.showExperienceListModal()">&nbsp; edit</button>
+                        <button ng-if="vm.canEdit && !vm.experience.length" class="button button-icon ion-ios-plus-outline button-pos-tr" ng-click="vm.showAddExperienceModal()">&nbsp; add</button>
                     </div>
-                    <div class="item">
-                        <span class="item-label">TRAILER:</span>
-                        <span class="item-note">
-                                        <span ng-repeat="trailer in vm.profileData.props.trailer">
-                                            {{trailer}}<span ng-if="!$last">, </span>
-                        </span>
-                        </span>
-                    </div>
-                    <div class="item" ng-if="!!vm.profileData.props.started">
-                        <span class="item-label">DRIVING SINCE:</span>
-                        <span class="item-note">{{vm.profileData.props.started | monthDate | date : 'MMMM, yyyy'}}</span>
-                    </div>
-                    <div class="item item-divider"></div>
-                    <div class="item" ng-if="!!vm.profileData.props.company">
-                        <span class="item-label">DRIVING FOR:</span>
-                        <span class="item-note">{{vm.profileData.props.company}}</span>
-                    </div>
-                    <div class="item" ng-if="vm.profileData.props.freight">
-                        <span class="item-label"><span class="ico ico-freight"></span> FREIGHT:</span>
-                        <span class="item-note">{{vm.profileData.props.freight}}</span>
-                    </div>
-                    <div class="item endorsements-row">
-                        <span class="item-label">ENDORSEMENTS:</span>
-                        <!--<i class="ico extra-small-size {{'ico-license' + vm.profileData.license.class.toLowerCase() + 'active' }}"></i>-->
-                        <ul class="endorsements-list" ng-click="vm.showEndorsements()">
-                            <li ng-if="vm.profileData.license.class" class="license"><span class="ltxt">{{vm.profileData.license.class}}</span></li>
-                            <li ng-repeat="endorsement in vm.profileData.license.endorsements">
-                                <i class="ico extra-small-size {{ vm.endorsementsMap[endorsement].ico}}"></i>
-                            </li>
-                        </ul>
-                    </div>
+
+                    <tline-experience-list ng-model="vm.experience" show-add-button="false" can-edit="vm.canEdit" show-add-fn="vm.showAddExperienceModal"
+                    instructText="vm.expInstructText"></tline-experience-list>
+                </div>
+                
+
+                <div name="activity-list">
 
                     <div class="item item-divider" ng-if="vm.feed"></div>
 
@@ -142,38 +139,20 @@
                         <div ng-if="!vm.feed.length && !vm.feedLoading" class="no-feed-items">{{ vm.feedMessage }}</div>
                     </div>
 
-                    </div>
-                    <!--<div class=" activity list"></div>-->
-                </ion-scroll>
-
-                <div class="button content-button" ng-if="!!vm.showShareModal" ng-click='vm.showShareModal()'>
-                    <button type="button" class="button button-block button-positive">
-                        <i class="ion-share"></i> Share
-                    </button>
                 </div>
-                <div class="button content-button" ng-if="!vm.canEdit" ng-click="vm.openChat()">
-                    <button type="button" class="button button-block button-positive">
-                        <i class="ion-chatbubbles"></i> Send Message
-                    </button>
-                </div>
+            </ion-scroll>
 
-            </ion-tab>
-
-            <ion-tab title="EXPERIENCE" ui-sref="account.profile.experience" on-select="vm.showExperienceTab()" ng-class="{'has-button': !!vm.showAddExperienceModal}"
-            badge="vm.canEdit && vm.getExperienceBadge()" badge-style="badge-energized">
-
-                <ion-scroll class="experience-list">
-                    <tline-experience-list ng-model="vm.experience" show-add-button="false" can-edit="vm.canEdit" show-add-fn="vm.showAddExperienceModal" instructText="vm.expInstructText"></tline-experience-list>
-                </ion-scroll>
-
-                <div class="button content-button" ng-if="!!vm.canEdit && !!vm.showAddExperienceModal" ng-click="vm.showAddExperienceModal()">
-                    <button type="button" class="button button-block button-positive">
-                        <i class="ion-plus"></i> Add Experience
-                    </button>
-                </div>
-
-            </ion-tab>
-        </ion-tabs>
+            <div class="button content-button" ng-if="!!vm.showShareModal" ng-click='vm.showShareModal()'>
+                <button type="button" class="button button-block button-positive">
+                    <i class="ion-share"></i> Share
+                </button>
+            </div>
+            <div class="button content-button" ng-if="!vm.canEdit" ng-click="vm.openChat()">
+                <button type="button" class="button button-block button-positive">
+                    <i class="ion-chatbubbles"></i> Send Message
+                </button>
+            </div>
+        </div>
     </ion-pane>
 
 </ion-view>

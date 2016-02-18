@@ -6,6 +6,15 @@ body{
   margin-bottom: 5px;
 }
 
+.platform-android {
+    .bar-subheader {
+        .title {
+            line-height: 1.3em;
+            overflow: visible;
+        }
+    }
+}
+
 .view-section{
   // background-image: linear-gradient(-180deg, $tab-selected 0%, $tab-selected 100%);
   // background-repeat: repeat-x;
@@ -31,22 +40,43 @@ body{
     height: auto;
   }
 
+  .platform-android &.full-size > .pane{
+    top: $bar-fullsize-height - $ios-statusbar-height;
+    height: auto;
+  }
+
+  .platform-android &.mid-size > .pane{
+    top: $bar-midsize-height - $ios-statusbar-height;
+    height: auto;
+  }
+
+  .platform-android &.compact-size > .pane{
+    top: $bar-compact-height - $ios-statusbar-height;
+    height: auto;
+  }
+
+  .platform-android &.min-size > .pane{
+    top: $bar-minsize-height - $ios-statusbar-height;
+    height: auto;
+  }	
+  
+        
   .bar-header{
     padding: 0 5px;
     background: none;
     border: 0;
-    font: $bar-title-font-size Helvetica Neue, Helvetica, Arial;
-    color: $secondary-text-action;
+        font: $bar-title-font-size Helvetica Neue, Helvetica, Arial;
+        color: $secondary-text-action;
 
     .title{
       font-size: $bar-title-font-size;
-      font-weight: $headings-font-weight;
-      text-transform: capitalize;
+          font-weight: $headings-font-weight;
+          text-transform: capitalize;
       color: $light;
     }
 
-    .button{
-      color: $secondary-text-action;
+        .button{
+          color: $secondary-text-action;
       font-size: $bar-title-font-size;
       font-weight: $headings-font-weight;
       padding: 0 5px;
@@ -225,6 +255,10 @@ textarea{
       min-height: 36px;
     }
   }
+}
+
+.text-center {
+    text-align: center;
 }
 
 .no-content {
@@ -505,6 +539,22 @@ and (max-device-height : 568px) {
 
     &.min-size > .pane{
       top: 64px;
+    }
+    
+    .platform-android &.full-size > .pane{
+      top: 220px - $ios-statusbar-height;
+    }
+
+    .platform-android &.mid-size > .pane{
+      top: 150px - $ios-statusbar-height;
+    }
+
+    .platform-android &.compact-size > .pane{
+      top: 130px - $ios-statusbar-height;
+    }
+
+    .platform-android &.min-size > .pane{
+      top: 64px - $ios-statusbar-height;
     }
 
     .bar-header{

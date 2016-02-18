@@ -5,24 +5,24 @@
         .module('account')
         .controller('ProfileCtrl', ProfileCtrl);
 
-    ProfileCtrl.$inject = ['$rootScope', '$scope', 'StorageService', 'updateService', 'appCache', '$state', '$cordovaGoogleAnalytics',
-        'activityService', 'reviewService', 'LoadingService', 'experienceService', 'utilsService',
+    ProfileCtrl.$inject = ['$rootScope', '$scope', 'StorageService', 'updateService', 'appCache', '$state', '$cordovaGoogleAnalytics', '$ionicHistory',
+        'activityService', 'reviewService', 'LoadingService', 'experienceService',
         'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl($rootScope, $scope, StorageService, updateService, appCache, $state, $cordovaGoogleAnalytics,
-        activityService, reviewService, LoadingService, experienceService, utilsService,
-        friendsService, avatarService, profileModalsService, cameraService, user, profile) {
+    function ProfileCtrl($rootScope, $scope, StorageService, updateService, appCache, $state, $cordovaGoogleAnalytics, $ionicHistory,
+        activityService, reviewService, LoadingService, experienceService,
+        friendsService, avatarService, ProfileModals, cameraService, user, profile) {
 
         var vm = this;
 
         logger.debug('Loading $state: `%s`', $state.current.name);
 
         vm.profileData = profile || user;
-        //vm.profileAvatar = 
+        // vm.profileAvatar =
         vm.user = user;
         vm.camera = cameraService;
         vm.updates = updateService.getLastUpdates();
-        
+
         // vm.reviews = [];
         // [{ rating: 5, title: 'A real professional driver!', created: 1443285630631, text: 'Sergey is incredibly professional, and in the 5 years he has been delivering freight to my job sites, he has never let me down', name: 'Rob' }, { rating: 4, text: 'Serge is a good driver, has never let me down', title: 'He is the best', name: 'John', created: 1443285630631 }];
 
@@ -32,6 +32,17 @@
         vm.showFriends = showFriends;
         vm.openChat = openChat;
         vm.friendStatus = null;
+
+        vm.goBack = function () {
+            // ui-sref="account.profile({userId: null})" ui-sref-opts="{reload: true}"
+            var backView = $ionicHistory.backView();
+
+            if (_.isEmpty(backView) || _.isEmpty(backView.stateName)) {
+                return $state.go('account.profile', { userId: null }, { reload: true });
+            }
+
+            return $ionicHistory.goBack();
+        };
 
         vm.ab = function () {
             var profi = appCache.getCachedProfiles();
@@ -43,7 +54,7 @@
             _.isFunction(unbindUpdatesHandler) && unbindUpdatesHandler();
         }
 
-        $rootScope.$on("clear", function () {
+        $rootScope.$on('clear', function () {
             logger.debug('ProfileCtrl my event occurred');
             vm.profileData = profile || user;
             vm.user = user;
@@ -66,15 +77,17 @@
         $scope.$on('$ioncView.unloaded', function (event) {
             destroy();
         });
-        
-        //
-        
-        vm.welcomeExperience = JSON.parse(StorageService.get('welcome.experience')) || !_.isEmpty(vm.user.experience);
-        vm.welcomeReview = true;
-        
-        //////////////////////////////////////////////////////////////////////////////////////////////
 
-        function showFriends() {
+        //
+
+        vm.welcomeExperience = angular.fromJson(StorageService.get('welcome.experience')) || !_.isEmpty(vm.user.experience);
+        vm.welcomeReview = true;
+
+        // ////////////////////////////////////////////////////////////////////////////////////////////
+
+        function showFriends(event) {
+            LoadingService.showLoader('Loading');
+            event.stopPropagation();
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showFriends');
             logger.debug('TODO: Edit friends to adhere to \'profile\' resolve parameter');
             $state.go('account.profile.friends', { userId: profile && profile.id });
@@ -91,14 +104,16 @@
 
             var listItems = _.map(vm.profileData.license.endorsements,
                 function (e) {
+                    debugger;
                     return '<li>' + vm.endorsementsMap[e].title + '</li>';
-                })
+                });
 
             var endorsements = '<ul>' + listItems.join('') + '</ul>';
 
             LoadingService.show(title + endorsements, { noBackdrop: true });
         }
 
+        /** ------ Viewing Profile User Configuration -------------------- */
         if (!vm.canEdit) {
 
             vm.feed = [];
@@ -109,9 +124,9 @@
             if (!vm.isFriend) {
                 vm.profileData.displayName = vm.profileData.firstName + ' ' + (vm.profileData.lastName && vm.profileData.lastName[0]);
             } else {
-                //LoadingService.showLoader('Loading ' + vm.profileData.firstName + '\'s Feed');
+                // LoadingService.showLoader('Loading ' + vm.profileData.firstName + '\'s Feed');
                 vm.feedLoading = true;
-                
+
                 activityService
                     .getFeed().then(function (result) {
                         var uniqueResults = _.uniq(result),
@@ -143,7 +158,7 @@
 
 
             vm.addUserToFriends = function () {
-            $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'addUserToFriends');
+                $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'addUserToFriends');
                 var friend = vm.profileData;
 
                 if (!friend) return;
@@ -183,7 +198,7 @@
             };
 
             vm.acceptFriend = function acceptFriend() {
-            $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'acceptFriend');
+                $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'acceptFriend');
                 friendsService
                     .updateRequest(vm.friendRequest.id, { action: 'accept' })
                     .then(function (result) {
@@ -193,10 +208,11 @@
                             var template = 'Added ' + (vm.profileData.handle || vm.profileData.firstName) + ' to your convoy';
                             LoadingService.showSuccess(template);
                         }
-                    })
-            }
+                    });
+            };
         }
 
+        /** -------- Viewing own-user configuration ------------------------ */
         if (vm.canEdit) { // TODO: Restore this || vm.profileData.id === vm.user.id) {
 
             /**
@@ -206,7 +222,7 @@
              */
             vm.showUserSettings = null;
             getExperience();
-            
+
             vm.expInstructText = '<p>This is your profile’s experience section where you can keep a digital record of your work experience - think of it like a digital resume. Add your past jobs here and add details about all your responsibilities to present a full picture of your professional abilities.</p>' +
             '<p class="message">Get started with the <strong>Add Experience</strong> button below</p>';
 
@@ -228,20 +244,32 @@
              * editing of user's name, properties, etc
              */
             vm.showEditModal = function (parameters) {
-            				$cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showEdit');
-                
-                profileModalsService
+                LoadingService.showLoader();
+                $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showEdit');
+
+                ProfileModals
                     .showProfileEditModal(parameters)
                     .then(function (result) {
-                        if (!!result) {
-																									vm.profileData = result;}
+                        if (result) {
+                            vm.profileData = result;
+                        }
+                    });
+            };
+
+            vm.showExperienceListModal = function showExperienceListModal() {
+                debugger;
+                return ProfileModals
+                    .showListExperienceModal({ experience: vm.experience })
+                    .then(function success(experience) {
+                        vm.experience = experience;
                     });
             };
 
             vm.showShareModal = function (parameters) {
+                LoadingService.showLoader();
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showShare');
-                
-                profileModalsService
+
+                ProfileModals
                     .showProfileShareModal(parameters)
                     .then(function (result) {
                         logger.debug(result);
@@ -252,9 +280,10 @@
             };
 
             vm.showRequestReviewModal = function (parameters) {
+                LoadingService.showLoader();
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showRequestReview');
-                
-                profileModalsService
+
+                ProfileModals
                     .showRequestReviewModal(parameters)
                     .then(function (result) {
                         logger.debug(result);
@@ -265,19 +294,23 @@
             };
         }
         // END: vm.canEdit
-        
+
         vm.showProfileTab = showProfileTab;
-vm.showReviewTab = showReviewTab;
-vm.showExperienceTab = showExperienceTab;
-vm.getReviewBadge = getReviewBadge;
-vm.getExperienceBadge = getExperienceBadge;
-        
-        function showProfileTab() {
+        vm.showReviewTab = showReviewTab;
+        vm.showExperienceTab = showExperienceTab;
+        vm.getReviewBadge = getReviewBadge;
+        vm.getExperienceBadge = getExperienceBadge;
+
+        function showProfileTab(event) {
+            !!event && event.preventDefault();
+
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
             $cordovaGoogleAnalytics.trackView(vm.canEdit ? 'account.profile' : 'user.profile');
         }
 
-        function showReviewTab() {
+        function showReviewTab(event) {
+            !!event && event.preventDefault();
+
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
             $cordovaGoogleAnalytics.trackView((vm.canEdit ? 'account.profile' : 'user.profile') + '.reviews');
             if (vm.canEdit) {
@@ -290,7 +323,9 @@ vm.getExperienceBadge = getExperienceBadge;
             }
         }
 
-        function showExperienceTab() {
+        function showExperienceTab(event) {
+            !!event && event.preventDefault();
+
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showExperience');
             $cordovaGoogleAnalytics.trackView((vm.canEdit ? 'account.profile' : 'user.profile') + '.experience');
             if (vm.canEdit && !vm.welcomeExperience) {
@@ -320,7 +355,7 @@ vm.getExperienceBadge = getExperienceBadge;
             }
 
             return null;
-        };
+        }
 
         function getReviews() {
             reviewService
@@ -330,7 +365,7 @@ vm.getExperienceBadge = getExperienceBadge;
                 })
                 .finally(function () {
                     if (vm.canEdit) {
-                        vm.welcomeReview = !_.isEmpty(vm.reviews) || JSON.parse(StorageService.get('welcome.review'));
+                        vm.welcomeReview = !_.isEmpty(vm.reviews) || angular.fromJson(StorageService.get('welcome.review'));
                     }
                 });
         }
@@ -346,7 +381,7 @@ vm.getExperienceBadge = getExperienceBadge;
         function openChat() {
             if (!vm.canEdit) {
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'openChat');
-                $state.go('account.messages', { recipientId: vm.profileData.id }); 
+                $state.go('account.messages', { recipientId: vm.profileData.id });
             }
         }
 
@@ -383,6 +418,6 @@ vm.getExperienceBadge = getExperienceBadge;
             'Mack Trucks': 'ico ico-mack-logo',
             'Kenworth': 'ico ico-kenworth-logo',
             'Volvo': 'ico ico-volvo-logo'
-        }
+        };
     }
 })();

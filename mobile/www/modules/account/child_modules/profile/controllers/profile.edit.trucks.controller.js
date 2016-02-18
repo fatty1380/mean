@@ -7,7 +7,7 @@
 
     ProfileEditTrucksCtrl.$inject = ['parameters', 'registerService', 'userService', 'truckService'];
 
-    function ProfileEditTrucksCtrl(parameters, registerService, userService, truckService) {
+    function ProfileEditTrucksCtrl (parameters, registerService, userService, truckService) {
         var vm = this;
 
         vm.currentTruck = '';
@@ -15,10 +15,10 @@
 
         vm.save = save;
         vm.addTruck = addTruck;
-        
-        //////////////////////////////////////////////////////////////
 
-        function getTrucks() {
+        // ////////////////////////////////////////////////////////////
+
+        function getTrucks () {
             var trucks = parameters.trucks,
                 props = userService.profileData && userService.profileData.props,
                 selectedTruck = props && props.truck || '',
@@ -39,22 +39,22 @@
             return trucks;
         }
 
-        function addTruck() {
+        function addTruck () {
             truckService.addTruck().then(function (response) {
-                if(!!response){
+                if (!!response) {
                     vm.trucks.push(response);
                     vm.currentTruck = response.name;
                 }
             });
         }
 
-        function save() {
+        function save () {
 
             return registerService.updateUserProps({ truck: vm.currentTruck })
                 .then(function (updateResult) {
                     if (updateResult.success) {
                         registerService.userProps.truck = vm.currentTruck;
-                        return vm.closeModal(vm.currentTruck)
+                        return vm.closeModal(vm.currentTruck);
                     }
                     return vm.cancelModal(updateResult.message);
                 });

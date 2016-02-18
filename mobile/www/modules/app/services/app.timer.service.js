@@ -3,33 +3,54 @@
 
     angular
         .module(AppConfig.appModuleName)
-        .service('timerService', timerService);
+        .service('timerService', TimerService);
 
-    timerService.$inject = ['$rootScope', '$timeout'];
+    TimerService.$inject = ['$interval', '$rootScope', '$timeout'];
 
-    function timerService($rootScope, $timeout) {
+    function TimerService ($interval, $rootScope, $timeout) {
         var vm = this;
 
         vm.timers = [];
+        vm.intervals = [];
 
         // default interval in seconds
         vm.defaultInterval = 30;
 
-        $rootScope.$on("clear", function () {
-            for (var i = 0; i < vm.timers.length; i++) {
-                var timer = vm[vm.timers[i]];
-                cancelTimer(timer);
+        $rootScope.$on('clear', function () {
+
+            _.each(vm.timers, function (t) {
+                if (cancelTimer(t)) {
+                    logger.debug('Stopped Timer `%s`', t.name);
+                    _.remove(vm.timers, t);
+                }
+            });
+
+            _.each(vm.intervals, function (i) {
+                if (cancelInterval(i)) {
+                    logger.debug('Stopped Interval `%s`', i.name);
+                    _.remove(vm.intervals, i);
+                }
+            });
+
+            if (vm.timers.length > 0) {
+                logger.error('Active Timers remain after clear event: ', vm.timers);
+                vm.timers = [];
+            }
+
+            if (vm.intervals.length > 0) {
+                logger.error('Active intervals remain after clear event: ', vm.intervals);
+                vm.intervals = [];
             }
         });
 
         return {
-            restartTimer: restartTimer,
             initTimer: initTimer,
+            initInterval: initInterval,
             cancelTimer: cancelTimer
         };
-        
+
         function initTimer (name, intervalSeconds, callback) {
-            if(vm[name]) return false;
+            if (vm[name]) { return false; }
 
             var timer = {};
             timer.name = name;
@@ -37,7 +58,7 @@
             timer.interval = intervalSeconds || vm.defaultInterval;
             timer.running = false;
             timer.callback = callback;
-            
+
             vm[name] = timer;
 
             vm.timers.push(name);
@@ -45,60 +66,90 @@
             return startTimer(vm[name]);
         }
 
+        function initInterval (name, intervalSeconds, callback) {
+            if (vm[name]) { return false; }
+
+            var interval = {};
+            interval.name = name;
+            interval.timeOut = null;
+            interval.interval = intervalSeconds || vm.defaultInterval;
+            interval.running = false;
+            interval.callback = callback;
+
+            vm[name] = interval;
+
+            vm.intervals.push(name);
+
+            return startInterval(vm[name]);
+        }
+
         function startTimer (timer) {
-            if(!timer) return false;
+            if (!timer) { return false; }
 
             if (!timer.running) {
-                timer.timeOut = $timeout(onTimeout, timer.interval * 1000, true, timer);
+                timer.timeOut = $interval(onTimeout, timer.interval * 1000, 1, true, timer);
                 timer.running = true;
             }
-            
+
             return timer.running;
         }
 
-        function onTimeout(timer) {
-            logger.debug('[onTimeout] %s timed out', timer.name);
+        function startInterval (interval) {
+            if (!interval) { return false; }
 
-            if (timer.name === 'security-timer') debugger;
+            if (!interval.running) {
+                interval.timeOut = $interval(requestUpdate, interval.interval * 1000, 0, false, interval);
+                interval.running = true;
+            }
+
+            return interval.running;
+        }
+
+        function requestUpdate (timer) {
+            $rootScope.$broadcast(timer.name + '-refresh');
+        }
+
+        function onTimeout (timer) {
+            logger.debug('[onTimeout] %s timed out', timer.name);
 
             var timerObj = vm[timer.name];
 
             timerObj.running = false;
 
-            $rootScope.$broadcast(timer.name + '-stopped');
-
             if (_.isFunction(timerObj.callback)) {
-                    timerObj.callback();
-                }
-
-                return;
-        }
-
-        function restartTimer (name) {
-            if(!name) return;
-
-            var timer = vm[name];
-
-            if(!timer) {
-                initTimer(name);
-                return;
+                timerObj.callback();
             }
 
-            timer.timeOut = null;
-            timer.running = false;
-
-            startTimer(timer);
+            return;
         }
 
-        function cancelTimer(timer) {
+        function cancelTimer (timer) {
             if (_.isString(timer)) { timer = vm[timer]; }
-            if(!timer) return;
+            if (!timer) { return; }
 
-            $timeout.cancel(timer.timeOut);
+            if ($timeout.cancel(timer.timeOut)) {
+                timer.running = false;
+                timer.interval = null;
+                timer.timeOut = null;
+                return true;
+            }
 
-            timer.running = false;
-            timer.interval = null;
-            timer.timeOut = null;
+            return false;
+        }
+
+        function cancelInterval (interval) {
+
+            if (_.isString(interval)) { interval = vm[interval]; }
+            if (!interval) { return; }
+
+            if ($interval.cancel(interval.timeOut)) {
+                interval.running = false;
+                interval.interval = null;
+                interval.timeOut = null;
+                return true;
+            }
+
+            return false;
         }
     }
 })();

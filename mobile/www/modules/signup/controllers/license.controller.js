@@ -1,3 +1,4 @@
+/* global angular */
 (function () {
     'use strict';
 
@@ -7,54 +8,49 @@
 
     LicenseCtrl.$inject = ['$state', '$cordovaGoogleAnalytics', '$ionicHistory', 'userService', 'LoadingService'];
 
-    function LicenseCtrl($state, $cordovaGoogleAnalytics, $ionicHistory, userService, LoadingService) {
+    function LicenseCtrl ($state, $cordovaGoogleAnalytics, $ionicHistory, userService, LoadingService) {
 
         var vm = this;
         vm.class = null;
         vm.endorsement = endorsementStub;
 
-        //vm.backTxt = 'Back';
+        // vm.backTxt = 'Back';
         vm.saveTxt = 'Continue';
         vm.canGoBack = false;
 
         vm.save = save;
         vm.cancel = goBack;
 
-        function save() {
+        function save () {
             var obj = {
                 license: {
                     class: vm.class,
                     endorsements: getEndorsementKeys(vm.endorsement)
                 }
-            }
+            };
 
             var then = Date.now();
 
             LoadingService.showLoader('please wait');
 
             userService.updateUserData(obj).then(
-                function success(response) {
+                function success (response) {
                     $cordovaGoogleAnalytics.trackEvent('signup', 'license', 'save');
                     $cordovaGoogleAnalytics.trackEvent('signup', Date.now() - then, 'license', 'save');
 
                     $state.go('signup.engagement');
                     LoadingService.hide();
                 })
-                .catch(function fail(err) {
-                    logger.error("license response update user ERROR: ", response);
+                .catch(function fail (err) {
+                    logger.error('license response update user ERROR: ', err);
                     $cordovaGoogleAnalytics.trackEvent('signup', 'license', 'error');
 
                     LoadingService.showFailure('Sorry, unable to save at this time');
                 });
         }
-        
-        function goBack() {
-            return null;
-            // if (_.isEmpty($ionicHistory.backTitle())) {
-            //     return $state.go('signup.engagement');
-            // }
 
-            // return $ionicHistory.goBack();
+        function goBack () {
+            return null;
         }
     }
 
@@ -63,26 +59,26 @@
         .controller('ProfileEditLicenseCtrl', LicenseProfileCtrl);
 
     LicenseProfileCtrl.$inject = ['$cordovaGoogleAnalytics', 'userService', 'LoadingService'];
-    function LicenseProfileCtrl($cordovaGoogleAnalytics, userService, LoadingService) {
+    function LicenseProfileCtrl ($cordovaGoogleAnalytics, userService, LoadingService) {
         var vm = this;
 
         vm.class = null;
         vm.endorsement = endorsementStub;
 
-        vm.header = 'Edit License'
+        vm.header = 'Edit License';
         vm.backTxt = 'Cancel';
         vm.saveTxt = 'Save';
         vm.showCancel = true;
         vm.canGoBack = true;
 
         vm.save = save;
-        vm.cancel = vm.cancelModal;
+        vm.cancel = function () { vm.cancelModal(); };
 
         activate();
-        
-        /////////////////////////////////////////////////////////////////////////////
-        
-        function activate() {
+
+        // ///////////////////////////////////////////////////////////////////////////
+
+        function activate () {
             var license = userService.profileData && userService.profileData.license;
 
             if (!_.isEmpty(license)) {
@@ -91,7 +87,7 @@
             }
         }
 
-        function save() {
+        function save () {
             var obj = {
                 license: {
                     class: vm.class,
@@ -103,14 +99,14 @@
             LoadingService.showLoader('Saving License');
 
             userService.updateUserData(obj).then(
-                function success(response) {
+                function success (response) {
                     $cordovaGoogleAnalytics.trackEvent('profile', 'license', 'save');
                     $cordovaGoogleAnalytics.trackTiming('profile', Date.now() - then, 'license', 'save');
-                    
+
                     vm.closeModal(response.license);
                     LoadingService.hide();
                 })
-                .catch(function fail(err) {
+                .catch(function fail (err) {
                     LoadingService.showFailure('Unable to Save at this time');
                     $cordovaGoogleAnalytics.trackEvent('profile', 'license', 'error');
 
@@ -118,10 +114,10 @@
                 });
         }
     }
-    
-    /////////////////////////////////////////////////////////
-    
-    function getEndorsementKeys(obj) {
+
+    // ///////////////////////////////////////////////////////
+
+    function getEndorsementKeys (obj) {
         var keys = [];
         for (var i in obj) {
             if (obj.hasOwnProperty(i)) {
@@ -133,10 +129,9 @@
         return keys;
     }
 
-    function mapEndorsementKeys(keys) {
+    function mapEndorsementKeys (keys) {
         var endorsements = _.clone(endorsementStub);
         _.each(keys, function (key) {
-            debugger;
             endorsements[key] = true;
         });
 
@@ -150,5 +145,5 @@
         N: false,
         H: false,
         X: false
-    }
+    };
 })();

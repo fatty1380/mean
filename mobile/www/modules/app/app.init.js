@@ -1,86 +1,102 @@
+/* eslint angular/component-limit:0*/
 (function () {
     'use strict';
 
     // creating main application module
     angular
         .module(AppConfig.appModuleName, AppConfig.appModuleDependencies)
-        .config([
-            '$urlRouterProvider', function ($urlRouterProvider) {
-                //logger.warn('unknown route or url: ' + location.hash);
-                $urlRouterProvider.otherwise('home');
-            }
-        ])
-        .config(['$ionicConfigProvider', function ($ionicConfigProvider) {
-            $ionicConfigProvider.tabs.position('bottom');
-        }])
+        .config(configDefaultRoute)
+        .config(configDefaultTabPosition)
 
-        .config(['$compileProvider', function ($compileProvider) {
-            // disable debug info
-            $compileProvider.debugInfoEnabled(AppConfig.debug);
-        }])
-        .config(['msdElasticConfig', function (config) {
-            config.append = '\n';
-        }])
-        .config(["$provide", function ($provide) {
-            // Use the `decorator` solution to substitute or attach behaviors to
-            // original service instance; @see angular-mocks for more examples....
-            // @attribution http://solutionoptimist.com/2013/10/07/enhance-angularjs-logging-using-decorators/
-            // TODO: Implement additional points from article regarding per-class invocation and initailziation.
- 
-            $provide.decorator('$log', ["$delegate", function ($delegate) {
-                // Save the original $log.debug()
-                
-                _.forOwn($delegate, function (prop, key) {
-                    if (_.isFunction(prop)) {
-                        $delegate[key] = function () {
-                            var args = [].slice.call(arguments),
-                                now = moment().format('HH:MM:SS');
- 
-                            // Prepend timestamp
-                            args[0] = now + ' - ' + args[0];
- 
-                            // Call the original with the output prepended with formatted timestamp
-                            prop.apply(null, args)
-                        };
-                    }
-                });
-
-                return $delegate;
-            }]);
-        }])
+        .config(configDebugInfoSetup)
+        .config(configElasticTextField)
+        .config(configLoggerDecorator)
 
         .run(initializePlatform)
         .run(initializeStateChangeListeners)
         .run(initializeBranch);
 
-    initializePlatform.$inject = ['$ionicPlatform', '$window', 'settings', '$log', '$q',
-        '$cordovaGoogleAnalytics', '$cordovaKeyboard', '$cordovaStatusbar', '$cordovaDevice']
+    configElasticTextField.$inject = ['msdElasticConfig'];
+    function configElasticTextField (config) {
+        config.append = '\n';
+    }
+    configDebugInfoSetup.$inject = ['$compileProvider'];
+    function configDebugInfoSetup ($compileProvider) {
+        // disable debug info
+        $compileProvider.debugInfoEnabled(AppConfig.debug);
+    }
 
-    function initializePlatform($ionicPlatform, $window, settings, $log, $q,
-        $cordovaGoogleAnalytics, $cordovaKeyboard, $cordovaStatusbar, $cordovaDevice) {
+    configDefaultTabPosition.$inject = ['$ionicConfigProvider'];
+    function configDefaultTabPosition ($ionicConfigProvider) {
+        $ionicConfigProvider.tabs.position('bottom');
+    }
+
+    configDefaultRoute.$inject = ['$urlRouterProvider'];
+    function configDefaultRoute ($urlRouterProvider) {
+        // logger.warn('unknown route or url: ' + location.hash);
+        $urlRouterProvider.otherwise('home');
+    }
+
+    configLoggerDecorator.$inject = ['$provide'];
+    function configLoggerDecorator ($provide) {
+        // Use the `decorator` solution to substitute or attach behaviors to
+        // original service instance; @see angular-mocks for more examples....
+        // @attribution http://solutionoptimist.com/2013/10/07/enhance-angularjs-logging-using-decorators/
+        // TODO: Implement additional points from article regarding per-class invocation and initailziation.
+
+        $provide.decorator('$log', addLogTimestamp);
+    }
+
+    addLogTimestamp.$inject = ['$delegate'];
+    function addLogTimestamp ($delegate) {
+        // Save the original $log.debug()
+
+        _.forOwn($delegate, function (prop, key) {
+            if (_.isFunction(prop)) {
+                $delegate[key] = function () {
+                    var args = [].slice.call(arguments);
+
+                    // Prepend timestamp
+                    args[0] = moment().format('HH:mm:ss') + ' - ' + args[0];
+
+                    // Call the original with the output prepended with formatted timestamp
+                    prop.apply(null, args);
+                };
+            }
+        });
+
+        return $delegate;
+    }
+
+    initializePlatform.$inject = ['$ionicPlatform', '$window', 'settings', '$log', '$q',
+        '$cordovaKeyboard', '$cordovaStatusbar'];
+
+    function initializePlatform ($ionicPlatform, $window, settings, $log, $q,
+        $cordovaKeyboard, $cordovaStatusbar) {
 
         if (!!$window) {
             $window.logger = $log;
         }
 
         // setTimeout(function () {
-
+        /* eslint-disable */
         if (!$window.cordova && _.isUndefined($window.ga)) {
             (function (i, s, o, g, r, a, m) {
                 i['GoogleAnalyticsObject'] = r;
                 i[r] = i[r] || function () {
-                    (i[r].q = i[r].q || []).push(arguments)
+                    (i[r].q = i[r].q || []).push(arguments);
                 }, i[r].l = 1 * new Date();
                 a = s.createElement(o),
                 m = s.getElementsByTagName(o)[0];
                 a.async = 1;
                 a.src = g;
-                m.parentNode.insertBefore(a, m)
+                m.parentNode.insertBefore(a, m);
             })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-            ga('create', settings.gaKey, 'auto');
-            ga('send', 'pageview', 'Say Hello from app.init');
+            $window.ga('create', settings.gaKey, 'auto');
+            $window.ga('send', 'pageview', 'Say Hello from app.init');
         }
+        /* eslint-enable */
 
         $ionicPlatform.ready(function () {
             logger.info('Cordova Available', !!$window.cordova);
@@ -88,9 +104,9 @@
 
             if ($window.cordova && $window.cordova.plugins && $window.cordova.plugins.Keyboard) {
                 $cordovaKeyboard.hideAccessoryBar(false);
-                //cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+                // cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
             } else if ($window.cordova) {
-                logger.error('Cordova Plugins are not Defined - not configuring keyboard')
+                logger.error('Cordova Plugins are not Defined - not configuring keyboard');
             }
 
             if (!!$window.StatusBar) {
@@ -107,8 +123,8 @@
         // }, 5000);
     }
 
-    initializeBranch.$inject = ['$ionicPlatform', '$window', 'settings']
-    function initializeBranch($ionicPlatform, $window, settings) {
+    initializeBranch.$inject = ['$ionicPlatform', '$window', 'settings'];
+    function initializeBranch ($ionicPlatform, $window, settings) {
 
         $ionicPlatform.ready(function (e) {
             readBranchData();
@@ -116,18 +132,18 @@
             $ionicPlatform.on('resume', readBranchData);
         });
 
-        function readBranchData() {
+        function readBranchData () {
             logger.debug('readBranchData');
             if (!!$window.cordova && !!branch) {
 
                 branch.setDebug(AppConfig.debug);
                 branch.init(settings.branchKey, function (err, response) {
-                    logger.debug("branch.init - start");
+                    logger.debug('branch.init - start');
 
                     if (err) {
-                        logger.debug("branch error msg: " + err);
+                        logger.debug('branch error msg: ' + err);
                     } else {
-                        logger.debug("branch data: " + JSON.stringify(response, null, 1));
+                        logger.debug('branch data: ' + angular.toJson(response, true));
                     }
 
                     if (_.isEmpty(response)) {
@@ -135,18 +151,18 @@
                     }
 
                     if (!!response.data) {
-                        logger.debug("branch data: " + JSON.stringify(response.data, null, 1));
+                        logger.debug('branch data: ' + angular.toJson(response.data, true));
                     }
 
                     if (!err && response.data) {
-                        var parsed_data = JSON.parse(response.data);
-                        logger.debug('Parsed: ' + JSON.stringify(parsed_data, null, 1))
+                        var parsedData = angular.fromJson(response.data);
+                        logger.debug('Parsed: ' + angular.toJson(parsedData, true));
 
-                        if (parsed_data['+clicked_branch_link']) {
-                            logger.debug('Referral Code' + parsed_data.referring_identity);
-                            $window.localStorage.setItem('referralCode', parsed_data.referring_identity);
+                        if (parsedData['+clicked_branch_link']) {
+                            logger.debug('Referral Code' + parsedData.referring_identity);
+                            $window.localStorage.setItem('referralCode', parsedData.referring_identity);
 
-                            $window.localStorage.setItem('branchData', JSON.stringify(parsed_data));
+                            $window.localStorage.setItem('branchData', angular.toJson(parsedData));
                         }
                     }
                 });
@@ -154,12 +170,11 @@
         }
     }
 
-    initializeStateChangeListeners.$inject = ['$rootScope', '$window', '$state', '$ionicPlatform', '$cordovaGoogleAnalytics', 'settings'];
+    initializeStateChangeListeners.$inject = ['$cordovaGoogleAnalytics', '$ionicPlatform', '$rootScope', '$state', '$window', 'settings'];
 
-    function initializeStateChangeListeners($rootScope, $window, $state, $ionicPlatform, $cordovaGoogleAnalytics, settings) {
+    function initializeStateChangeListeners ($cordovaGoogleAnalytics, $ionicPlatform, $rootScope, $state, $window, settings) {
 
-
-        return $ionicPlatform.ready(function (e) {
+        return $ionicPlatform.ready(function () {
 
             var initializeAnalyticsPromise;
 
@@ -171,21 +186,24 @@
                         if (AppConfig.debug) {
                             $cordovaGoogleAnalytics.debugMode();
                         }
-                        $cordovaGoogleAnalytics.enableUncaughtExceptionReporting(true);
+
+                        if (_.isFunction($cordovaGoogleAnalytics.enableUncaughtExceptionReporting)) {
+                            $cordovaGoogleAnalytics.enableUncaughtExceptionReporting(true);
+                        }
 
                         $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'launch', location.hash)
                             .catch(function (e) {
                                 logger.error('Unable to track Lifecycle Launch Event: ', e, event);
                             });
-																												
-						$cordovaGoogleAnalytics.trackView($state.current && $state.current.name || location.hash);
-                        
+
+                        $cordovaGoogleAnalytics.trackView($state.current && $state.current.name || location.hash);
+
                         return true;
-                    }, 
-                    function startTrackerFailed(e) {
+                    })
+                    .catch(function startTrackerFailed (e) {
                         logger.error('Unable to Initialize GA Tracker', e);
                         return false;
-                    })
+                    });
 
 
             } else if (!$window.analytics && !!$window.ga) {
@@ -200,20 +218,19 @@
                 $rootScope.$on('$ionicView.afterEnter', function (event) {
                     $window.ga('send', 'screenview', { screenName: window.location.hash });
                     logger.debug('trackview %s', window.location.hash);
-                })
+                });
                 return;
-            }
-            else {
+            } else {
                 logger.warn('No Google Analytics Available');
                 return;
             }
 
             return initializeAnalyticsPromise.then(function (response) {
-                if(!response) {
+                if (!response) {
                     logger.error('GA Tracker not Initialized', response);
                     return;
                 }
-                
+
                 $ionicPlatform.on('pause', function (event) {
                     logger.debug('Lifecycle Event: pause', event);
                     $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'pause', location.hash)
@@ -230,15 +247,13 @@
                         });
                 });
 
-                var i = 0;
-
                 $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
                     logger.debug('StateChange %s -> %s', fromState.name, toState.name);
                     $cordovaGoogleAnalytics.trackView(toState.name)
                         .catch(function (e) {
                             logger.error('Unable to track Lifecycle StateChange Event: ', e, event);
                         });
-                    //$window.ga('send', 'pageview', { page: $location.path() });
+                    // $window.ga('send', 'pageview', { page: $location.path() });
                 });
 
             });

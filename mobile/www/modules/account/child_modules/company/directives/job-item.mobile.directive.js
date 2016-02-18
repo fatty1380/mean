@@ -8,7 +8,7 @@
 
     jobItemDirective.$inject = [];
 
-    function jobItemDirective() {
+    function jobItemDirective () {
         return {
             restrict: 'E',
             replace: true,
@@ -26,7 +26,7 @@
             link: link
         };
 
-        function link(scope, el, attr, vm) {
+        function link (scope, el, attr, vm) {
             vm.job = scope.entry;
 
             if (_.isEmpty(vm.job)) {
@@ -54,8 +54,8 @@
         }
     }
 
-    JobItemCtrl.$inject = ['activityService', 'companyModalService', '$state', '$ionicPopup', 'LoadingService', 'CompanyService'];
-    function JobItemCtrl(activityService, companyModalService, $state, $ionicPopup, LoadingService, Companies) {
+    JobItemCtrl.$inject = ['activityService', 'companyModalService', '$state', '$ionicPopup', '$sce', 'LoadingService', 'CompanyService'];
+    function JobItemCtrl (activityService, companyModalService, $state, $ionicPopup, $sce, LoadingService, Companies) {
         var vm = this;
 
         vm.stringify = function (obj) {
@@ -64,15 +64,16 @@
 
         vm.activate = activate;
         vm.apply = apply;
-        
-        //////////////////////////////////////////////////////////////////
+        vm.trust = trustMe;
 
-        function activate() {
+        // ////////////////////////////////////////////////////////////////
+
+        function activate () {
             if (_.isEmpty(vm.job)) {
                 logger.error('Whoa man, no entry, no directive! What are you thinking');
                 return;
             }
-            
+
             if (_.isString(vm.job.company)) {
                 Companies.get(vm.job.company)
                     .then(function (company) {
@@ -84,8 +85,8 @@
             }
 
             vm.itemClick = !!vm.embedded ? showDetailsModal : _.noop;
-          
-            //vm.username = vm.job.company.name;
+
+            // vm.username = vm.job.company.name;
             vm.title = vm.job.name;
 
             vm.location = _.first(vm.job.location);
@@ -96,7 +97,7 @@
             }
         }
 
-        function showDetailsModal() {
+        function showDetailsModal () {
             if (!!vm.job.company && vm.job.company.id) {
                 return $state.go('company', { companyId: vm.job.company.id });
             }
@@ -112,7 +113,7 @@
 
 
 
-        function apply(entry) {
+        function apply (entry) {
             var applyPopup = $ionicPopup.confirm({
                 title: 'Send Application',
                 template: 'This will send your profile to ' + (entry.company.name || 'the employer') + ' for review. Continue?'
@@ -124,6 +125,11 @@
                     logger.debug('You are not sure');
                 }
             });
+        }
+
+
+        function trustMe (html) {
+            return $sce.trustAsHtml(html.replace(/\<br\>/gi, ' '));
         }
     }
 })();

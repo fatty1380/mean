@@ -8,7 +8,7 @@
     LoginCtrl.$inject = ['$state', 'lockboxDocuments', '$window', '$cordovaGoogleAnalytics',
         'registerService', 'LoadingService', 'tokenService', 'userService', 'securityService'];
 
-    function LoginCtrl($state, lockboxDocuments, $window, $cordovaGoogleAnalytics,
+    function LoginCtrl ($state, lockboxDocuments, $window, $cordovaGoogleAnalytics,
         registerService, LoadingService, tokenService, userService, securityService) {
         var vm = this;
         vm.lastElementFocused = false;
@@ -18,7 +18,7 @@
             email: '',
             password: ''
         };
-        
+
         vm.focus = {
             email: true,
             pass: false
@@ -29,18 +29,19 @@
 
         vm.echange = function () {
             vm.error = '';
-            //logger.warn(' vm.user --->>>', vm.user.email);
+            // logger.warn(' vm.user --->>>', vm.user.email);
         };
         /**
          * @description Submit form if last field in focus
         */
-        function submitForm() {
+        function submitForm (event) {
             vm.error = '';
-            vm.mainLoginForm.$submitted = true;
+
             if (vm.lastElementFocused) {
+                vm.mainLoginForm.$submitted = true;
                 return signIn();
             }
-            
+
             vm.focus['pass'] = true;
             $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'err:notLast');
         }
@@ -49,7 +50,7 @@
          * @description
          * Sign In
          */
-        function signIn() {
+        function signIn () {
 
             if (vm.mainLoginForm.$invalid) {
                 $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'err:formInvalid');
@@ -63,7 +64,7 @@
 
             registerService.signIn(vm.user)
                 .then(function (response) {
-                    
+
                     var data = response && response.message && response.message.data;
                     if (response.success && !!data) {
                         tokenService.set('access_token', data.access_token);
@@ -72,7 +73,7 @@
 
                         userService.getUserData()
                             .then(
-                                function success(profileData) {
+                                function success (profileData) {
                                     securityService.initialize();
                                     lockboxDocuments.removeOtherUserDocuments(profileData.id);
 
@@ -81,17 +82,19 @@
 
                                     LoadingService.hide();
                                     $state.go('account.profile');
+
+                                    vm.user.password = '';
                                 },
-                                function fail(err) {
+                                function fail (err) {
                                     logger.error('Unable to retrieve user information', err);
                                     LoadingService.showAlert('Sorry, unable to login at this time');
                                 })
                             .catch(
-                                function fail(err) {
+                                function fail (err) {
                                     logger.error('Unknown error occurred after loading user data', err);
-                                    
-                                    if(_.isEmpty(userService.profileData)) {
-                                      LoadingService.showAlert('Sorry, unable to login at this time');  
+
+                                    if (_.isEmpty(userService.profileData)) {
+                                        LoadingService.showAlert('Sorry, unable to login at this time');
                                     } else {
                                         LoadingService.hide();
                                         $state.go('account.profile');
@@ -115,23 +118,23 @@
                 });
         }
 
-        function selectInputValue(id) {
+        function selectInputValue (id) {
             var password = document.getElementById(id);
             password.setSelectionRange(0, password.value.length);
         }
 
-        //$scope.$on('$ionicView.afterEnter', function () {
+        // $scope.$on('$ionicView.afterEnter', function () {
         //    // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
         //    if (window.cordova && window.cordova.plugins.Keyboard) {
         //        window.cordova.plugins.Keyboard.disableScroll(true);
         //    }
-        //});
-        //$scope.$on('$ionicView.beforeLeave', function () {
+        // });
+        // $scope.$on('$ionicView.beforeLeave', function () {
         //    if (window.cordova && window.cordova.plugins.Keyboard) {
         //        // return to keyboard default scroll state
         //        window.cordova.plugins.Keyboard.disableScroll(false);
         //    }
-        //});
+        // });
     }
 })();
 

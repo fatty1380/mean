@@ -7,7 +7,7 @@
 
     updateService.$inject = ['$q', '$http', 'settings', 'timerService', '$rootScope', 'reviewService'];
 
-    function updateService($q, $http, settings, timerService, $rootScope, reviewService) {
+    function updateService ($q, $http, settings, timerService, $rootScope, reviewService) {
 
         var currentMessage,
             updateAvailable,
@@ -28,34 +28,51 @@
                 reviews: 0
             };
 
-        $rootScope.$on(timerName + '-stopped', runUpdateProcess);
+         // NOTE - this is the deprecated route of manually restarting `$timeout`-based interval service
+        // $rootScope.$on(timerName + '-stopped', runUpdateProcess);
+
+        $rootScope.$on(timerName + '-refresh', runUpdateProcess);
 
         return {
             getLastUpdates: getLastUpdates,
-            checkForUpdates: initializeUpdateTimerProcess,
+            // FIX ME - should be changed to `intializeUpdateIntervalProcess` for clarity
+            // checkForUpdates: initializeUpdateInterval,
+            checkForUpdates: intializeUpdateTimerProcess,
             resetUpdates: resetUpdates
         };
-        
-        /////////////////////////////////////////////
+
+        // ///////////////////////////////////////////
 
 
-        function getLastUpdates() {
+        function getLastUpdates () {
             logger.debug('getLastUpdates ', updates);
             return updates;
         }
 
-        function initializeUpdateTimerProcess(profileData) {
+        // function initializeUpdateTimerProcess(profileData) {
+        //     user = profileData;
+
+        //     if (timerService.initTimer(timerName, 15) && !initialized) { // 'updates-timer'
+        //         // if the timer is not already running
+        //         // kick of an early update process;
+        //         runUpdateProcess();
+        //         initialized = true;
+        //     }
+        // }
+
+
+        // NOTE - the second call of `timer.intitInterval` perhaps is messing things up
+        function intializeUpdateTimerProcess (profileData) {
             user = profileData;
 
-            if (timerService.initTimer(timerName, 15) && !initialized) { // 'updates-timer'
-                // if the timer is not already running
-                // kick of an early update process;
+            if (timerService.initInterval(timerName, 15) && !initialized) {
                 runUpdateProcess();
                 initialized = true;
             }
         }
 
-        function resetUpdates(data, value) {
+
+        function resetUpdates (data, value) {
             if (!data) {
                 updates = {
                     messages: {},
@@ -72,39 +89,60 @@
             }
             $rootScope.$broadcast('updates-available', updates);
         }
-        
-        /////////////////////////////////////////////////
-        
-        function runUpdateProcess(event) {
+
+        // ///////////////////////////////////////////////
+
+        // function runUpdateProcess(event) {
+        //     logger.debug('AppUpdates: Checking for Updates: ', updates);
+        //     var promises = [
+        //         getLatestMessages(),
+        //         getLatestActivity(),
+        //         getLatestFriendRequests(),
+        //         getLatestReviews()
+        //     ]
+
+        //     return $q.all(promises)
+        //         .then(function (response) {
+        //             logger.debug('AppUpdates: Checked for Updates: Processing', updates);
+        //             getUpdates(response);
+
+        //             if (!!event) {
+        //                 timerService.restartTimer(timerName);
+        //             }
+        //         });
+        // }
+
+
+        // MODIFIED
+        function runUpdateProcess (event) {
+            // debugger;
+            logger.debug('this should be the event', event);
             logger.debug('AppUpdates: Checking for Updates: ', updates);
             var promises = [
                 getLatestMessages(),
                 getLatestActivity(),
                 getLatestFriendRequests(),
                 getLatestReviews()
-            ]
+            ];
 
             return $q.all(promises)
                 .then(function (response) {
                     logger.debug('AppUpdates: Checked for Updates: Processing', updates);
                     getUpdates(response);
-                    
-                    if (!!event) {
-                        timerService.restartTimer(timerName);
-                    }
                 });
         }
+        // MODIFIED
 
-        function getUpdates(response) {
+        function getUpdates (response) {
             var messages, activities, requests, reviews;
 
-            if (!response) return;
+            if (!response) { return; }
 
             for (var i = 0; i < response.length; i++) {
-                var responseObject = response[i],
-                    url = responseObject && responseObject.config && responseObject.config.url;
+                var responseObject = response[i];
+                var url = responseObject && responseObject.config && responseObject.config.url;
 
-                if (!url) return;
+                if (!url) { return; }
 
                 if (url.indexOf('messages/') >= 0) {
                     messages = responseObject.data;
@@ -129,9 +167,9 @@
             }
         }
 
-        function getMessagesUpdates(messages) {
-            var messagesArray = filterOutUsersMessages(messages),
-                latestMessage = getMostRecentItem(messagesArray);
+        function getMessagesUpdates (messages) {
+            var messagesArray = filterOutUsersMessages(messages);
+            var latestMessage = getMostRecentItem(messagesArray);
 
             if (!currentMessage) {
                 currentMessage = latestMessage;
@@ -143,12 +181,12 @@
             }
         }
 
-        function getActivitiesUpdates(activities) {
-            var uniqueItems = _.uniq(activities.items),
-                uniqueActivities = _.uniq(activities.activity),
-                itemCount = uniqueItems && uniqueItems.length || 0,
-                ownActivityCount = uniqueActivities && uniqueActivities.length || 0,
-                modifiedDate = new Date(activities.modified).getTime();
+        function getActivitiesUpdates (activities) {
+            var uniqueItems = _.uniq(activities.items);
+            var uniqueActivities = _.uniq(activities.activity);
+            var itemCount = uniqueItems && uniqueItems.length || 0;
+            var ownActivityCount = uniqueActivities && uniqueActivities.length || 0;
+            var modifiedDate = new Date(activities.modified).getTime();
 
             if (!currentActivity.date) {
                 currentActivity.date = modifiedDate;
@@ -158,14 +196,14 @@
                 if (itemCount === 1 && ownActivityCount === 0) {
                     // This represents the 'welcome' state, where we need to
                     // show a badge on the activities tab;
-                    
+
                     updates.activities = 1;
                     updateAvailable = true;
                 }
             } else if (modifiedDate > currentActivity.date && itemCount > currentActivity.amount) {
                 if (currentActivity.ownActivities !== activities.activity.length) {
-                    return
-                };
+                    return;
+                }
 
                 updates.activities = itemCount - currentActivity.amount;
 
@@ -177,12 +215,12 @@
 
             }
         }
-        
+
         /**
          * getReviewUpdates
          * STUB: This will check for newly posted reviews;
          */
-        function getReviewUpdates(reviews) {
+        function getReviewUpdates (reviews) {
             if (_.isEmpty(user)) {
                 return;
             }
@@ -213,14 +251,14 @@
             }
         }
 
-        function getFriendRequestUpdates(requests) {
+        function getFriendRequestUpdates (requests) {
             if (!updates.requests && requests.length || (updates.requests != requests.length)) {
                 updateAvailable = true;
             }
             updates.requests = requests.length;
         }
 
-        function filterOutUsersMessages(items) {
+        function filterOutUsersMessages (items) {
             var filteredItems = [];
             for (var i = 0; i < items.length; i++) {
                 var item = items[i],
@@ -233,7 +271,7 @@
             return filteredItems;
         }
 
-        function processNewMessages(elements, offset) {
+        function processNewMessages (elements, offset) {
             var sortedElements, modifiedElements,
                 newItems = [];
 
@@ -277,7 +315,7 @@
             return messageObject;
         }
 
-        //function getNewElementsAmount (elements, offset) {
+        // function getNewElementsAmount (elements, offset) {
         //    var sortedDates, amount, dates;
         //
         //    dates = elements.map(function (el) {
@@ -289,10 +327,10 @@
         //    amount = sortedDates.indexOf(offset);
         //
         //    return amount > 0 ? amount : 0;
-        //}
+        // }
 
-        function getMostRecentItem(items) {
-            if (!angular.isArray(items)) return;
+        function getMostRecentItem (items) {
+            if (!angular.isArray(items)) { return; }
 
             var datesArray = items.map(function (item) {
                 return new Date(item.created).getTime();
@@ -301,7 +339,7 @@
             return Math.max.apply(this, datesArray);
         }
 
-        function resetMessages(id) {
+        function resetMessages (id) {
             var messages = updates.messages,
                 tempArray = [];
 
@@ -319,25 +357,25 @@
                 newItems: tempArray,
                 byIds: messages.byIds,
                 amount: tempArray.length
-            }
+            };
 
         }
-        
-        /////////////////////////////////////////
 
-        function getLatestReviews() {
+        // ///////////////////////////////////////
+
+        function getLatestReviews () {
             return reviewService.getUserReviews();
         }
 
-        function getLatestMessages() {
+        function getLatestMessages () {
             return $http.get(settings.messages);
         }
 
-        function getLatestActivity() {
+        function getLatestActivity () {
             return $http.get(settings.feed);
         }
 
-        function getLatestFriendRequests() {
+        function getLatestFriendRequests () {
             return $http.get(settings.requests);
         }
     }

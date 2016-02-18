@@ -18,8 +18,7 @@
                             <div class="text">
                                 <div class="holder">
                                     <div class="activity-summary">
-                                        <a ng-if="!!vm.username || !!vm.user.handle" class="user-link" 
-                                            ng-click="vm.viewUser($event)">
+                                        <a ng-if="!!vm.username || !!vm.user.handle" class="user-link" ng-click="vm.viewUser($event)">
                                             <strong>{{vm.username || vm.user.handle}}</strong>
                                         </a>
                                     </div>
@@ -34,11 +33,11 @@
                         </div>
 
                         <div class="title">{{ vm.entry.title }}</div>
-                        <div class="notes-content" ng-show="!!vm.showNotes">
+                        <div class="notes-content" ng-if="!vm.entry.company" ng-show="!!vm.showNotes">
                             <span ng-bind="vm.entry.notes"></span>
                         </div>
 
-                        <div class="clearfix props">
+                        <div class="clearfix props" ng-if="!vm.entry.company">
                             <div class="left notes" ng-class="{'active':!!vm.showNotes}" ng-if="!!vm.entry.notes" ng-click="vm.showNotes = !vm.showNotes">
                                 <i class="ion-document-text"></i>
                                 <span class="lbl">notes</span>&nbsp;
@@ -63,6 +62,15 @@
                 <div id="map" data-tap-disabled="true"></div>
             </div>
 
+            <img ng-if="vm.entry.imageURL" ng-src="{{vm.entry.imageURL}}" class="static-pic">
+
+
+            <div class="activity-item bottom" ng-if="!!vm.entry.company && !!vm.entry.notes">
+                <div class="notes-content">
+                    <span ng-bind="vm.entry.notes"></span>
+                </div>
+            </div>
+            
             <div class="activity-item bottom">
                 <div class="clearfix props">
                     <div class="driven left" ng-if="!!vm.entry.props.slMiles">
@@ -78,14 +86,14 @@
                 </div>
             </div>
 
-            <div class="item-detail ">
+            <div class="item-detail" ng-click="vm.toggleInput($event, true)">
                 <div class="comments" ng-if="!!vm.entry.comments">
                     <i class="ion ion-chatboxes"></i> {{vm.entry.comments.length}}
                     <span class="lbl">comments</span>
                 </div>
             </div>
 
-            <div class="item comment" ng-repeat="message in vm.entry.comments" ng-init="logger.debug('Showing message: '+message);">
+            <div class="item comment" ng-repeat="message in vm.entry.comments" ng-click="vm.toggleInput($event, true)">
                 <a>{{message.sender.displayName}}</a> {{message.text}}
                 <div class="time-inline" ng-if="vm.entry.created">{{message.created | date:'mediumDate'}}</div>
             </div>

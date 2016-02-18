@@ -7,7 +7,7 @@
 
     ManualFriendsAddCtrl.$inject = ['$scope', '$state', 'contactsService', '$ionicScrollDelegate', 'LoadingService'];
 
-    function ManualFriendsAddCtrl($scope, $state, contactsService, $ionicScrollDelegate, LoadingService) {
+    function ManualFriendsAddCtrl ($scope, $state, contactsService, $ionicScrollDelegate, LoadingService) {
         var vm = this;
 
         vm.contact = {};
@@ -17,20 +17,18 @@
 
         initialize();
 
-        /////////////////////////////
-        
-        function initialize(newContact) {
+        // ///////////////////////////
+
+        function initialize (newContact) {
             LoadingService.hide();
             vm.contact = newContact || { type: 'manual' };
         }
 
-        function registerForm(form) {
-            debugger
+        function registerForm (form) {
             vm.contactForm = form;
         }
 
-        function addFriend() {
-            debugger // chck for vm.form
+        function addFriend () {
             if (!!vm.contactForm) {
                 vm.contactForm.$setSubmitted(true);
                 vm.contactForm.validate();

@@ -7,7 +7,7 @@
 
     friendsService.$inject = ['$http', '$q', 'settings'];
 
-    function friendsService($http, $q, settings) {
+    function friendsService ($http, $q, settings) {
         var friends = [], users = [];
 
         return {
@@ -26,78 +26,78 @@
             updateRequest: updateRequest
         };
 
-        function getFriends() {
+        function getFriends () {
             return friends;
         }
 
-        function setFriends(userFriends) {
+        function setFriends (userFriends) {
             friends = userFriends;
 
             return friends;
         }
 
-        function getUsers() {
+        function getUsers () {
             return users;
         }
 
-        function retrieveFriends() {
+        function retrieveFriends () {
             return $http.get(settings.friends).then(
-                function success(response) {
+                function success (response) {
                     setFriends(response.data);
 
                     return response.data;
                 });
         }
 
-        function loadFriends(id) {
+        function loadFriends (id) {
             if (!id) {
                 return retrieveFriends();
             }
 
             return $http.get(settings.users + id + '/friends').then(
-                function success(response) {
+                function success (response) {
                     setFriends(response.data);
 
                     return response.data;
                 });
         }
 
-        function getFriendStatus(id) {
+        function getFriendStatus (id) {
             if (!id) return $q.reject('No ID Specified');
 
             return $http.get(settings.friends + id);
         }
 
-        function getRequestsList() {
+        function getRequestsList () {
             return $http.get(settings.requests);
         }
 
-        function sendFriendRequests(recipients) {
+        function sendFriendRequests (recipients) {
             var promises = _.map(recipients, function (recipient) {
                 return createRequest({ contactInfo: recipient });
-            })
+            });
 
             return $q.all(promises)
-                .then(function success(results) {
-                    logger.debug('Sent %d  new Requests')
+                .then(function success (results) {
+                    logger.debug('Sent %d  new Requests');
                     return results;
                 })
-                .catch(function fail(err) {
+                .catch(function fail (err) {
                     logger.error(err, 'Failed to send requests');
                     return false;
-                })
+                });
         }
 
-        function createRequest(requestData) {
+        function createRequest (requestData) {
             return $http.post(settings.requests, requestData);
         }
 
-        function loadRequest(id) {
+        function loadRequest (id) {
             if (!id) return $q.reject('No ID Specified');
             return $http.get(settings.friends + id);
         }
 
-        function updateRequest(id, data) {
+        function updateRequest (id, data) {
             if (!id) return $q.reject('No ID Specified');
             return $http.put(settings.requests + id, data);
         }

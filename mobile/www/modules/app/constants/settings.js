@@ -1,18 +1,18 @@
+/* global AppConfig */
 (function () {
     'use strict';
 
     var settings = {};
-    
+
     settings.baseUrl = AppConfig.getUrl(); // [set to 'dev', 'prod', 'local' or 'vault' if needed]
-    
+
     settings.uriScheme = 'truckerline';
     settings.branchKey = AppConfig.getBranchKey();
     settings.gaKey = AppConfig.getGAKey();
-    
-    
 
     // controllers
     settings.oauth = settings.baseUrl + 'oauth/';
+    settings.config = settings.baseUrl + 'config/';
     settings.api = settings.baseUrl + 'api/';
 
     settings.auth = settings.api + 'auth/';
@@ -34,7 +34,7 @@
     settings.signup = settings.oauth + 'signup/';
     settings.token = settings.oauth + 'token/';
     settings.signout = settings.auth + 'signout/';
-    
+
     settings.search = settings.profiles + 'search/';
     settings.usersProfile = settings.users + 'me/';
     settings.usersExperience = settings.usersProfile + 'experience/';

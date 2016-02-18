@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    
+
     /**
      * Message Modal : selectChatRecipient
      * Invoked to select a user from a list of user's friends.
@@ -13,8 +13,8 @@
 
     MessageFriendCtrl.$inject = ['$state', 'parameters', 'userService'];
     function MessageFriendCtrl ($state, parameters, userService) {
-        var vm  = this;
-        
+        var vm = this;
+
         vm.friends = parameters.friends;
         vm.messageFriend = messageFriend;
         vm.getAvatar = getAvatar;
@@ -29,11 +29,11 @@
             vm.closeModal(friend);
         }
 
-        function getAvatar(friend) {
+        function getAvatar (friend) {
             return userService.getAvatar(friend);
         }
-        
-        function gotoFriends() {
+
+        function gotoFriends () {
             $state.go('account.profile.friends');
             vm.closeModal(null);
         }

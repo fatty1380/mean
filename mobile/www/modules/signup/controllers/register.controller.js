@@ -1,3 +1,5 @@
+/* global logger */
+/* global _ */
 (function () {
     'use strict';
 
@@ -14,26 +16,37 @@
                 restrict: 'A',
                 link: function ($scope, elem, attrs) {
 
-                    elem.bind('keydown', function (e) {
-                        if ((e.keyCode || e.which) === 13) {
-                            e.preventDefault();
+                    elem.bind('keydown', function (event) {
+                        if ((event.keyCode || event.which) === 13) {
+                            event.preventDefault();
                             try {
-                                elem.parent().next().children('input')[0].focus();
+                                var e = elem.parent().next().children('input');
+
+                                if (_.isEmpty(e)) {
+                                    e = elem.parent().parent().next().children('input');
+                                }
+                                if (_.isEmpty(e)) {
+                                    throw new Error('Unable to locate password in parent or parent\'s parent');
+                                }
+
+                                event.preventDefault();
+                                e[0].focus();
                             } catch (error) {
                                 logger.error('Focus change failed', error);
                             }
                         }
                     });
                 }
-            }
+            };
         });
 
-    function RegisterCtrl($state, $window, $ionicPopup, $cordovaGoogleAnalytics,
-        LoadingService, tokenService, welcomeService, securityService, registerService, userService, lockboxDocuments) {
+    function RegisterCtrl ($state, $window, $ionicPopup, $cordovaGoogleAnalytics,
+        LoadingService, tokenService, welcomeService, securityService, registerService,
+        userService, lockboxDocuments) {
         var vm = this;
         vm.lastElementFocused = false;
 
-        var branchData = JSON.parse($window.localStorage.getItem('branchData') || 'null');
+        var branchData = angular.fromJson($window.localStorage.getItem('branchData') || 'null');
 
         vm.user = {
             firstName: '',
@@ -46,47 +59,44 @@
         };
 
         vm.continueToEngagement = continueToEngagement;
-        vm.submitForm = submitForm; 
+        vm.submitForm = submitForm;
         vm.clearConfirm = clearConfirm;
 
         /**
          * @description Submit form if last field in focus
          */
-        function submitForm(event) {
-            debugger;
+        function submitForm (event) {
             if (vm.lastElementFocused) {
                 return continueToEngagement();
             }
 
             $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'formErr:notLast');
         }
-        
-        function clearConfirm() {
+
+        function clearConfirm () {
             vm.user.confirmPassword = '';
         }
 
-        function continueToEngagement() {
-            
+        function continueToEngagement () {
+
             if (vm.user.confirmPassword !== vm.user.password) {
-                debugger;
                 // vm.user.confirmPassword = '';
                 // vm.user.password = '';
                 // vm.error = 'Passwords do not match';
-                
+
                 // vm.mainForm.password.$setValidity('compareTo', false);
                 // vm.mainForm.confirmPassword.$setValidity('compareTo', false);
                 vm.focusPass = true;
                 return;
             }
-            
+
             if (!vm.mainForm.$valid) {
-                debugger;
                 vm.error = vm.error || 'Please correct errors above';
                 return;
             }
-            
+
             vm.error = null;
-            
+
             var then = Date.now();
 
             LoadingService.showLoader('Saving');
@@ -103,7 +113,7 @@
                                     tokenService.set('refresh_token', signInResponse.message.data.refresh_token);
                                     tokenService.set('token_type', signInResponse.message.data.token_type);
 
-                                    //set fields to show welcome screens for new user
+                                    // set fields to show welcome screens for new user
                                     welcomeService.initialize();
                                     securityService.initialize();
 
@@ -115,7 +125,7 @@
                                     showPopup(null, signInResponse.title, signInResponse.message.data.error_description);
                                 }
                             })
-                            .then(function success(profileData) {
+                            .then(function success (profileData) {
                                 if (!!profileData) {
                                     LoadingService.hide();
                                     $state.go('signup.license');
@@ -140,10 +150,10 @@
                 });
         }
 
-        function showPopup(response, title, message) {
+        function showPopup (response, title, message) {
             if (!!response) {
                 if (response.message.status === 0) {
-                    message = 'Request timed-out. Please, check your network connection.'
+                    message = 'Request timed-out. Please, check your network connection.';
                 } else {
                     message = response.message.data && response.message.data.message || 'Unable to Register at this time. Please try again later';
                 }
@@ -153,26 +163,26 @@
                 message = 'Email is already registered. Would you like to <a ui-sref="login">LOGIN?</a>';
                 LoadingService.hide();
                 $ionicPopup.alert({
-                    title: title || "Sorry",
-                    template: message || "no message"
+                    title: title || 'sorry',
+                    template: message
                 });
             } else {
                 LoadingService.showFailure(message);
             }
         }
         //
-        //$scope.$on('$ionicView.afterEnter', function () {
+        // $scope.$on('$ionicView.afterEnter', function () {
         //    // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
         //    if (window.cordova && window.cordova.plugins.Keyboard) {
         //        window.cordova.plugins.Keyboard.disableScroll(true);
         //    }
-        //});
-        //$scope.$on('$ionicView.beforeLeave', function () {
+        // });
+        // $scope.$on('$ionicView.beforeLeave', function () {
         //    if (window.cordova && window.cordova.plugins.Keyboard) {
         //        // return to keyboard default scroll state
         //        window.cordova.plugins.Keyboard.disableScroll(false);
         //    }
-        //});
+        // });
     }
 
 })();

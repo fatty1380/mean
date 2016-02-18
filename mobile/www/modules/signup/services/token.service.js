@@ -1,13 +1,13 @@
 (function () {
     'use strict';
-    
+
     angular
         .module('signup')
         .factory('tokenService', tokenService);
 
     tokenService.$inject = ['$window'];
 
-    function tokenService($window) {
+    function tokenService ($window) {
         return {
             set: function (key, value) {
                 $window.localStorage[key] = value;
@@ -21,14 +21,14 @@
 
 (function () {
     'use strict';
-    
+
     angular
         .module('signup')
         .factory('StorageService', StorageService);
 
     StorageService.$inject = ['$window', 'userService'];
 
-    function StorageService($window, userService) {
+    function StorageService ($window, userService) {
         return {
             set: function (key, value, id) {
                 $window.localStorage[id || userService.userId + '.' + key] = value;

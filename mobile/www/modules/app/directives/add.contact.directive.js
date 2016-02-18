@@ -9,7 +9,7 @@
         .directive('osetManualContact', AddContactDirective);
 
 
-    function AddContactDirective() {
+    function AddContactDirective () {
         var directive = {
             template: contactTemplate,
             restrict: 'E',
@@ -27,15 +27,15 @@
             }
         };
 
-        function link(scope, elem, attrs, vm) {
+        function link (scope, elem, attrs, vm) {
             vm.showEmail = vm.showEmail !== false;
             vm.showPhone = vm.showPhone !== false;
             vm.showMessage = vm.showMessage !== false;
             vm.showName = vm.showName !== false;
-debugger
+
             var fn = _.isFunction(vm.formInit()) && vm.formInit() || _.noop;
             fn(vm.contactForm);
-            
+
             vm.contactForm.validate = vm.validate;
 
             vm.messagePlaceholder = vm.message || 'Enter a message to your recipient';
@@ -45,30 +45,28 @@ debugger
     }
 
     AddContactDirectiveCtrl.$inject = ['contactsService'];
-    function AddContactDirectiveCtrl(contactsService) {
+    function AddContactDirectiveCtrl (contactsService) {
         var vm = this;
 
         vm.pickContact = pickContact;
         vm.validate = validate;
-        
-        function pickContact() {
+
+        function pickContact () {
             contactsService
                 .pickContact()
                 .then(function (selectedContact) {
-                    debugger;
-					
-                    //alert(JSON.stringify(selectedContact, null, 2));
+                    // alert(JSON.stringify(selectedContact, null, 2));
                     logger.debug('Selected Contact: ', selectedContact);
-					
+
 					/**
 					 * Contacts returned with teh following schemas:
 					 * 'displayName' only available on android. 'formatted' may be used on ios
 					 * emails and phones arrays store objects with the following keys:
-					 * 		value : the email or phone number 
+					 * 		value : the email or phone number
 					 * 		pref: boolean - true if preferred contact value
 					 * 		id: appears to be index in array (ios)
 					 * 		type: 'work', 'mobile', 'home', etc
-					 * 
+					 *
 					 * Within the directve, the singular `email` or `phone` will be used to
 					 * display the number to the users
 					 */
@@ -82,15 +80,14 @@ debugger
 
                     vm.contact.email = !!vm.showEmail && !!vm.contact.emails && !!vm.contact.emails.length && vm.contact.emails[0].value || null;
                     vm.contact.phone = !!vm.showPhone && !!vm.contact.phoneNumbers && !!vm.contact.phoneNumbers.length && vm.contact.phoneNumbers[0].value || null;
-                })
+                });
         }
-        
-        function validate() {
-            debugger
+
+        function validate () {
             if (!!vm.contact.phone) {
                 vm.contactForm.phone.$setValidity('phone', vm.contact.phone.replace(/\D/g, '').length >= 10);
             }
-            
+
             if (!vm.contact.phone && !vm.contact.email) {
                 vm.contactForm.phone.$setValidity('required', false);
                 vm.contactForm.email.$setValidity('required', false);

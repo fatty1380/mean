@@ -3,12 +3,12 @@
 
     angular
         .module('signup')
-        .controller('TrucksCtrl', TrucksCtrl)
+        .controller('TrucksCtrl', TrucksCtrl);
 
     TrucksCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', '$ionicPopup', '$ionicHistory',
         'userService', 'LoadingService'];
 
-    function TrucksCtrl($scope, $state, $cordovaGoogleAnalytics, $ionicPopup, $ionicHistory,
+    function TrucksCtrl ($scope, $state, $cordovaGoogleAnalytics, $ionicPopup, $ionicHistory,
         userService, LoadingService) {
 
         var vm = this;
@@ -20,7 +20,7 @@
         vm.goBack = goBack;
         vm.trucks = getTrucks();
 
-        function addTruck() {
+        function addTruck () {
             var then = Date.now();
             $ionicPopup.show({
                 template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.newTruck" autofocus>',
@@ -29,7 +29,7 @@
                 buttons: [
                     {
                         text: 'Cancel',
-                        onTap: function (e) {
+                        onTap: function () {
                             vm.newTruck = '';
                             $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'addCustom:cancel');
                             $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trucks', 'addCustom:cancel');
@@ -49,7 +49,6 @@
                                 vm.trucks.push({ name: vm.newTruck, logoClass: '' });
                                 vm.currentTruck = vm.newTruck;
                                 vm.newTruck = '';
-                                debugger;
                                 return vm.currentTruck;
                             }
                         }
@@ -59,18 +58,19 @@
         }
 
 
-        function goNext(isSave) {
+        function goNext (isSave) {
             if (isSave) {
                 var then = Date.now();
                 LoadingService.showLoader('Saving Truck');
 
                 return userService.updateUserProps({ truck: vm.currentTruck })
-                    .then(function success(propsResponse) {
+                    .then(function success (propsResponse) {
+                        logger.debug('Saved User Props Successfully', propsResponse);
                         $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'save');
                         $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trucks', 'save');
-                        logger.debug('Trucks: Saved Successfully');
+                        logger.info('Trucks: Saved Successfully');
                     })
-                    .catch(function fail(err) {
+                    .catch(function fail (err) {
                         $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'err: ' + err);
                         $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trucks', 'err: ' + err);
                         logger.error('Trucks: Save Failed', err);
@@ -84,16 +84,18 @@
             $cordovaGoogleAnalytics.trackEvent('signup', 'trucks', 'skip');
             $state.go('signup.trailers');
         }
-        
-        function goBack() {
-            if (_.isEmpty($ionicHistory.backTitle())) {
+
+        function goBack () {
+            var backView = $ionicHistory.backView();
+
+            if (_.isEmpty(backView) || _.isEmpty(backView.stateName)) {
                 return $state.go('signup.engagement');
             }
 
             return $ionicHistory.goBack();
         }
 
-        function getTrucks() {
+        function getTrucks () {
             return TRUCKS;
         }
     }

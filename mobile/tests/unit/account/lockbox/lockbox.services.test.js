@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    describe("Lockbox Service:", function() {
+    describe('Lockbox Service:', function () {
 
         // mock app module
         beforeEach(module(AppConfig.appModuleName));

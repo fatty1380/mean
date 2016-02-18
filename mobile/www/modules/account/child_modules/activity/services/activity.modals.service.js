@@ -16,7 +16,7 @@
             controller = 'ActivityAddCtrl as vm';
             params = parameters || {};
             options = angular.extend({}, defaultOptions, options);
-            
+
             return modalService
                 .show(templateUrl, controller, params);
         }
@@ -24,8 +24,8 @@
             templateUrl = 'modules/account/child_modules/activity/templates/activity-details.html';
             controller = 'ActivityDetailsCtrl as vm';
             params = parameters || {};
-            options = angular.extend({animation: 'slide-left-right'}, defaultOptions, options);
-            
+            options = angular.extend({ animation: 'slide-left-right' }, defaultOptions, options);
+
             return modalService
                 .show(templateUrl, controller, params);
         }

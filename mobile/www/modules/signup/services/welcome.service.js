@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    
+
     /**
      * Welcome Service
      * ---------------
@@ -13,10 +13,10 @@
 
     welcomeService.$inject = ['modalService', '$q'];
 
-    function welcomeService(modalService, $q) {
+    function welcomeService (modalService, $q) {
         var showAcks = {};
 
-        //initialize();
+        // initialize();
 
         return {
             showModal: showModal,
@@ -24,10 +24,10 @@
             acknowledge: acknowledge,
             isAckd: function (state) { return !showAcks[state]; }
         };
-        
-        ////////////////////////////////////////////////////////
 
-        function initialize(key) {
+        // //////////////////////////////////////////////////////
+
+        function initialize (key) {
             if (!!key) {
                 showAcks[key] = true;
             } else {
@@ -37,15 +37,15 @@
             }
         }
 
-        function acknowledge(state) {
+        function acknowledge (state) {
             showAcks[state] = false;
         }
 
-        function showModal(state, parameters) {
+        function showModal (state, parameters) {
             var templateUrl = 'modules/account/child_modules/profile/templates/welcome-modal.html';
             var controller = 'WelcomeModalCtrl as vm';
 
-            parameters = parameters || { stateName: state }
+            parameters = parameters || { stateName: state };
 
             var key = parameters.stateName;
 
@@ -63,7 +63,7 @@
                         return false;
                     });
             }
-            
+
             // If ack not required, resolve with false;
             return $q.when(false);
         }
@@ -75,7 +75,7 @@
 
     WelcomeModalCtrl.$inject = ['parameters'];
 
-    function WelcomeModalCtrl(parameters) {
+    function WelcomeModalCtrl (parameters) {
         var vm = this;
         var screenConfig = screenConfigs[parameters.stateName];
 
@@ -88,10 +88,10 @@
         vm.welcomeTitle = screenConfig.title || 'Welcome';
 
         vm.acknowledge = acknowledge;
-        
-        /////////////////////////////////////
 
-        function acknowledge() {
+        // ///////////////////////////////////
+
+        function acknowledge () {
             vm.closeModal(true);
         }
     }
@@ -120,6 +120,6 @@
             title: 'Adding Lockbox Documents',
             text: 'Adding documents to your lockbox is easy. Simply place the document you want to add on a flat, well-list area and take a clear picture, trying to fill up the whole screen. Once you have a good picture, you can select the document type, save it, and it will be waiting securely in your lockbox anytime you need it.'
         }
-    }
+    };
 
 })();

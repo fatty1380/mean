@@ -2,7 +2,7 @@ angular
     .module('signup')
     .directive('compareTo', compareTo);
 
-function compareTo() {
+function compareTo () {
     var directive = {
         require: 'ngModel',
         scope: {
@@ -13,11 +13,11 @@ function compareTo() {
 
     return directive;
 
-    function link(scope, element, attributes, ngModel) {
-        ngModel.$validators.compareTo = function(modelValue) {
+    function link (scope, element, attributes, ngModel) {
+        ngModel.$validators.compareTo = function (modelValue) {
             return modelValue == scope.otherModelValue;
         };
-        scope.$watch('otherModelValue', function() {
+        scope.$watch('otherModelValue', function () {
             ngModel.$validate();
         });
     }
