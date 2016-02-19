@@ -17,6 +17,7 @@ var eslint = require('gulp-eslint');
 var packageJSON = require('./package.json');
 var protractor = require('gulp-protractor').protractor;
 var webdriver_update = require('gulp-protractor').webdriver_update;
+var webdriver_standalone = require("gulp-protractor").webdriver_standalone;
 
 
 var paths = {
@@ -83,10 +84,11 @@ gulp.task('git-check', function (done) {
 
 
 gulp.task('webdriver_update', webdriver_update);
+gulp.task('webdriver_standalone', webdriver_standalone);
 
 gulp.task('test', ['webdriver_update'], function(done) {
     gulp.src([]).pipe(protractor({
-        configFile: 'protractor.conf.js',
+        configFile: 'protractor.conf.js'
     })).on('error', function(e) {
         console.log(e)
     }).on('end', done);        

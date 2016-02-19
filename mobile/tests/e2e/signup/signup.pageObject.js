@@ -28,8 +28,6 @@ function SignupObject() {
     this.trailersContinueButton = $('[ng-click="vm.continue(true)"]');
     this.skipButton = $('[ng-click="vm.skipToProfile();"]');
     this.acknowledgeButton = $('[ng-click="vm.acknowledge();"]')
-   
-    
     
     // misc page objects
     this.licenseContent = $('.license-content');
@@ -41,14 +39,10 @@ function SignupObject() {
     // errors/popus
     this.error = element(by.css('.error'));
     this.regFailPopup = element(by.cssContainingText('.popup-title', 'Registration Failed'));
-
-    
     
     // `this.email` will be used to store an existing user's email to test for registration with existing email
     this.email;
 
-    // FIX ME - this is a stop gap measure until a robust server-side test stub can be created
-    // could also simplify this  more - is having a dedicated `fillFields` method necessary?
     this.fillRandomFields = function (email) {
         
         function rand() { return Math.floor(Math.random() * alpha.length) };
@@ -63,6 +57,4 @@ function SignupObject() {
         this.passField.sendKeys('truckerline123');
         this.passConfirmField.sendKeys('truckerline123');
     };
-
 }
-
