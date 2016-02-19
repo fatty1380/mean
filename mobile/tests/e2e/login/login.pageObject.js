@@ -7,4 +7,3 @@ function LoginObject () {
     this.inputFields = element.all(by.css('.item-input'));
     this.error = element(by.css('.error'));
 }
-
