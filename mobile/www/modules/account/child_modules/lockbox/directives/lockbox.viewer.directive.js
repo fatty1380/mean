@@ -7,7 +7,36 @@
 	 */
     angular.module(AppConfig.appModuleName)
         .controller('DocumentModalCtrl', DocumentModalCtrl)
-        .directive('osetDocView', ViewDocumentDirective);
+        .directive('osetDocView', ViewDocumentDirective)
+        .directive('osetDocAttrView', ViewDocAttrDirective);
+
+    function ViewDocAttrDirective () {
+        var directive = {
+            link: link,
+            restrict: 'A',
+            scope: {
+                document: '=model',
+                btnText: '@?'
+            },
+            controller: ViewDocDirectiveCtrl,
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return directive;
+
+        // Inject controller as 'vm' for consistency
+        function link (scope, el, attr, vm) {
+            // Set defaults
+            vm.scope = scope;
+            if (vm.document && vm.document.url) {
+                el.bind('click', function () {
+                    logger.debug('Displaying doc at URL: ', vm.document.url);
+                    vm.openPreview(vm.document);
+                });
+            }
+        }
+    }
 
     function ViewDocumentDirective () {
         var directive = {
@@ -51,14 +80,18 @@
             vm.btnText = vm.btnText || 'View';
         }
 
-        function showDocument (document) {
+        function showDocument (document, event) {
+            if (!!event) {
+                event.stopPropagation();
+            }
+            document = document || vm.document;
             return DocPreview.show('modules/account/child_modules/lockbox/templates/modal-preview.html',
                 'DocumentModalCtrl as vm',
                 document);
         }
     }
 
-    var documentTemplate = '<button class="button button-small" ng-click="vm.openPreview(vm.document)">{{vm.btnText}}</button>';
+    var documentTemplate = '<button class="button button-small" ng-click="vm.openPreview(vm.document, $event)">{{vm.btnText}}</button>';
 
 
     // AKA: ContactDialogCtrl
@@ -133,7 +166,10 @@
         }
 
 
-        function onImageEvent (type) {
+        function onImageEvent (event) {
+            var type = event.type || event;
+            var err = event.err;
+
             logger.debug('   **** onImageEvent  ' + type + ' ****');
             switch (type) {
                 case 'loadStart':
@@ -143,7 +179,9 @@
                     LoadingService.hide();
                     break;
                 case 'loadError':
+                    debugger;
                     LoadingService.showAlert('Sorry, Please, try later.');
+                    logger.error('Image Event Errored', err);
                     break;
                 default:
                     logger.warn('Unknown Image Event: `%s`', type);
@@ -153,8 +191,12 @@
         }
 
 
-        function onPdfEvent (type) {
-            logger.debug('   **** ' + type + ' ****');
+        function onPdfEvent (event) {
+            var type = event.type || event;
+            var err = event.err;
+
+            logger.debug('   **** ' + type + ' ****', event);
+
             switch (type) {
                 case 'loadStart':
                     LoadingService.showLoader('Loading PDF, Please Wait.');
@@ -164,6 +206,7 @@
                     break;
                 case 'loadError':
                     LoadingService.showAlert('Sorry, Please, try later.');
+                    logger.error('Image Event Errored', err);
                     break;
                 default:
                     logger.warn('Unknown PDF Event: `%s`', type);

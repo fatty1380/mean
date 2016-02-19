@@ -190,8 +190,9 @@
         function refreshDocuments () {
             $cordovaGoogleAnalytics.trackEvent('Lockbox', 'refresh', 'start', vm.documents.length);
             return lockboxDocuments.getDocuments(true, { redirect: true })
-                .finally(function () {
+                .then(function () {
                     vm.documents = sortDocs(lockboxDocuments.updateDocumentList());
+                    logger.debug('[refreshDocuments] Complete', vm.documents);
                     // Stop the ion-refresher from spinning
                     $scope.$broadcast('scroll.refreshComplete');
                     $cordovaGoogleAnalytics.trackEvent('Lockbox', 'refresh', 'complete', vm.documents.length);
