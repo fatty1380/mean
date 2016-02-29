@@ -373,3 +373,32 @@
   -webkit-background-size: 149px 18px;
   background-size: 149px 18px;
 }
+
+/* "New" icons for profile */
+.ico {
+
+    &.ico-message-badge, 
+    &.ico-friend-badge,
+    &.ico-radio-badge {
+        -webkit-background-size: (78/3)+px (78/3)+px;
+        background-size: (78/3)+px (78/3)+px;
+        
+        width: 26px;
+        height: 26px;
+        background-position: 0 0;
+    }
+    
+        
+        
+    &.ico-message-badge{
+        background-image: url('../img/message_badge_sm@3x.png');
+    }
+
+    &.ico-friend-badge{
+        background-image: url('../img/friend_badge_sm@3x.png');
+    }
+
+    &.ico-radio-badge {
+        background-image: url('../img/radio_badge_sm@3x.png');
+    }
+}
