@@ -65,7 +65,7 @@ body{
     padding: 0 5px;
     background: none;
     border: 0;
-        font: $bar-title-font-size Helvetica Neue, Helvetica, Arial;
+        font: $bar-title-font-size -apple-system, Helvetica Neue, Helvetica, Arial;
         color: $secondary-text-action;
 
     .title{
@@ -75,8 +75,8 @@ body{
       color: $light;
     }
 
-        .button{
-          color: $secondary-text-action;
+    .button{
+        color: $secondary-text-action;
       font-size: $bar-title-font-size;
       font-weight: $headings-font-weight;
       padding: 0 5px;
