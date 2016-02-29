@@ -104,6 +104,7 @@
 
             var listItems = _.map(vm.profileData.license.endorsements,
                 function (e) {
+                    debugger;
                     return '<li>' + vm.endorsementsMap[e].title + '</li>';
                 });
 
