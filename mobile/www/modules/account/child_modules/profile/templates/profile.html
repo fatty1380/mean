@@ -1,59 +1,77 @@
-<ion-view class="profile-screen view-section mid-size" cache-view="false">
+<ion-view class="profile-screen view-section" cache-view="false">
     <!--Profile Main Heading START-->
     <ion-header-bar align-title="center">
-        <!--<button ng-if="!!vm.showEditModal" class="button button-clear" ng-click="vm.showEditModal()"><i class="ion-compose"></i> Edit</button>-->
+        <button ng-if="!!vm.showEditModal" class="button button-clear" ng-click="vm.showEditModal()"><i class="ion-compose"></i> Edit</button>
         <button ng-if="!vm.showEditModal" class="button button-clear" ng-click="vm.goBack()">
             <i class="ion-ios-arrow-back"></i>
             <span class="ico ico-avatarsmall ico-middle"></span>
         </button>
-        <h1 class="title" ng-bind="vm.profileData.displayName">Profile</h1>
-        <button class="button button-clear" ng-if="!!vm.showUserSettings" ng-click="vm.showUserSettings()">
-            <i class="ico ico-settingsicon ico-text-top"></i>
-        </button>
-        <button class="button button-clear" ng-if="!!vm.doFriendAction" ng-click="vm.doFriendAction()">
-            <span ng-if="vm.friendStatus === 'none'"><i class="ion-plus"></i> Add</span>
-            <span ng-if="vm.friendStatus === 'sent'" class="badge badge-balanced">invited</span>
-            <span ng-if="vm.friendStatus === 'pending'" class="badge badge-balanced"><i class="ion-plus"></i> Accept</span>
-            <span ng-if="vm.friendStatus === 'friends'" class="badge badge-positive">in convoy</span>
-        </button>
 
-        <!--<button class="button button-clear contacts-amount" ng-click="vm.showFriends($event);">
-             <span class="ico ico-friends ico-middle"></span>
-            <span ng-if="vm.canEdit && vm.updates.requests" class="badge badge-assertive">{{vm.updates.requests}}</span>
-        </button>-->
-
-        <!--<button class="button button-clear" ng-click="vm.showFriends($event);">
-
-            <span class="contacts-amount">
-                <span class="ico ico-friends ico-middle" ng-click="vm.showFriends($event);"></span>
-                <span ng-if="vm.canEdit && vm.updates.requests" class="badge badge-assertive" ng-click="vm.showFriends($event);">{{vm.updates.requests}}</span>
-                <strong ng-click="vm.showFriends($event);">{{vm.profileData.friends.length}}</strong>
-            </span>
-        </button>-->
+        <div class="profile-visual">
+            <div class="photo" ng-click="vm.showEditAvatar()">
+                <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt="" />
+            </div>
+        </div>
     </ion-header-bar>
-
-    <div class="profile-visual">
-        <div class="photo" ng-click="vm.showEditAvatar()">
-            <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt="" />
-        </div>
-        <div class="contacts-amount" ng-click="vm.showFriends($event);">
-            <span class="ico ico-friends ico-middle" ng-click="vm.showFriends($event);"></span>
-            <span ng-if="vm.canEdit && vm.updates.requests" class="badge badge-assertive" ng-click="vm.showFriends($event);">{{vm.updates.requests}}</span>
-            <strong ng-click="vm.showFriends($event);">{{vm.profileData.friends.length}}</strong>
-        </div>
-        <div class="handle" ng-if="!!vm.profileData.handle">
-            <strong><i class="ico ico-radio"></i> {{vm.profileData.handle}}</strong>
-        </div>
-    </div>
     <!--Profile Main Heading END-->
 
     <!--Profile Main Body START-->
     <ion-pane class="profile-pane">
         <div title="PROFILE" class="profile-tabs content-pane" ng-class="{'has-button': !!vm.showShareModal || !vm.canEdit, 'view-only': !vm.canEdit}">
 
+            <button class="button button-icon ion-compose button-pos-tr" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()"></button>
+
             <ion-scroll class="list">
 
                 <div class="profile-list">
+
+                    <div class="profile-title">
+                        <h3>{{vm.profileData.displayName}}</h3>
+                    </div>
+
+                    <ion-item class="profile-highlights">
+                        <div class="handle" ng-if="!!vm.profileData.handle">
+                            <i class="ico ico-radio-badge"></i> {{vm.profileData.handle | uppercase}}
+                        </div>
+                        <div class="friends" ng-click="vm.showFriends($event);">
+                            <i class="ico ico-friend-badge"></i>{{vm.profileData.friends.length}} Friends
+                        </div>
+
+                        <div class="message" ng-click="vm.messageClick($event);">
+                            <i class="ico ico-message-badge"></i>
+                            <span ng-if="vm.canEdit && vm.updates.messages.amount" class="badge badge-assertive">{{vm.updates.messages.amount}}</span>
+                        </div>
+                    </ion-item>
+
+                    <ion-item class="profile-bubbles">
+                        <div class="circle">
+                            <div class="miles-badge">
+                                20<span class="small">k</span>
+                                <span class="label-text bot">miles</span>
+                            </div>
+                        </div>
+                        <div class="circle">
+                            <div class="license-badge">
+                                <span class="label-text top">class</span> {{vm.profileData.license.class}}
+                                <span class="label-text bot hide">license</span>
+                            </div>
+                        </div>
+                        <div class="circle">
+                            <div class="experience-badge">
+                                5
+                                <span class="label-text bot">years</span>
+                            </div>
+                        </div>
+                    </ion-item>
+
+                    <ion-item>
+                        <ul class="endorsements-list" ng-click="vm.showEndorsements()">
+                            <li ng-repeat="endorsement in vm.profileData.license.endorsements">
+                                <i class="ico extra-small-size {{ vm.endorsementsMap[endorsement].ico}}"></i>
+                            </li>
+                        </ul>
+                    </ion-item>
+
                     <ion-item class="card has-title">
 
                         <div class="item-divider item-heading">
@@ -61,7 +79,7 @@
                                     <span ng-if="vm.profileData.props.company || vm.profileData.props.title">{{vm.profileData.props.title || 'Driver'}}<span ng-if="!!vm.profileData.props.company"> at </span>{{vm.profileData.props.company}}</span>
                             <span ng-if="!vm.profileData.props.company && !vm.profileData.props.title">About {{vm.profileData.firstName}}</span>
                             </span>
-                            <button class="button button-icon ion-compose button-pos-tr" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()">&nbsp; edit</button>
+
                         </div>
                         <div class="row">
                             <div class="col-67">
@@ -116,7 +134,7 @@
 
                 <div class="experience-list">
                     <div class="item activity profile-activity" ng-if="vm.experience">
-                        <span class="item-label">EXPERIENCE:</span> 
+                        <span class="item-label">EXPERIENCE:</span>
                         <button ng-if="vm.canEdit &&  !!vm.experience.length" class="button button-icon ion-compose button-pos-tr" ng-click="vm.showExperienceListModal()">&nbsp; edit</button>
                         <button ng-if="vm.canEdit && !vm.experience.length" class="button button-icon ion-ios-plus-outline button-pos-tr" ng-click="vm.showAddExperienceModal()">&nbsp; add</button>
                     </div>
@@ -124,7 +142,7 @@
                     <tline-experience-list ng-model="vm.experience" show-add-button="false" can-edit="vm.canEdit" show-add-fn="vm.showAddExperienceModal"
                     instructText="vm.expInstructText"></tline-experience-list>
                 </div>
-                
+
 
                 <div name="activity-list">
 
