@@ -114,7 +114,7 @@
                                     return lockboxDocuments.getFilesByUserId(user.id)
                                         .then(function (data) {
                                             logger.debug('returning lockbox doc loaded from device');
-                                            return data;
+                                            return lockboxDocuments.getDocuments(true);
                                         })
                                         .catch(function (err) {
                                             logger.error('[LockboxDocResolve] Couldn\'t retrieve documents err --->>>', err);
