@@ -62,8 +62,8 @@
 
 
     // AKA: ContactDialogCtrl
-    DocumentModalCtrl.$inject = ['parameters', '$sce', '$ionicPopup', 'LoadingService'];
-    function DocumentModalCtrl (parameters, $sce, $ionicPopup, LoadingService) {
+    DocumentModalCtrl.$inject = ['parameters', '$sce', '$timeout', '$ionicPopup', 'LoadingService', 'PDFViewerService'];
+    function DocumentModalCtrl (parameters, $sce, $timeout, $ionicPopup, LoadingService, PDFViewerService) {
         var vm = this;
 
         vm.document = parameters.document || parameters;
@@ -99,12 +99,24 @@
             if (angular.isFunction(screen.lockOrientation)) {
                 screen.lockOrientation('landscape');
             }
+
+            if (!_.isEmpty(vm.pdfInstance)) {
+                $timeout(function () {
+                    vm.pdfInstance.setScale(2);
+                }, 500);
+            }
         }
 
         function minimize () {
             vm.fullScreenMode = !vm.fullScreenMode;
             if (angular.isFunction(screen.lockOrientation)) {
                 screen.lockOrientation('portrait');
+            }
+
+            if (!_.isEmpty(vm.pdfInstance)) {
+                $timeout(function () {
+                    vm.pdfInstance.reRender();
+                }, 500);
             }
         }
 
@@ -118,6 +130,7 @@
         var docURL = vm.document.url;
 
         if (docURL.indexOf('.pdf') > 0) {
+            vm.viewerId = vm.document.id;
             vm.pdfURL = { src: vm.document.url };
         } else {
             vm.image = vm.document.url;
@@ -161,6 +174,7 @@
                     break;
                 case 'loadComplete':
                     LoadingService.hide();
+                    vm.pdfInstance = PDFViewerService.Instance(vm.viewerId);
                     break;
                 case 'loadError':
                     LoadingService.showAlert('Sorry, Please, try later.');

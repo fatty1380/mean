@@ -13,10 +13,10 @@
         <div class="pdf-container" ng-if="!!vm.pdfURL.src">
             <pdfviewer
                 src="{{ vm.trustSrc(vm.pdfURL.src) }}"
-                scale="{{scale}}"
-                pages-to-show="{{pages}}"
+                scale="{{vm.scale}}"
+                pages-to-show="{{vm.pages}}"
                 on-page-load='vm.pageLoaded(page,total)'
-                id="viewer"
+                id="vm.viewerId"
                 height="100%"
                 load-progress='vm.loadProgress(loaded, total, state)'
                 on-pdf-event='vm.onPdfEvent(type)'>

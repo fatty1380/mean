@@ -345,13 +345,12 @@
 
                     return storage.setItem('hasDocumentsForUsers', JSON.stringify(users));
                 }
-            )
-            .catch(
-                function removalFail (err) {
-                    logger.error('Failed to remove all user documents due to error', err);
-                    return null;
-                }
-            );
+                )
+                .catch(
+                    function removalFail (err) {
+                        logger.error('Failed to remove all user documents due to error', err);
+                        return null;
+                    });
 
         }
 
@@ -384,20 +383,33 @@
             var name = id + '-' + getFileName(doc);
             var path = vm.LOCKBOX_FOLDER + vm.userData.id + '/' + name;
 
-            var deferred = $q.defer();
 
-            $cordovaFileTransfer
-                .download(doc.url, path,
-                    function success (entry) {
-                        deferred.resolve(entry);
-                    },
-                    function error (err) {
-                        logger.error(err, 'Error Downloading doc id ' + id);
-                        deferred.reject('Failed to Download File');
-                    },
-                    true);
+            return $cordovaFileTransfer.download(doc.url, path, { encodeURI: false }, true)
+                .then(function success (entry) {
+                    logger.debug('Downloaded and saved doc `%s`', id);
 
-            return deferred.promise;
+                    return entry;
+                })
+                .catch(function fail (err) {
+                    logger.error('Error downloading doc `%s`', id, err);
+
+                    return doc;
+                });
+
+
+            // var deferred = $q.defer();
+            // $cordovaFileTransfer
+            //     .download(doc.url, path,
+            //         function success (entry) {
+            //             deferred.resolve(entry);
+            //         },
+            //         function error (err) {
+            //             logger.error(err, 'Error Downloading doc id ' + id);
+            //             deferred.reject('Failed to Download File');
+            //         },
+            //         true);
+
+            // return deferred.promise;
         }
 
         /**
@@ -675,14 +687,23 @@
             return doc;
         }
 
+
         function getFileName (source) {
-            var hasExtension = source.name.lastIndexOf('.') >= 0;
-            return source.sku + '-' + source.name.replace('/ /g', '_') + (!hasExtension ? '.txt' : '');
+            var extensionMatcher = /.*(\.\w{3,4})/;
+            var extension = '.txt';
+
+            if (extensionMatcher.test(source.key)) {
+                extension = source.key.match(extensionMatcher).pop();
+            }
+            else if (extensionMatcher.test(source.name)) {
+                extension = source.name.match(extensionMatcher).pop();
+            }
+
+            return source.sku + '-' + source.name.replace(/ /g, '_') + extension;
         }
 
         function getDisplayName (source) {
-
-            return source.replace('/_/g', ' ').replace(/\.\w{3,4}$/, '');
+            return source.replace(/_/g, ' ').replace(/\.\w{3,4}$/, '');
         }
 
         function updateDocumentList () {
@@ -732,3 +753,4 @@
     ];
 
 })();
+
