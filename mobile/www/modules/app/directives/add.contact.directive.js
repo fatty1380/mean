@@ -108,7 +108,7 @@
         '		<ion-label>Email</ion-label>',
         '		<input type="email" name="email" placeholder="Email Address" ng-model="vm.contact.email" focus>',
         '		<i class="icon ion-ios-email"></i>',
-        '	</label>',
+        '	</ion-input>',
         '	<ion-input class="item item-input" ng-if="!!vm.showName">',
         '		<ion-label>Name</ion-label>',
         '		<input type="text" name="email" placeholder="Recipient Name" ng-model="vm.contact.displayName" focus>',
