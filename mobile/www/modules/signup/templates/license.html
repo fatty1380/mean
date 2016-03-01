@@ -12,58 +12,36 @@
 
     <ion-content class="has-footer license-content">
             <h4>Select your license Class</h4>
+
+
             <div class="list license">
-                <label class="oset-cb-item category-a" ng-click="vm.class='A'" ng-class="{'active':vm.class==='A'}">
+                <span class="oset-cb-item category-a" ng-click="vm.class='A'" ng-class="{'active':vm.class==='A'}">
                     <div class="item-content">
                         <i class="ico {{vm.class === 'A' ? 'ico-licenseaactive' : 'ico-licenseainactive'}}"></i>
                     </div>
-                </label>
-                <label class="oset-cb-item category-b" ng-click="vm.class='B'" ng-class="{'active':vm.class==='B'}">
+                </span>
+                <span class="oset-cb-item category-b" ng-click="vm.class='B'" ng-class="{'active':vm.class==='B'}">
                     <div class="item-content">
                         <i class="ico {{vm.class === 'B' ? 'ico-licensebactive' : 'ico-licensebinactive'}}"></i>
                     </div>
-                </label>
-                <label class="oset-cb-item category-c" ng-click="vm.class='C'" ng-class="{'active':vm.class==='C'}">
+                </span>
+                <span class="oset-cb-item category-c" ng-click="vm.class='C'" ng-class="{'active':vm.class==='C'}">
                     <div class="item-content">
                         <i class="ico {{vm.class === 'C' ? 'ico-licensecactive' : 'ico-licensecinactive'}}"></i>
                     </div>
-                </label>
+                </span>
             </div>
+    
             <h4>Select your endorsements</h4>
-            <ul class="list endorsements">
-                <li class="item item-checkbox endorsement-a col">
-                    <label class="checkbox">
-                        <input type="checkbox" ng-model="vm.endorsement.T">
-                    </label>
-                    <p>Double /
-                        <br> Triple trailers</p>
-                </li>
-                <li class="item item-checkbox endorsement-c col">
-                    <label class="checkbox">
-                        <input type="checkbox" ng-model="vm.endorsement.N">
-                    </label>
-                    <p>Tank Vehicle</p>
-                </li>
-                <li class="item item-checkbox endorsement-d col">
-                    <label class="checkbox">
-                        <input type="checkbox" ng-model="vm.endorsement.H">
-                    </label>
-                    <p>Hazardous Materials</p>
-                </li>
-                <li class="item item-checkbox endorsement-b col">
-                    <label class="checkbox">
-                        <input type="checkbox" ng-model="vm.endorsement.P">
-                    </label>
-                    <p>Passenger</p>
-                </li>
-                <li class="item item-checkbox endorsement-e col">
-                    <label class="checkbox">
-                        <input type="checkbox" ng-model="vm.endorsement.X">
-                    </label>
-                    <p>Tank Vehicle and
-                        <br> Hazardous Materials</p>
-                </li>
-            </ul>
+
+            <ion-list class="signup-list">
+              <ion-checkbox ng-model="vm.endorsement.T">Double/Triple Trailers</ion-checkbox>
+              <ion-checkbox ng-model="vm.endorsement.N">Tank Vehicles</ion-checkbox>
+              <ion-checkbox ng-model="vm.endorsement.H">Hazardous Materials</ion-checkbox>
+              <ion-checkbox ng-model="vm.endorsement.P">Passenger</ion-checkbox>
+              <ion-checkbox ng-model="vm.endorsement.X">Tank Vehicle and Hazardous Materials</ion-checkbox>
+            </ion-list>
+
     </ion-content>
 
     <ion-footer-bar>

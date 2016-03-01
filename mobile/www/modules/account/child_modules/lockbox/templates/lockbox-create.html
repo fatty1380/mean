@@ -3,7 +3,9 @@
     <ion-pane class="has-footer has-title">
 
         <div class="content-top">
-            <label class="item item-input item-select">
+
+            <ion-input class="item item-input item-select">
+
                 <div class="input-label">
                     Select Document Type:
                 </div>
@@ -15,7 +17,10 @@
                     <option ng-if="!!vm.document.name" value="misc">{{vm.document.name}}</option>
                     <option value="other">other ...</option>
                 </select>
-            </label>
+
+            </ion-input>
+
+
         </div>
 
         <ion-scroll>

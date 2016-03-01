@@ -108,10 +108,10 @@
 
     <ion-footer-bar ng-if="vm.isInputVisible" class="bar bar-footer item-input-inset">
         <button class="button button-clear button-positive" ng-disabled="!vm.message" ng-click="vm.toggleInput($event, false)"><i class="ion-close-round"></i></button>
-        <label class="item-input-wrapper message-textarea">
+        <ion-input class="item-input-wrapper message-textarea">
             <i class="ion ico-messagesiconblue"></i>
             <textarea focus-me="vm.focusComment" msd-elastic id="message-field" name="commentInput" placeholder="&nbsp;Comment" ng-model="vm.message"></textarea>
-        </label>
+        </ion-input>
         <button class="button button-clear button-positive" ng-disabled="!vm.message" ng-click="vm.createComment($event)">Send</button>
     </ion-footer-bar>
 

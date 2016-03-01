@@ -11,37 +11,37 @@
         <ion-scroll>
             <form name="mainForm" id="mainForm" class="" ng-init="vm.initForm(this)" ng-submit="vm.saveItemToFeed()" novalidate>
                 <div class="list">
-                    <label class="item item-input">
-                        <span class="input-label">Title:</span>
+                    <ion-input class="item item-input">
+                        <ion-label>Title:</ion-label>
                         <input type="text" ng-model="vm.activity.title" placeholder="Name your drive">
-                    </label>
+                    </ion-input>
 
                     <div class="row">
                         <div class="col">
-                            <label class="item item-input item-floating-label">
-                                <span class="input-label" ng-show="vm.activity.props.freight || vm.activity.props.distance">Freight Hauled:</span>
+                            <ion-input class="item item-input item-floating-label">
+                                <ion-label ng-show="vm.activity.props.freight || vm.activity.props.distance">Freight Hauled:</ion-label>
                                 <input type="text" ng-model="vm.activity.props.freight" placeholder="Freight Hauled">
-                            </label>
+                            </ion-input>
                         </div>
                         <div class="col">
-                            <label class="item item-input item-floating-label">
-                                <span class="input-label" ng-show="vm.activity.props.freight || vm.activity.props.distance">Miles Driven:</span>
+                            <ion-input class="item item-input item-floating-label">
+                                <ion-label ng-show="vm.activity.props.freight || vm.activity.props.distance">Miles Driven:</ion-label>
                                 <input type="tel" ng-model="vm.activity.props.distance" placeholder="Distance Driven">
-                            </label>
+                            </ion-input>
                         </div>
                     </div>
 
-                    <label class="item item-input">
-                        <span class="input-label">Notes:</span>
+                    <ion-input class="item item-input">
+                        <ion-label>Notes:</ion-label>
                         <!--<div class="notes-holder" ng-bind="vm.activity.notes"></div>-->
                         
                         <textarea msd-elastic class="optional" placeholder="Enter notes about your drive (optional)" ng-model="vm.activity.notes"></textarea>
-                    </label>
+                    </ion-input>
 
-                    <label class="item item-input" ng-if="!!vm.mapIsVisible">
-                        <span class="input-label">Where:</span>
+                    <ion-input class="item item-input" ng-if="!!vm.mapIsVisible">
+                        <ion-label>Where:</ion-label>
                         <ion-google-place placeholder="Enter Name of Stop" ng-model="vm.where" />
-                    </label>
+                    </ion-input>
                     <div id="map" data-tap-disabled="true" ng-if="!!vm.mapIsVisible"></div>
 
                     <div class="activity-item bottom">

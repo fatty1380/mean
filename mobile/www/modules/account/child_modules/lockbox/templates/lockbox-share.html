@@ -15,9 +15,8 @@
         <ion-scroll>
             <ul class="list document-list">
                 <li class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id">
-                    <label class="checkbox">
-                        <input type="checkbox" ng-model="doc.checked">
-                    </label>
+                    <ion-checkbox ng-model="doc.checked"></ion-checkbox>
+
                     <div class="item-content">
                         <strong>{{doc.name}}</strong>
                         <span>{{doc.created | date : 'MMMM d, y'}}</span>

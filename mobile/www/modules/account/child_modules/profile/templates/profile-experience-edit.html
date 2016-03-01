@@ -7,35 +7,35 @@
     <ion-pane class="pane has-footer">
         <ion-scroll>
             <div class="list add-activity-pane">
-                <label class="item item-input">
-                    <span class="input-label">Job Title</span>
+                <ion-input class="item item-input">
+                    <ion-label>Job Title</ion-label>
                     <input type="text" ng-model="vm.experience.title" placeholder="" required>
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Company</span>
+                </ion-input>
+                <ion-input class="item item-input">
+                    <ion-label>Company</ion-label>
                     <input type="text" ng-model="vm.experience.company" placeholder="" />
-                </label>
-                <label class="item item-input item-stacked-label">
-                    <span class="input-label">Description</span>
+                </ion-input>
+                <ion-input class="item item-input item-stacked-label">
+                    <ion-label>Description</ion-label>
                     <textarea msd-elastic class="optional" type="text" ng-model="vm.experience.description" placeholder="About the role"></textarea>
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Location</span>
+                </ion-input>
+                <ion-input class="item item-input">
+                    <ion-label>Location</ion-label>
                     <input type="text" ng-model="vm.experience.location" placeholder="Location or Region">
-                </label>
+                </ion-input>
 
                 <div class="row">
                     <div class="col">
-                        <label class="item item-input item-floating-label">
-                            <span class="input-label" ng-show="vm.startDate || vm.endDate">Start Date</span>
+                        <ion-input class="item item-input item-floating-label">
+                            <ion-label ng-show="vm.startDate || vm.endDate">Start Date</ion-label>
                             <input type="text" ng-model="vm.startDate" placeholder="Start Date" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
-                        </label>
+                        </ion-input>
                     </div>
                     <div class="col">
-                        <label class="item item-input item-floating-label">
-                            <span class="input-label" ng-show="vm.startDate || vm.endDate">End Date</span>
+                        <ion-input class="item item-input item-floating-label">
+                            <ion-label ng-show="vm.startDate || vm.endDate">End Date</ion-label>
                             <input type="text" ng-model="vm.endDate" placeholder="End Date" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
-                        </label>
+                        </ion-input>
                     </div>
                 </div>
             </div>

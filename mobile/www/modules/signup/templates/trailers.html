@@ -15,25 +15,26 @@
     </div>
 
     <ion-content class="has-footer has-subheader">
-        <ion-list class="select-trailer has-footer">
-                <li class="item item-checkbox" ng-repeat="trailer in vm.trailers" ng-class="{'active': !!trailer.checked}">
-                    <label class="checkbox">
-                        <input type="checkbox" ng-model="trailer.checked">
+        <ion-scroll>
+            <ion-list class="select-trailer has-footer">
+
+                <li class="item item-checkbox" ng-repeat="trailer in vm.trailers" ng-click="trailer.checked = !trailer.checked">
+                    <div class="checkbox"  ng-class="{'active': !!trailer.checked}" >
                         <div class="item-content">
-                            <i class="ico ico-checkboxselected"></i>
+                            <p> {{ trailer.name }} </p>
+                            <i class="ico ico-checkboxselected" ></i>
                         </div>
-                    </label>
-                    <p>{{ trailer.name }}</p>
+                    </div>
                 </li>
 
-                <li class="item item-checkbox">
-                    <label class="item item-radio" ng-click="vm.addTrailer()">
-                        <div class="item-content button-other">
-                            <p class="center-text">other...</p>
-                        </div>
-                    </label>
-                </li>
-        </ion-list>
+                <ion-item>
+                    <ion-input class="item item-radio item-content button-other" ng-click="vm.addTrailer()">
+                        <p class="center-text">other...</p>
+                    </ion-input>
+                </ion-item>
+
+            </ion-list>
+        </ion-scroll>
     </ion-content>
 
     <ion-footer-bar>

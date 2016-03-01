@@ -20,6 +20,8 @@ ion-content {
 
 .signup-form{
 
+
+
   .form-row{
     position: relative;
 
@@ -52,6 +54,7 @@ ion-content {
       font-weight: bold;
       font-size: $font-size-base - 1px;
       line-height: $line-height-computed;
+      width: 100%;
     }
   }
 
@@ -61,6 +64,12 @@ ion-content {
 
   .ng-dirty.ng-valid {
     border:0;
+  }
+
+  .input-label {
+    width: 100%;
+    max-width: 100%;
+
   }
 }
 
@@ -152,6 +161,20 @@ ion-content {
   background: none;
 }
 
+.signup-list {
+
+  .list {
+      margin-left: 12vw;
+      margin-right: 12vw;
+  }
+
+  .item {
+    background-color: transparent;
+    color: $stable;
+  }
+}
+
+
 .endorsements{
 
   p{
@@ -180,6 +203,11 @@ ion-content {
     height: 130px;
   }
 
+  .special{
+    height: 64px;
+    width: 64px;
+  }
+
   .checkbox{
     position: inherit;
     vertical-align: top;
@@ -187,7 +215,7 @@ ion-content {
     margin: 0px -31px;
     padding: 0;
 
-     input:checked:before,  input:checked + .checkbox-icon:before {
+    input:checked:before,  input:checked + .checkbox-icon:before {
        background-image: url('../img/sprite.png');
        display: inline-block;
        vertical-align: top;
@@ -199,6 +227,7 @@ ion-content {
     }
 
     input:before{
+
       background: none;
     }
 
@@ -208,6 +237,7 @@ ion-content {
 
 
     input:before,  input + .checkbox-icon:before {
+
       background-image: url('../img/sprite.png');
       display: inline-block;
       vertical-align: top;
@@ -295,21 +325,27 @@ ion-content {
 }
 
 
-
-
 /*  select truck */
 
 
 
 .select-truck {
 
-  .item-radio  {
-    input ~ .item-content {
+  .item-radio  
+  {
+    input ~ .radio-content > .item-content {
       background-color: $signup-entry-row-bg;
     }
-    input:checked ~ .item-content {
-      background-color: $signup-entry-row-active-bg;
-      p {color: $dark; }
+
+    input:checked ~ .radio-content {
+      & > .item-content {
+        background-color: $signup-entry-row-active-bg;
+        p {color: $dark; }
+      }
+
+      & > .radio-icon {
+        display: none;
+      }
     }
   }
 
@@ -346,6 +382,9 @@ ion-content {
       margin-top: -36px;
     }
   }
+  .item {
+    padding: 0px;
+  }
 }
 
 
@@ -374,7 +413,7 @@ $but-height: 70px;
       margin-top: 0;
     }
     
-    &.active {
+    & .checkbox.active {
       p {
         color: $dark;
       }
@@ -409,33 +448,35 @@ $but-height: 70px;
     height: $but-height;
 
     .item-content{
+      background-color: transparent;
+      // border: 1px solid yellow;
       i{
         top: 50%;
         margin-top: -10px;
         left: 35px;
       }
 
-      top: -20px;
+      // top: -20px;
       height: $but-height;
     }
 
-    input:checked + .item-content{
+    &.active .item-content{
       background-color: $signup-entry-row-active-bg;
+
+      i {
+         visibility:visible;
+      }
     }
 
-    input + .item-content{
+    & .item-content {
       background-color: $signup-entry-row-bg;
+      
+      i {
+        visibility:hidden;
+      }
     }
 
-    input:checked + .item-content i{
-       visibility:visible;
-    }
-
-    input + .item-content i{
-       visibility:hidden;
-    }
-
-    input:checked:before, input:checked + .checkbox-icon:before {
+    &.active:before, input:checked + .checkbox-icon:before {
       background-position: -2140px -2009px;
       background:none;
       border:0;
@@ -451,12 +492,7 @@ $but-height: 70px;
       border:0;
     }
   }
-
 }
-
-
-
-
 
 .signup-section{
   // background: url("../img/welcomeBackground@3x.jpg") 0 0 no-repeat ;

@@ -18,17 +18,17 @@
             <form name="vm.mainLoginForm" id="vm.mainLoginForm" class="list signup-form" ng-submit="vm.submitForm($event)" accessible-form
             novalidate>
                 <div class="form-row">
-                    <label class="item item-input">
+                    <ion-input class="item item-input">
                         <input type="email" name="email" placeholder="Email" ng-change="vm.echange()" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false"
                         debounce required focus focus-me="vm.focus['email']">
-                    </label>
+                    </ion-input>
                     <i class="icon ion-backspace-outline" ng-if="vm.user.email && vm.user.email.length" ng-click="vm.user.email = ''"></i>
                 </div>
                 <div class="form-row">
-                    <label class="item item-input">
+                    <ion-input class="item item-input">
                         <input id="password" type="password" placeholder="Password" ng-model="vm.user.password" name="password" ng-focus="vm.lastElementFocused = true"
                         required focus-me="vm.focus['pass']">
-                    </label>
+                    </ion-input>
                     <i class="icon ion-backspace-outline" ng-if="vm.user.password.length > 0" ng-click="vm.user.password = ''"></i>
                 </div>
                 <input style="position:absolute; left:9999px" type="submit" />

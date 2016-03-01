@@ -21,28 +21,28 @@
     <ion-pane class="has-footer edit-pane">
         <ion-scroll>
             <div class="list profile-edit-list edit-fields-list">
-                <label class="item item-input item-floating-label" ng-class="{'error': editForm.firstName.$invalid}">
-                    <span class="input-label">First Name</span>
+                <ion-input class="item item-input item-floating-label" ng-class="{'error': editForm.firstName.$invalid}">
+                    <ion-label>First Name</ion-label>
                     <span class="error-message" ng-show="editForm.firstName.$error.required">required</span>
                     <input type="text" ng-model="vm.profileData.firstName" placeholder="First Name" name="firstName" required>
-                </label>
-                <label class="item item-input item-floating-label" ng-class="{'error': editForm.lastName.$invalid}">
-                    <span class="input-label">Last Name</span>
+                </ion-input>
+                <ion-input class="item item-input item-floating-label" ng-class="{'error': editForm.lastName.$invalid}">
+                    <ion-label>Last Name</ion-label>
                     <span class="error-message" ng-show="editForm.lastName.$error.required">required</span>
                     <input type="text" ng-model="vm.profileData.lastName" placeholder="Last Name" name="lastName" required>
-                </label>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Handle</span>
+                </ion-input>
+                <ion-input class="item item-input item-floating-label">
+                    <ion-label>Handle</ion-label>
                     <input type="text" ng-model="vm.profileData.handle" placeholder="Handle">
-                </label>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Phone Number</span>
+                </ion-input>
+                <ion-input class="item item-input item-floating-label">
+                    <ion-label>Phone Number</ion-label>
                     <input type="tel" ng-model="vm.profileData.phone" placeholder="Phone Number" name="phone">
-                </label>
+                </ion-input>
 
                 <div class="item edit-profile-types">
                     <div class="top">
-                        <span class="input-label" ng-click="vm.editAddress()">Address</span>
+                        <ion-label ng-click="vm.editAddress()">Address</ion-label>
                         <button type="button" class="button button-small" ng-click="vm.addressEditing = !vm.addressEditing">
                             {{vm.addressEditing ? 'done' : 'edit'}}
                         </button>
@@ -55,19 +55,19 @@
 
                 <div class="item edit-profile-types">
                     <div class="top">
-                        <span class="input-label">Truck Manufacturer</span>
+                        <ion-label>Truck Manufacturer</ion-label>
                         <button type="button" class="button button-small" ng-click="vm.showProfileEditTrucksModal();">change</button>
                     </div>
                     <div ng-bind="vm.profileData.props.truck"></div>
                 </div>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Truck Model</span>
+                <ion-input class="item item-input item-floating-label">
+                    <ion-label>Truck Model</ion-label>
                     <input type="text" ng-model="vm.profileData.props.model" placeholder="Truck Model" name="model">
-                </label>
+                </ion-input>
                 <oset-toggle label="Owner Operator" type="button-small" model="vm.owner"></oset-toggle>
                 <div class="item edit-profile-types">
                     <div class="top">
-                        <span class="input-label">Trailer Types</span>
+                        <ion-label>Trailer Types</ion-label>
                         <button type="button" class="button button-small" ng-click="vm.showProfileEditTrailersModal();">change</button>
                     </div>
                     <ul class="selected-trailers">
@@ -76,7 +76,7 @@
                 </div>
                 <div class="item edit-profile-types">
                     <div class="top">
-                        <span class="input-label">License</span>
+                        <ion-label>License</ion-label>
                         <button class="button button-small" ng-click="vm.editLicense();">edit</button>
                     </div>
                     <div ng-if="vm.profileData.license">
@@ -88,18 +88,18 @@
                         </span>
                     </div>
                 </div>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Driving Since</span>
+                <ion-input class="item item-input item-floating-label">
+                    <ion-label>Driving Since</ion-label>
                     <input type="text" ng-model="vm.started" placeholder="Driving Since" name="started" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
-                </label>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Employer</span>
+                </ion-input>
+                <ion-input class="item item-input item-floating-label">
+                    <ion-label>Employer</ion-label>
                     <input type="text" ng-model="vm.profileData.props.company" placeholder="Employer" name="employer">
-                </label>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Miles per Year</span>
+                </ion-input>
+                <ion-input class="item item-input item-floating-label">
+                    <ion-label>Miles per Year</ion-label>
                     <input type="text" ng-model="vm.profileData.props.miles" placeholder="Miles per Year" name="miles">
-                </label>
+                </ion-input>
 
                 <div class="item item-button-right">
                     Log Out
