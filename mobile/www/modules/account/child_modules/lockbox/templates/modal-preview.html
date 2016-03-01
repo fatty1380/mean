@@ -6,17 +6,19 @@
         <button ng-if="vm.fullScreenMode" class="button button-icon ion-arrow-shrink" ng-click="vm.minimize($event)"></button>
     </ion-header-bar>
 
-    <ion-content id="pdf-view-content" ng-class="{'controls-hidden': vm.showControls}" ng-click="vm.toggleFullScreen($event);">
+    <ion-content id="pdf-view-content" ng-class="{'controls-hidden': vm.showControls}" 
+    ng-click="vm.toggleFullScreen($event);"
+    ng-dblclick="vm.toggleZoom()">
         <ion-pane class="image-container" ng-if="!!vm.image">
             <div src="{{vm.trustSrc(vm.image)}}"  on-image-event='vm.onImageEvent(type)' imageviewer></div>
         </ion-pane>
         <div class="pdf-container" ng-if="!!vm.pdfURL.src">
             <pdfviewer
                 src="{{ vm.trustSrc(vm.pdfURL.src) }}"
-                scale="{{scale}}"
-                pages-to-show="{{pages}}"
+                scale="{{vm.scale}}"
+                pages-to-show="{{vm.pages}}"
                 on-page-load='vm.pageLoaded(page,total)'
-                id="viewer"
+                id="vm.viewerId"
                 height="100%"
                 load-progress='vm.loadProgress(loaded, total, state)'
                 on-pdf-event='vm.onPdfEvent(type)'>

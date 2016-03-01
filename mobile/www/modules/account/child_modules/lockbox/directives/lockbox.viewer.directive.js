@@ -62,8 +62,8 @@
 
 
     // AKA: ContactDialogCtrl
-    DocumentModalCtrl.$inject = ['parameters', '$sce', '$ionicPopup', 'LoadingService'];
-    function DocumentModalCtrl (parameters, $sce, $ionicPopup, LoadingService) {
+    DocumentModalCtrl.$inject = ['parameters', '$sce', '$timeout', '$ionicPopup', 'LoadingService', 'PDFViewerService'];
+    function DocumentModalCtrl (parameters, $sce, $timeout, $ionicPopup, LoadingService, PDFViewerService) {
         var vm = this;
 
         vm.document = parameters.document || parameters;
@@ -82,7 +82,10 @@
         vm.enlarge = enlarge;
         vm.minimize = minimize;
         vm.toggleFullScreen = toggleFullScreen;
+        vm.toggleZoom = toggleZoom;
         vm.close = close;
+
+
 
         function close (e) {
             e.stopPropagation();
@@ -99,6 +102,12 @@
             if (angular.isFunction(screen.lockOrientation)) {
                 screen.lockOrientation('landscape');
             }
+
+            if (!_.isEmpty(vm.pdfInstance)) {
+                $timeout(function () {
+                    vm.pdfInstance.setScale(2);
+                }, 500);
+            }
         }
 
         function minimize () {
@@ -106,6 +115,18 @@
             if (angular.isFunction(screen.lockOrientation)) {
                 screen.lockOrientation('portrait');
             }
+
+            if (!_.isEmpty(vm.pdfInstance)) {
+                $timeout(function () {
+                    vm.pdfInstance.reRender();
+                }, 500);
+            }
+        }
+
+        function toggleZoom () {
+            logger.debug('toggling zoom from `%s`', vm.scale);
+
+            vm.scale = vm.scale === 1 ? 2 : 1;
         }
 
         function toggleFullScreen () {
@@ -118,6 +139,7 @@
         var docURL = vm.document.url;
 
         if (docURL.indexOf('.pdf') > 0) {
+            vm.viewerId = vm.document.id;
             vm.pdfURL = { src: vm.document.url };
         } else {
             vm.image = vm.document.url;
@@ -161,6 +183,9 @@
                     break;
                 case 'loadComplete':
                     LoadingService.hide();
+
+                    debugger;
+                    vm.pdfInstance = PDFViewerService.Instance(vm.viewerId);
                     break;
                 case 'loadError':
                     LoadingService.showAlert('Sorry, Please, try later.');

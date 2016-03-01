@@ -38,7 +38,7 @@ function PdfViewerService ($rootScope) {
             setScale: function (scale) {
                 $rootScope.$broadcast('pdfviewer.setScale', instanceId, scale);
             },
-            reRender: function (scale) {
+            reRender: function () {
                 $rootScope.$broadcast('pdfviewer.reRender', instanceId);
             }
         };
@@ -171,7 +171,7 @@ function PdfViewerDirective ($log, $q) {
             };
 
             $scope.$on('pdfviewer.setScale', function (evt, id, scale) {
-                if (id !== instanceId) {
+                if (id !== $scope.id) {
                     return;
                 }
                 $scope.setScale(scale);
@@ -179,7 +179,7 @@ function PdfViewerDirective ($log, $q) {
             });
 
             $scope.$on('pdfviewer.reRender', function (evt, id) {
-                if (id !== instanceId) {
+                if (id !== $scope.id) {
                     return;
                 }
                 $scope.setScale(1);
@@ -187,7 +187,7 @@ function PdfViewerDirective ($log, $q) {
             });
 
             $scope.$on('pdfviewer.nextPage', function (evt, id) {
-                if (id !== instanceId) {
+                if (id !== $scope.id) {
                     return;
                 }
                 if ($scope.pageNum < $scope.pdfDoc.numPages) {
@@ -197,7 +197,7 @@ function PdfViewerDirective ($log, $q) {
             });
 
             $scope.$on('pdfviewer.prevPage', function (evt, id) {
-                if (id !== instanceId) {
+                if (id !== $scope.id) {
                     return;
                 }
                 if ($scope.pageNum > 1) {
@@ -207,7 +207,7 @@ function PdfViewerDirective ($log, $q) {
             });
 
             $scope.$on('pdfviewer.gotoPage', function (evt, id, page) {
-                if (id !== instanceId) {
+                if (id !== $scope.id) {
                     return;
                 }
                 if (page >= 1 && page <= $scope.pdfDoc.numPages) {
