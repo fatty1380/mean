@@ -53,7 +53,7 @@
     "cordova-plugin-statusbar",
     "cordova-plugin-crosswalk-webview",
     {
-      "locator": "https://github.com/BranchMetrics/Cordova-Ionic-PhoneGap-Deferred-Deep-Linking-SDK",
+      "locator": "https://github.com/BranchMetrics/Cordova-Ionic-PhoneGap-Deferred-Deep-Linking-SDK.git#v1.8.0-locked",
       "id": "io.branch.sdk"
     }
   ],
