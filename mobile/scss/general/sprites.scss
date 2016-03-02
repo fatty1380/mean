@@ -402,3 +402,46 @@
         background-image: url('../img/radio_badge_sm@3x.png');
     }
 }
+
+.ico-t.ico {
+    background-image: url('../img/truck_logos_sm@3x.png');
+    display: inline-block;
+    pointer-events: none;
+    background-size: (210/3)+px (900)/3+px;
+  
+    &.ico-peterbilt-logo {
+        width: 70px;
+        height: 50px;
+        background-position: 0 0;
+    }
+  
+    &.ico-international-logo {
+        width: 70px;
+        height: 50px;
+        background-position: 0 -50px;
+    }
+  
+    &.ico-freightliner-logo {
+        width: 70px;
+        height: 50px;
+        background-position: 0 -100px;
+    }
+
+    &.ico-mack-logo {
+        width: 70px;
+        height: 50px;
+        background-position: 0 -150px;
+    }
+
+    &.ico-kenworth-logo {
+        width: 70px;
+        height: 50px;
+        background-position: 0 -200px;
+    }
+
+    &.ico-volvo-logo {
+        width: 70px;
+        height: 50px;
+        background-position: 0 -250px;
+    }
+}

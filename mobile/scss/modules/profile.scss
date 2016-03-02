@@ -38,13 +38,46 @@ $photo-dimension : $profile-subheader-height * 1.1;
         margin-right: -$padding-large-horizontal;
         
         div {
-            padding: $padding-base-vertical $padding-base-horizontal;
+            padding: $padding-base-vertical $padding-small-horizontal;
             display: inline-block;
             line-height: 25px;
             
             i.ico {
                 display: inline-block;
                 margin-right: $padding-base-vertical;
+            }
+        }
+        
+        
+            
+        .ico {
+            & + .badge-container {
+                position: relative;
+                left: 10px;
+                padding-left: -10px;
+                
+                float: left;
+                display: flex;
+                
+                .badge {
+                    opacity: 0.9;
+                    position: relative;
+                    left: 0;
+                    top: -6px;
+                    // bottom: 10px;
+                    // right: 0;
+                    // left: 0px;
+                    //top: unset;
+                    display: inline-flex;
+                    
+                    border-radius: 6px;
+                    font-size: 0.8em;
+                    line-height: 0.9em;
+                    max-width: 80px;
+                    
+                    padding-left: 4px;
+                    padding-right: 4px;
+                }
             }
         }
     }
@@ -67,7 +100,7 @@ $photo-dimension : $profile-subheader-height * 1.1;
             
             border: 2px solid $light;
             border-radius: 50%;
-            box-shadow: 1px 1px 8px $ribbon-bg;
+            box-shadow: 1px 1px 10px rgba($action-text, 0.8);
             
             background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
             background: -webkit-linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
@@ -112,6 +145,26 @@ $photo-dimension : $profile-subheader-height * 1.1;
                 bottom: 2vw;
             }
             
+            .equipment-logo {
+                width: 100%;
+                margin: 5px auto;
+             
+                & + .badge {
+                    opacity: 0.9;
+                    position: relative;
+                    bottom: 10px;
+                    right: 0;
+                    left: 0px;
+                    top: unset;
+                    display: inline-flex;
+                    
+                    border-radius: 6px;
+                    font-size: 0.8em;
+                    line-height: 0.9em;
+                    max-width: 80px;
+                }   
+            }
+            
             .license-badge {
                 font-size: 12vw;
                 font-weight: 500;
@@ -134,12 +187,12 @@ $photo-dimension : $profile-subheader-height * 1.1;
 }
 
 .profile-visual {
-  //position: absolute;
-  left: 10px;
-  right: 10px;
-//   height: $profile-subheader-height;
-  text-align: center;
-  z-index: 2;
+    text-align: center;
+    z-index: 2;
+    width: 100%;
+    float: left;
+    position: fixed;
+    left: 0;
   
   .photo{
     position: relative;
@@ -149,7 +202,7 @@ $photo-dimension : $profile-subheader-height * 1.1;
     }
     
     .platform-ios & {
-        top: $padding-large-vertical + $ios-statusbar-height !important;
+        top: $padding-large-vertical + $ios-statusbar-height;
     }
     display: inline-block;
     vertical-align: top;
@@ -158,6 +211,7 @@ $photo-dimension : $profile-subheader-height * 1.1;
     -webkit-background-size: $photo-dimension $photo-dimension;
     background-size: $photo-dimension $photo-dimension;
     border: 4px solid rgba($search-bar, 0.6);
+    background-color: 4px solid rgba($search-bar, 0.6);
     text-align: center;
     @include rounded-corner(100%);
 
@@ -182,7 +236,11 @@ $photo-dimension : $profile-subheader-height * 1.1;
     padding-bottom: 0;
   
     .platform-ios & {
-        padding-top: $bar-height + $ios-statusbar-height !important;
+        padding-top: $bar-height + $ios-statusbar-height;
+        
+        .photo {
+            top: 0;
+        }
     }
 
     .photo{
@@ -192,6 +250,7 @@ $photo-dimension : $profile-subheader-height * 1.1;
       margin-right: 15px;
       -webkit-background-size: 60px 60px;
       background-size: 60px 60px;
+      top: 0;
     }
     .text{
       color: $light;
