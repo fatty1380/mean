@@ -5,9 +5,9 @@
         .module('account')
         .controller('AccountCtrl', AccountCtrl);
 
-    AccountCtrl.$inject = ['$rootScope', '$state', 'updateService', 'timerService', 'user'];
+    AccountCtrl.$inject = ['$rootScope', '$state', 'lockboxSecurity', 'timerService', 'updateService', 'user'];
 
-    function AccountCtrl ($rootScope, $state, updateService, timerService, user) {
+    function AccountCtrl ($rootScope, $state, lockboxSecurity, timerService, updateService, user) {
         var vm = this;
         logger.debug('AccountCtrl.init');
 
@@ -15,9 +15,24 @@
         vm.userId = user && user.id;
         vm.updates = updateService.getLastUpdates();
 
+        vm.lockboxOpen = false;
+
         vm.profileSelect = function () {
             $state.transitionTo('account.profile', {});
         };
+
+        lockboxSecurity.getUnlockedStatus()
+            .then(function (status) {
+                vm.lockboxOpen = status;
+            });
+
+        $rootScope.$on('lockbox-unlocked', function (event) {
+            vm.lockboxOpen = true;
+        });
+
+        $rootScope.$on('lockbox-secured', function (event) {
+            vm.lockboxOpen = false;
+        });
 
         $rootScope.$on('updates-available', function (event, updates) {
             logger.debug('AccountCtrl: New updates available: ', updates);

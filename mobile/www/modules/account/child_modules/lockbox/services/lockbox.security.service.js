@@ -6,8 +6,23 @@ lockboxSecurity.$inject = ['$rootScope', '$state', '$ionicPopup', 'LoadingServic
 function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $timeout, $cordovaGoogleAnalytics, securityService) {
 
     return {
-        checkAccess: checkAccess
+        checkAccess: checkAccess,
+        getUnlockedStatus: getCurrentStatus
     };
+
+    function getCurrentStatus () {
+        return securityService
+            .getPin()
+            .then(function (pin) {
+                if (_.isEmpty(pin)) {
+                    return true;
+                }
+
+                var state = securityService.getState();
+
+                return !state.secured;
+            });
+    }
 
     function checkAccess (options) {
         // TODO: refactor and move to service

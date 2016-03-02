@@ -7,7 +7,7 @@
 
     securityService.$inject = ['$rootScope', 'timerService', 'userService', 'StorageService', '$q'];
 
-    function securityService ($rootScope, timerService, userService, StorageService, $q) {
+    function securityService($rootScope, timerService, userService, StorageService, $q) {
 
         var PIN;
         var state = {
@@ -28,7 +28,7 @@
 
         // ///////////////////////////////////////////////////////////////////////////
 
-        function initialize () {
+        function initialize() {
             state = {
                 secured: false,
                 accessible: false
@@ -42,28 +42,30 @@
             state.initialized = true;
         }
 
-        function lock () {
+        function lock() {
+            $rootScope.$broadcast('lockbox-secured');
             logger.debug('Locking Lockbox');
             state.accessible = false;
         }
 
-        function unlock (pin) {
+        function unlock(pin) {
             logger.debug('UnLocking Lockbox');
             if (PIN === pin) {
                 state.accessible = true;
                 // lock lockbox documents every 15 minutes
                 timerService.initTimer('security-timer', 15 * 60, false);
+                $rootScope.$broadcast('lockbox-unlocked');
             }
             return state.accessible;
         }
 
-        function setPin (pin) {
+        function setPin(pin) {
             PIN = pin;
             userService.updateUserProps({ pin: pin });
             StorageService.set('lockbox_pin', pin);
         }
 
-        function getPin () {
+        function getPin() {
             if (!state.initialized) {
                 initialize();
             }
@@ -83,11 +85,11 @@
                 });
         }
 
-        function getState () {
+        function getState() {
             return state;
         }
 
-        function logout () {
+        function logout() {
             timerService.cancelTimer('security-timer');
             state.accessible = false;
             state.initialized = false;

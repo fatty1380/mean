@@ -21,9 +21,16 @@
     </ion-tab>
     <ion-tab title="lockbox" 
         icon-on="ico ico-lockboxiconactive" 
-        icon-off="ico ico-lockboxiconblue" 
+        icon-off="ico {{vm.lockboxOpen ? 'ico-lockboxiconblue' : 'ico-lockboxiconlocked'}}" 
         ui-sref="account.lockbox"
         >
         <ion-nav-view name="lockbox"></ion-nav-view>
     </ion-tab>
+    <ion-tab
+        ui-sref="account.messages"
+        hidden="true"
+        >
+        <ion-nav-view name="messages"></ion-nav-view>
+    </ion-tab>
+
 </ion-tabs>
