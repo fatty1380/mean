@@ -13,20 +13,36 @@
     <ion-pane class="pane content-pane">
         <ion-scroll>
             <ion-refresher pulling-text="Pull to refresh ..." on-refresh="vm.refreshDocuments()"></ion-refresher>
-            <ion-list class="document-list"  >
-                <ul ng-if="vm.documents.length">
-                    <li class="item" ng-repeat="doc in vm.documents track by $index | orderBy: 'url' : false" 
-                    ng-class="{'stub-document': !(doc.url || doc.id)}">
-                        <i class="ico ico-documentimage ico-documentimage{{doc.sku}}"></i>
-                        <div class="item-content" ng-class="{'no-date': !doc.created}">
-                            <strong>{{ doc.name }}</strong>
-                            <!--<span>{{ doc.created }}</span>-->
+            <ion-list class="document-list">
+                <div ng-if="vm.documents.length">
+                    <div ng-repeat="doc in vm.documents track by $index | orderBy: 'url' : false">
+                        <div class="row" ng-if="$even">
+                            <div ng-init="doc1 = vm.documents[$index]" class="doc col col-50" 
+                                 ng-class="{'stub-document': !(doc1.url || doc1.id)}" 
+                                 oset-doc-attr-view model="vm.documents[$index]" >
+                                <i class="ico ico-documentimage ico-documentimage{{doc1.sku}}"></i>
+                                <div class="item-content" ng-class="{'no-date': !doc1.created}">
+                                    <strong>{{ doc1.name }}</strong>
+                                    <!--<span>{{ doc1.created }}</span>-->
+                                </div>
+                                <oset-doc-view ng-if="!!doc1.url" model="doc" btn-text="View"></oset-doc-view>
+                                <button ng-if="!doc1.url" class="button button-small" ng-click="!!vm[doc1.fn] ? vm[doc1.fn](doc1) : vm.newDoc(doc1.sku)">{{doc1.action || 'Add'}}</button>
+                            </div>
+                            <div ng-init="doc2 = vm.documents[$index+1]" class="doc col col-50" 
+                                 ng-class="{'stub-document': !(doc2.url || doc2.id)}" 
+                                 oset-doc-attr-view model="vm.documents[$index+1]">
+                                <i class="ico ico-documentimage ico-documentimage{{doc2.sku}}"></i>
+                                <div class="item-content" ng-class="{'no-date': !doc2.created}">
+                                    <strong>{{ doc2.name }}</strong>
+                                    <!--<span>{{ doc2.created }}</span>-->
+                                </div>
+                                <oset-doc-view ng-if="!!doc2.url" model="doc2" btn-text="View"></oset-doc-view>
+                                <button ng-if="!doc2.url" class="button button-small" ng-click="!!vm[doc2.fn] ? vm[doc2.fn](doc2) : vm.newDoc(doc2.sku)">{{doc2.action || 'Add'}}</button>
+                            </div>
                         </div>
-                        <oset-doc-view ng-if="!!doc.url" model="doc" btn-text="View"></oset-doc-view>
-                        <button ng-if="!doc.url" class="button button-small" 
-                        ng-click="!!vm[doc.fn] ? vm[doc.fn](doc) : vm.newDoc(doc.sku)">{{doc.action || 'Add'}}</button>
-                    </li>
-                </ul>
+                    </div>
+                </div>
+
                 <div ng-if="!vm.documents.length" class="no-content">No documents</div>
             </ion-list>
         </ion-scroll>
