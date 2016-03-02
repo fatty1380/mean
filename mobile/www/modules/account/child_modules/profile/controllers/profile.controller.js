@@ -9,7 +9,7 @@
         'activityService', 'reviewService', 'LoadingService', 'experienceService',
         'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl($rootScope, $scope, StorageService, updateService, appCache, $state, $cordovaGoogleAnalytics, $ionicHistory,
+    function ProfileCtrl ($rootScope, $scope, StorageService, updateService, appCache, $state, $cordovaGoogleAnalytics, $ionicHistory,
         activityService, reviewService, LoadingService, experienceService,
         friendsService, avatarService, ProfileModals, cameraService, user, profile) {
 
@@ -50,7 +50,7 @@
         };
 
         var unbindUpdatesHandler = null;
-        function destroy() {
+        function destroy () {
             _.isFunction(unbindUpdatesHandler) && unbindUpdatesHandler();
         }
 
@@ -85,7 +85,7 @@
 
         // ////////////////////////////////////////////////////////////////////////////////////////////
 
-        function showFriends(event) {
+        function showFriends (event) {
             LoadingService.showLoader('Loading');
             event.stopPropagation();
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showFriends');
@@ -93,7 +93,7 @@
             $state.go('account.profile.friends', { userId: profile && profile.id });
         }
 
-        function showEndorsements() {
+        function showEndorsements () {
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showEndorsements');
             if (_.isEmpty(vm.profileData.license) ||
                 _.isEmpty(vm.profileData.license.class) && _.isEmpty(vm.profileData.license.endorsements)) {
@@ -156,7 +156,7 @@
 
                 vm.messageClick = function (event) {
                     openChat();
-                }
+                };
             }
 
             friendsService
@@ -213,11 +213,11 @@
                     });
             };
 
-            vm.showExperienceListModal = function showExperienceListModal() {
+            vm.showExperienceListModal = function showExperienceListModal () {
                 debugger;
                 return ProfileModals
                     .showListExperienceModal({ experience: vm.experience })
-                    .then(function success(experience) {
+                    .then(function success (experience) {
                         vm.experience = experience;
                     });
             };
@@ -258,14 +258,14 @@
         vm.getReviewBadge = getReviewBadge;
         vm.getExperienceBadge = getExperienceBadge;
 
-        function showProfileTab(event) {
+        function showProfileTab (event) {
             !!event && event.preventDefault();
 
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
             $cordovaGoogleAnalytics.trackView(vm.canEdit ? 'account.profile' : 'user.profile');
         }
 
-        function showReviewTab(event) {
+        function showReviewTab (event) {
             !!event && event.preventDefault();
 
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
@@ -280,7 +280,7 @@
             }
         }
 
-        function showExperienceTab(event) {
+        function showExperienceTab (event) {
             !!event && event.preventDefault();
 
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showExperience');
@@ -291,7 +291,7 @@
             }
         }
 
-        function getReviewBadge() {
+        function getReviewBadge () {
             if (vm.canEdit) {
 
                 if (!!vm.updates.reviews) {
@@ -306,7 +306,7 @@
             return null;
         }
 
-        function getExperienceBadge() {
+        function getExperienceBadge () {
             if (vm.canEdit && !vm.welcomeExperience) {
                 return '+';
             }
@@ -314,7 +314,7 @@
             return null;
         }
 
-        function getReviews() {
+        function getReviews () {
             reviewService
                 .getReviewsByUserID(vm.profileData.id)
                 .then(function (response) {
@@ -327,7 +327,7 @@
                 });
         }
 
-        function getExperience() {
+        function getExperience () {
             experienceService
                 .getUserExperience()
                 .then(function (response) {
@@ -335,24 +335,24 @@
                 });
         }
 
-        function openChat() {
+        function openChat () {
             if (!vm.canEdit && vm.friendStatus === 'friends') {
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'openChat');
                 $state.go('account.messages', { recipientId: vm.profileData.id });
             }
         }
-        
-        function gotoMessages() {
+
+        function gotoMessages () {
             if (vm.canEdit) {
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'gotoInbox');
                 $state.go('account.messages');
             }
         }
-        
+
 
 
         // "Other User" functions - START
-        function addUserToFriends() {
+        function addUserToFriends () {
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'addUserToFriends');
             var friend = vm.profileData;
 
@@ -375,7 +375,7 @@
                 });
         }
 
-        function doFriendAction() {
+        function doFriendAction () {
             switch (vm.friendStatus) {
                 case 'none':
                     vm.addUserToFriends();
@@ -392,7 +392,7 @@
             }
         }
 
-        function acceptFriend() {
+        function acceptFriend () {
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'acceptFriend');
             friendsService
                 .updateRequest(vm.friendRequest.id, { action: 'accept' })
@@ -405,7 +405,7 @@
                     }
                 });
         }
-            
+
         // Other User Function --- END
 
         vm.endorsementsMap = {
