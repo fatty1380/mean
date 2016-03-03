@@ -1,10 +1,40 @@
+
+
+$profile-subheader-height :     $bar-midsize-height - $bar-height - 20px;
+$photo-dimension :              $profile-subheader-height * 1.1;
+$profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
+
+.material-action {
+    
+    position: absolute;
+    right: $padding-base-horizontal;
+    top: calc(100vh - #{$tabs-height} - #{$button-height} - #{$padding-base-horizontal});
+    
+    //top: calc(100vh - $tabs-height + $padding-base-vertical);
+    // bottom: $tabs-height + $padding-base-vertical;
+    z-index: 10;
+        
+    .button {
+        border-radius: 50%;
+        width: $button-height;
+        height: $button-height;
+        box-shadow: 1px 1px 10px $dark;
+        
+        &:active {
+           box-shadow: 1px 1px 3px $dark;
+        }
+        
+        &.button-share, &.button-edit {
+            i {
+                zoom: 125%;
+            }
+        }
+    }
+}
+
 .button.button-small.button-icon:before {
   font-size: 26px !important;
 }
-
-$profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
-
-$photo-dimension : $profile-subheader-height * 1.1;
 
 .profile-screen {
     .profile-pane {
@@ -46,6 +76,17 @@ $photo-dimension : $profile-subheader-height * 1.1;
                 display: inline-block;
                 margin-right: $padding-base-vertical;
             }
+            
+            &.clickable {
+                color: $balanced;
+                
+                i.ico {
+                    background-color: $balanced;
+                    border-radius: 50%;
+                    padding: 4px;
+                    box-shadow: 1px 1px 5px rgba($balanced, 0.9);
+                }
+            }
         }
         
         
@@ -86,104 +127,235 @@ $photo-dimension : $profile-subheader-height * 1.1;
         text-align: center;
         margin-left: -$padding-large-horizontal;
         margin-right: -$padding-large-horizontal;
+    }
+    
+    .circle {
+    margin: 0 $padding-small-horizontal/2;
+    display: inline-block;
+    
+    vertical-align: top;
+    
+    width: 76px;
+    height: 76px;
+    // max-width: 80px;
+    // max-height: 80px;
+    
+    border: 2px solid $light;
+    border-radius: 50%;
+    box-shadow: 1px 1px 10px rgba($action-text, 0.8);
+    
+    background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
+    background: -webkit-linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
+    
+    color: $positive;
+    
+    .miles-badge, .license-badge, .experience-badge {
+        font-size: 8vw;
+        line-height: 9vw;
+        position: relative;
+        left: 0;
+        top: 0;
+        width: 100%;
+        top: 4vw;
         
-        .circle {
-            margin: 0 $padding-small-horizontal/2;
-            display: inline-block;
+        .small {
+            font-size: 0.7em;
+        }
+        
+        .label-text {
+            text-transform: uppercase;
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            left: 0;
+            font-size: 2.5vw;
             
-            vertical-align: top;
-            
-            width: 76px;
-            height: 76px;
-            // max-width: 80px;
-            // max-height: 80px;
-            
-            border: 2px solid $light;
-            border-radius: 50%;
-            box-shadow: 1px 1px 10px rgba($action-text, 0.8);
-            
-            background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
-            background: -webkit-linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
-            
-            color: $positive;
-            
-            .miles-badge, .license-badge, .experience-badge {
-                font-size: 8vw;
-                line-height: 9vw;
-                position: relative;
-                left: 0;
-                top: 0;
-                width: 100%;
-                top: 4vw;
-                
-                .small {
-                    font-size: 0.7em;
-                }
-                
-                .label-text {
-                    text-transform: uppercase;
-                    position: absolute;
-                    text-align: center;
-                    width: 100%;
-                    left: 0;
-                    font-size: 2.5vw;
-                    
-                    &.top {
-                        bottom: 6vw;
-                    }
-                    &.bot {
-                        top: 5vw;
-                    }
-                }
+            &.top {
+                bottom: 6vw;
             }
-            
-            .experience-badge::after {
-                content: '+';
-                font-size: 5vw;
-                position: absolute;
-                //left: -2vw;
-                bottom: 2vw;
+            &.bot {
+                top: 5vw;
             }
-            
-            .equipment-logo {
-                width: 100%;
-                margin: 5px auto;
-             
-                & + .badge {
-                    opacity: 0.9;
-                    position: relative;
-                    bottom: 10px;
-                    right: 0;
-                    left: 0px;
-                    top: unset;
-                    display: inline-flex;
-                    
-                    border-radius: 6px;
-                    font-size: 0.8em;
-                    line-height: 0.9em;
-                    max-width: 80px;
-                }   
-            }
-            
-            .license-badge {
-                font-size: 12vw;
-                font-weight: 500;
-                
-                top: 6vw;
-                
-                .label-text {
-                    &.bot {
-                        top: 6vw;
-                    }
-                }
-            }
-            
         }
     }
+    
+    .experience-badge::after {
+        content: '+';
+        font-size: 5vw;
+        position: absolute;
+        //left: -2vw;
+        bottom: 2vw;
+    }
+    
+    .equipment-logo {
+        width: 100%;
+        margin: 5px auto;
+        text-align: center;
+        
+        & + .badge {
+            opacity: 0.9;
+            position: relative;
+            bottom: 10px;
+            
+            // margin-right: auto;
+            // margin-left: auto;
+            
+            right: unset;
+            left: unset;
+            top: unset;
+            display: inline-flex;
+            
+            border-radius: 6px;
+            font-size: 0.8em;
+            line-height: 0.9em;
+            max-width: 76px + 2*$button-bar-button-padding;
+        }   
+    }
+    
+    .license-badge {
+        font-size: 12vw;
+        font-weight: 500;
+        
+        top: 6vw;
+        
+        .label-text {
+            &.bot {
+                top: 6vw;
+            }
+        }
+    }
+  }
+  
+  .equipment.card {
+      padding-left: $padding-base-horizontal;
+      
+      & > div {
+          display: block;
+      }
+      
+      .hanger {
+          
+      margin-right: 76 + $padding-base-horizontal;
+      }
+      
+      .circle {
+          vertical-align: bottom;
+          background: none;
+          border: none;
+          box-shadow: none;
+          position: absolute;
+          bottom: 0;
+          bottom: $padding-base-vertical;
+          right: $padding-base-horizontal;
+          margin: 10px;
+          display: inline-block;
+          
+          text-align: center;
+          
+          .badge {
+              bottom: 0; // $padding-base-vertical;
+              text-align: center;
+              
+              //text-align: right;
+          }
+      }
+  }
+  
+  .experience.item, .equipment.item {
+      padding-left: $padding-base-horizontal;
+      padding-right: $padding-base-horizontal;
+      
+      
+      
+      .item-label {
+            padding-top: $padding-large-vertical;
+            padding-bottom: $padding-small-vertical;
+          //border-bottom: 1px solid black;
+          color: $tab-text;
+          font-weight: 400;
+          font-size: 1.15em;
+          
+          &:first-of-type {
+            padding-top: $padding-base-vertical;
+            //color: purple;
+        }
+      }
+      
+      .button-clear, .button-icon {
+          color: $positive;
+      }
+      
+      .exp-item {
+        margin-left: $padding-base-horizontal;
+        margin-right: $padding-base-horizontal;
+        
+        color: $dark;
+      }
+      
+      .col {
+          padding-left: 0;
+          padding-right: 0;
+          padding-top: 0;
+          padding-bottom: 0;
+      }
+      
+      .company {
+          font-size: 1.1em;
+          text-transform: uppercase;
+          color: $brand-blue;
+          padding-bottom: $padding-small-vertical;
+      }
+      
+    //   .exp-spacer {
+    //       width: 100%;
+    //     //   background-color: purple;
+    //       height: 2*$padding-large-vertical;
+    //   }
+  }
+}
+
+.profile-screen.view-section {
+    background: linear-gradient(rgba($tab-selected, 0.7), rgba($tab-selected, 0.7)), url('../img/semi.jpg');
+    background-position-x: 50%;
+    background-position-y: -115%;
 }
 
 .profile-pane {
-    margin-top: $photo-dimension/1.3 + $padding-large-vertical;
+    margin-top: $profile-header-height;
+}
+
+.header-actions {
+    z-index: 3;
+    
+    &.right {
+        right: $padding-base-horizontal;
+        .button {
+            margin-left: $padding-small-horizontal;
+        }
+    }
+    &.left {
+        left: $padding-base-horizontal;
+        .button {
+            margin-right: $padding-small-horizontal;
+        }
+    }
+    
+    position: fixed;
+    top: $profile-header-height - 38px;
+    
+    &.below {
+    top: $photo-dimension/1.3 + $padding-large-vertical + $padding-base-vertical;
+    .button {
+        border-radius: 50%;
+        width: 38px;
+        height: 38px;
+        box-shadow: 1px 1px 10px rgba($action-text, 0.8);
+        
+        &.button-share, &.button-edit {
+            padding-top: 3px;
+        }
+    }
+    }
 }
 
 .profile-visual {
@@ -399,12 +571,13 @@ $photo-dimension : $profile-subheader-height * 1.1;
 
 .button {
     &.button-pos-tr {
-        // position: relative;
+        position: absolute;
         // top: 10px;
         // right: 10px;
         float: right;
-        top: -15px;
-        // max-height: 20px;
+        top: 0; //-4px;
+        right: $padding-base-horizontal;
+                // max-height: 20px;
         // min-height: 18px;
     }
 }
@@ -454,19 +627,23 @@ $photo-dimension : $profile-subheader-height * 1.1;
       }
   }
   
-  .profile-list {
-      .card {
-         & > .row {
-              position: relative;
-	          top: -20px;
-          }
+//   .profile-list {
+//       .card {
+//          & > .row {
+//               position: relative;
+// 	          top: -20px;
+//           }
       
-        //padding-bottom: 0!important;
+//         //padding-bottom: 0!important;
       
-      }
-  }
+//       }
+//   }
 
   .profile-list, .experience-list, activity-list {
+      
+      padding-bottom: 200px;
+      
+      
       .row {
         margin-bottom: 0px;
         
@@ -492,13 +669,13 @@ $photo-dimension : $profile-subheader-height * 1.1;
         padding: 10px 0 15px;
         border: none;
           
-        
-        .item-label{
-            font-weight: bold;
-            color: $gradient-bottom;
-        }
+      .item-label {
+          color: $tab-text;
+          font-weight: 400;
+          font-size: 1.15em;
+      }
         .item-title {
-            font-size: 1.1em;
+            font-size: 1.2em;
         }
       }
       
@@ -612,7 +789,7 @@ $photo-dimension : $profile-subheader-height * 1.1;
       }
       
       .company{
-          display: inline-block;
+        display: inline-block;
         font-size: 0.85em;
         text-transform: uppercase;
         color: $positive;

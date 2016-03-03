@@ -8,22 +8,13 @@
     ProfileEditCtrl.$inject = ['$rootScope', '$timeout', '$state', '$filter',
         'LoadingService', 'truckService', 'userService', 'profileModalsService', 'trailerService', 'tokenService'];
 
-    function ProfileEditCtrl ($rootScope, $timeout, $state, $filter,
+    function ProfileEditCtrl($rootScope, $timeout, $state, $filter,
         LoadingService, truckService, userService, profileModalsService, trailerService, tokenService) {
         var vm = this;
 
         if (!userService.profileData) {
             return $state.go('home');
         }
-
-        vm.addressEditing = false;
-
-        vm.profileData = userService.profileData;
-        vm.profileData.props = vm.profileData.props || {};
-        vm.profileData.profileImageURL = userService.getAvatar(vm.profileData);
-
-        vm.owner = vm.profileData.props.owner;
-        vm.started = getFormattedDate(vm.profileData.props.started);
 
         vm.save = save;
         vm.logout = logout;
@@ -33,25 +24,46 @@
         vm.editAddress = showEditAddress;
         vm.updateTrailers = updateTrailers;
         vm.updateTrucks = updateTrucks;
+        vm.toggleMileUnit = toggleMileUnit;
 
+        activate();
 
-        function updateTrailers (trailers) {
+        function activate() {
+
+            vm.addressEditing = false;
+
+            vm.profileData = userService.profileData;
+            vm.profileData.props = vm.profileData.props || {};
+            vm.profileData.profileImageURL = userService.getAvatar(vm.profileData);
+
+            vm.owner = vm.profileData.props.owner;
+            vm.started = getFormattedDate(vm.profileData.props.started);
+
+            vm.mileUnit = vm.profileData.props.mileUnit || 'miles';
+        }
+
+        function toggleMileUnit(unit) {
+            debugger;
+            vm.mileUnit = unit || 'miles';
+        }
+
+        function updateTrailers(trailers) {
             if (!trailers) { return; }
             vm.profileData.props.trailer = trailers;
         }
 
-        function updateTrucks (truck) {
+        function updateTrucks(truck) {
             if (!truck) { return; }
             vm.profileData.props.truck = truck;
         }
 
-        function showEditAddress () {
+        function showEditAddress() {
             profileModalsService.showProfileEditAddressModal({ address: vm.profileData.address });
 
             vm.addressEditing = true;
         }
 
-        function showProfileEditTrailersModal () {
+        function showProfileEditTrailersModal() {
             trailerService
                 .getTrailers()
                 .then(function (trailers) {
@@ -65,7 +77,7 @@
                 });
         }
 
-        function showProfileEditTrucksModal () {
+        function showProfileEditTrucksModal() {
             truckService
                 .getTrucks()
                 .then(function (trucks) {
@@ -79,20 +91,20 @@
                 });
         }
 
-        function showProfileEditLicenseModal () {
+        function showProfileEditLicenseModal() {
             profileModalsService
                 .showProfileEditLicenseModal({ license: vm.profileData.license })
-                .then(function success (license) {
+                .then(function success(license) {
                     logger.debug('Updated License to ', license);
                     vm.profileData.license = license;
                 });
         }
 
-        function getFormattedDate (date) {
+        function getFormattedDate(date) {
             return $filter('date')($filter('monthDate')(date), 'MMMM, yyyy');
         }
 
-        function save (form, e) {
+        function save(form, e) {
             e.preventDefault();
             logger.warn(' form --->>>', form);
             LoadingService.showLoader('Saving Profile');
@@ -100,6 +112,7 @@
             if (form.$valid) {
                 // Update the started date
                 if (vm.owner !== null) { vm.profileData.props.owner = vm.owner; }
+                vn.profileData.props.mileUnit = vm.mileUnit;
 
                 if (/\d{4,4}-\d{2,2}/.test(vm.started)) {
                     vm.profileData.props.started = vm.started;
@@ -132,7 +145,7 @@
 
         }
 
-        function logout () {
+        function logout() {
             userService
                 .signOut()
                 .then(function (data) {

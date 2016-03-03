@@ -47,12 +47,18 @@
                             {{vm.addressEditing ? 'done' : 'edit'}}
                         </button>
                     </div>
-                    
+
                     <tline-address-toggle ng-model="vm.profileData.address" edit-mode="vm.addressEditing"></tline-address-toggle>
-                    
+
                 </div>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Employer</span>
+                    <input type="text" ng-model="vm.profileData.props.company" placeholder="Employer" name="employer">
+                </label>
 
-
+                <div class="item item-divider">
+                    Truck & Trailer
+                </div>
                 <div class="item edit-profile-types">
                     <div class="top">
                         <span class="input-label">Truck Manufacturer</span>
@@ -64,7 +70,9 @@
                     <span class="input-label">Truck Model</span>
                     <input type="text" ng-model="vm.profileData.props.model" placeholder="Truck Model" name="model">
                 </label>
+
                 <oset-toggle label="Owner Operator" type="button-small" model="vm.owner"></oset-toggle>
+
                 <div class="item edit-profile-types">
                     <div class="top">
                         <span class="input-label">Trailer Types</span>
@@ -73,6 +81,9 @@
                     <ul class="selected-trailers">
                         <li ng-repeat="trailer in vm.profileData.props.trailer">{{trailer}}</li>
                     </ul>
+                </div>
+                <div class="item item-divider">
+                    Qualifications
                 </div>
                 <div class="item edit-profile-types">
                     <div class="top">
@@ -92,15 +103,30 @@
                     <span class="input-label">Driving Since</span>
                     <input type="text" ng-model="vm.started" placeholder="Driving Since" name="started" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
                 </label>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Employer</span>
-                    <input type="text" ng-model="vm.profileData.props.company" placeholder="Employer" name="employer">
-                </label>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Miles per Year</span>
-                    <input type="text" ng-model="vm.profileData.props.miles" placeholder="Miles per Year" name="miles">
+                <label class="item item-input">
+                    <div class="col item-floating-label">
+                        <span class="input-label">Miles per Year</span>
+                        <input type="tel" ng-model="vm.profileData.props.miles" placeholder="Miles per Year" name="miles">
+                    </div>
+                    <div class="col">
+                        <div class="button-bar">
+                            <button class="button button-small" ng-class="{'active': (vm.mileUnit === 'miles')}" ng-click="vm.toggleMileUnit('miles')"
+                            type="button">1</button>
+                            <button class="button button-small" ng-class="{'active': (vm.mileUnit === 'thousand')}" ng-click="vm.toggleMileUnit('thousand')"
+                            type="button">1k</button>
+                            <button class="button button-small" ng-class="{'active': (vm.mileUnit === 'million')}" ng-click="vm.toggleMileUnit('million')"
+                            type="button">1m</button>
+                        </div>
+                    </div>
+
+
+
                 </label>
 
+                <div class="item item-divider">
+                    
+                </div>
+                
                 <div class="item item-button-right">
                     Log Out
                     <button class="button button-assertive" ng-click="vm.logout()">

@@ -1,4 +1,6 @@
 <ion-view class="profile-screen view-section" cache-view="false">
+
+
     <!--Profile Main Heading START-->
     <ion-header-bar align-title="center">
         <button ng-if="!vm.showEditModal" class="button button-clear" ng-click="vm.goBack()">
@@ -11,17 +13,35 @@
                 <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt="" />
             </div>
         </div>
+
+
+        <div class="header-actions left">
+            <button class="button button-clear button-edit" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()">
+                <i class="icon ion-ios-gear"></i>
+            </button>
+        </div>
+
+        <div class="header-actions right">
+        </div>
+
+
+        <div class="material-action">
+            <button class="button button-energized button-share" ng-if="vm.showShareModal" ng-click="vm.showShareModal()">
+                <i class="icon ion-android-share"></i>
+            </button>
+        </div>
     </ion-header-bar>
+
     <!--Profile Main Heading END-->
 
     <!--Profile Main Body START-->
     <ion-pane class="profile-pane">
-        <div title="PROFILE" class="profile-tabs content-pane" ng-class="{'has-button': !!vm.showShareModal || !vm.canEdit, 'view-only': !vm.canEdit}">
+        <div title="PROFILE" class="profile-tabs content-pane" ng-class="{'view-only': !vm.canEdit}">
 
 
 
             <ion-scroll class="list">
-            <button class="button button-icon ion-compose button-pos-tr" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()"></button>
+                <!--<button class="button button-icon ion-compose button-pos-tr" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()"></button>-->
                 <div class="profile-list">
 
                     <div class="profile-title">
@@ -32,14 +52,14 @@
                         <div class="handle" ng-if="!!vm.profileData.handle">
                             <i class="ico ico-radio-badge"></i> {{vm.profileData.handle | uppercase}}
                         </div>
-                        <div class="friends" ng-click="vm.showFriends($event);">
+                        <div class="friends clickable" ng-click="vm.showFriends($event);">
                             <i class="ico ico-friend-badge"></i>{{vm.profileData.friends.length}} Friends
                             <span class="badge-container">
                             <span ng-if="vm.canEdit && vm.updates.requests" class="badge badge-assertive">{{vm.updates.requests}}</span>
                             </span>
                         </div>
 
-                        <div class="message" ng-click="vm.messageClick($event);">
+                        <div class="message clickable" ng-click="vm.messageClick($event);">
                             <i class="ico ico-message-badge"></i>
                             <span class="badge-container">
                                 <span ng-if="vm.canEdit && vm.updates.messages.amount" class="badge badge-assertive">{{vm.updates.messages.amount}}</span>
@@ -51,19 +71,9 @@
                     <ion-item class="profile-bubbles">
                         <div class="circle">
                             <div class="miles-badge">
-                                20<span class="small">k</span>
+                                {{vm.thousandsOfMiles}}<span class="small">k</span>
                                 <span class="label-text bot">miles</span>
                             </div>
-                        </div>
-                        <div class="circle">
-                            <div class="equipment-logo">
-                                <i ng-if="vm.trucksMap[vm.profileData.props.truck]" class="ico-t {{vm.trucksMap[vm.profileData.props.truck]}}"></i>
-                                <div ng-if="!!vm.profileData.props.truck && !vm.trucksMap[vm.profileData.props.truck]">{{vm.profileData.props.truck}} {{vm.profileData.props.model}}</div>
-                                <div ng-if="!vm.profileData.props.truck && vm.profileData.props.model">{{vm.profileData.props.model}}</div>
-                            </div>
-                            <span ng-if="vm.trucksMap[vm.profileData.props.truck] && vm.profileData.props.model" class="badge badge-positive">
-                                        {{vm.profileData.props.model}}
-                                    </span>
                         </div>
                         <div class="circle">
                             <div class="license-badge">
@@ -79,102 +89,110 @@
                         </div>
                     </ion-item>
 
+                    <ion-item class="equipment card">
+                        <h4 class="item-label">Equipment</h4>
+                        <button class="button button-icon ion-compose button-pos-tr" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()"></button>
 
 
-                    <!--<ion-item class="card has-title">
-
-                        <div class="item-divider item-heading">
-                            <span class="item-label item-title text-center">
-                                    <span ng-if="vm.profileData.props.company || vm.profileData.props.title">{{vm.profileData.props.title || 'Driver'}}<span ng-if="!!vm.profileData.props.company"> at </span>{{vm.profileData.props.company}}</span>
-                            <span ng-if="!vm.profileData.props.company && !vm.profileData.props.title">About {{vm.profileData.firstName}}</span>
-                            </span>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-67">
-                                <div class="row nested" ng-if="vm.profileData.props.started">
-                                    <div class="col">
-                                        <span class="item-label">DRIVING SINCE:</span>
-                                        <span class="item-note">{{vm.profileData.props.started | monthDate | date : 'MMMM, yyyy'}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-33">
-                                <div class="item-note">
-                                    <div class="equipment-logo">
-                                        <i ng-if="vm.trucksMap[vm.profileData.props.truck]" class="{{vm.trucksMap[vm.profileData.props.truck]}}"></i>
-                                        <div ng-if="!!vm.profileData.props.truck && !vm.trucksMap[vm.profileData.props.truck]">{{vm.profileData.props.truck}} {{vm.profileData.props.model}}</div>
-                                        <div ng-if="!vm.profileData.props.truck && vm.profileData.props.model">{{vm.profileData.props.model}}</div>
-                                        <span ng-if="vm.trucksMap[vm.profileData.props.truck] && vm.profileData.props.model" class="badge badge-positive">
-                                        {{vm.profileData.props.model}}
-                                    </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row" ng-if="!!vm.profileData.props.trailer">
-                            <div class="col hanger">
-                                <span class="item-label">TRAILER:&nbsp;</span>
-                                <span class="wrap-col">
-                                <span ng-repeat="trailer in vm.profileData.props.trailer">
+                        <div class="exp-item">
+                            <div class="row">
+                                <div class="col">
+                                    <span ng-repeat="trailer in vm.profileData.props.trailer">
                                     {{trailer}}<span ng-if="!$last">, </span>
-                                </span>
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                        <div class="row" ng-if="!!vm.profileData.props.freight">
-                            <div class="col">
-                                <span class="item-label"><span class="ico ico-freight"></span> FREIGHT:&nbsp;</span>
-                                <span class="item-note">{{vm.profileData.props.freight}}</span></div>
-                        </div>
-                    </ion-item>-->
 
-                    <ion-item>
-                        <ul class="endorsements-list" ng-click="vm.showEndorsements()">
-                            <li ng-repeat="endorsement in vm.profileData.license.endorsements">
-                                <i class="ico extra-small-size {{ vm.endorsementsMap[endorsement].ico}}"></i>
-                            </li>
-                        </ul>
+                        <h4 class="item-label">Endorsements</h4>
+                        <div class="exp-item">
+                            <div class="row">
+                                <div class="col">
+                                    <span ng-repeat="endorsement in vm.profileData.license.endorsements">
+                                    <strong>{{endorsement}}:</strong> {{ vm.endorsementsMap[endorsement].title }}
+                                    <br ng-if="!$last" />
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="circle">
+                            <div class="equipment-logo">
+                                <i ng-if="vm.trucksMap[vm.profileData.props.truck]" class="ico-t {{vm.trucksMap[vm.profileData.props.truck]}}"></i>
+                                <div ng-if="!!vm.profileData.props.truck && !vm.trucksMap[vm.profileData.props.truck]">{{vm.profileData.props.truck}} {{vm.profileData.props.model}}</div>
+                                <div ng-if="!vm.profileData.props.truck && vm.profileData.props.model">{{vm.profileData.props.model}}</div>
+                            </div>
+                            <span ng-if="vm.trucksMap[vm.profileData.props.truck] && vm.profileData.props.model" class="badge badge-positive">
+                                {{vm.profileData.props.model}}
+                            </span>
+                        </div>
+
                     </ion-item>
-                </div>
 
-                <div class="experience-list">
-                    <div class="item activity profile-activity" ng-if="vm.experience">
-                        <span class="item-label">EXPERIENCE:</span>
-                        <button ng-if="vm.canEdit &&  !!vm.experience.length" class="button button-icon ion-compose button-pos-tr" ng-click="vm.showExperienceListModal()">&nbsp; edit</button>
-                        <button ng-if="vm.canEdit && !vm.experience.length" class="button button-icon ion-ios-plus-outline button-pos-tr" ng-click="vm.showAddExperienceModal()">&nbsp; add</button>
-                    </div>
+                    <ion-item class="card experience">
+                        <h4 class="item-label">Experience</h4>
+                        <button ng-if="vm.canEdit &&  !!vm.experience.length" class="button button-icon ion-compose button-pos-tr" ng-click="vm.showExperienceListModal()"></button>
+                        <button ng-if="vm.canEdit && !vm.experience.length" class="button button-icon ion-ios-plus-outline button-pos-tr" ng-click="vm.showAddExperienceModal()"></button>
 
-                    <tline-experience-list ng-model="vm.experience" show-add-button="false" can-edit="vm.canEdit" show-add-fn="vm.showAddExperienceModal"
-                    instructText="vm.expInstructText"></tline-experience-list>
-                </div>
+                        <span ng-repeat="exp in (vm.experience) track by $index">
+                            <div class="exp-item">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="company" ng-if="!!exp.company"> {{exp.company}}</div>
+                                    </div>
+                                    <div class="col text-right">
+                                        <div class="time" ng-if="!!exp.startDate || exp.endDate">
+                                            <i class="ico ico-timesmall"></i>
+                                            <span ng-if="!!exp.startDate">{{exp.startDate | monthDate | date : 'yyyy'}}</span>
+                                            <span ng-if="!!exp.startDate && exp.startDate !== exp.endDate">-</span>
+                                            <span ng-if="!!exp.endDate">{{exp.endDate | monthDate | date : 'yyyy'}}</span>
+                                            <span ng-if="!exp.endDate">Now</span>
+                                        </div>
+                                    </div>
+        </div>
 
-
-                <div name="activity-list">
-
-                    <div class="item item-divider" ng-if="vm.feed"></div>
-
-                    <div class="item activity profile-activity" ng-if="vm.feed">
-                        <span class="item-label">ACTIVITY:</span>
-                        <div class="text-center item-loading" ng-if="vm.feedLoading">
-                            <ion-spinner></ion-spinner>
-                        </div>
-                        <oset-feed-item ng-if="vm.feed.length" ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
-                        <div ng-if="!vm.feed.length && !vm.feedLoading" class="no-feed-items">{{ vm.feedMessage }}</div>
-                    </div>
-
-                </div>
-            </ion-scroll>
-
-            <div class="button content-button" ng-if="!!vm.showShareModal" ng-click='vm.showShareModal()'>
-                <button type="button" class="button button-block button-positive">
-                    <i class="ion-share"></i> Share
-                </button>
+        <div class="row">
+            <div class="col">
+                <div class="title">{{exp.title}}</div>
             </div>
-            <div class="button content-button" ng-if="!vm.canEdit" ng-click="vm.openChat()">
-                <button type="button" class="button button-block button-positive">
-                    <i class="ion-chatbubbles"></i> Send Message
-                </button>
+            <div class="col text-right">
+                <div class="location" ng-if="!!exp.location">{{exp.location}}</div>
             </div>
+        </div>
+
+        </div>
+        <div class="exp-spacer" ng-if="!$last">&nbsp;</div>
+        </span>
+
+        </ion-item>
+        </div>
+
+        <div name="activity-list">
+
+            <div class="item item-divider" ng-if="vm.feed"></div>
+
+            <div class="item activity profile-activity" ng-if="vm.feed">
+                <span class="item-label">ACTIVITY:</span>
+                <div class="text-center item-loading" ng-if="vm.feedLoading">
+                    <ion-spinner></ion-spinner>
+                </div>
+                <oset-feed-item ng-if="vm.feed.length" ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
+                <div ng-if="!vm.feed.length && !vm.feedLoading" class="no-feed-items">{{ vm.feedMessage }}</div>
+            </div>
+
+        </div>
+        </ion-scroll>
+
+        <div class="button content-button" ng-if="!!vm.showShareModal" ng-click='vm.showShareModal()'>
+            <button type="button" class="button button-block button-positive">
+                <i class="ion-share"></i> Share
+            </button>
+        </div>
+        <div class="button content-button" ng-if="!vm.canEdit" ng-click="vm.openChat()">
+            <button type="button" class="button button-block button-positive">
+                <i class="ion-chatbubbles"></i> Send Message
+            </button>
+        </div>
         </div>
     </ion-pane>
 
