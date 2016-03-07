@@ -80,8 +80,8 @@
             destroy();
         });
 
-        function activate() {
-            vm.profileData = profile || user;
+        function activate(updatedUser) {
+            vm.profileData = updatedUser || profile || user;
 
             vm.thousandsOfMiles = null;
             vm.mileType = null;
@@ -100,6 +100,19 @@
                     vm.mileType = 'year';
                     miles = Number(props.miles);
                     vm.thousandsOfMiles = miles >= 1000 ? miles / 1000 : miles;
+                    vm.mileUnit = 'k';
+
+                    if (vm.thousandsOfMiles >= 1000) {
+                        vm.thousandsOfMiles = Number(vm.thousandsOfMiles / 1000).toFixed(1);
+                        vm.mileUnit = 'm';
+                    }
+                    else {
+                        vm.thousandsOfMiles = Number(miles >= 1000 ? miles / 1000 : miles).toFixed(0);
+                    }
+                }
+                
+                if (!!props.started) {
+                    vm.yearsDriving = moment().diff(moment(props.started, 'YYYY-MM'), 'years');
                 }
             }
         }
@@ -226,15 +239,16 @@
              * Shows the "Edit User" modal screen to allow
              * editing of user's name, properties, etc
              */
-            vm.showEditModal = function (parameters) {
+            vm.showEditModal = function (target) {
                 LoadingService.showLoader();
                 $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'showEdit');
 
                 ProfileModals
-                    .showProfileEditModal(parameters)
+                    .showProfileEditModal({target: target})
                     .then(function (result) {
                         if (result) {
-                            vm.profileData = result;
+                            activate(result);
+                            // vm.profileData = result;
                         }
                     });
             };

@@ -5,16 +5,18 @@
         .module('account')
         .controller('ProfileEditCtrl', ProfileEditCtrl);
 
-    ProfileEditCtrl.$inject = ['$rootScope', '$timeout', '$state', '$filter',
-        'LoadingService', 'truckService', 'userService', 'profileModalsService', 'trailerService', 'tokenService'];
+    ProfileEditCtrl.$inject = ['$filter', '$ionicScrollDelegate', '$location', '$rootScope', '$state', '$timeout',
+        'LoadingService', 'parameters', 'profileModalsService', 'tokenService', 'trailerService', 'truckService', 'userService'];
 
-    function ProfileEditCtrl($rootScope, $timeout, $state, $filter,
-        LoadingService, truckService, userService, profileModalsService, trailerService, tokenService) {
+    function ProfileEditCtrl($filter, $ionicScrollDelegate, $location, $rootScope, $state, $timeout,
+        LoadingService, parameters, profileModalsService, tokenService, trailerService, truckService, userService) {
         var vm = this;
 
         if (!userService.profileData) {
             return $state.go('home');
         }
+
+        vm.activate = activate;
 
         vm.save = save;
         vm.logout = logout;
@@ -28,11 +30,11 @@
 
         activate();
 
-        function activate() {
+        function activate(inputUser) {
 
             vm.addressEditing = false;
 
-            vm.profileData = userService.profileData;
+            vm.profileData = inputUser || userService.profileData;
             vm.profileData.props = vm.profileData.props || {};
             vm.profileData.profileImageURL = userService.getAvatar(vm.profileData);
 
@@ -40,6 +42,16 @@
             vm.started = getFormattedDate(vm.profileData.props.started);
 
             vm.mileUnit = vm.profileData.props.mileUnit || 'miles';
+
+            if (!_.isEmpty(parameters.target)) {
+                vm.hash = parameters.target;
+                $timeout(function () {
+                    $location.hash(parameters.target);
+                    var scroller = $ionicScrollDelegate.$getByHandle('mainScroll');
+                    var instance = _.find(scroller._instances, { '$$delegateHandle': 'mainScroll' });
+                    instance.anchorScroll(true);
+                }, 150);
+            }
         }
 
         function toggleMileUnit(unit) {
@@ -112,7 +124,8 @@
             if (form.$valid) {
                 // Update the started date
                 if (vm.owner !== null) { vm.profileData.props.owner = vm.owner; }
-                vn.profileData.props.mileUnit = vm.mileUnit;
+                vm.profileData.props.mileUnit = vm.mileUnit;
+                debugger;
 
                 if (/\d{4,4}-\d{2,2}/.test(vm.started)) {
                     vm.profileData.props.started = vm.started;

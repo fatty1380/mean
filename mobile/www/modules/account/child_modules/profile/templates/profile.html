@@ -73,21 +73,28 @@
                     </ion-item>
 
                     <ion-item class="profile-bubbles">
-                        <div class="circle">
+                        <div class="circle" ng-click="vm.showEditModal('miles')">
                             <div class="miles-badge">
-                                {{vm.thousandsOfMiles}}<span class="small">k</span>
+                                <span ng-if="vm.thousandsOfMiles">
+                                {{vm.thousandsOfMiles}}<span class="small">{{vm.mileUnit}}</span>
+                                </span>
+                                <span ng-if="!vm.thousandsOfMiles" class="empty"> <i class="ion ion-compose"></i> </span>
                                 <span class="label-text bot">miles</span>
                             </div>
                         </div>
-                        <div class="circle">
+                        <div class="circle" ng-click="vm.showEditModal('license')">
                             <div class="license-badge">
+                                <span ng-if="!vm.profileData.license || !vm.profileData.license.class" class="empty"> <i class="ion ion-compose"></i> </span>
                                 <span class="label-text top">class</span> {{vm.profileData.license.class}}
                                 <span class="label-text bot hide">license</span>
                             </div>
                         </div>
-                        <div class="circle">
+                        <div class="circle" ng-click="vm.showEditModal('started')">
                             <div class="experience-badge">
-                                5
+                                <span ng-if="vm.yearsDriving" class="value">
+                                {{vm.yearsDriving}}
+                                </span>
+                                <span ng-if="!vm.yearsDriving" class="empty"> <i class="ion ion-compose"></i> </span>
                                 <span class="label-text bot">years</span>
                             </div>
                         </div>
@@ -95,7 +102,7 @@
 
                     <ion-item class="equipment card">
                         <h4 class="item-label">Equipment</h4>
-                        <button class="button button-icon ion-compose button-pos-tr" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()"></button>
+                        <button class="button button-icon ion-compose button-pos-tr" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal('trailer')"></button>
 
 
                         <div class="exp-item">
@@ -120,7 +127,7 @@
                             </div>
                         </div>
 
-                        <div class="circle">
+                        <div class="circle"  ng-click="vm.showEditModal('truck')">
                             <div class="equipment-logo">
                                 <i ng-if="vm.trucksMap[vm.profileData.props.truck]" class="ico-t {{vm.trucksMap[vm.profileData.props.truck]}}"></i>
                                 <div ng-if="!!vm.profileData.props.truck && !vm.trucksMap[vm.profileData.props.truck]">{{vm.profileData.props.truck}} {{vm.profileData.props.model}}</div>
@@ -138,7 +145,7 @@
                         <button ng-if="vm.canEdit &&  !!vm.experience.length" class="button button-icon ion-compose button-pos-tr" ng-click="vm.showExperienceListModal()"></button>
                         <button ng-if="vm.canEdit && !vm.experience.length" class="button button-icon ion-ios-plus-outline button-pos-tr" ng-click="vm.showAddExperienceModal()"></button>
 
-                        <span ng-repeat="exp in (vm.experience) track by $index">
+                        <div ng-repeat="exp in (vm.experience) track by $index">
                             <div class="exp-item">
                                 <div class="row">
                                     <div class="col">
