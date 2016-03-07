@@ -38,7 +38,7 @@
         }
     }
 
-    function ViewDocumentDirective() {
+    function ViewDocumentDirective () {
         var directive = {
             link: link,
             template: documentTemplate,
@@ -56,7 +56,7 @@
         return directive;
 
         // Inject controller as 'vm' for consistency
-        function link(scope, el, attr, vm) {
+        function link (scope, el, attr, vm) {
             // Set defaults
             vm.scope = scope;
 
@@ -68,11 +68,11 @@
     }
 
     ViewDocDirectiveCtrl.$inject = ['modalService'];
-    function ViewDocDirectiveCtrl(DocPreview) {
+    function ViewDocDirectiveCtrl (DocPreview) {
         var vm = this;
 
         vm.docClick = function (event) {
-            
+
             event.stopPropagation();
             
             if (vm.document.url) {
@@ -86,12 +86,12 @@
 
         // /
 
-        function activate() {
+        function activate () {
             vm.btnText = vm.document && vm.document.name || 'huh?'
 
             if (!!vm.document && !!vm.document.created) {
                 vm.created = moment(vm.document.created, moment.ISO_8601).format('L');
-            }
+        }
             //            vm.btnText = vm.btnText || 'View';
         }
 
@@ -117,7 +117,7 @@
 
     // AKA: ContactDialogCtrl
     DocumentModalCtrl.$inject = ['parameters', '$sce', '$timeout', '$ionicPopup', 'LoadingService', 'PDFViewerService'];
-    function DocumentModalCtrl(parameters, $sce, $timeout, $ionicPopup, LoadingService, PDFViewerService) {
+    function DocumentModalCtrl (parameters, $sce, $timeout, $ionicPopup, LoadingService, PDFViewerService) {
         var vm = this;
 
         vm.document = parameters.document || parameters;
@@ -136,9 +136,12 @@
         vm.enlarge = enlarge;
         vm.minimize = minimize;
         vm.toggleFullScreen = toggleFullScreen;
+        vm.toggleZoom = toggleZoom;
         vm.close = close;
 
-        function close(e) {
+
+
+        function close (e) {
             e.stopPropagation();
             vm.closeModal(null);
 
@@ -148,7 +151,7 @@
             }
         }
 
-        function enlarge(e) {
+        function enlarge (e) {
             vm.fullScreenMode = !vm.fullScreenMode;
             if (angular.isFunction(screen.lockOrientation)) {
                 screen.lockOrientation('landscape');
@@ -161,7 +164,7 @@
             }
         }
 
-        function minimize() {
+        function minimize () {
             vm.fullScreenMode = !vm.fullScreenMode;
             if (angular.isFunction(screen.lockOrientation)) {
                 screen.lockOrientation('portrait');
@@ -194,7 +197,7 @@
 
         logger.debug('[DocumentModalCtrl] for document: %o', vm.document);
 
-        function trustSrc(src) {
+        function trustSrc (src) {
             // logger.debug('SCE Trusting resource: `%s`', src);
             return $sce.trustAsResourceUrl(src);
         }
@@ -213,7 +216,6 @@
                     LoadingService.hide();
                     break;
                 case 'loadError':
-                    debugger;
                     LoadingService.showAlert('Sorry, Please, try later.');
                     logger.error('Image Event Errored', err);
                     break;
@@ -251,7 +253,7 @@
         }
 
 
-        function loadProgress(loaded, total, state) {
+        function loadProgress (loaded, total, state) {
 
             var progress = Math.ceil(loaded / total * 100);
             if (progress <= 100) {

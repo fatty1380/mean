@@ -20,7 +20,7 @@
     lockboxDocuments.$inject = ['$cordovaFileTransfer', '$window', '$cordovaFile', '$ionicActionSheet', '$q', 'LoadingService',
         'userService', 'API', 'settings', 'cameraService', 'lockboxModalsService', 'welcomeService', 'lockboxSecurity'];
 
-    function lockboxDocuments($cordovaFileTransfer, $window, $cordovaFile, $ionicActionSheet, $q, LoadingService,
+    function lockboxDocuments ($cordovaFileTransfer, $window, $cordovaFile, $ionicActionSheet, $q, LoadingService,
         userService, API, settings, cameraService, lockboxModalsService, welcomeService, lockboxSecurity) {
 
         var vm = this;
@@ -52,7 +52,7 @@
             // getStubDocuments: getStubDocuments
         };
 
-        function clear() {
+        function clear () {
             vm.documents = docTypeDefinitions;
             vm.userData = null;
         }
@@ -79,10 +79,10 @@
             //     })
 
 
-            LoadingService.showLoader('Loading Documents');
+                        LoadingService.showLoader('Loading Documents');
 
             return API.doRequest(settings.documents, 'get')
-                .then(function success(documentListResponse) {
+                .then(function success (documentListResponse) {
                     var docs = documentListResponse.data;
 
                     if (!vm.path) {
@@ -172,7 +172,7 @@
         }
 
 
-        function getFilesByUserId(id, options) {
+        function getFilesByUserId (id, options) {
 
             vm.userData = userService.profileData;
 
@@ -230,7 +230,7 @@
                 });
         }
 
-        function addDocsPopup(docSku) {
+        function addDocsPopup (docSku) {
             var deferred = $q.defer();
 
             $ionicActionSheet.show({
@@ -260,7 +260,7 @@
             return deferred.promise;
         }
 
-        function updateDocument(doc, data) {
+        function updateDocument (doc, data) {
             return API.doRequest(settings.documents + doc.id, 'put', data)
                 .then(function () {
                     if (!vm.path) return _.extend(doc, data);
@@ -274,16 +274,16 @@
                 });
         }
 
-        function takePicture(sku) {
+        function takePicture (sku) {
 
             return welcomeService.showModal('lockbox.add')
                 .then(function () {
                     return cameraService.showActionSheet();
                 })
-                .then(function success(rawImageResponse) {
+                .then(function success (rawImageResponse) {
                     return lockboxModalsService.showCreateModal({ image: rawImageResponse, sku: sku });
                 })
-                .then(function success(newDocumentObject) {
+                .then(function success (newDocumentObject) {
                     return lockboxSecurity.checkAccess({ setNew: true })
                         .then(function (accessStatus) {
                             if (accessStatus !== -1 && accessStatus) {
@@ -304,7 +304,7 @@
                         return API.doRequest(settings.documents + newDocumentObject.id, 'put', newDocumentObject);
                     }
                 })
-                .then(function saveSuccess(newDocumentResponse) {
+                .then(function saveSuccess (newDocumentResponse) {
                     // TODO: Is this a sync or async call?
                     saveFileToDevice(newDocumentResponse.data);
 
@@ -316,7 +316,7 @@
 
                     return newDocumentResponse.data;
                 })
-                .catch(function reject(err) {
+                .catch(function reject (err) {
                     logger.error('Failed to save new doc: ', err);
 
                     if (!!sku) {
@@ -330,7 +330,7 @@
                 });
         }
 
-        function orderReports() {
+        function orderReports () {
             lockboxModalsService
                 .showOrderReportsModal();
         }
@@ -339,7 +339,7 @@
          * Iterates over all stored documents in the lockbox (per local storage)
          * and removes any documents that are not the newly logged in user's
          */
-        function removePrevUserDocuments(id) {
+        function removePrevUserDocuments (id) {
             var storage = $window.localStorage;
             var usersJSON = storage.getItem('hasDocumentsForUsers');
             var users = usersJSON && angular.fromJson(usersJSON);
@@ -356,7 +356,7 @@
             });
 
             return $q.all(removals).then(
-                function removalSuccess(result) {
+                function removalSuccess (result) {
                     var removed = _.omit(removals, _.isEmpty);
 
                     logger.info('Removed %d user\'s documents', removed && removed.length);
@@ -366,14 +366,14 @@
                 }
                 )
                 .catch(
-                    function removalFail(err) {
+                    function removalFail (err) {
                         logger.error('Failed to remove all user documents due to error', err);
                         return null;
                     });
 
         }
 
-        function removeDocuments(documents) {
+        function removeDocuments (documents) {
             var promises = _.map(documents, function (doc) {
                 logger.debug('[LockboxDocsService] Removing Doc: %s w/ ID: %s ', doc.sku, doc.id);
 
@@ -397,19 +397,19 @@
         * downloadAndSaveDocumentToDevice
         * Given a document defined by a URL, downloads the doucment and saves it to the device
         */
-        function downloadAndSaveDocumentToDevice(doc) {
+        function downloadAndSaveDocumentToDevice (doc) {
             var id = doc.id;
             var name = id + '-' + getFileName(doc);
             var path = vm.LOCKBOX_FOLDER + vm.userData.id + '/' + name;
 
 
             return $cordovaFileTransfer.download(doc.url, path, { encodeURI: false }, true)
-                .then(function success(entry) {
+                .then(function success (entry) {
                     logger.debug('Downloaded and saved doc `%s`', id);
 
                     return entry;
                 })
-                .catch(function fail(err) {
+                .catch(function fail (err) {
                     logger.error('Error downloading doc `%s`', id, err);
 
                     return doc;
@@ -435,7 +435,7 @@
          * saveFileToDevice
          * Give a 'document' defined as a URI, saves the document contents to the device
          */
-        function saveFileToDevice(file) {
+        function saveFileToDevice (file) {
             var path = vm.path;
 
             updateNewDocumentWithID(file);
@@ -462,7 +462,7 @@
          * @returns : promise
          * @resolves with: the newly wirtten file object
          */
-        function writeFileInUserFolder(options) {
+        function writeFileInUserFolder (options) {
             var path = options.path;
             var user = options.user;
             var name = options.name;
@@ -486,7 +486,7 @@
                 });
         }
 
-        function removeDocumentsByUser(user) {
+        function removeDocumentsByUser (user) {
             var path = vm.LOCKBOX_FOLDER;
 
             return $cordovaFile.checkDir(path, user)
@@ -503,7 +503,7 @@
                 });
         }
 
-        function removeOneDocument(doc) {
+        function removeOneDocument (doc) {
             logger.warn(' removeOneDocument() doc >>>', doc);
             if (!doc) return;
 
@@ -526,7 +526,7 @@
                 });
         }
 
-        function updateStorageInfo(user, data) {
+        function updateStorageInfo (user, data) {
             var storage = $window.localStorage;
             var usersJSON = storage.getItem('hasDocumentsForUsers');
             var users = !!usersJSON && angular.fromJson(usersJSON);
@@ -549,7 +549,7 @@
 
         // ////// Methods ///////////////////////////////////////////////////////////////
 
-        function addDocument(doc) {
+        function addDocument (doc) {
             if (_.isEmpty(doc.sku + doc.id + doc.url)) {
                 return false;
             }
@@ -579,21 +579,21 @@
             }
         }
 
-        function updateNewDocumentWithID(doc) {
+        function updateNewDocumentWithID (doc) {
             var i = _.findIndex(vm.documents, { url: doc.url, name: doc.name });
             if (i >= 0 && vm.documents[i]) {
                 _.extend(vm.documents[i], doc);
             }
         }
 
-        function toArray(list) {
+        function toArray (list) {
             return Array.prototype.slice.call(list || [], 0);
         }
 
         /**
          * Given a directory, reads through it and resolves teh documents in it.
          */
-        function readFolder(directory) {
+        function readFolder (directory) {
 
             var dirReader = directory.createReader();
             var entries = [];
@@ -601,9 +601,9 @@
             var q = $q.defer();
 
             // Keep calling readEntries() until no more results are returned.
-            function readEntries() {
+            function readEntries () {
                 dirReader.readEntries(
-                    function success(results) {
+                    function success (results) {
                         logger.debug('[LockboxDocsService] dirReader.readEntries results: %d entries: %d', results && results.length, entries.length);
                         if (results.length) {
                             logger.debug('[LockboxDocsService] dirReader Length ' + results.length);
@@ -622,7 +622,7 @@
                                 });
                         }
                     },
-                    function fail(err) {
+                    function fail (err) {
                         logger.error('Failed to read Directory', err);
                         q.reject(err);
                     });
@@ -634,7 +634,7 @@
         }
 
 
-        function resolveDocuments(entries) {
+        function resolveDocuments (entries) {
 
             logger.debug('[LockboxDocsService] looking  at %d documents to resolve', entries && entries.length || 0);
 
@@ -655,7 +655,7 @@
                 });
         }
 
-        function createDocumentPromise(entry) {
+        function createDocumentPromise (entry) {
             var deferred = $q.defer();
             var entryExtension = entry.name.split('.').pop();
             var userID = vm.userData.id;
@@ -683,7 +683,7 @@
             return deferred.promise;
         }
 
-        function renameLocalFile(doc, data) {
+        function renameLocalFile (doc, data) {
             var userID = getUserId(doc);
             var path = vm.LOCKBOX_FOLDER + '/' + userID;
             var oldName = doc.id + '-' + getFileName(doc);
@@ -692,7 +692,7 @@
             return $cordovaFile.moveFile(path, oldName, path, newName);
         }
 
-        function parseDocFromFilename(filename) {
+        function parseDocFromFilename (filename) {
             var params = filename.split('-');
             var doc = {};
             var i = 0;
@@ -707,7 +707,7 @@
         }
 
 
-        function getFileName(source) {
+        function getFileName (source) {
             var extensionMatcher = /.*(\.\w{3,4})/;
             var extension = '.txt';
 
@@ -721,17 +721,17 @@
             return source.sku + '-' + source.name.replace(/ /g, '_') + extension;
         }
 
-        function getDisplayName(source) {
+        function getDisplayName (source) {
             return source.replace(/_/g, ' ').replace(/\.\w{3,4}$/, '');
         }
 
-        function updateDocumentList() {
+        function updateDocumentList () {
             return vm.documents;
         }
 
-        function getId(e) { return e.id || e._id; }
+        function getId (e) { return e.id || e._id; }
 
-        function getUserId(doc) {
+        function getUserId (doc) {
             return angular.isObject(doc.user) && doc.user.id || doc.user || vm.userData.id;
         }
 
