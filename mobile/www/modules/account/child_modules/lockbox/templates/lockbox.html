@@ -36,11 +36,13 @@
                                 <oset-doc-view model="doc1" new-doc-fn="vm[doc1.fn] || vm.newDoc"></oset-doc-view>
                             </div>
                             
-                            <div ng-init="doc2 = vm.documents[$index+1]"  class="doc col" 
+                            <div ng-init="doc2 = vm.documents[$index+1]"  class="doc col" ng-if="!!vm.documents[$index+1]"
                                  ng-class="{'stub-document': !(doc2.url || doc2.id), 'real-document': doc2.url || doc2.id}" 
                                  oset-doc-attr-view model="vm.documents[$index+1]" new-doc-fn="vm[doc2.fn] || vm.newDoc">
                                 <oset-doc-view model="doc2" new-doc-fn="vm[doc2.fn] || vm.newDoc"></oset-doc-view>
                             </div>
+                            
+                            <div class="doc col blank" ng-if="!vm.documents[$index+1]">&nbsp;</div>
                             
                         </div>
                     </div>

@@ -110,7 +110,7 @@
         '<div class="{{!!vm.document.url ? \'button-document\' : \'button-stub\' }}" ng-click="vm.docClick($event)">' +
         '<div class="" ng-class="{\'no-date\': !vm.created}">' +
         '    <div class="doc-name">{{ vm.document.name }}</div>' +
-        '    <div class="doc-date">{{ vm.created }}</div>' +
+        '    <!-- <div class="doc-date">{{ vm.created }}</div> -->' +
         '    <i class="icon {{vm.document.icon}}"></i>' +
         '</div>' +
         '</div>';
