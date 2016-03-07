@@ -43,6 +43,7 @@
         }
 
         function lock () {
+            $rootScope.$broadcast('lockbox-secured');
             logger.debug('Locking Lockbox');
             state.accessible = false;
         }
@@ -53,6 +54,7 @@
                 state.accessible = true;
                 // lock lockbox documents every 15 minutes
                 timerService.initTimer('security-timer', 15 * 60, false);
+                $rootScope.$broadcast('lockbox-unlocked');
             }
             return state.accessible;
         }

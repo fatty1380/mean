@@ -1,41 +1,54 @@
-<ion-view class="lockbox view-section compact-size">
+<ion-view class="lockbox view-section min-size">
 
+    <div class="material-action">
+        <button class="button button-energized button-share" ng-click="vm.showShareModal()">
+            <i class="icon ion-android-share"></i>
+        </button>
+    </div>
+    
     <ion-header-bar align-title="center">
-        <button class="button button-clear" ng-click="vm.showEditModal()">Edit</button>
+        <button class="button button-clear" ng-click="vm.showEditModal()"><i class="ion ion-compose"></i>
+           
+        </button>
         <h1 class="title">My Lockbox</h1>
-        <button class="button button-clear" ng-click="vm.addDocsPopup()">Add Docs</button>
+        <button class="button button-clear" ng-click="vm.addDocsPopup()"><i class="ion ion-plus"></i>
+           
+        </button>
     </ion-header-bar>
 
     <div class="bar bar-subheader">
-        <h3 class="title">Securely store your important documents here</h3>
+        <h3 class="title">Upload and save your documents by clicking the boxes below</h3>
     </div>
 
     <ion-pane class="pane content-pane">
         <ion-scroll>
             <ion-refresher pulling-text="Pull to refresh ..." on-refresh="vm.refreshDocuments()"></ion-refresher>
-            <ion-list class="document-list"  >
-                <ul ng-if="vm.documents.length">
-                    <li class="item" ng-repeat="doc in vm.documents track by $index | orderBy: 'url' : false" 
-                    ng-class="{'stub-document': !(doc.url || doc.id)}">
-                        <i class="ico ico-documentimage ico-documentimage{{doc.sku}}"></i>
-                        <div class="item-content" ng-class="{'no-date': !doc.created}">
-                            <strong>{{ doc.name }}</strong>
-                            <!--<span>{{ doc.created }}</span>-->
+            <ion-list class="document-list">
+                <div ng-if="vm.documents.length">
+                    <div ng-repeat="doc in vm.documents track by $index | orderBy: 'url' : false">
+                        <div class="row" ng-if="$even">
+                            
+                            <!--<div class="doc col blank" ng-if="!vm.documents[$index+1] && !vm.documents[$index].url">&nbsp;</div>-->
+                            
+                            <div ng-init="doc1 = vm.documents[$index]" class="doc col" 
+                                 ng-class="{'stub-document': !(doc1.url || doc1.id), 'real-document': doc1.url || doc1.id}" 
+                                 oset-doc-attr-view model="vm.documents[$index]" new-doc-fn="vm[doc1.fn] || vm.newDoc">
+                                <oset-doc-view model="doc1" new-doc-fn="vm[doc1.fn] || vm.newDoc"></oset-doc-view>
+                            </div>
+                            
+                            <div ng-init="doc2 = vm.documents[$index+1]"  class="doc col" 
+                                 ng-class="{'stub-document': !(doc2.url || doc2.id), 'real-document': doc2.url || doc2.id}" 
+                                 oset-doc-attr-view model="vm.documents[$index+1]" new-doc-fn="vm[doc2.fn] || vm.newDoc">
+                                <oset-doc-view model="doc2" new-doc-fn="vm[doc2.fn] || vm.newDoc"></oset-doc-view>
+                            </div>
+                            
                         </div>
-                        <oset-doc-view ng-if="!!doc.url" model="doc" btn-text="View"></oset-doc-view>
-                        <button ng-if="!doc.url" class="button button-small" 
-                        ng-click="!!vm[doc.fn] ? vm[doc.fn](doc) : vm.newDoc(doc.sku)">{{doc.action || 'Add'}}</button>
-                    </li>
-                </ul>
+                    </div>
+                </div>
+
                 <div ng-if="!vm.documents.length" class="no-content">No documents</div>
             </ion-list>
         </ion-scroll>
-
-        <div class="button content-button" ng-class="{'disabled': !vm.documents.length}" ng-click="vm.showShareModal()">
-            <button type="button" class="button button-block button-positive">
-                <i class="ion-share"></i> Share
-            </button>
-        </div>
 
     </ion-pane>
 

@@ -7,15 +7,16 @@
 	 */
     angular.module(AppConfig.appModuleName)
         .controller('DocumentModalCtrl', DocumentModalCtrl)
-        .directive('osetDocView', ViewDocumentDirective);
+        .directive('osetDocView', ViewDocumentDirective)
+        .directive('osetDocAttrView', ViewDocAttrDirective);
 
-    function ViewDocumentDirective () {
+    function ViewDocAttrDirective() {
         var directive = {
             link: link,
-            template: documentTemplate,
-            restrict: 'E',
+            restrict: 'A',
             scope: {
                 document: '=model',
+                newDocFn: '&',
                 btnText: '@?'
             },
             controller: ViewDocDirectiveCtrl,
@@ -26,7 +27,36 @@
         return directive;
 
         // Inject controller as 'vm' for consistency
-        function link (scope, el, attr, vm) {
+        function link(scope, el, attr, vm) {
+            // Set defaults
+            vm.scope = scope;
+
+            el.bind('click', function (event) {
+                logger.debug('Displaying doc at URL: ', vm.document.url);
+                vm.docClick(event);
+            });
+        }
+    }
+
+    function ViewDocumentDirective() {
+        var directive = {
+            link: link,
+            template: documentTemplate,
+            restrict: 'E',
+            scope: {
+                document: '=model',
+                newDocFn: '&',
+                btnText: '@?'
+            },
+            controller: ViewDocDirectiveCtrl,
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return directive;
+
+        // Inject controller as 'vm' for consistency
+        function link(scope, el, attr, vm) {
             // Set defaults
             vm.scope = scope;
 
@@ -38,32 +68,56 @@
     }
 
     ViewDocDirectiveCtrl.$inject = ['modalService'];
-    function ViewDocDirectiveCtrl (DocPreview) {
+    function ViewDocDirectiveCtrl(DocPreview) {
         var vm = this;
 
-        vm.openPreview = showDocument;
+        vm.docClick = function (event) {
+            
+            event.stopPropagation();
+            
+            if (vm.document.url) {
+                return showDocument(vm.document, event);
+            }
+
+            return vm.newDocFn()(vm.document.sku);
+        };
 
         activate();
 
         // /
 
-        function activate () {
-            vm.btnText = vm.btnText || 'View';
+        function activate() {
+            vm.btnText = vm.document && vm.document.name || 'huh?'
+
+            if (!!vm.document && !!vm.document.created) {
+                vm.created = moment(vm.document.created, moment.ISO_8601).format('L');
+            }
+            //            vm.btnText = vm.btnText || 'View';
         }
 
-        function showDocument (document) {
+        function showDocument(document, event) {
+            if (!!event) {
+                event.stopPropagation();
+            }
+            document = document || vm.document;
             return DocPreview.show('modules/account/child_modules/lockbox/templates/modal-preview.html',
                 'DocumentModalCtrl as vm',
                 document);
         }
     }
 
-    var documentTemplate = '<button class="button button-small" ng-click="vm.openPreview(vm.document)">{{vm.btnText}}</button>';
-
+    var documentTemplate =
+        '<div class="{{!!vm.document.url ? \'button-document\' : \'button-stub\' }}" ng-click="vm.docClick($event)">' +
+        '<div class="" ng-class="{\'no-date\': !vm.created}">' +
+        '    <div class="doc-name">{{ vm.document.name }}</div>' +
+        '    <div class="doc-date">{{ vm.created }}</div>' +
+        '    <i class="icon {{vm.document.icon}}"></i>' +
+        '</div>' +
+        '</div>';
 
     // AKA: ContactDialogCtrl
     DocumentModalCtrl.$inject = ['parameters', '$sce', '$timeout', '$ionicPopup', 'LoadingService', 'PDFViewerService'];
-    function DocumentModalCtrl (parameters, $sce, $timeout, $ionicPopup, LoadingService, PDFViewerService) {
+    function DocumentModalCtrl(parameters, $sce, $timeout, $ionicPopup, LoadingService, PDFViewerService) {
         var vm = this;
 
         vm.document = parameters.document || parameters;
@@ -84,7 +138,7 @@
         vm.toggleFullScreen = toggleFullScreen;
         vm.close = close;
 
-        function close (e) {
+        function close(e) {
             e.stopPropagation();
             vm.closeModal(null);
 
@@ -94,7 +148,7 @@
             }
         }
 
-        function enlarge (e) {
+        function enlarge(e) {
             vm.fullScreenMode = !vm.fullScreenMode;
             if (angular.isFunction(screen.lockOrientation)) {
                 screen.lockOrientation('landscape');
@@ -107,7 +161,7 @@
             }
         }
 
-        function minimize () {
+        function minimize() {
             vm.fullScreenMode = !vm.fullScreenMode;
             if (angular.isFunction(screen.lockOrientation)) {
                 screen.lockOrientation('portrait');
@@ -120,7 +174,7 @@
             }
         }
 
-        function toggleFullScreen () {
+        function toggleFullScreen() {
             if (!vm.fullScreenMode) return;
             vm.showControls = !vm.showControls;
         }
@@ -140,13 +194,16 @@
 
         logger.debug('[DocumentModalCtrl] for document: %o', vm.document);
 
-        function trustSrc (src) {
+        function trustSrc(src) {
             // logger.debug('SCE Trusting resource: `%s`', src);
             return $sce.trustAsResourceUrl(src);
         }
 
 
-        function onImageEvent (type) {
+        function onImageEvent(event) {
+            var type = event.type || event;
+            var err = event.err;
+
             logger.debug('   **** onImageEvent  ' + type + ' ****');
             switch (type) {
                 case 'loadStart':
@@ -156,7 +213,9 @@
                     LoadingService.hide();
                     break;
                 case 'loadError':
+                    debugger;
                     LoadingService.showAlert('Sorry, Please, try later.');
+                    logger.error('Image Event Errored', err);
                     break;
                 default:
                     logger.warn('Unknown Image Event: `%s`', type);
@@ -166,8 +225,12 @@
         }
 
 
-        function onPdfEvent (type) {
-            logger.debug('   **** ' + type + ' ****');
+        function onPdfEvent(event) {
+            var type = event.type || event;
+            var err = event.err;
+
+            logger.debug('   **** ' + type + ' ****', event);
+
             switch (type) {
                 case 'loadStart':
                     LoadingService.showLoader('Loading PDF, Please Wait.');
@@ -178,6 +241,7 @@
                     break;
                 case 'loadError':
                     LoadingService.showAlert('Sorry, Please, try later.');
+                    logger.error('Image Event Errored', err);
                     break;
                 default:
                     logger.warn('Unknown PDF Event: `%s`', type);
@@ -187,7 +251,7 @@
         }
 
 
-        function loadProgress (loaded, total, state) {
+        function loadProgress(loaded, total, state) {
 
             var progress = Math.ceil(loaded / total * 100);
             if (progress <= 100) {

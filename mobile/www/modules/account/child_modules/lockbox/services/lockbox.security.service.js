@@ -6,8 +6,23 @@ lockboxSecurity.$inject = ['$rootScope', '$state', '$ionicPopup', 'LoadingServic
 function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $timeout, $cordovaGoogleAnalytics, securityService) {
 
     return {
-        checkAccess: checkAccess
+        checkAccess: checkAccess,
+        getUnlockedStatus: getCurrentStatus
     };
+
+    function getCurrentStatus () {
+        return securityService
+            .getPin()
+            .then(function (pin) {
+                if (_.isEmpty(pin)) {
+                    return true;
+                }
+
+                var state = securityService.getState();
+
+                return !state.secured;
+            });
+    }
 
     function checkAccess (options) {
         // TODO: refactor and move to service
@@ -31,6 +46,10 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
         var pinPopup;
         scopeData.closePopup = closePINPopup;
         scopeData.pinChange = pinChanged;
+        
+        //////////////////////////////////////////////
+        
+        //return $q.when(true);
 
         // ///////////////////////////////////////////
 
@@ -50,6 +69,9 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
 
             })
             .then(function () {
+                if (!state.secured) {
+                    return $q.reject('Lockbox is not secured');
+                }
                 if (!state.accessible) {
                     LoadingService.hide();
                     $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'locked');
@@ -65,6 +87,9 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
                 }
 
                 return !!accessGranted;
+            })
+            .catch(function (error) {
+                return -1;
             })
             .finally(function () {
                 LoadingService.hide();

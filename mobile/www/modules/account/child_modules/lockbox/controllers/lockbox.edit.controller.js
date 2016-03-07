@@ -23,7 +23,6 @@
         function init () {
             vm.unselectedDocuments = null;
             vm.deleteDisabled = true;
-            vm.renameDisabled = true;
 
 
             if (_.isEmpty(vm.documents)) {
@@ -51,11 +50,10 @@
         }
 
         $scope.$watch(function () {
-            return vm.documents.filter(vm.getUnselectedItems).length;
-        }, function (currentUnselectedLength) {
+            return vm.documents.filter(getSelected).length;
+        }, function (selectedLength) {
             var totalLength = vm.documents.length;
-            vm.deleteDisabled = (currentUnselectedLength === totalLength);
-            vm.renameDisabled = (totalLength - currentUnselectedLength !== 1);
+            vm.deleteDisabled = selectedLength <= 0; // (currentUnselectedLength === totalLength);
         });
 
         function getUnselectedItems (object) {
@@ -140,6 +138,7 @@
                     })
                     .then(function () {
                         vm.documents = lockboxDocuments.updateDocumentList();
+                        return vm.documents;
                     });
             }
         }

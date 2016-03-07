@@ -8,7 +8,7 @@
 
     <ion-content id="pdf-view-content" ng-class="{'controls-hidden': vm.showControls}" ng-click="vm.toggleFullScreen($event);">
         <ion-pane class="image-container" ng-if="!!vm.image">
-            <div src="{{vm.trustSrc(vm.image)}}"  on-image-event='vm.onImageEvent(type)' imageviewer></div>
+            <div src="{{vm.trustSrc(vm.image)}}"  on-image-event='vm.onImageEvent({type: type, err: err})' imageviewer></div>
         </ion-pane>
         <div class="pdf-container" ng-if="!!vm.pdfURL.src">
             <pdfviewer

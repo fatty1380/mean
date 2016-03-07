@@ -1,6 +1,7 @@
 <ion-view class="lockbox view-section min-size">
 
-    <ion-header-bar align-title="center">
+    <ion-header-bar>
+        <button class="button button-icon icon ion-ios-arrow-back" ng-click="vm.goBack()"></button>
         <h1 class="title">Messages</h1>
     </ion-header-bar>
 
@@ -33,14 +34,14 @@
                 </div>
 
             </ul>
-        </ion-scroll>        
-        
-        <div class="button content-button" ng-click="vm.createNewChat()">
-            <button type="button" class="button button-block button-positive">
-                <i class="ion-chatbubbles"></i> New Message
-            </button>
-        </div>
+        </ion-scroll>   
         
     </ion-pane>
+    
+    <div class="material-action">
+        <button class="button button-positive button-share" ng-click="vm.createNewChat()">
+            <i class="icon ion-chatbubbles"></i>
+        </button>
+    </div>
 
 </ion-view>
