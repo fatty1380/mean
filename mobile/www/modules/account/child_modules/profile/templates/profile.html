@@ -160,39 +160,38 @@
                                             <span ng-if="!exp.endDate">Now</span>
                                         </div>
                                     </div>
-        </div>
+                                </div>
 
-        <div class="row">
-            <div class="col">
-                <div class="title">{{exp.title}}</div>
-            </div>
-            <div class="col text-right">
-                <div class="location" ng-if="!!exp.location">{{exp.location}}</div>
-            </div>
-        </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="title">{{exp.title}}</div>
+                                    </div>
+                                    <div class="col text-right">
+                                        <div class="location" ng-if="!!exp.location">{{exp.location}}</div>
+                                    </div>
+                                </div>
 
-        </div>
-        <div class="exp-spacer" ng-if="!$last">&nbsp;</div>
-        </span>
-
-        </ion-item>
-        </div>
-
-        <div name="activity-list">
-
-            <div class="item item-divider" ng-if="vm.feed"></div>
-
-            <div class="item activity profile-activity" ng-if="vm.feed">
-                <span class="item-label">ACTIVITY:</span>
-                <div class="text-center item-loading" ng-if="vm.feedLoading">
-                    <ion-spinner></ion-spinner>
+                            </div>
+                            <div class="exp-spacer" ng-if="!$last">&nbsp;</div>
+                        </div>
+                    </ion-item>
                 </div>
-                <oset-feed-item ng-if="vm.feed.length" ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
-                <div ng-if="!vm.feed.length && !vm.feedLoading" class="no-feed-items">{{ vm.feedMessage }}</div>
-            </div>
 
-        </div>
-        </ion-scroll>
+                <div class="activity-list">
+
+                    <div class="item item-divider" ng-if="vm.feed.length"></div>
+
+                    <div class="item activity profile-activity" ng-if="vm.feed">
+                        <div class="item-label">ACTIVITY:</div>
+                        <div class="text-center item-loading" ng-if="vm.feedLoading">
+                            <ion-spinner></ion-spinner>
+                        </div>
+                        <oset-feed-item ng-if="vm.feed.length" ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
+                        <div ng-if="!vm.feed.length && !vm.feedLoading" class="no-feed-items">{{ vm.feedMessage }}</div>
+                    </div>
+
+                </div>
+            </ion-scroll>
 
         </div>
     </ion-pane>
