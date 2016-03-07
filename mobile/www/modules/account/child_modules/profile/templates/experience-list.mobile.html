@@ -1,4 +1,5 @@
 <div name="experience-list">
+    
     <ion-list ng-if="vm.experience && vm.experience.length">
         <ion-item class="item card" ng-repeat="exp in (vm.experience) track by $index">
             <button class="button button-clear edit-btn" ng-if="!!vm.showAddExperienceModal" ng-click="vm.showEditExperienceModal(exp)">
@@ -29,11 +30,5 @@
             <span ng-bind-html="vm.instructText"></span>
         </span>
         <span ng-if="!vm.canEdit">No Experience Listed</span>
-    </div>
-
-    <div class="button content-button" ng-if="vm.canEdit && vm.showAddBtn" ng-click="vm.showAddExperienceModal()">
-        <button type="button" class="button button-block button-positive">
-            <i class="ion-plus"></i> Add Experience
-        </button>
     </div>
 </div>

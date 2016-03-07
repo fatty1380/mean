@@ -28,12 +28,12 @@
 
             <!--<ion-infinite-scroll ng-if="vm.feed.length > 2" distance="5%" on-infinite="vm.loadMore()" immediate-check="false"></ion-infinite-scroll>-->
         </ion-scroll>
-
-        <div class="button content-button" ng-click='vm.showAddActivityModal()'>
-            <button type="button" class="button button-block button-positive">
-                <i class="ion-plus"></i> Add Activity
-            </button>
-        </div>
         
-    </ion-pane>
+    </ion-pane>   
+    
+     <div class="material-action">
+        <button class="button button-calm" ng-click="vm.showAddActivityModal()">
+            <i class="icon ion-plus"></i>
+        </button>
+    </div>
 </ion-view>

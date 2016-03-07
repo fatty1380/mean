@@ -1,69 +1,435 @@
+
+
+$profile-subheader-height :     $bar-midsize-height - $bar-height - 20px;
+$photo-dimension :              $profile-subheader-height * 1.1;
+$profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
+
+.material-action {
+    
+    position: fixed;
+    right: $padding-base-horizontal;
+    //top: calc(100vh - #{$tabs-height} - #{$button-height} - #{$padding-base-horizontal});
+    bottom: calc(#{$tabs-height} + #{$padding-base-horizontal});
+    
+    .platform-ios & {
+        //top: calc(100vh - #{$tabs-height} - #{$button-height} - #{$padding-base-horizontal} - #{$ios-statusbar-height});
+        //bottom: calc(#{$tabs-height} + #{$padding-base-horizontal} - #{$ios-statusbar-height});
+    }
+    
+    //top: calc(100vh - $tabs-height + $padding-base-vertical);
+    // bottom: $tabs-height + $padding-base-vertical;
+    z-index: 10;
+        
+    .button {
+        border-radius: 50%;
+        border-width: 0;
+        width: $button-large-height;
+        height: $button-large-height;
+        box-shadow: 1px 1px 10px $dark;
+        
+        &:active {
+           box-shadow: 1px 1px 3px $dark;
+        }
+        
+        &.button-share, &.button-edit {
+            i {
+                zoom: 125%;
+            }
+        }
+    }
+}
+
 .button.button-small.button-icon:before {
   font-size: 26px !important;
 }
 
-$profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
-
-$photo-dimension : $profile-subheader-height * 1.1;
-
 .profile-screen {
+    .profile-pane {
+        .scroll-view {
+            padding-top: $photo-dimension/2;
+            
+            .platform-ios & {
+                padding-top: $photo-dimension/2 + $ios-statusbar-height;
+            }
+        }
+    }
     
+    .bar.bar-header > .button {
+        z-index: 3;
+    }
+}
 
-  .contacts-amount{
-    color: #fff;
+.profile-screen .profile-list {
+      
+    .profile-title {
+        h1, h2, h3, h4 {
+            text-align: center;
+            font-weight: 400;
+        }
+    }
     
-    &:after{
-      content: 'convoy';
-      position: absolute;
-      top: 15px;
-      left: 0;
-      font-size: 11px;
-      text-align: left;
+    .item.profile-highlights {
+        text-align: center;
+        padding-top: $padding-base-vertical;
+        padding-bottom: $padding-base-vertical;
+        background-color: white;
+        color: $positive;
+        
+        margin-left: -$padding-large-horizontal;
+        margin-right: -$padding-large-horizontal;
+        
+        div {
+            padding: $padding-base-vertical $padding-small-horizontal;
+            display: inline-block;
+            line-height: 25px;
+            
+            i.ico {
+                display: inline-block;
+                margin-right: $padding-base-vertical;
+            }
+            
+            &.clickable {
+                //color: $balanced;
+                
+                i.ico {
+                    background-color: $brand-blue;
+                    border-radius: 50%;
+                    border-style: none;
+                    padding: -2px;
+                    box-shadow: 1px 1px 5px rgba($dark, 0.9);
+                }
+            }
+        }
+        
+        
+            
+        .ico {
+            & + .badge-container {
+                position: relative;
+                left: 10px;
+                padding-left: -10px;
+                
+                float: left;
+                display: flex;
+                
+                .badge {
+                    opacity: 0.9;
+                    position: relative;
+                    left: 0;
+                    top: -6px;
+                    // bottom: 10px;
+                    // right: 0;
+                    // left: 0px;
+                    //top: unset;
+                    display: inline-flex;
+                    
+                    border-radius: 6px;
+                    font-size: 0.8em;
+                    line-height: 0.9em;
+                    max-width: 80px;
+                    
+                    padding-left: 4px;
+                    padding-right: 4px;
+                }
+            }
+        }
     }
-
-    .badge{
-      position: absolute;
-      left: -5px;
-      top: 8px;
-      font-size: 10px;
-      min-width: 0;
-      padding: 3px 5px;
-      line-height: 10px;
+    
+    .item.profile-bubbles {
+        text-align: center;
+        margin-left: -$padding-large-horizontal;
+        margin-right: -$padding-large-horizontal;
     }
-
-    strong{
-      vertical-align: middle;
-      font-size: 13px;
+    
+    .circle {
+    margin: 0 $padding-small-horizontal/2;
+    display: inline-block;
+    
+    vertical-align: top;
+    
+    width: 76px;
+    height: 76px;
+    // max-width: 80px;
+    // max-height: 80px;
+    
+    border: 2px solid $light;
+    border-radius: 50%;
+    box-shadow: 1px 1px 10px rgba($action-text, 0.8);
+    
+    background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
+    background: -webkit-linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
+    
+    color: $positive;
+    
+    .miles-badge, .license-badge, .experience-badge {
+        color: $positive; // $ribbon-bg;
+        font-size: 1.8em;
+        line-height: 9vw;
+        position: relative;
+        left: 0;
+        top: 0;
+        width: 100%;
+        top: 4vw;
+        
+        .small {
+            font-size: 0.7em;
+        }
+        
+        .empty {
+            color: $calm;
+            i.ion {
+                font-size: 1.1em;
+            }
+            
+            font-size: 0.7em;
+            text-transform: uppercase;
+        }
+        
+        .label-text {
+            text-transform: uppercase;
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            left: 0;
+            font-size: 9px;
+            letter-spacing: -0.5px;
+            
+            &.top {
+                bottom: 70%;
+            }
+            &.bot {
+                top: 60%;
+            }
+        }
     }
+    
+    .experience-badge>.value::after {
+        content: '+';
+        font-size: 5vw;
+        position: absolute;
+        //left: -2vw;
+        bottom: 2vw;
+    }
+    
+    .equipment-logo {
+        width: 100%;
+        margin: 5px auto;
+        text-align: center;
+        
+        & + .badge {
+            opacity: 0.9;
+            position: relative;
+            bottom: 10px;
+            
+            // margin-right: auto;
+            // margin-left: auto;
+            
+            right: unset;
+            left: unset;
+            top: unset;
+            display: inline-flex;
+            
+            border-radius: 6px;
+            font-size: 0.8em;
+            line-height: 0.9em;
+            max-width: 76px + 2*$button-bar-button-padding;
+        }   
+    }
+    
+    .license-badge {
+        font-size: 12vw;
+        font-weight: 500;
+        
+        top: 6vw;
+        
+        .label-text {
+            &.bot {
+                top: 6vw;
+            }
+        }
+    }
+  }
+  
+  .card {
+      &.experience, &.equipment {
+        .ion-compose {
+            font-size: 1.7em;
+        }
+      }
+  }
+  
+  .equipment.card {
+      padding-left: $padding-base-horizontal;
+      
+      & > div {
+          display: block;
+      }
+      
+      .hanger {
+          
+      margin-right: 76 + $padding-base-horizontal;
+      }
+      
+      .circle {
+          vertical-align: bottom;
+          background: none;
+          border: none;
+          box-shadow: none;
+          position: absolute;
+          bottom: 0;
+          bottom: $padding-base-vertical;
+          right: $padding-base-horizontal;
+          margin: 10px;
+          display: inline-block;
+          
+          text-align: center;
+          
+          .badge {
+              bottom: 0; // $padding-base-vertical;
+              text-align: center;
+              
+              //text-align: right;
+          }
+      }
+  }
+  
+  .experience.item, .equipment.item {
+      padding-left: $padding-base-horizontal;
+      padding-right: $padding-base-horizontal;
+            
+      .item-label {
+            padding-top: $padding-large-vertical;
+            padding-bottom: $padding-small-vertical;
+          //border-bottom: 1px solid black;
+          color: $tab-text;
+          font-weight: 400;
+          font-size: 1.15em;
+          
+          &:first-of-type {
+            padding-top: $padding-base-vertical;
+            //color: purple;
+        }
+      }
+      
+      .button-clear, .button-icon {
+          color: $positive;
+      }
+      
+      .exp-item {
+        margin-left: $padding-base-horizontal;
+        margin-right: $padding-base-horizontal;
+        
+        color: $dark;
+      }
+      
+      .col {
+          padding-left: 0;
+          padding-right: 0;
+          padding-top: 0;
+          padding-bottom: 0;
+      }
+      
+      .company {
+          font-size: 1.0em;
+          font-weight: 500;
+          text-transform: uppercase;
+          color: $dark;
+          padding-bottom: $padding-small-vertical;
+      }
+      
+      h4 {
+          margin-bottom: $padding-base-vertical;
+      }
+      
+      .exp-spacer {
+          width: 100%;
+        //   background-color: purple;
+          height: 2*$padding-large-vertical;
+      }
   }
 }
 
-.profile-visual{
-  position: absolute;
-  top: $bar-height; 
-  left: 10px;
-  right: 10px;
-  height: $profile-subheader-height;
-  text-align: center;
-  z-index: 2;
-  
-  .platform-android & {
-    top: $bar-height; 
-  }
-  
-  .platform-ios & {
-    top: $bar-height + $ios-statusbar-height !important;
-  }
+.profile-screen.view-section {
+    background: linear-gradient(rgba($tab-selected, 0.7), rgba($tab-selected, 0.7)), url('../img/semi.jpg');
+    background-position-x: 50%;
+    background-position-y: -115%;
+}
 
+.profile-pane {
+    margin-top: $profile-header-height;
+}
+
+
+
+.header-actions {
+    z-index: 3;
+    
+    &.right {
+        right: $padding-base-horizontal;
+        .button {
+            margin-left: $padding-small-horizontal;
+        }
+    }
+    &.left {
+        left: $padding-base-horizontal;
+        .button {
+            margin-right: $padding-small-horizontal;
+        }
+    }
+    
+    position: fixed;
+    top: $profile-header-height - 38px;
+    
+    .platform-ios & {
+        top:  $profile-header-height - 38px - $ios-statusbar-height;
+    }
+    
+    &.below {
+        top: $profile-header-height + $padding-base-vertical;
+        
+        .platform-ios & {
+            top: $profile-header-height + $padding-base-vertical - $ios-statusbar-height;
+        }
+        
+        .button {
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            box-shadow: 1px 1px 10px rgba($action-text, 0.8);
+            
+            &.button-share, &.button-edit {
+                padding-top: 3px;
+            }
+        }
+    }
+}
+
+.profile-visual {
+    text-align: center;
+    z-index: 2;
+    width: 100%;
+    float: left;
+    position: fixed;
+    left: 0;
+  
   .photo{
+    position: relative;
+    top: $padding-large-vertical; 
+    .platform-android & {
+        top: $padding-large-vertical; 
+    }
+    
+    .platform-ios & {
+        top: $padding-large-vertical + $ios-statusbar-height;
+    }
     display: inline-block;
     vertical-align: top;
     width: $photo-dimension;
     height: $photo-dimension;
-    background: #333 url('../img/bg-profile-default.jpg') 50% no-repeat;
     -webkit-background-size: $photo-dimension $photo-dimension;
     background-size: $photo-dimension $photo-dimension;
-    border: 2px solid #8C8B8B;
+    border: 4px solid rgba($search-bar, 0.6);
+    background-color: 4px solid rgba($search-bar, 0.6);
     text-align: center;
     @include rounded-corner(100%);
 
@@ -71,71 +437,6 @@ $photo-dimension : $profile-subheader-height * 1.1;
       @include rounded-corner(100%);
       width: 100%;
       vertical-align: top;
-    }
-  }
-  
-  .contacts-amount{
-    position: absolute;
-    left: 0;
-    bottom: 5px;
-    padding-bottom: 15px;
-    padding-top: 15px;
-    padding-right: 15px;
-    color: #fff;
-    
-    // &:after {
-    //     content: none;
-    // }
-
-    // &:after{
-    //   content: 'Friends';
-    //   position: absolute;
-    //   bottom: 0;
-    //   left: -2px;
-    //   font-size: 11px;
-    //   right: -6px;
-    //   text-align: center;
-    //   margin-top: -1px;
-    // }
-    
-    &:after{
-      content: 'friends';
-      position: absolute;
-      top: 35px;
-      left: 4px;
-      font-size: 11px;
-      text-align: left;
-    }
-
-    .badge{
-      position: absolute;
-      left: -5px;
-      top: 8px;
-      font-size: 10px;
-      min-width: 0;
-      padding: 3px 5px;
-      line-height: 10px;
-    }
-
-    strong{
-      vertical-align: middle;
-      font-size: 13px;
-    }
-  }
-
-  .handle{
-    position: absolute;
-    right: 0;
-    bottom: 20px;
-    width: 33%;
-    line-height: 25px;
-    color: #fff;
-
-    strong{
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
   }
 
@@ -153,7 +454,11 @@ $photo-dimension : $profile-subheader-height * 1.1;
     padding-bottom: 0;
   
     .platform-ios & {
-        padding-top: $bar-height + $ios-statusbar-height !important;
+        padding-top: $bar-height + $ios-statusbar-height;
+        
+        .photo {
+            top: 0;
+        }
     }
 
     .photo{
@@ -163,6 +468,7 @@ $photo-dimension : $profile-subheader-height * 1.1;
       margin-right: 15px;
       -webkit-background-size: 60px 60px;
       background-size: 60px 60px;
+      top: 0;
     }
     .text{
       color: $light;
@@ -311,12 +617,13 @@ $photo-dimension : $profile-subheader-height * 1.1;
 
 .button {
     &.button-pos-tr {
-        // position: relative;
+        position: absolute;
         // top: 10px;
         // right: 10px;
         float: right;
-        top: -15px;
-        // max-height: 20px;
+        top: 0; //-4px;
+        right: $padding-base-horizontal;
+                // max-height: 20px;
         // min-height: 18px;
     }
 }
@@ -366,19 +673,25 @@ $photo-dimension : $profile-subheader-height * 1.1;
       }
   }
   
-  .profile-list {
-      .card {
-         & > .row {
-              position: relative;
-	          top: -20px;
-          }
+//   .profile-list {
+//       .card {
+//          & > .row {
+//               position: relative;
+// 	          top: -20px;
+//           }
       
-        padding-bottom: 0!important;
+//         //padding-bottom: 0!important;
       
-      }
+//       }
+//   }
+
+  .scroll > :last-child {
+      padding-bottom: 275px;
   }
 
-  .profile-list, .experience-list, activity-list {
+  .profile-list, .experience-list, .activity-list {
+      
+      
       .row {
         margin-bottom: 0px;
         
@@ -396,21 +709,21 @@ $photo-dimension : $profile-subheader-height * 1.1;
           padding: 0;
       }
       
-      margin-left: 20px;
-      margin-right: 20px;
+      margin-left: $padding-large-horizontal;
+      margin-right: $padding-large-horizontal;
       
       > .item {
         //background: none;
         padding: 10px 0 15px;
         border: none;
           
-        
-        .item-label{
-            font-weight: bold;
-            color: $gradient-bottom;
-        }
+      .item-label {
+          color: $tab-text;
+          font-weight: 400;
+          font-size: 1.15em;
+      }
         .item-title {
-            font-size: 1.1em;
+            font-size: 1.2em;
         }
       }
       
@@ -448,7 +761,7 @@ $photo-dimension : $profile-subheader-height * 1.1;
         }
         
         .endorsements-list{
-            float: right;
+            //float: right;
             width: auto;
         }
  
@@ -490,6 +803,16 @@ $photo-dimension : $profile-subheader-height * 1.1;
             height: 48px;
         }
     }
+  }
+  
+  .activity-list .item.activity {
+      .item-label, .no-feed-items {
+          text-align: center;
+      }
+      
+      .item-label {
+          color: $dark;
+      }
   }    
   
 }
@@ -524,7 +847,7 @@ $photo-dimension : $profile-subheader-height * 1.1;
       }
       
       .company{
-          display: inline-block;
+        display: inline-block;
         font-size: 0.85em;
         text-transform: uppercase;
         color: $positive;
@@ -570,9 +893,9 @@ $photo-dimension : $profile-subheader-height * 1.1;
 }
 
 .endorsements-list{
-  float: right;
-  width: 50%;
-  text-align: right;
+  //float: right;
+  //width: 50%;
+  text-align: center;
   white-space: normal;
 
   li{
@@ -610,7 +933,7 @@ $photo-dimension : $profile-subheader-height * 1.1;
       background-size: (8994/6)+px (351)/6+px;
 
       &.ico-doubletraileractive{background-position: -239px 0;}
-      &.ico-passengeractive{background-position: -(1867/2)+px -0;}
+      &.ico-passengeractive{background-position: -(1865/2)+px -0;}
       &.ico-tankvehicleactive{background-position: -(2759/2)+px 0;}
       &.ico-hazardousmaterialsactive{background-position: -(731/2)+px 0;}
       &.ico-tankhazardousactive{background-position: -1317px 0;}
@@ -632,6 +955,13 @@ $photo-dimension : $profile-subheader-height * 1.1;
       overflow: hidden;
     }
   }
+}
+
+.edit-pane {
+    .focused {
+        box-shadow: inset 0 0 10px $energized;
+//        background-color: rgba($energized, 0.5);
+    }
 }
 
 //

@@ -26,9 +26,9 @@ $brand-bg: $brand-blue;
 
 $light:                           #fff !default;
 $stable:                          #f8f8f8 !default;
-$positive:                        #206B89 !default; //#387ef5 !default;
+$positive:                        $badge-green !default; //#387ef5 !default;
 $calm:                            $tab-selected !default; //#11c1f3 !default;
-$balanced:                        #3EAEB1 !default;
+$balanced:                        #3EAEB1 !default; // #3EAEB1 !default
 $energized:                       #dc9647 !default;
 $assertive:                       $danger !default; // #ef473a !default;
 $royal:                           #886aea !default;
@@ -50,8 +50,8 @@ $signup-entry-value-text: $light;
 // Base
 // -------------------------------
 
-$font-family-sans-serif:          "Helvetica Neue", "Roboto", "Segoe UI", sans-serif !default;
-$font-family-light-sans-serif:    "HelveticaNeue-Light", "Roboto-Light", "Segoe UI-Light", sans-serif-light !default;
+$font-family-sans-serif:          "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif !default;
+$font-family-light-sans-serif:    "-apple-system", "HelveticaNeue-Light", "Roboto-Light", "Segoe UI-Light", sans-serif-light !default;
 $font-family-serif:               serif !default;
 $font-family-monospace:           monospace !default;
 

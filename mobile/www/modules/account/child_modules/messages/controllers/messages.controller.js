@@ -5,10 +5,10 @@
         .module('messages')
         .controller('MessagesCtrl', MessagesCtrl);
 
-    MessagesCtrl.$inject = ['$rootScope', '$scope', 'updates', 'updateService', '$cordovaGoogleAnalytics',
-        'messageService', 'messageModalsService', 'LoadingService', 'friendsService', 'recipientChat'];
+    MessagesCtrl.$inject = ['$ionicHistory', '$rootScope', '$scope', '$state', 'updates', '$cordovaGoogleAnalytics',
+        'updateService', 'messageService', 'messageModalsService', 'LoadingService', 'friendsService', 'recipientChat'];
 
-    function MessagesCtrl ($rootScope, $scope, updates, updateService, $cordovaGoogleAnalytics,
+    function MessagesCtrl ($ionicHistory, $rootScope, $scope, $state, updates, $cordovaGoogleAnalytics, updateService,
         messageService, messageModalsService, LoadingService, friendsService, recipientChat) {
 
         var vm = this;
@@ -19,6 +19,7 @@
         vm.showChatDetailsModal = showChatDetailsModal;
         vm.createNewChat = createNewChat;
         vm.getChats = getChats;
+        vm.goBack = goBack;
 
         $rootScope.$on('clear', function () {
             $cordovaGoogleAnalytics.trackEvent('Messages', 'clear', null, vm.chats.length);
@@ -30,7 +31,8 @@
         $scope.$on('$ionicView.enter', function () {
             if (!!recipientChat) {
                 showChatDetailsModal(recipientChat);
-            } else {
+            }
+            else {
                 getChats();
             }
         });
@@ -101,6 +103,19 @@
                     $cordovaGoogleAnalytics.trackTiming('Messages', Date.now() - then, 'getChats', 'complete');
                     LoadingService.hide();
                 });
+        }
+
+
+
+        function goBack () {
+            // ui-sref="account.profile({userId: null})" ui-sref-opts="{reload: true}"
+            var backView = $ionicHistory.backView();
+
+            if (_.isEmpty(backView) || _.isEmpty(backView.stateName)) {
+                return $state.go('account.profile', { userId: null }, { reload: true });
+            }
+
+            return $ionicHistory.goBack();
         }
     }
 })();

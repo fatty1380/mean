@@ -1,5 +1,15 @@
 <ion-tabs class="main-tabs" delegate-handle="account-tabs">
     <ion-tab
+        title="home"
+        icon-on="ico ico-activityiconactive"
+        icon-off="ico ico-activityiconblue"
+        ui-sref="account.activity"
+        badge="vm.updates.activities"
+        badge-style="badge-assertive"
+        >
+        <ion-nav-view name="activity"></ion-nav-view>
+    </ion-tab>
+    <ion-tab
         title="profile"
         icon-on="ico ico-profileiconactive"
         icon-off="ico ico-profileiconblue"
@@ -11,30 +21,16 @@
     </ion-tab>
     <ion-tab title="lockbox" 
         icon-on="ico ico-lockboxiconactive" 
-        icon-off="ico ico-lockboxiconblue" 
+        icon-off="ico {{vm.lockboxOpen ? 'ico-lockboxiconblue' : 'ico-lockboxiconlocked'}}" 
         ui-sref="account.lockbox"
         >
         <ion-nav-view name="lockbox"></ion-nav-view>
     </ion-tab>
     <ion-tab
-        title="activity"
-        icon-on="ico ico-activityiconactive"
-        icon-off="ico ico-activityiconblue"
-        ui-sref="account.activity"
-        badge="vm.updates.activities"
-        badge-style="badge-assertive"
-        >
-        <ion-nav-view name="activity"></ion-nav-view>
-    </ion-tab>
-    <ion-tab
-        title="messages"
-        icon-on="ico ico-messagesiconactive"
-        icon-off="ico ico-messagesiconblue"
         ui-sref="account.messages"
-        badge="vm.updates.messages.amount"
-        badge-style="badge-assertive"
+        hidden="true"
         >
-
         <ion-nav-view name="messages"></ion-nav-view>
     </ion-tab>
+
 </ion-tabs>

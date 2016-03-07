@@ -182,6 +182,15 @@
     background-position: -1691px 0;
   }
 
+  &.ico-lockboxiconlocked {
+    width: 18px;
+    height: 22px;
+    
+    background-image: url('../img/lockboxIconLocked@3x.png');
+    background-size: (54/3)+px (66)/3+px;
+    background-position: 0 0;
+  }
+
   &.ico-mack-logo {
     width: 102px;
     height: 72px;
@@ -209,7 +218,7 @@
   &.ico-passengeractive {
     width: 62px;
     height: 62px;
-    background-position: -1867px 0;
+    background-position: -1865px 0;
   }
 
   &.ico-passengerinactive {
@@ -315,6 +324,7 @@
   }
 
   &.ico-timesmall {
+      margin-top: 2px;
     width: 12px;
     height: 12px;
     background-position: -2884px 0;
@@ -372,4 +382,76 @@
   height: 20px;
   -webkit-background-size: 149px 18px;
   background-size: 149px 18px;
+}
+
+/* "New" icons for profile */
+.ico {
+
+    &.ico-message-badge, 
+    &.ico-friend-badge,
+    &.ico-radio-badge {
+        -webkit-background-size: (78/3)+px (78/3)+px;
+        background-size: (78/3)+px (78/3)+px;
+        
+        width: 26px;
+        height: 26px;
+        background-position: 0 0;
+    }
+    
+        
+        
+    &.ico-message-badge{
+        background-image: url('../img/message_badge_sm@3x.png');
+    }
+
+    &.ico-friend-badge{
+        background-image: url('../img/friend_badge_sm@3x.png');
+    }
+
+    &.ico-radio-badge {
+        background-image: url('../img/radio_badge_sm@3x.png');
+    }
+}
+
+.ico-t.ico {
+    background-image: url('../img/truck_logos_sm@3x.png');
+    display: inline-block;
+    pointer-events: none;
+    background-size: (210/3)+px (900)/3+px;
+  
+    &.ico-peterbilt-logo {
+        width: 70px;
+        height: 50px;
+        background-position: 0 0;
+    }
+  
+    &.ico-international-logo {
+        width: 70px;
+        height: 50px;
+        background-position: 0 -50px;
+    }
+  
+    &.ico-freightliner-logo {
+        width: 70px;
+        height: 50px;
+        background-position: 0 -100px;
+    }
+
+    &.ico-mack-logo {
+        width: 70px;
+        height: 50px;
+        background-position: 0 -150px;
+    }
+
+    &.ico-kenworth-logo {
+        width: 70px;
+        height: 50px;
+        background-position: 0 -200px;
+    }
+
+    &.ico-volvo-logo {
+        width: 70px;
+        height: 50px;
+        background-position: 0 -250px;
+    }
 }
