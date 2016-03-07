@@ -1,5 +1,15 @@
 <ion-view class="profile-screen view-section" cache-view="false">
 
+    <div class="material-action">
+        <button class="button button-energized button-share" ng-if="vm.showShareModal" ng-click="vm.showShareModal()">
+            <i class="icon ion-android-share"></i>
+        </button>
+
+        <button class="button button-calm" ng-if="!vm.canEdit" ng-click="vm.openChat()">
+            <i class="icon ion-chatbubbles"></i>
+        </button>
+    </div>
+
 
     <!--Profile Main Heading START-->
     <ion-header-bar align-title="center">
@@ -24,12 +34,6 @@
         <div class="header-actions right">
         </div>
 
-
-        <div class="material-action">
-            <button class="button button-energized button-share" ng-if="vm.showShareModal" ng-click="vm.showShareModal()">
-                <i class="icon ion-android-share"></i>
-            </button>
-        </div>
     </ion-header-bar>
 
     <!--Profile Main Heading END-->
@@ -183,16 +187,6 @@
         </div>
         </ion-scroll>
 
-        <div class="button content-button" ng-if="!!vm.showShareModal" ng-click='vm.showShareModal()'>
-            <button type="button" class="button button-block button-positive">
-                <i class="ion-share"></i> Share
-            </button>
-        </div>
-        <div class="button content-button" ng-if="!vm.canEdit" ng-click="vm.openChat()">
-            <button type="button" class="button button-block button-positive">
-                <i class="ion-chatbubbles"></i> Send Message
-            </button>
-        </div>
         </div>
     </ion-pane>
 

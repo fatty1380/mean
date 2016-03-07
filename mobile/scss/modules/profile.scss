@@ -6,9 +6,15 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
 
 .material-action {
     
-    position: absolute;
+    position: fixed;
     right: $padding-base-horizontal;
-    top: calc(100vh - #{$tabs-height} - #{$button-height} - #{$padding-base-horizontal});
+    //top: calc(100vh - #{$tabs-height} - #{$button-height} - #{$padding-base-horizontal});
+    bottom: calc(#{$tabs-height} + #{$padding-base-horizontal});
+    
+    .platform-ios & {
+        //top: calc(100vh - #{$tabs-height} - #{$button-height} - #{$padding-base-horizontal} - #{$ios-statusbar-height});
+        //bottom: calc(#{$tabs-height} + #{$padding-base-horizontal} - #{$ios-statusbar-height});
+    }
     
     //top: calc(100vh - $tabs-height + $padding-base-vertical);
     // bottom: $tabs-height + $padding-base-vertical;
@@ -16,8 +22,9 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
         
     .button {
         border-radius: 50%;
-        width: $button-height;
-        height: $button-height;
+        border-width: 0;
+        width: $button-large-height;
+        height: $button-large-height;
         box-shadow: 1px 1px 10px $dark;
         
         &:active {
@@ -41,10 +48,14 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
         .scroll-view {
             padding-top: $photo-dimension/2;
             
-            // .platform-ios & {
-            //     padding-top: $photo-dimension/2 + $ios-statusbar-height;
-            // }
+            .platform-ios & {
+                padding-top: $photo-dimension/2 + $ios-statusbar-height;
+            }
         }
+    }
+    
+    .bar.bar-header > .button {
+        z-index: 3;
     }
 }
 
@@ -78,13 +89,14 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
             }
             
             &.clickable {
-                color: $balanced;
+                //color: $balanced;
                 
                 i.ico {
-                    background-color: $balanced;
+                    background-color: $brand-blue;
                     border-radius: 50%;
-                    padding: 4px;
-                    box-shadow: 1px 1px 5px rgba($balanced, 0.9);
+                    border-style: none;
+                    padding: -2px;
+                    box-shadow: 1px 1px 5px rgba($dark, 0.9);
                 }
             }
         }
@@ -150,7 +162,8 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
     color: $positive;
     
     .miles-badge, .license-badge, .experience-badge {
-        font-size: 8vw;
+        color: $positive; // $ribbon-bg;
+        font-size: 1.8em;
         line-height: 9vw;
         position: relative;
         left: 0;
@@ -162,24 +175,35 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
             font-size: 0.7em;
         }
         
+        .empty {
+            color: $calm;
+            i.ion {
+                font-size: 1.1em;
+            }
+            
+            font-size: 0.7em;
+            text-transform: uppercase;
+        }
+        
         .label-text {
             text-transform: uppercase;
             position: absolute;
             text-align: center;
             width: 100%;
             left: 0;
-            font-size: 2.5vw;
+            font-size: 9px;
+            letter-spacing: -0.5px;
             
             &.top {
-                bottom: 6vw;
+                bottom: 70%;
             }
             &.bot {
-                top: 5vw;
+                top: 60%;
             }
         }
     }
     
-    .experience-badge::after {
+    .experience-badge>.value::after {
         content: '+';
         font-size: 5vw;
         position: absolute;
@@ -226,6 +250,14 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
     }
   }
   
+  .card {
+      &.experience, &.equipment {
+        .ion-compose {
+            font-size: 1.7em;
+        }
+      }
+  }
+  
   .equipment.card {
       padding-left: $padding-base-horizontal;
       
@@ -264,9 +296,7 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
   .experience.item, .equipment.item {
       padding-left: $padding-base-horizontal;
       padding-right: $padding-base-horizontal;
-      
-      
-      
+            
       .item-label {
             padding-top: $padding-large-vertical;
             padding-bottom: $padding-small-vertical;
@@ -300,17 +330,22 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
       }
       
       .company {
-          font-size: 1.1em;
+          font-size: 1.0em;
+          font-weight: 500;
           text-transform: uppercase;
-          color: $brand-blue;
+          color: $dark;
           padding-bottom: $padding-small-vertical;
       }
       
-    //   .exp-spacer {
-    //       width: 100%;
-    //     //   background-color: purple;
-    //       height: 2*$padding-large-vertical;
-    //   }
+      h4 {
+          margin-bottom: $padding-base-vertical;
+      }
+      
+      .exp-spacer {
+          width: 100%;
+        //   background-color: purple;
+          height: 2*$padding-large-vertical;
+      }
   }
 }
 
@@ -323,6 +358,8 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
 .profile-pane {
     margin-top: $profile-header-height;
 }
+
+
 
 .header-actions {
     z-index: 3;
@@ -343,18 +380,27 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
     position: fixed;
     top: $profile-header-height - 38px;
     
-    &.below {
-    top: $photo-dimension/1.3 + $padding-large-vertical + $padding-base-vertical;
-    .button {
-        border-radius: 50%;
-        width: 38px;
-        height: 38px;
-        box-shadow: 1px 1px 10px rgba($action-text, 0.8);
-        
-        &.button-share, &.button-edit {
-            padding-top: 3px;
-        }
+    .platform-ios & {
+        top:  $profile-header-height - 38px - $ios-statusbar-height;
     }
+    
+    &.below {
+        top: $profile-header-height + $padding-base-vertical;
+        
+        .platform-ios & {
+            top: $profile-header-height + $padding-base-vertical - $ios-statusbar-height;
+        }
+        
+        .button {
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            box-shadow: 1px 1px 10px rgba($action-text, 0.8);
+            
+            &.button-share, &.button-edit {
+                padding-top: 3px;
+            }
+        }
     }
 }
 
@@ -639,9 +685,11 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
 //       }
 //   }
 
-  .profile-list, .experience-list, activity-list {
-      
-      padding-bottom: 200px;
+  .scroll > :last-child {
+      padding-bottom: 275px;
+  }
+
+  .profile-list, .experience-list, .activity-list {
       
       
       .row {
@@ -755,6 +803,16 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
             height: 48px;
         }
     }
+  }
+  
+  .activity-list .item.activity {
+      .item-label, .no-feed-items {
+          text-align: center;
+      }
+      
+      .item-label {
+          color: $dark;
+      }
   }    
   
 }
@@ -897,6 +955,13 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
       overflow: hidden;
     }
   }
+}
+
+.edit-pane {
+    .focused {
+        box-shadow: inset 0 0 10px $energized;
+//        background-color: rgba($energized, 0.5);
+    }
 }
 
 //
