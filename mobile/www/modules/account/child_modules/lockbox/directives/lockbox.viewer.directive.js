@@ -10,12 +10,13 @@
         .directive('osetDocView', ViewDocumentDirective)
         .directive('osetDocAttrView', ViewDocAttrDirective);
 
-    function ViewDocAttrDirective () {
+    function ViewDocAttrDirective() {
         var directive = {
             link: link,
             restrict: 'A',
             scope: {
                 document: '=model',
+                newDocFn: '&',
                 btnText: '@?'
             },
             controller: ViewDocDirectiveCtrl,
@@ -26,25 +27,25 @@
         return directive;
 
         // Inject controller as 'vm' for consistency
-        function link (scope, el, attr, vm) {
+        function link(scope, el, attr, vm) {
             // Set defaults
             vm.scope = scope;
-            if (vm.document && vm.document.url) {
-                el.bind('click', function () {
-                    logger.debug('Displaying doc at URL: ', vm.document.url);
-                    vm.openPreview(vm.document);
-                });
-            }
+
+            el.bind('click', function (event) {
+                logger.debug('Displaying doc at URL: ', vm.document.url);
+                vm.docClick(event);
+            });
         }
     }
 
-    function ViewDocumentDirective () {
+    function ViewDocumentDirective() {
         var directive = {
             link: link,
             template: documentTemplate,
             restrict: 'E',
             scope: {
                 document: '=model',
+                newDocFn: '&',
                 btnText: '@?'
             },
             controller: ViewDocDirectiveCtrl,
@@ -55,7 +56,7 @@
         return directive;
 
         // Inject controller as 'vm' for consistency
-        function link (scope, el, attr, vm) {
+        function link(scope, el, attr, vm) {
             // Set defaults
             vm.scope = scope;
 
@@ -67,20 +68,34 @@
     }
 
     ViewDocDirectiveCtrl.$inject = ['modalService'];
-    function ViewDocDirectiveCtrl (DocPreview) {
+    function ViewDocDirectiveCtrl(DocPreview) {
         var vm = this;
 
-        vm.openPreview = showDocument;
+        vm.docClick = function (event) {
+            
+            event.stopPropagation();
+            
+            if (vm.document.url) {
+                return showDocument(vm.document, event);
+            }
+
+            return vm.newDocFn()(vm.document.sku);
+        };
 
         activate();
 
         // /
 
-        function activate () {
-            vm.btnText = vm.btnText || 'View';
+        function activate() {
+            vm.btnText = vm.document && vm.document.name || 'huh?'
+
+            if (!!vm.document && !!vm.document.created) {
+                vm.created = moment(vm.document.created, moment.ISO_8601).format('L');
+            }
+            //            vm.btnText = vm.btnText || 'View';
         }
 
-        function showDocument (document, event) {
+        function showDocument(document, event) {
             if (!!event) {
                 event.stopPropagation();
             }
@@ -91,12 +106,18 @@
         }
     }
 
-    var documentTemplate = '<button class="button button-small" ng-click="vm.openPreview(vm.document, $event)">{{vm.btnText}}</button>';
-
+    var documentTemplate =
+        '<div class="{{!!vm.document.url ? \'button-document\' : \'button-stub\' }}" ng-click="vm.docClick($event)">' +
+        '<div class="" ng-class="{\'no-date\': !vm.created}">' +
+        '    <div class="doc-name">{{ vm.document.name }}</div>' +
+        '    <div class="doc-date">{{ vm.created }}</div>' +
+        '    <i class="icon {{vm.document.icon}}"></i>' +
+        '</div>' +
+        '</div>';
 
     // AKA: ContactDialogCtrl
     DocumentModalCtrl.$inject = ['parameters', '$sce', '$timeout', '$ionicPopup', 'LoadingService', 'PDFViewerService'];
-    function DocumentModalCtrl (parameters, $sce, $timeout, $ionicPopup, LoadingService, PDFViewerService) {
+    function DocumentModalCtrl(parameters, $sce, $timeout, $ionicPopup, LoadingService, PDFViewerService) {
         var vm = this;
 
         vm.document = parameters.document || parameters;
@@ -117,7 +138,7 @@
         vm.toggleFullScreen = toggleFullScreen;
         vm.close = close;
 
-        function close (e) {
+        function close(e) {
             e.stopPropagation();
             vm.closeModal(null);
 
@@ -127,7 +148,7 @@
             }
         }
 
-        function enlarge (e) {
+        function enlarge(e) {
             vm.fullScreenMode = !vm.fullScreenMode;
             if (angular.isFunction(screen.lockOrientation)) {
                 screen.lockOrientation('landscape');
@@ -140,7 +161,7 @@
             }
         }
 
-        function minimize () {
+        function minimize() {
             vm.fullScreenMode = !vm.fullScreenMode;
             if (angular.isFunction(screen.lockOrientation)) {
                 screen.lockOrientation('portrait');
@@ -153,7 +174,7 @@
             }
         }
 
-        function toggleFullScreen () {
+        function toggleFullScreen() {
             if (!vm.fullScreenMode) return;
             vm.showControls = !vm.showControls;
         }
@@ -173,13 +194,13 @@
 
         logger.debug('[DocumentModalCtrl] for document: %o', vm.document);
 
-        function trustSrc (src) {
+        function trustSrc(src) {
             // logger.debug('SCE Trusting resource: `%s`', src);
             return $sce.trustAsResourceUrl(src);
         }
 
 
-        function onImageEvent (event) {
+        function onImageEvent(event) {
             var type = event.type || event;
             var err = event.err;
 
@@ -204,7 +225,7 @@
         }
 
 
-        function onPdfEvent (event) {
+        function onPdfEvent(event) {
             var type = event.type || event;
             var err = event.err;
 
@@ -230,7 +251,7 @@
         }
 
 
-        function loadProgress (loaded, total, state) {
+        function loadProgress(loaded, total, state) {
 
             var progress = Math.ceil(loaded / total * 100);
             if (progress <= 100) {

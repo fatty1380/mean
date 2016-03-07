@@ -46,6 +46,10 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
         var pinPopup;
         scopeData.closePopup = closePINPopup;
         scopeData.pinChange = pinChanged;
+        
+        //////////////////////////////////////////////
+        
+        //return $q.when(true);
 
         // ///////////////////////////////////////////
 
@@ -65,6 +69,9 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
 
             })
             .then(function () {
+                if (!state.secured) {
+                    return $q.reject('Lockbox is not secured');
+                }
                 if (!state.accessible) {
                     LoadingService.hide();
                     $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'locked');
@@ -80,6 +87,9 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
                 }
 
                 return !!accessGranted;
+            })
+            .catch(function (error) {
+                return -1;
             })
             .finally(function () {
                 LoadingService.hide();
