@@ -116,8 +116,8 @@
         // MODIFIED
         function runUpdateProcess (event) {
             // debugger;
-            logger.debug('this should be the event', event);
-            logger.debug('AppUpdates: Checking for Updates: ', updates);
+            // logger.debug('this should be the event', event);
+            // logger.debug('AppUpdates: Checking for Updates: ', updates);
             var promises = [
                 getLatestMessages(),
                 getLatestActivity(),
@@ -127,7 +127,7 @@
 
             return $q.all(promises)
                 .then(function (response) {
-                    logger.debug('AppUpdates: Checked for Updates: Processing', updates);
+                    // logger.debug('AppUpdates: Checked for Updates: Processing', updates);
                     getUpdates(response);
                 });
         }
