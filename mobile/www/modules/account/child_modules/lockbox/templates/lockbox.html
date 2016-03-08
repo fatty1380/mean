@@ -25,7 +25,7 @@
             <ion-refresher pulling-text="Pull to refresh ..." on-refresh="vm.refreshDocuments()"></ion-refresher>
             <ion-list class="document-list">
                 <div ng-if="vm.documents.length">
-                    <div ng-repeat="doc in vm.documents track by $index | orderBy: 'url' : false">
+                    <div ng-repeat="doc in vm.documents track by $index">
                         <div class="row" ng-if="$even">
                             
                             <!--<div class="doc col blank" ng-if="!vm.documents[$index+1] && !vm.documents[$index].url">&nbsp;</div>-->

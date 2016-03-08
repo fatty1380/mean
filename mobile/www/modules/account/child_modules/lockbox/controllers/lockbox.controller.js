@@ -91,11 +91,9 @@
                 return false;
             }
 
-            debugger;
             return lockboxDocuments.loadLocalDocsForUser(user.id)
                 .then(function (response) {
                     logger.debug('Documents List', response);
-                    debugger;
                     sortDocs();
                 });
         }
@@ -109,14 +107,7 @@
         function sortDocs () {
             if (_.isArray(vm.documents)) {
                 vm.documents.sort(function (a, b) {
-                    if (a.url && !b.url) {
-                        return -1;
-                    }
-                    else if (!a.url && b.url) {
-                        return 1;
-                    }
-
-                    return 0;
+                    return a.order - b.order;
                 });
             }
 
@@ -197,10 +188,8 @@
                 })
                 .then(
                     function (result) {
-
-                        debugger;
                         sortDocs();
-                        logger.debug(result);
+                        logger.debug('edit document result', result);
                     },
                     function (err) {
                         logger.debug(err);
@@ -237,8 +226,6 @@
 
             return lockboxDocuments.loadDocuments(true)
                 .then(function () {
-                    debugger;
-
                     sortDocs();
                     logger.debug('[refreshDocuments] Complete', vm.documents);
                     // Stop the ion-refresher from spinning
