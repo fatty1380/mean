@@ -111,23 +111,25 @@
 
                                     LoadingService.showLoader('Loading documents');
 
-                                    return lockboxDocuments.getFilesByUserId(user.id)
+                                    return lockboxDocuments.loadLocalDocsForUser(user.id)
                                         .then(function (data) {
                                             logger.debug('returning lockbox doc loaded from device');
-                                            return lockboxDocuments.getDocuments(true);
+                                            return lockboxDocuments.loadDocuments(true);
                                         })
                                         .catch(function (err) {
                                             logger.error('[LockboxDocResolve] Couldn\'t retrieve documents err --->>>', err);
 
-                                            if (/no access/i.test(err)) {
-                                                return -1;
-                                            }
+                                            return -1;
 
-                                            return lockboxDocuments.getDocuments(true)
-                                                .catch(function (err) {
-                                                    logger.error('Caught error on secondary Lockbox doc access attempt', err);
-                                                    return -1;
-                                                });
+                                            // if (/no access/i.test(err)) {
+                                            //     return -1;
+                                            // }
+
+                                            // return lockboxDocuments.loadDocuments(true)
+                                            //     .catch(function (err) {
+                                            //         logger.error('Caught error on secondary Lockbox doc access attempt', err);
+                                            //         return -1;
+                                            //     });
                                         });
                                 }],
                             welcome: ['welcomeService', function (welcomeService) {

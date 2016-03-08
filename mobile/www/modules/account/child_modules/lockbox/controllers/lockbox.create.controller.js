@@ -75,9 +75,10 @@
                         onTap: function () {
                             if ($scope.data.name) {
                                 return $scope.data.name;
-                            } else {
-                                return '';
                             }
+
+                            return '';
+
                         }
                     }
                 ]

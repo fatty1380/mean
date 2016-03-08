@@ -293,3 +293,24 @@ input.pin-input {
   }
 
 }
+
+.lockbox {
+    &.lockbox-edit {
+        .content-top {
+            padding-left: 0;
+            padding-right: 0;
+            
+            .input-label {
+                width: auto;
+                text-align: left;
+                display: inline-block;
+            }
+            
+            select {
+                max-width: unset;
+                display: inline-block
+                
+            }
+        }
+    }
+}

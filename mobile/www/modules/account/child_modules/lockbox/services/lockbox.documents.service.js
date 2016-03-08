@@ -36,15 +36,15 @@
         vm.documents = docTypeDefinitions;
 
         return {
-            getDocuments: getDocuments,
+            loadDocuments: loadDocsFromServer,
+            loadLocalDocsForUser: loadLocalDocsForUser,
             addDocsPopup: addDocsPopup,
             removeDocuments: removeDocuments,
             removeOtherUserDocuments: removePrevUserDocuments,
             updateDocument: updateDocument,
             writeFileInUserFolder: writeFileInUserFolder,
             removeDocumentsByUser: removeDocumentsByUser,
-            getFilesByUserId: getFilesByUserId,
-            updateDocumentList: updateDocumentList,
+            getDocumentList: getDocumentList,
             orderReports: orderReports,
             newDocPopup: takePicture,
             checkAccess: lockboxSecurity.checkAccess,
@@ -58,7 +58,7 @@
         }
 
         // TODO: Refactor to be "refresh documents"
-        function getDocuments(saveToDevice) {
+        function loadDocsFromServer (saveToDevice) {
 
             vm.userData = userService.profileData;
 
@@ -79,7 +79,7 @@
             //     })
 
 
-                        LoadingService.showLoader('Loading Documents');
+            LoadingService.showLoader('Loading Documents');
 
             return API.doRequest(settings.documents, 'get')
                 .then(function success (documentListResponse) {
@@ -172,7 +172,7 @@
         }
 
 
-        function getFilesByUserId (id, options) {
+        function loadLocalDocsForUser (userId, options) {
 
             vm.userData = userService.profileData;
 
@@ -180,8 +180,8 @@
                 return $q.reject('No user is logged in');
             }
 
-            logger.warn('getFilesByUserId() for id >>> @ path `%s`', vm.path, id);
-            if (!vm.path) return $q.when(getDocuments(true));
+            logger.warn('loadLocalDocsForUser() for id >>> @ path `%s`', vm.path, userId);
+            if (!vm.path) {return $q.when(loadDocsFromServer(true));}
 
 
             LoadingService.showLoader('Loading Documents');
@@ -195,11 +195,11 @@
                     path += 'lockbox/';
                     hasLockbox = true;
 
-                    return $cordovaFile.checkDir(path, id);
+                    return $cordovaFile.checkDir(path, userId);
                 })
                 .then(function (dir) {
                     logger.debug('[LockboxDocsService] directory >>> ', dir);
-                    path += id;
+                    path += userId;
                     hasUserDir = true;
 
                     return readFolder(dir);
@@ -211,11 +211,11 @@
                 })
                 .catch(function (err) {
                     if (!!hasLockbox) {
-                        logger.debug('[LockboxDocsService] getFilesByUserId : calling getDocuments');
-                        return $q.when(getDocuments(true, { redirect: true }));
+                        logger.debug('[LockboxDocsService] loadLocalDocsForUser : calling getDocuments');
+                        return $q.when(loadDocsFromServer(true, { redirect: true }));
                     } else {
                         return $cordovaFile.createDir(path, 'lockbox', false).then(function () {
-                            return $q.when(getDocuments(true));
+                            return $q.when(loadDocsFromServer(true));
                         });
                     }
                     return $q.when(vm.documents);
@@ -225,7 +225,7 @@
                     if (!hasRealDoc) {
                         welcomeService.initialize('lockbox.add');
                     }
-                    logger.warn('getFilesByUserId() finally vm.documents >>>', vm.documents);
+                    logger.warn('loadLocalDocsForUser() finally vm.documents >>>', vm.documents);
                     LoadingService.hide();
                 });
         }
@@ -289,15 +289,15 @@
                             if (accessStatus !== -1 && accessStatus) {
                                 return newDocumentObject;
                             }
-                            
+
                             logger.error('[lockboxService.addDocument] No Access to lockbox, not saving');
-                            
+
                             LoadingService.showFailure('Please enter a PIN to secure your lockbox before saving Documents');
                             throw new Error('Lockbox is not secured');
                         });
                 })
-                
-                .then(function success(newDocumentObject) {
+
+                .then(function success (newDocumentObject) {
                     if (addDocument(newDocumentObject)) {
                         return API.doRequest(settings.documents, 'post', newDocumentObject);
                     } else {
@@ -725,7 +725,7 @@
             return source.replace(/_/g, ' ').replace(/\.\w{3,4}$/, '');
         }
 
-        function updateDocumentList () {
+        function getDocumentList () {
             return vm.documents;
         }
 

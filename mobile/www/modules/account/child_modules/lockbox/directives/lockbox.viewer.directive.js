@@ -10,7 +10,7 @@
         .directive('osetDocView', ViewDocumentDirective)
         .directive('osetDocAttrView', ViewDocAttrDirective);
 
-    function ViewDocAttrDirective() {
+    function ViewDocAttrDirective () {
         var directive = {
             link: link,
             restrict: 'A',
@@ -27,7 +27,7 @@
         return directive;
 
         // Inject controller as 'vm' for consistency
-        function link(scope, el, attr, vm) {
+        function link (scope, el, attr, vm) {
             // Set defaults
             vm.scope = scope;
 
@@ -67,16 +67,23 @@
         }
     }
 
-    ViewDocDirectiveCtrl.$inject = ['modalService'];
-    function ViewDocDirectiveCtrl (DocPreview) {
+    ViewDocDirectiveCtrl.$inject = ['modalService', 'lockboxSecurity'];
+    function ViewDocDirectiveCtrl (DocPreview, lockboxSecurity) {
         var vm = this;
 
         vm.docClick = function (event) {
 
             event.stopPropagation();
-            
+
             if (vm.document.url) {
-                return showDocument(vm.document, event);
+                return lockboxSecurity
+                    .checkAccess({ setNew: false, throwOnFail: true })
+                    .then(function () {
+                        return showDocument(vm.document, event);
+                    })
+                    .catch(function (err) {
+                        logger.error('Lockbox Access Failed', err);
+                    });
             }
 
             return vm.newDocFn()(vm.document.sku);
@@ -87,15 +94,15 @@
         // /
 
         function activate () {
-            vm.btnText = vm.document && vm.document.name || 'huh?'
+            vm.btnText = vm.document && vm.document.name || 'huh?';
 
             if (!!vm.document && !!vm.document.created) {
                 vm.created = moment(vm.document.created, moment.ISO_8601).format('L');
-        }
+            }
             //            vm.btnText = vm.btnText || 'View';
         }
 
-        function showDocument(document, event) {
+        function showDocument (document, event) {
             if (!!event) {
                 event.stopPropagation();
             }
@@ -136,7 +143,6 @@
         vm.enlarge = enlarge;
         vm.minimize = minimize;
         vm.toggleFullScreen = toggleFullScreen;
-        vm.toggleZoom = toggleZoom;
         vm.close = close;
 
 
@@ -177,7 +183,7 @@
             }
         }
 
-        function toggleFullScreen() {
+        function toggleFullScreen () {
             if (!vm.fullScreenMode) return;
             vm.showControls = !vm.showControls;
         }
@@ -203,7 +209,7 @@
         }
 
 
-        function onImageEvent(event) {
+        function onImageEvent (event) {
             var type = event.type || event;
             var err = event.err;
 
@@ -227,7 +233,7 @@
         }
 
 
-        function onPdfEvent(event) {
+        function onPdfEvent (event) {
             var type = event.type || event;
             var err = event.err;
 

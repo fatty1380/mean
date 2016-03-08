@@ -33,7 +33,7 @@
 
         function getDocs () {
             lockboxDocuments
-                .getDocuments()
+                .loadDocuments()
                 .then(function (response) {
                     logger.debug('Documents List', response);
 
@@ -137,7 +137,7 @@
                         }
                     })
                     .then(function () {
-                        vm.documents = lockboxDocuments.updateDocumentList();
+                        vm.documents = lockboxDocuments.getDocumentList();
                         return vm.documents;
                     });
             }
