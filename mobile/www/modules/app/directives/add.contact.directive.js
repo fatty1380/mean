@@ -33,7 +33,7 @@
             vm.showMessage = vm.showMessage !== false;
             vm.showName = vm.showName !== false;
 
-            var fn = _.isFunction(vm.formInit()) && vm.formInit() || _.noop;
+            var fn = !!vm.formInit && _.isFunction(vm.formInit()) && vm.formInit() || _.noop;
             fn(vm.contactForm);
 
             vm.contactForm.validate = vm.validate;
