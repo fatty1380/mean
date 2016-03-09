@@ -1,0 +1,18 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    // The files to exclude when doing a lookup
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/platforms/**": true,
+        "!(mobile)/**": true
+    },
+    // The folders to exclude when doing a full text search in the workspace.
+    "search.exclude": {
+        "www/lib": false,
+        "**/*.min.*": true,
+        "**/*.bundle.*": true
+    }, 
+    
+    "editor.formatOnType": true
+}
