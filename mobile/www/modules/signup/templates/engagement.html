@@ -14,9 +14,9 @@
         <ion-scroll>
         <form name="mainEnagegmentForm" id="mainEnagegmentForm" class="list signup-form" ng-init="vm.initEngagementForm(this)" ng-submit="vm.continue()"
         role="form">
-            <label class="item item-input">
+            <ion-input class="item item-input">
                 <input type="text" placeholder="Enter your CB Handle" ng-model="vm.handle" autofocus>
-            </label>
+            </ion-input>
             <div class="avatar-wrapper">
                 <div class="avatar" ng-click="vm.showEditAvatar()">
                     <button type="button" class="button button-block button-clear button-light">
@@ -27,12 +27,12 @@
                 </div>
             </div>
             <oset-toggle label="Owner Operator" type="button-small" model="vm.userProps.owner"></oset-toggle>
-            <label class="item item-input">
+            <ion-input class="item item-input">
                 <input type="text" placeholder="Driving Since" ng-model="vm.userProps.started" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
-            </label>
-            <label class="item item-input">
+            </ion-input>
+            <ion-input class="item item-input">
                 <input type="text" placeholder="Name of Employer" ng-model="vm.userProps.company">
-            </label>
+            </ion-input>
         </form>
         </ion-scroll>
     </ion-pane>

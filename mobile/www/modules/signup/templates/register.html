@@ -19,25 +19,25 @@
         </div>-->
         <div class="login-content">
             <form name="vm.mainForm" id="mainForm" class="list sign-up signup-form" ng-submit="vm.submitForm($event)" novalidate>
-                <label class="item item-input">
+                <ion-label class="item item-input">
                     <input name="firstName" id="firstName" type="text" placeholder="First Name" ng-model="vm.user.firstName" focus required autocorrect="off"
                     spellcheck="false" focus-me>
-                </label>
-                <label class="item item-input">
+                </ion-label>
+                <ion-label class="item item-input">
                     <input name="lastName" type="text" placeholder="Last Name" ng-model="vm.user.lastName" focus required autocorrect="off" spellcheck="false">
-                </label>
-                <label class="item item-input">
+                </ion-label>
+                <ion-label class="item item-input">
                     <input name="email" type="email" placeholder="Email" ng-model="vm.user.email" focus required>
-                </label>
-                <label class="item item-input">
+                </ion-label>
+                <ion-label class="item item-input">
                     <input name="password" type="password" placeholder="Password" ng-model="vm.user.password" ng-minlength="8" focus required
                     focus-me="vm.focusPass">
-                </label>
-                <label class="item item-input item-ass">
+                </ion-label>
+                <ion-label class="item item-input item-ass">
                     <input name="confirmPassword" type="password" placeholder="Confirm Password" ng-model="vm.user.confirmPassword" 
                     compare-to="vm.user.password"
                     ng-focus="vm.lastElementFocused = true; vm.clearConfirm();" ng-blur="vm.lastElementFocused = false" required>
-                </label>
+                </ion-label>
                 <input style="position:absolute; left:9999px" type="submit" />
             </form>
             

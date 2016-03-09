@@ -3,7 +3,7 @@
   "devDependencies": {},
   "dependencies": {
     "angular-google-staticmaps": "~0.3.0",
-    "ionic": "~1.1.0",
+    "ionic": "~1.2.4",
     "ionic-rating": "~0.1.0",
     "ngCordova": "~0.1.20-alpha",
     "pdfjs-dist": "~1.1.343",

@@ -29,10 +29,10 @@
     </ion-pane>
 
     <ion-footer-bar class="bar bar-footer item-input-inset">
-        <label class="item-input-wrapper message-textarea">
+        <ion-input class="item-input-wrapper message-textarea">
             <i class="ion ico-messagesiconblue"></i>
             <textarea msd-elastic id="message-field" placeholder="Message" ng-model="vm.message"></textarea>
-        </label>
+        </ion-input>
         <button class="button button-clear button-positive" ng-click="vm.createMessage()">Send</button>
     </ion-footer-bar>
 
