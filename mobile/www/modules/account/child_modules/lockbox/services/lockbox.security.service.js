@@ -59,23 +59,23 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
                 PIN = pin;
                 state = securityService.getState();
 
-                if (!!state.secured) {
+                // If the lockbox has a PIN and is Locked
+                if (state.secured) {
                     scopeData.title = 'Enter PIN';
                     scopeData.subTitle = 'Enter your PIN to unlock';
                 }
+                // If the lockbox has NO PIN set and we are not setting a new PIN, reject
                 else if (!state.secured && !options.setNew) {
                     return $q.reject('Lockbox not secured and securing is disabled');
                 }
 
             })
             .then(function () {
-                if (!state.secured) {
-                    return $q.reject('Lockbox is not secured');
-                }
+                
                 if (!state.accessible) {
                     LoadingService.hide();
                     $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'locked');
-                    return (pinPopup = $ionicPopup.show(getPinObject()));
+                    return pinPopup = $ionicPopup.show(getPinObject());
                 }
 
                 $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'unlocked');
@@ -118,7 +118,7 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
         }
 
         function pinChanged (popup) {
-            if (scopeData.pin.length !== 4) return;
+            if (scopeData.pin.length !== 4) {return;}
 
             if (!scopeData.confirm && !state.secured) {
                 // Creating New PIN on Confirmation Step

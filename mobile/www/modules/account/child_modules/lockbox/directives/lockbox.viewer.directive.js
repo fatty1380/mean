@@ -77,7 +77,7 @@
 
             if (vm.document.url) {
                 return lockboxSecurity
-                    .checkAccess({ setNew: false, throwOnFail: true })
+                    .checkAccess({ setNew: true, throwOnFail: true })
                     .then(function () {
                         return showDocument(vm.document, event);
                     })
