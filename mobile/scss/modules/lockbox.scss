@@ -25,10 +25,14 @@
         padding-top: 20px;
       }
   }
-  
-  &.view-section .content-pane {
-      top: 120px;
-  }
+}
+
+.platform-android {
+    .lockbox {
+        ion-pane.pane.content-pane{
+            top: 120px;
+        }
+    }
 }
 
 // document list
