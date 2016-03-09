@@ -104,9 +104,9 @@
                             if (/data:\w+\//i.test(doc.url)) {
                                 // If the URL is a URI (eg: 'data:image/jpeg'), save it directly to the device
                                 return $q.when(saveFileToDevice(doc));
-                            } 
+                            }
                                 // Otherwise, we can assume that the URL is a URL and must be Downloaded
-                            return $q.when(downloadAndSaveDocumentToDevice(doc));               
+                            return $q.when(downloadAndSaveDocumentToDevice(doc));
                         } else {
                             return $q.when(doc);
                         }
@@ -208,8 +208,8 @@
 
                     return vm.documents;
                 })
-                .catch(function(err) {
-                    logger.error('[LockboxDocsService] loadLocalDocsForUser', err)
+                .catch(function (err) {
+                    logger.error('[LockboxDocsService] loadLocalDocsForUser', err);
                     if (!!hasLockbox) {
                         logger.debug('[LockboxDocsService] loadLocalDocsForUser : calling getDocuments');
                         return $q.when(loadDocsFromServer(true, { redirect: true }));
@@ -300,8 +300,8 @@
                 .then(function success (newDocumentObject) {
                     if (addDocument(newDocumentObject)) {
                         return API.doRequest(settings.documents, 'post', newDocumentObject);
-                    } 
-                        return API.doRequest(settings.documents + newDocumentObject.id, 'put', newDocumentObject);
+                    }
+                    return API.doRequest(settings.documents + newDocumentObject.id, 'put', newDocumentObject);
                 })
                 .then(function saveSuccess (newDocumentResponse) {
                     // TODO: Is this a sync or async call?

@@ -49,7 +49,18 @@
 
     addLogTimestamp.$inject = ['$delegate'];
     function addLogTimestamp ($delegate) {
-        // Save the original $log.debug()
+        // Save the original $log.debug(
+
+        $delegate.LEVELS = {
+            ERROR: 0,
+            WARN: 1,
+            INFO: 2,
+            LOG: 3,
+            DEBUG: 4,
+            TRACE: 5
+        };
+
+        $delegate.level = $delegate.LEVELS.DEBUG;
 
         _.forOwn($delegate, function (prop, key) {
             if (_.isFunction(prop)) {
@@ -64,6 +75,20 @@
                 };
             }
         });
+
+        $delegate.trace = function () {
+            if (this.level < this.LEVELS.TRACE) {
+                return;
+            }
+
+            var args = [].slice.call(arguments);
+
+            // Prepend timestamp
+            args[0] = moment().format('HH:mm:ss') + ' [TRACE] - ' + args[0];
+
+            // Call the original with the output prepended with formatted timestamp
+            this.debug.apply(null, args);
+        };
 
         return $delegate;
     }
