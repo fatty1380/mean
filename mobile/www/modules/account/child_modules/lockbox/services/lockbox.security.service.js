@@ -71,11 +71,13 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
 
             })
             .then(function () {
-                
+
                 if (!state.accessible) {
-                    LoadingService.hide();
                     $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'locked');
-                    return pinPopup = $ionicPopup.show(getPinObject());
+                    pinPopup = $ionicPopup.show(getPinObject());
+                    LoadingService.hide();
+
+                    return pinPopup;
                 }
 
                 $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'unlocked');
