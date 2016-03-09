@@ -46,10 +46,10 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
         var pinPopup;
         scopeData.closePopup = closePINPopup;
         scopeData.pinChange = pinChanged;
-        
-        //////////////////////////////////////////////
-        
-        //return $q.when(true);
+
+        // ////////////////////////////////////////////
+
+        // return $q.when(true);
 
         // ///////////////////////////////////////////
 
@@ -59,23 +59,25 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
                 PIN = pin;
                 state = securityService.getState();
 
-                if (!!state.secured) {
+                // If the lockbox has a PIN and is Locked
+                if (state.secured) {
                     scopeData.title = 'Enter PIN';
                     scopeData.subTitle = 'Enter your PIN to unlock';
                 }
+                // If the lockbox has NO PIN set and we are not setting a new PIN, reject
                 else if (!state.secured && !options.setNew) {
                     return $q.reject('Lockbox not secured and securing is disabled');
                 }
 
             })
             .then(function () {
-                if (!state.secured) {
-                    return $q.reject('Lockbox is not secured');
-                }
+
                 if (!state.accessible) {
-                    LoadingService.hide();
                     $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'locked');
-                    return (pinPopup = $ionicPopup.show(getPinObject()));
+                    pinPopup = $ionicPopup.show(getPinObject());
+                    LoadingService.hide();
+
+                    return pinPopup;
                 }
 
                 $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'unlocked');
@@ -84,11 +86,17 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
             .then(function (accessGranted) {
                 if (!accessGranted) {
                     $cordovaGoogleAnalytics.trackEvent('Lockbox', 'open', 'no-access');
+                    if (options.throwOnFail) {
+                        throw new Error('Lockbox Authentication Failed');
+                    }
                 }
 
                 return !!accessGranted;
             })
             .catch(function (error) {
+                if (options.throwOnFail) {
+                    throw error;
+                }
                 return -1;
             })
             .finally(function () {
@@ -112,7 +120,7 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
         }
 
         function pinChanged (popup) {
-            if (scopeData.pin.length !== 4) return;
+            if (scopeData.pin.length !== 4) {return;}
 
             if (!scopeData.confirm && !state.secured) {
                 // Creating New PIN on Confirmation Step

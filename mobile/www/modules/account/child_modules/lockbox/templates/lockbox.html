@@ -25,21 +25,21 @@
             <ion-refresher pulling-text="Pull to refresh ..." on-refresh="vm.refreshDocuments()"></ion-refresher>
             <ion-list class="document-list">
                 <div ng-if="vm.documents.length">
-                    <div ng-repeat="doc in vm.documents track by $index | orderBy: 'url' : false">
+                    <div ng-repeat="doc in vm.documents track by $index">
                         <div class="row" ng-if="$even">
                             
                             <!--<div class="doc col blank" ng-if="!vm.documents[$index+1] && !vm.documents[$index].url">&nbsp;</div>-->
                             
-                            <div ng-init="doc1 = vm.documents[$index]" class="doc col" 
-                                 ng-class="{'stub-document': !(doc1.url || doc1.id), 'real-document': doc1.url || doc1.id}" 
-                                 oset-doc-attr-view model="vm.documents[$index]" new-doc-fn="vm[doc1.fn] || vm.newDoc">
-                                <oset-doc-view model="doc1" new-doc-fn="vm[doc1.fn] || vm.newDoc"></oset-doc-view>
+                            <div class="doc col" 
+                                 ng-class="{'stub-document': !(vm.documents[$index].url || vm.documents[$index].id), 'real-document': vm.documents[$index].url || vm.documents[$index].id}" 
+                                 oset-doc-attr-view model="vm.documents[$index]" new-doc-fn="vm[vm.documents[$index].fn] || vm.newDoc">
+                                <oset-doc-view model="vm.documents[$index]" new-doc-fn="vm[vm.documents[$index].fn] || vm.newDoc"></oset-doc-view>
                             </div>
                             
-                            <div ng-init="doc2 = vm.documents[$index+1]"  class="doc col" ng-if="!!vm.documents[$index+1]"
-                                 ng-class="{'stub-document': !(doc2.url || doc2.id), 'real-document': doc2.url || doc2.id}" 
-                                 oset-doc-attr-view model="vm.documents[$index+1]" new-doc-fn="vm[doc2.fn] || vm.newDoc">
-                                <oset-doc-view model="doc2" new-doc-fn="vm[doc2.fn] || vm.newDoc"></oset-doc-view>
+                            <div class="doc col" ng-if="!!vm.documents[$index+1]"
+                                 ng-class="{'stub-document': !(vm.documents[$index+1].url || vm.documents[$index+1].id), 'real-document': vm.documents[$index+1].url || vm.documents[$index+1].id}" 
+                                 oset-doc-attr-view model="vm.documents[$index+1]" new-doc-fn="vm[vm.documents[$index+1].fn] || vm.newDoc">
+                                <oset-doc-view model="vm.documents[$index+1]" new-doc-fn="vm[vm.documents[$index+1].fn] || vm.newDoc"></oset-doc-view>
                             </div>
                             
                             <div class="doc col blank" ng-if="!vm.documents[$index+1]">&nbsp;</div>

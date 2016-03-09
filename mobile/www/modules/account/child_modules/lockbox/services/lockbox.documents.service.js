@@ -3,9 +3,10 @@
 
     angular.module('lockbox').filter('getById', function () {
         return function (input, id) {
-            var i = 0, len = input.length;
+            var i = 0;
+            var len = input.length;
             for (; i < len; i++) {
-                if (+input[i].id == +id) {
+                if (+input[i].id === +id) {
                     return input[i];
                 }
             }
@@ -28,23 +29,24 @@
         try {
             vm.path = cordova.file.documentsDirectory;
             vm.LOCKBOX_FOLDER = vm.path + 'lockbox/';
-        } catch (err) {
+        }
+        catch (err) {
             logger.warn('no cordova available, can\'t get access to documentsDirectory and lockbox folder');
         }
 
         vm.userData = userService.profileData;
-        vm.documents = docTypeDefinitions;
+        vm.documents = copyArray(docTypeDefinitions);
 
         return {
-            getDocuments: getDocuments,
+            loadDocuments: loadDocsFromServer,
+            loadLocalDocsForUser: loadLocalDocsForUser,
             addDocsPopup: addDocsPopup,
             removeDocuments: removeDocuments,
             removeOtherUserDocuments: removePrevUserDocuments,
             updateDocument: updateDocument,
             writeFileInUserFolder: writeFileInUserFolder,
             removeDocumentsByUser: removeDocumentsByUser,
-            getFilesByUserId: getFilesByUserId,
-            updateDocumentList: updateDocumentList,
+            getDocumentList: getDocumentList,
             orderReports: orderReports,
             newDocPopup: takePicture,
             checkAccess: lockboxSecurity.checkAccess,
@@ -53,12 +55,12 @@
         };
 
         function clear () {
-            vm.documents = docTypeDefinitions;
+            vm.documents = copyArray(docTypeDefinitions);
             vm.userData = null;
         }
 
         // TODO: Refactor to be "refresh documents"
-        function getDocuments(saveToDevice) {
+        function loadDocsFromServer (saveToDevice) {
 
             vm.userData = userService.profileData;
 
@@ -79,7 +81,7 @@
             //     })
 
 
-                        LoadingService.showLoader('Loading Documents');
+            LoadingService.showLoader('Loading Documents');
 
             return API.doRequest(settings.documents, 'get')
                 .then(function success (documentListResponse) {
@@ -102,10 +104,9 @@
                             if (/data:\w+\//i.test(doc.url)) {
                                 // If the URL is a URI (eg: 'data:image/jpeg'), save it directly to the device
                                 return $q.when(saveFileToDevice(doc));
-                            } else {
-                                // Otherwise, we can assume that the URL is a URL and must be Downloaded
-                                return $q.when(downloadAndSaveDocumentToDevice(doc));
                             }
+                                // Otherwise, we can assume that the URL is a URL and must be Downloaded
+                            return $q.when(downloadAndSaveDocumentToDevice(doc));
                         } else {
                             return $q.when(doc);
                         }
@@ -127,7 +128,8 @@
                                 sku = docObject.sku;
                                 name = docObject.name;
                                 url = doc.nativeURL;
-                            } else {
+                            }
+                            else {
                                 id = doc.id;
                                 sku = doc.sku;
                                 name = doc.name;
@@ -172,7 +174,7 @@
         }
 
 
-        function getFilesByUserId (id, options) {
+        function loadLocalDocsForUser (userId) {
 
             vm.userData = userService.profileData;
 
@@ -180,28 +182,25 @@
                 return $q.reject('No user is logged in');
             }
 
-            logger.warn('getFilesByUserId() for id >>> @ path `%s`', vm.path, id);
-            if (!vm.path) return $q.when(getDocuments(true));
+            logger.warn('loadLocalDocsForUser() for id >>> @ path `%s`', vm.path, userId);
+            if (!vm.path) { return $q.when(loadDocsFromServer(true)); }
 
 
             LoadingService.showLoader('Loading Documents');
 
             var path = vm.path;
             var hasLockbox = false;
-            var hasUserDir = false;
 
             return $cordovaFile.checkDir(path, 'lockbox')
                 .then(function () {
                     path += 'lockbox/';
                     hasLockbox = true;
 
-                    return $cordovaFile.checkDir(path, id);
+                    return $cordovaFile.checkDir(path, userId);
                 })
                 .then(function (dir) {
                     logger.debug('[LockboxDocsService] directory >>> ', dir);
-                    path += id;
-                    hasUserDir = true;
-
+                    path += userId;
                     return readFolder(dir);
                 })
                 .then(function (entries) {
@@ -210,12 +209,13 @@
                     return vm.documents;
                 })
                 .catch(function (err) {
+                    logger.error('[LockboxDocsService] loadLocalDocsForUser', err);
                     if (!!hasLockbox) {
-                        logger.debug('[LockboxDocsService] getFilesByUserId : calling getDocuments');
-                        return $q.when(getDocuments(true, { redirect: true }));
+                        logger.debug('[LockboxDocsService] loadLocalDocsForUser : calling getDocuments');
+                        return $q.when(loadDocsFromServer(true, { redirect: true }));
                     } else {
                         return $cordovaFile.createDir(path, 'lockbox', false).then(function () {
-                            return $q.when(getDocuments(true));
+                            return $q.when(loadDocsFromServer(true));
                         });
                     }
                     return $q.when(vm.documents);
@@ -225,7 +225,7 @@
                     if (!hasRealDoc) {
                         welcomeService.initialize('lockbox.add');
                     }
-                    logger.warn('getFilesByUserId() finally vm.documents >>>', vm.documents);
+                    logger.warn('loadLocalDocsForUser() finally vm.documents >>>', vm.documents);
                     LoadingService.hide();
                 });
         }
@@ -263,14 +263,14 @@
         function updateDocument (doc, data) {
             return API.doRequest(settings.documents + doc.id, 'put', data)
                 .then(function () {
-                    if (!vm.path) return _.extend(doc, data);
+                    if (!vm.path) {return _.extend(doc, data);}
                     return renameLocalFile(doc, data);
                 })
-                .then(function (resp) {
+                .then(function () {
                     return _.extend(doc, data);
                 })
                 .catch(function (err) {
-                    logger.warn(' err --->>>', err);
+                    logger.error(' err --->>>', err);
                 });
         }
 
@@ -289,26 +289,25 @@
                             if (accessStatus !== -1 && accessStatus) {
                                 return newDocumentObject;
                             }
-                            
+
                             logger.error('[lockboxService.addDocument] No Access to lockbox, not saving');
-                            
+
                             LoadingService.showFailure('Please enter a PIN to secure your lockbox before saving Documents');
                             throw new Error('Lockbox is not secured');
                         });
                 })
-                
-                .then(function success(newDocumentObject) {
+
+                .then(function success (newDocumentObject) {
                     if (addDocument(newDocumentObject)) {
                         return API.doRequest(settings.documents, 'post', newDocumentObject);
-                    } else {
-                        return API.doRequest(settings.documents + newDocumentObject.id, 'put', newDocumentObject);
                     }
+                    return API.doRequest(settings.documents + newDocumentObject.id, 'put', newDocumentObject);
                 })
                 .then(function saveSuccess (newDocumentResponse) {
                     // TODO: Is this a sync or async call?
                     saveFileToDevice(newDocumentResponse.data);
 
-                    if (newDocumentResponse.status != 200) {
+                    if (newDocumentResponse.status !== 200) {
                         logger.warn('Unknown Error in Doc Save response: ', newDocumentResponse);
                     }
 
@@ -365,28 +364,37 @@
                     return storage.setItem('hasDocumentsForUsers', JSON.stringify(users));
                 })
                 .catch(
-                    function removalFail (err) {
-                        logger.error('Failed to remove all user documents due to error', err);
-                        return null;
-                    });
+                function removalFail (err) {
+                    logger.error('Failed to remove all user documents due to error', err);
+                    return null;
+                });
 
         }
 
         function removeDocuments (documents) {
+
             var promises = _.map(documents, function (doc) {
                 logger.debug('[LockboxDocsService] Removing Doc: %s w/ ID: %s ', doc.sku, doc.id);
 
-                _.remove(vm.documents, { id: doc.id });
-                removeOneDocument(doc);
 
-                var stub = _.find(docTypeDefinitions, { sku: doc.sku });
-                var alreadyHasStub = _.find(vm.documents, { sku: doc.sku });
+                return API.doRequest(settings.documents + doc.id, 'delete')
+                    .then(function (success) {
+                        _.remove(vm.documents, { id: doc.id });
+                        return removeOneDocument(doc);
+                    })
+                    .then(function (success) {
+                        var stub = _.find(docTypeDefinitions, { sku: doc.sku });
+                        var alreadyHasStub = _.find(vm.documents, { sku: doc.sku });
+                        if (!!stub && !alreadyHasStub) {
+                            addDocument(stub);
+                        }
+                    })
+                    .catch(function fail (err) {
+                        logger.error('failed to delete documents ', err);
+                    });
 
-                if (!!stub && !alreadyHasStub) {
-                    addDocument(stub);
-                }
 
-                return API.doRequest(settings.documents + doc.id, 'delete');
+
             });
 
             return $q.all(promises);
@@ -519,10 +527,10 @@
                 })
                 .catch(function (err) {
                     logger.warn(' remove doc err --->>>', err);
-                })
-                .finally(function () {
-                    // TODO: Restore deleted document from stubs *IF* the deleted document sku matches a non-multi docTypeDefinition
                 });
+                // .finally(function() {
+                //     // TODO: Restore deleted document from stubs *IF* the deleted document sku matches a non-multi docTypeDefinition
+                // });
         }
 
         function updateStorageInfo (user, data) {
@@ -558,6 +566,8 @@
 
 
             var def = _.find(docTypeDefinitions, { sku: doc.sku }) || {};
+            var order = def.order || vm.documents.length;
+            doc.order = order !== 99 ? order : vm.documents.length;
 
             if ((i = !!doc.id ? _.findIndex(vm.documents, { id: doc.id }) : -1) !== -1) {
                 // If a document with the same ID is already in the array, replace it.
@@ -585,7 +595,7 @@
             }
         }
 
-        function toArray (list) {
+        function copyArray (list) {
             return Array.prototype.slice.call(list || [], 0);
         }
 
@@ -672,7 +682,8 @@
                 }, function (err) {
                     deferred.reject(err);
                 });
-            } else {
+            }
+            else {
                 docObject = parseDocFromFilename(entry.name);
                 docObject.url = entry.nativeURL;
                 docObject.user = userID;
@@ -724,11 +735,9 @@
             return source.replace(/_/g, ' ').replace(/\.\w{3,4}$/, '');
         }
 
-        function updateDocumentList () {
+        function getDocumentList () {
             return vm.documents;
         }
-
-        function getId (e) { return e.id || e._id; }
 
         function getUserId (doc) {
             return angular.isObject(doc.user) && doc.user.id || doc.user || vm.userData.id;
@@ -745,28 +754,33 @@
             sku: 'reports',
             name: 'MVR & Background Checks',
             action: 'Order',
-            fn: 'orderDocs'
+            fn: 'orderDocs',
+            order: 0
         },
         {
             sku: 'cdl',
             name: 'Commercial Driver License',
-            info: ''
+            info: '',
+            order: 2
         },
         {
             sku: 'res',
             name: 'Resume',
-            info: ''
+            info: '',
+            order: 1
         },
         {
             sku: 'ins',
             name: 'Insurance',
-            info: ''
+            info: '',
+            order: 3
         },
         {
             sku: 'misc',
             multi: true,
             icon: 'ion-plus',
-            info: ''
+            info: '',
+            order: 99
         }
     ];
 

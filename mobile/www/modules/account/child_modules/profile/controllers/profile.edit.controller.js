@@ -8,7 +8,7 @@
     ProfileEditCtrl.$inject = ['$filter', '$ionicScrollDelegate', '$location', '$rootScope', '$state', '$timeout',
         'LoadingService', 'parameters', 'profileModalsService', 'tokenService', 'trailerService', 'truckService', 'userService'];
 
-    function ProfileEditCtrl($filter, $ionicScrollDelegate, $location, $rootScope, $state, $timeout,
+    function ProfileEditCtrl ($filter, $ionicScrollDelegate, $location, $rootScope, $state, $timeout,
         LoadingService, parameters, profileModalsService, tokenService, trailerService, truckService, userService) {
         var vm = this;
 
@@ -30,7 +30,7 @@
 
         activate();
 
-        function activate(inputUser) {
+        function activate (inputUser) {
 
             vm.addressEditing = false;
 
@@ -54,28 +54,28 @@
             }
         }
 
-        function toggleMileUnit(unit) {
+        function toggleMileUnit (unit) {
             debugger;
             vm.mileUnit = unit || 'miles';
         }
 
-        function updateTrailers(trailers) {
+        function updateTrailers (trailers) {
             if (!trailers) { return; }
             vm.profileData.props.trailer = trailers;
         }
 
-        function updateTrucks(truck) {
+        function updateTrucks (truck) {
             if (!truck) { return; }
             vm.profileData.props.truck = truck;
         }
 
-        function showEditAddress() {
+        function showEditAddress () {
             profileModalsService.showProfileEditAddressModal({ address: vm.profileData.address });
 
             vm.addressEditing = true;
         }
 
-        function showProfileEditTrailersModal() {
+        function showProfileEditTrailersModal () {
             trailerService
                 .getTrailers()
                 .then(function (trailers) {
@@ -89,7 +89,7 @@
                 });
         }
 
-        function showProfileEditTrucksModal() {
+        function showProfileEditTrucksModal () {
             truckService
                 .getTrucks()
                 .then(function (trucks) {
@@ -103,20 +103,20 @@
                 });
         }
 
-        function showProfileEditLicenseModal() {
+        function showProfileEditLicenseModal () {
             profileModalsService
                 .showProfileEditLicenseModal({ license: vm.profileData.license })
-                .then(function success(license) {
+                .then(function success (license) {
                     logger.debug('Updated License to ', license);
                     vm.profileData.license = license;
                 });
         }
 
-        function getFormattedDate(date) {
+        function getFormattedDate (date) {
             return $filter('date')($filter('monthDate')(date), 'MMMM, yyyy');
         }
 
-        function save(form, e) {
+        function save (form, e) {
             e.preventDefault();
             logger.warn(' form --->>>', form);
             LoadingService.showLoader('Saving Profile');
@@ -158,7 +158,7 @@
 
         }
 
-        function logout() {
+        function logout () {
             userService
                 .signOut()
                 .then(function (data) {

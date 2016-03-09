@@ -52,7 +52,7 @@
 
         function getDocs () {
             return lockboxDocuments
-                .getDocuments()
+                .loadDocuments()
                 .then(function (response) {
                     logger.debug('Documents List', response);
                     vm.documents = getRealDocs(_.isArray(response) ? response : []);

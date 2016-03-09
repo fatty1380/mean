@@ -33,7 +33,7 @@
 
         function getDocs () {
             lockboxDocuments
-                .getDocuments()
+                .loadDocuments()
                 .then(function (response) {
                     logger.debug('Documents List', response);
 
@@ -121,6 +121,7 @@
 
         function deleteDocuments () {
             vm.unselectedDocuments = vm.documents.filter(vm.getUnselectedItems);
+
             if (vm.unselectedDocuments.length !== vm.documents.length) {
                 var confirmPopup = $ionicPopup.confirm({
                     title: 'Delete Items',
@@ -128,16 +129,15 @@
                     okType: 'button-small button-assertive',
                     template: 'Are you sure you want to delete selected documents?'
                 });
-
                 confirmPopup
                     .then(function (res) {
                         if (res) {
-                            lockboxDocuments.removeDocuments(vm.documents.filter(getSelected));
+                            return lockboxDocuments.removeDocuments(vm.documents.filter(getSelected));
                             // vm.documents = vm.unselectedDocuments;
                         }
                     })
                     .then(function () {
-                        vm.documents = lockboxDocuments.updateDocumentList();
+                        // vm.documents = lockboxDocuments.getDocumentList();
                         return vm.documents;
                     });
             }
