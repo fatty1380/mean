@@ -361,7 +361,7 @@
                     logger.info('Removed user\'s documents', removed);
                     logger.info('Documents users >>>', users);
 
-                    return storage.setItem('hasDocumentsForUsers', JSON.stringify(users));
+                    return storage.setItem('hasDocumentsForUsers', angular.toJson(users));
                 })
                 .catch(
                 function removalFail (err) {
@@ -549,7 +549,7 @@
                 users.splice(index, 1);
             }
 
-            storage.setItem('hasDocumentsForUsers', JSON.stringify(users));
+            storage.setItem('hasDocumentsForUsers', angular.toJson(users));
         }
 
 
@@ -616,17 +616,19 @@
                         logger.debug('[LockboxDocsService] dirReader.readEntries results: %d entries: %d', results && results.length, entries.length);
                         if (results.length) {
                             logger.debug('[LockboxDocsService] dirReader Length ' + results.length);
-                            entries = entries.concat(toArray(results));
+                            
+                            entries = entries.concat(Array(results));
                             readEntries();
-                        } else {
-                            // logger.debug('[LockboxDocsService] dirReader trying to resolve docs: ' + JSON.stringify(entries));
+                        }
+                        else {
+                            // logger.debug('[LockboxDocsService] dirReader trying to resolve docs: ' + angular.toJson(entries));
                             resolveDocuments(entries)
                                 .then(function (entries) {
                                     logger.debug('[LockboxDocsService] dirReader resolving with entries: ', entries);
                                     q.resolve(entries);
                                 })
                                 .catch(function (err) {
-                                    logger.error('dirReader failed to resolve entries: ' + JSON.stringify(entries) + ' err: ' + err);
+                                    logger.error('dirReader failed to resolve entries: ' + angular.toJson(entries) + ' err: ' + err);
                                     q.reject(err);
                                 });
                         }
