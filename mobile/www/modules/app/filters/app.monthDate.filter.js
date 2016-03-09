@@ -10,7 +10,7 @@
                 }
 
                 try {
-                    logger.debug('Parsing date from `%s`', input);
+                    logger.trace('Parsing date from `%s`', input);
                     var d = (new Date(input));
 
                     return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
