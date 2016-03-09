@@ -359,12 +359,11 @@
                 function removalSuccess (result) {
                     var removed = _.omit(removals, _.isEmpty);
 
-                    logger.info('Removed %d user\'s documents', removed && removed.length);
+                    logger.info('Removed user\'s documents', removed);
                     logger.info('Documents users >>>', users);
 
                     return storage.setItem('hasDocumentsForUsers', JSON.stringify(users));
-                }
-                )
+                })
                 .catch(
                     function removalFail (err) {
                         logger.error('Failed to remove all user documents due to error', err);
@@ -490,9 +489,9 @@
             var path = vm.LOCKBOX_FOLDER;
 
             return $cordovaFile.checkDir(path, user)
-                .then(function (path) {
-                    logger.debug('[LockboxDocsService] Lockbox: Removing Documents for User ' + user);
-                    return $cordovaFile.removeRecursively(path, user);
+                .then(function (fsPath) {
+                    logger.debug('[LockboxDocsService] Lockbox: Removing Documents for User ' + user + ' at path: ', fsPath);
+                    return $cordovaFile.removeRecursively(fsPath, user);
                 }, function (err) {
                     return $q.reject(err);
                 })

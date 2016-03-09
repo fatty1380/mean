@@ -136,7 +136,6 @@
         vm.enlarge = enlarge;
         vm.minimize = minimize;
         vm.toggleFullScreen = toggleFullScreen;
-        vm.toggleZoom = toggleZoom;
         vm.close = close;
 
 
