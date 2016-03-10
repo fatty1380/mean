@@ -1,8 +1,10 @@
 <div name="experience-list">
-    
-    <ion-list ng-if="vm.experience && vm.experience.length">
-        <ion-item class="item card" ng-repeat="exp in (vm.experience) track by $index">
-            <button class="button button-clear edit-btn" ng-if="!!vm.showAddExperienceModal" ng-click="vm.showEditExperienceModal(exp)">
+
+    <ion-list ng-if="dm.experience && dm.experience.length">
+        
+        
+        <ion-item class="item card" ng-repeat="exp in (dm.experience) track by $index"  ng-if="!dm.showCompact">
+            <button class="button button-clear edit-btn" ng-if="!!dm.showAddExperienceModal" ng-click="dm.showEditExperienceModal(exp)">
                 <i class="ion-compose"></i>
             </button>
             <div class="experience-heading">
@@ -23,12 +25,46 @@
 
             <p class="description" ng-if="!!exp.description">{{exp.description}}</p>
         </ion-item>
+
+
+
+        <div ng-repeat="exp in (dm.experience) track by $index" ng-if="dm.showCompact">
+            <div class="exp-item">
+                <div class="row">
+                    <div class="col">
+                        <div class="company" ng-if="!!exp.company"> {{exp.company}}</div>
+                    </div>
+                    <div class="col text-right">
+                        <div class="time" ng-if="!!exp.startDate || exp.endDate">
+                            <i class="ico ico-timesmall"></i>
+                            <span ng-if="!!exp.startDate">{{exp.startDate | monthDate | date : 'yyyy'}}</span>
+                            <span ng-if="!!exp.startDate && exp.startDate !== exp.endDate">-</span>
+                            <span ng-if="!!exp.endDate">{{exp.endDate | monthDate | date : 'yyyy'}}</span>
+                            <span ng-if="!exp.endDate">Now</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="title">{{exp.title}}</div>
+                    </div>
+                    <div class="col text-right">
+                        <div class="location" ng-if="!!exp.location">{{exp.location}}</div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="exp-spacer" ng-if="!$last">&nbsp;</div>
+        </div>
+        
+        
     </ion-list>
 
-    <div ng-if="!vm.experience || !vm.experience.length" class="no-content">
-        <span ng-if="!!vm.canEdit">
-            <span ng-bind-html="vm.instructText"></span>
+    <div ng-if="!dm.experience || !dm.experience.length" class="no-content">
+        <span ng-if="!!dm.canEdit">
+            <span ng-bind-html="dm.instructText"></span>
         </span>
-        <span ng-if="!vm.canEdit">No Experience Listed</span>
+        <span ng-if="!dm.canEdit">No Experience Listed</span>
     </div>
 </div>

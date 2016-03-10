@@ -145,35 +145,8 @@
                         <button ng-if="vm.canEdit &&  !!vm.experience.length" class="button button-icon ion-compose button-pos-tr" ng-click="vm.showExperienceListModal()"></button>
                         <button ng-if="vm.canEdit && !vm.experience.length" class="button button-icon ion-ios-plus-outline button-pos-tr" ng-click="vm.showAddExperienceModal()"></button>
 
-                        <div ng-repeat="exp in (vm.experience) track by $index">
-                            <div class="exp-item">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="company" ng-if="!!exp.company"> {{exp.company}}</div>
-                                    </div>
-                                    <div class="col text-right">
-                                        <div class="time" ng-if="!!exp.startDate || exp.endDate">
-                                            <i class="ico ico-timesmall"></i>
-                                            <span ng-if="!!exp.startDate">{{exp.startDate | monthDate | date : 'yyyy'}}</span>
-                                            <span ng-if="!!exp.startDate && exp.startDate !== exp.endDate">-</span>
-                                            <span ng-if="!!exp.endDate">{{exp.endDate | monthDate | date : 'yyyy'}}</span>
-                                            <span ng-if="!exp.endDate">Now</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="title">{{exp.title}}</div>
-                                    </div>
-                                    <div class="col text-right">
-                                        <div class="location" ng-if="!!exp.location">{{exp.location}}</div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="exp-spacer" ng-if="!$last">&nbsp;</div>
-                        </div>
+                        <tline-experience-list ng-model="vm.experience" show-add-fn="vm.showAddExperienceModal" can-edit="vm.canEdit" show-compact="true">
+                            
                     </ion-item>
                 </div>
 
