@@ -26,10 +26,28 @@
       }
   }
   
-  &.view-section .content-pane {
-      top: 120px;
-  }
+  .platform-android &, .platform-ios & {
+        ion-pane.pane.content-pane{
+            top: 120px;
+        }
+    }
+
 }
+@media only screen
+and (max-device-height : 568px) {
+    
+    .lockbox {
+        .bar-subheader h3.title{
+            padding-top: 4px;
+        }
+        .platform-android &, .platform-ios & {
+            ion-pane.pane.content-pane{
+                top: 108px;
+            }
+        }
+    }
+}
+
 
 // document list
 .document-list{

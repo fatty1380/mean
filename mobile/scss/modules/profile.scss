@@ -43,6 +43,7 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
   font-size: 26px !important;
 }
 
+
 .profile-screen {
     .profile-pane {
         .scroll-view {
@@ -56,6 +57,20 @@ $profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
     
     .bar.bar-header > .button {
         z-index: 3;
+    }
+}
+
+@media only screen
+and (max-device-height : 570px) {
+    
+    .platform-android, .platform-ios{
+        .profile-screen {
+            .profile-pane {
+                .scroll-view {
+                    padding-top: 20px;
+                }
+            }
+        }
     }
 }
 
