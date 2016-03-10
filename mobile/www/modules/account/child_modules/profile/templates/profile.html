@@ -56,6 +56,11 @@
                         <div class="handle" ng-if="!!vm.profileData.handle">
                             <i class="ico ico-radio-badge"></i> {{vm.profileData.handle | uppercase}}
                         </div>
+                        
+                        <div class="handle" ng-if="!vm.profileData.handle" ng-click="vm.showEditModal()">
+                            <i class="ico ico-radio-badge"></i> Edit CB Handle
+                        </div>
+                        
                         <div class="friends clickable" ng-click="vm.showFriends($event);">
                             <i class="ico ico-friend-badge"></i>{{vm.profileData.friends.length}} Friends
                             <span class="badge-container">
@@ -127,7 +132,7 @@
                             </div>
                         </div>
 
-                        <div class="circle"  ng-click="vm.showEditModal('truck')">
+                        <div class="circle" ng-click="vm.showEditModal('truck')">
                             <div class="equipment-logo">
                                 <i ng-if="vm.trucksMap[vm.profileData.props.truck]" class="ico-t {{vm.trucksMap[vm.profileData.props.truck]}}"></i>
                                 <div ng-if="!!vm.profileData.props.truck && !vm.trucksMap[vm.profileData.props.truck]">{{vm.profileData.props.truck}} {{vm.profileData.props.model}}</div>
@@ -146,7 +151,7 @@
                         <button ng-if="vm.canEdit && !vm.experience.length" class="button button-icon ion-ios-plus-outline button-pos-tr" ng-click="vm.showAddExperienceModal()"></button>
 
                         <tline-experience-list ng-model="vm.experience" show-add-fn="vm.showAddExperienceModal" can-edit="vm.canEdit" show-compact="true">
-                            
+
                     </ion-item>
                 </div>
 
