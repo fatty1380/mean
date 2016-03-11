@@ -26,6 +26,10 @@
       }
   }
   
+  ion-pane.lockbox-edit-top.pane{
+      top: 128px;
+  }
+  
   .platform-android &, .platform-ios & {
         ion-pane.pane.content-pane{
             top: 120px;
@@ -51,6 +55,12 @@ and (max-device-height : 568px) {
 
 // document list
 .document-list{
+    
+    button.button-small.button {
+        color: $balanced;
+        border-color: $balanced;
+        @include list-button;
+    }
     
     .doc {
         padding: 10px;
@@ -92,9 +102,11 @@ and (max-device-height : 568px) {
             }
         }
         
-        .button-document {
-            color: $balanced;
-        }
+        // .button-document {
+        //     color: $balanced;
+        // }
+        
+
         
         .button-stub {
             color: $energized;
@@ -138,15 +150,17 @@ and (max-device-height : 568px) {
         }
       }
     }
-
-    .checkbox{
+    
+    label.item.item-checkbox.ng-valid{    
       left: 0;
       right: 0;
       top: 0;
       margin: 0;
       bottom: 0;
+      padding-right: 0px;
+      position: absolute;
 
-      input{
+      i.checkbox-icon{
         position: absolute;
         top: 50%;
         margin-top: -10px;

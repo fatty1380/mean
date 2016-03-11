@@ -415,6 +415,12 @@ textarea{
     background-color: rgba($content-bg, 0.7);
 }
 
+@mixin list-button{
+    min-width: 80px;
+    padding-left: $padding-small-horizontal;
+    padding-right: $padding-small-horizontal;
+ }
+
 .popup-container{
   input{
     padding-left: 10px;
