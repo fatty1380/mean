@@ -280,7 +280,7 @@ $logo-inline-zoom: ($button-signup-height - ($padding-small-vertical)) / $logo-n
   {
     input ~ .radio-content {
         &  > .item-content {
-          background-color: $signup-entry-row-bg;
+          background-color: $signup-entry-row-inactive-bg; // $signup-entry-row-bg;
           font-weight: 400;
         }
     }
@@ -288,11 +288,12 @@ $logo-inline-zoom: ($button-signup-height - ($padding-small-vertical)) / $logo-n
     input:checked ~ .radio-content, &.active {                
       & > .item-content {
         font-weight: 500;
-        background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
+        background-color: $balanced; 
+        //background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
            
         //border: $button-circle-border-width solid $light;
         //background-color: $signup-entry-row-active-bg;
-        p {color: $dark; }
+        p {color: $light; }
       }
 
       & > .radio-icon {
@@ -305,7 +306,7 @@ $logo-inline-zoom: ($button-signup-height - ($padding-small-vertical)) / $logo-n
         height: $button-signup-height;
       
         &  > .item-content {
-            background-color: $signup-entry-row-bg;
+            background-color: $signup-entry-row-inactive-bg; // $signup-entry-row-bg;
             font-weight: 400;
 
             padding: $padding-large-horizontal;
@@ -315,22 +316,32 @@ $logo-inline-zoom: ($button-signup-height - ($padding-small-vertical)) / $logo-n
         top: 0;
         margin-top: 0;
 
-        .ico.ico-checkboxselected {
+        .ico.ico-checkboxselected, .icon.ion-checkmark {
             display: none;
             position: absolute;
             right: 15px;
             margin-left: -50px;
+            
+            
             top: 50%;
-            margin-top: -10px;
+            margin-top: -11px;
         }
         
         &.active { 
             & > .item-content {
-                font-weight: 500; background: -o-linear-gradient(rgba(248,248,248,1) 0%, rgba(232,232,232,1) 100%);
-                background: linear-gradient(rgba(248,248,248,1) 0%, rgba(232,232,232,1) 100%); 
+                font-weight: 500; 
+                //background: linear-gradient(rgba(248,248,248,1) 0%, rgba(232,232,232,1) 100%);
+                background-color: $balanced; 
+               
+               p { color: $light;}
+            }
+            
+            .icon.ion-checkmark {
+                color: $light;
+                font-size: 1.7em;
             }
         
-            .ico.ico-checkboxselected {
+            .ico.ico-checkboxselected, .icon.ion-checkmark {
                 display: inline-block;
             }
         }
@@ -392,9 +403,13 @@ $but-height: 70px;
 
 .toggle-content {
     
-    .content-body {
-        min-height: 50vh;
+    .content-body {      
         
+        @include vertical-align(20%);
+        // position: relative;
+        // top: 20%;
+        // transform: translateY(-50%);
+          
         // & >*:first-child {
         //     height: 100%;
         //     top: 10vh;
@@ -402,38 +417,92 @@ $but-height: 70px;
         // }
     }
     
+    // .list.toggle {
+    //     position: absolute;
+    //     top: 50%;
+    //     left: 50%;
+    //     right: 0;
+        
+    //     //width: 100%;
+    //     margin-top: calc(-80px - 20vh);
+    //     margin-left: calc(-24vw);
+        
+    // }
+    
     .list.toggle {
-        max-width: 380px;
+        
+        max-width: 510px;
         
         .toggle-item {
+            width: 23vw;
+            height: 23vw; 
+            
+            min-width: $button-circle-diameter;
+            min-height: $button-circle-diameter;
+            max-width: 120px;
+            max-height: 120px;
+            
+        
             margin: 2vw; //$padding-small-horizontal/2;
             display: inline-block;
             
-            vertical-align: top;
+            vertical-align: middle;
             
-            width: $button-circle-diameter;
-            height: $button-circle-diameter;
+            //width: $button-circle-diameter;
+            //height: $button-circle-diameter;
             // max-width: 80px;
             // max-height: 80px;
             
             border: $button-circle-border-width solid darken($action-text, 2%);
             border-radius: 50%;
             
-            background-color: $signup-entry-row-bg;
+            background-color: $signup-entry-row-inactive-bg;
             
             &.selected {
-                font-weight: 500;
                 border: $button-circle-border-width solid $light;
                 box-shadow: 1px 1px 10px rgba($action-text, 0.8);
-                background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
+                //background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%);
+                
+                background-color: $balanced;  
+                
+                transform: scale(1.1);
+                //margin: 0;
+                
+                
+                .title-val {
+                    color: $light;
+                font-size: 1.2em;
+                font-weight: 500;
+                }
+                
+                .outer-label {
+                    transform: scale(0.91) translateY(-2vw);
+
+                    //font-size: 1.0em;
+                    //font-weight: 400;
+                }
+            }
+            
+            .outer-label {
+                position: absolute;
+                top: 23vw; //20px;
             }
             
             .title-val {
                 color: $dark;
+                
+                //@include vertical-align(-150%);
                 position: relative;
-                line-height: $button-circle-inner-diameter;
+                line-height: calc(22vw); // $button-circle-inner-diameter;
                 left: 0;
                 width: 100%;
+                
+                @media only screen and (min-device-width : 420px) {
+                    & {
+                        line-height: 120px;
+                        font-size: 1.2em;
+                    }
+                }
                 
                 &.gte::after {
                     content: '+';
@@ -481,17 +550,20 @@ $but-height: 70px;
             &.license-class-item {
                 
                 &.selected {
-                    margin: 0;
-                    zoom: 1.2;
+                    // margin: 0;
+                    // zoom: 1.2;
                     
-                    .title-val {
-                        color: $positive;
-                    }
+                    font-size: 1.4em;
+                    
+                    // .title-val {
+                    //     color: $positive;
+                    // }
                 }
                 
                 .title-val {
-                    color: $light;
-                    font-size: 2.5em;
+                    
+                    //color: $light;
+                    font-size: 3em;
                     &.gte::after {
                         content: none;
                     }
@@ -515,7 +587,23 @@ $but-height: 70px;
                     }
                 }
                 
-                margin-bottom: 50px;
+                
+                p {
+                    margin-left: -8px;
+                    margin-right: -8px;
+                }
+                    
+                @media only screen and (max-device-width : 320px) {
+                    & {
+                        margin-bottom: 45px;
+                        
+                        p {
+                            font-size: 0.9em;
+                        }
+                    }
+                }
+                
+                margin-bottom: 80px;
             }
             
             &.yes-no-item {
@@ -531,54 +619,42 @@ $but-height: 70px;
     }
 }
 
+progress {
+    
+    &::-webkit-progress-value {
+        background-color: $progress-green;
+        border-radius: $border-radius-base 0 0 $border-radius-base;
+    }
+    
+    &, &::-webkit-progress-bar {
+        background-color:  $signup-entry-row-inactive-bg; //rgba($signup-entry-row-bg, 0.4);
+        //border: thin solid $signup-entry-row-bg;
+        border-radius: $border-radius-base;
+    }
+}
+
 .signup-section {
     
-    
-  
-  //&:before {
-    // content: '';
-    // display: block;
-    // position: absolute;
-    // left: 0;
-    // top: 0;
-    // width: 100%;
-    // height: 100%;
-    // //opacity: 0.5;
-    // background-color: transparent;
-    // background-image: url('../img/bg-gradient-base-light.jpg');
-    // background-repeat: no-repeat;
-    // background-position: 50% 0;
-    // -ms-background-size: cover;
-    // -o-background-size: cover;
-    // -moz-background-size: cover;
-    // -webkit-background-size: cover;
-    // background-size: cover;
-      
-  // } 
-  
-//   background-color: $light;
-
-
   .header,
   .bar,
   .pane{background: none;}
   
   .bar-header {
       .button.button-icon {
-      color: $positive;
+        color: $positive;
       }
   }
   
   .bar-subheader {
       h3 {
-      color: $dark;
+        color: $dark;
       }
   }
   
   .progress {
       position: absolute;
       width: 100%;
-      bottom: 5vh;
+      bottom: 0;
   }
   
   .description, .progress {
@@ -590,6 +666,7 @@ $but-height: 70px;
       }
       
       p {
+          color: $dark;
           margin: $padding-large-vertical 0;
           font-size: $font-size-base;
           line-height: $line-height-base;
@@ -674,12 +751,12 @@ $but-height: 70px;
 
         .icon{
             margin-right: 5px;
-            font-size: 20px;
+            font-size: 26px;
             color: $light;
             position: absolute;
             top: 50%;
             right: 5px;
-            margin-top: -10px;
+            margin-top: -17px;
             z-index: 3;
         }
     }
@@ -697,8 +774,17 @@ $but-height: 70px;
     }
   
   .item-input {
-      .icon.placeholder-icon {
+      .icon {
           color: $brand-blue;
+          font-size: 26px;
+          
+          position: relative;
+          left: -9px;
+      }
+      
+      input {
+          color: $dark;
+          padding-right: $padding-small-horizontal;
       }
   }
   

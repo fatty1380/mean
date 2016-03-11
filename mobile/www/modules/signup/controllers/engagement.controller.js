@@ -19,6 +19,8 @@
             owner: null
         };
 
+
+
         vm.initEngagementForm = initEngagementForm;
         vm.continue = continueToLicense;
         vm.goBack = goBack;
@@ -37,7 +39,11 @@
             function success (userData) {
                 vm.profileData = userData;
 
-                if (!vm.profileData.props) {
+                if (vm.profileData) {
+                    vm.profileData = {};
+                }
+
+                if(!vm.profileData.props) {
                     vm.profileData.props = {};
                 }
 

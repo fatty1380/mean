@@ -3,6 +3,39 @@
 
     angular
         .module('signup')
+        .controller('SignupCtrl', SignupCtrl);
+
+    SignupCtrl.$inject = ['$ionicHistory', 'NavSvc'];
+
+    function SignupCtrl($ionicHistory, NavSvc) {
+
+        var vm = this;
+
+        vm.goBack = $ionicHistory.goBack;
+
+        vm.itemClass = 'miles-item';
+        vm.stepNumber = 5;
+        vm.intro = 'How many career miles have&nbsp;you&nbspdriven?';
+        vm.nextStep = 'signup.years';
+
+        vm.options = [
+            { min: 0, max: 100000, title: '100k' },
+            { min: 100000, max: 250000, title: '100-250k' },
+            { min: 250000, max: 500000, title: '250-500k' },
+            { min: 500000, max: 1000000, title: '500k-1M' },
+            { min: 1000000, max: 2000000, title: '1-2M' },
+            { min: 2000000, max: null, title: '2M' }
+        ];
+
+        vm.next = function() { NavSvc.go(vm.nextStep); };
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('signup')
         .controller('MilesCtrl', MilesCtrl);
 
     MilesCtrl.$inject = ['NavSvc'];
@@ -46,7 +79,7 @@
         vm.labelText = 'years';
         vm.labelPos = 'bot';
         vm.nextStep = 'signup.own-op';
-        
+
         vm.options = [
             { min: 0, max: 1, title: '1' },
             { min: 1, max: 3, title: '1-3' },
@@ -75,10 +108,10 @@
         vm.itemClass = 'license-class-item';
         vm.stepNumber = 3;
         vm.intro = 'What class is your driver license?';
-        vm.labelText = 'class';
+        vm.labelText = null; //  'class';
         vm.labelPos = 'top';
         vm.nextStep = 'signup.endorsements';
-        
+
         vm.options = [
             { min: 'A', title: 'A' },
             { min: 'B', title: 'B' },
@@ -107,7 +140,7 @@
         vm.labelText = null;
         vm.labelPos = 'top';
         vm.nextStep = 'signup.trucks';
-        
+
         vm.options = [
             { min: true, title: 'YES' },
             { min: false, title: 'NO' }
@@ -135,6 +168,6 @@
             $state.go(stateName, params);
         };
 
-        return this;        
+        return this;
     }
 })();

@@ -89,7 +89,7 @@
             var backView = $ionicHistory.backView();
 
             if (_.isEmpty(backView) || _.isEmpty(backView.stateName)) {
-                return $state.go('signup.engagement');
+                return $state.go('signup.own-op');
             }
 
             return $ionicHistory.goBack();

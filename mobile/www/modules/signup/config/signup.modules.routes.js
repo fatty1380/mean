@@ -43,12 +43,22 @@
                  *  11. Welcome : Congrats!!!
                  */
 
+                // Register : State 0                
                 .state('signup.register', {
                     url: '/register',
                     templateUrl: 'modules/signup/templates/register.html',
                     controller: 'RegisterCtrl as vm'
                 })
 
+
+                // Intro : State 0a        
+                .state('signup.intro', {
+                    url: '/intro',
+                    templateUrl: 'modules/signup/templates/intro.html'
+                    //controller: 'IntroCtrl as vm'
+                })
+
+                // Handle : State 1
                 .state('signup.handle', {
                     url: '/handle',
                     templateUrl: 'modules/signup/templates/handle.html',
@@ -61,51 +71,59 @@
                     controller: 'LicenseCtrl as vm'
                 })
 
+                // Handle : State 2
                 .state('signup.license', {
                     url: '/license',
                     templateUrl: 'modules/signup/templates/circle-select.html',
                     controller: 'ClassCtrl as vm'
                 })
 
+                // Handle : State 3
                 .state('signup.endorsements', {
                     url: '/endorsements',
                     templateUrl: 'modules/signup/templates/endorsements.html',
                     controller: 'LicenseCtrl as vm'
                 })
 
+                // Handle : State 4
                 .state('signup.miles', {
                     url: '/miles',
                     templateUrl: 'modules/signup/templates/circle-select.html',
                     controller: 'MilesCtrl as vm'
                 })
 
+                // Handle : State 5
                 .state('signup.years', {
                     url: '/years',
                     templateUrl: 'modules/signup/templates/circle-select.html',
                     controller: 'YearsCtrl as vm'
                 })
 
+                // Handle : State 6
                 .state('signup.own-op', {
                     url: '/own-op',
                     templateUrl: 'modules/signup/templates/circle-select.html',
                     controller: 'OwnOpCtrl as vm'
                 })
 
+                // Handle : State 7
                 .state('signup.trucks', {
                     url: '/trucks',
                     templateUrl: 'modules/signup/templates/trucks.html',
                     controller: 'TrucksCtrl as vm'
                 })
 
+                // Handle : State 8
                 .state('signup.trailers', {
                     url: '/trailers',
                     templateUrl: 'modules/signup/templates/trailers.html',
                     controller: 'TrailersCtrl as vm'
                 })
 
-                .state('signup.engagement', {
-                    url: '/engagement',
-                    templateUrl: 'modules/signup/templates/engagement.html',
+                // Handle : State 9
+                .state('signup.photo', {
+                    url: '/photo',
+                    templateUrl: 'modules/signup/templates/photo.html',
                     controller: 'EngagementCtrl as vm'
                 })
 

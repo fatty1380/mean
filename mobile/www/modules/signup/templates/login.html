@@ -19,6 +19,7 @@
             novalidate>
                 <div class="form-row">
                     <ion-input class="item item-input">
+                        <i class="icon ion-email placeholder-icon"></i>
                         <input type="email" name="email" placeholder="Email" ng-change="vm.echange()" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false"
                         debounce required focus focus-me="vm.focus['email']">
                     </ion-input>
@@ -26,6 +27,7 @@
                 </div>
                 <div class="form-row">
                     <ion-input class="item item-input">
+                        <i class="icon ion-locked placeholder-icon"></i>
                         <input id="password" type="password" placeholder="Password" ng-model="vm.user.password" name="password" ng-focus="vm.lastElementFocused = true"
                         required focus-me="vm.focus['pass']">
                     </ion-input>

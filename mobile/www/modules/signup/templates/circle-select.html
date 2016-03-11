@@ -1,4 +1,4 @@
-<ion-view class="signup-screen engagement-screen">
+<ion-view class="signup-screen circle-select {{vm.screenClass}}">
 
     <ion-content class="has-header toggle-content">
 
@@ -11,8 +11,10 @@
         <div class="description content-body">
             <ul class="list toggle">
                 <li class="item toggle-item {{vm.itemClass}} col" ng-repeat="val in vm.options" ng-click="vm.years = val.min" ng-class="{'selected':vm.years === val.min}">
-                    <span class="title-val" ng-class="{'lte':!val.min,'gte':!val.max}">{{val.title}}</span>
-                    <span class="label-text {{vm.labelPos || 'bot'}}" ng-bind="vm.labelText"></span>
+                    <div class="toggle-item-content">
+                        <div class="title-val" ng-class="{'lte':!val.min,'gte':!val.max}">{{val.title}}</div>
+                        <span class="label-text {{vm.labelPos || 'bot'}}" ng-bind="vm.labelText"></span>
+                    </div>
                 </li>
             </ul>
 
@@ -23,7 +25,7 @@
     <div class="progress">
         <div class="row">
             <div class="col text-center">
-                <button class="button button-positive" ng-click="vm.next()">continue</button>
+                <button class="button button-block button-positive" ng-click="vm.next()">continue</button>
             </div>
         </div>
         <div class="row">

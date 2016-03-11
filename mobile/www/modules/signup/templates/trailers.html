@@ -12,7 +12,8 @@
                 <div class="item item-checkbox" ng-class="{'active': !!trailer.checked}" ng-repeat="trailer in vm.trailers" ng-click="trailer.checked = !trailer.checked">
                     <div class="item-content">
                         <p> {{ trailer.name }} </p>
-                        <i class="ico ico-checkboxselected"></i>
+                        <i class="icon ion-checkmark"></i>
+                        <!--<i class="ico ico-checkboxselected"></i>-->
                     </div>
                 </div>
 
@@ -29,7 +30,7 @@
     <div class="progress">
         <div class="row">
             <div class="col text-center">
-                <button class="button button-positive" ui-sref="signup.engagement">continue</button>
+                <button class="button button-block button-positive" ui-sref="signup.photo">continue</button>
             </div>
         </div>
         <div class="row">

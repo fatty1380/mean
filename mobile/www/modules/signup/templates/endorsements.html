@@ -8,45 +8,47 @@
             </div>
         </div>
 
-        <ul class="list toggle endorsements">
-            <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.T = !vm.endorsement.T" ng-class="{'selected': vm.endorsement.T}">
-                <div>
-                    <i class="ico ico-endorsement T"></i>
-                </div>
-                <p class="outer-label">Double/Triple trailers</p>
-            </li>
-            <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.N = !vm.endorsement.N" ng-class="{'selected': vm.endorsement.N}">
-                <div>
-                    <i class="ico ico-endorsement N"></i>
-                </div>
-                <p class="outer-label">Tank Vehicle</p>
-            </li>
-            <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.H = !vm.endorsement.H" ng-class="{'selected': vm.endorsement.H}">
-                <div>
-                    <i class="ico ico-endorsement H"></i>
-                </div>
-                <p class="outer-label">Hazardous Materials</p>
-            </li>
-            <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.P = !vm.endorsement.P" ng-class="{'selected': vm.endorsement.P}">
-                <div>
-                    <i class="ico ico-endorsement P"></i>
-                </div>
-                <p class="outer-label">Passenger</p>
-            </li>
-            <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.X = !vm.endorsement.X" ng-class="{'selected': vm.endorsement.X}">
-                <div>
-                    <i class="ico ico-endorsement X"></i>
-                </div>
-                <p class="outer-label">Tank & Hazardous Materials</p>
-            </li>
-        </ul>
+        <div class="description content-body">
+            <ul class="list toggle endorsements">
+                <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.T = !vm.endorsement.T" ng-class="{'selected': vm.endorsement.T}">
+                    <div class="toggle-item-content">
+                        <i class="ico ico-endorsement T" ng-class="{'light': vm.endorsement.T}"></i>
+                    </div>
+                    <p class="outer-label">Double or Triple</p>
+                </li>
+                <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.N = !vm.endorsement.N" ng-class="{'selected': vm.endorsement.N}">
+                    <div class="toggle-item-content">
+                        <i class="ico ico-endorsement N" ng-class="{'light': vm.endorsement.N}"></i>
+                    </div>
+                    <p class="outer-label">Tank Vehicle</p>
+                </li>
+                <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.H = !vm.endorsement.H" ng-class="{'selected': vm.endorsement.H}">
+                    <div class="toggle-item-content">
+                        <i class="ico ico-endorsement H" ng-class="{'light': vm.endorsement.H}"></i>
+                    </div>
+                    <p class="outer-label">Hazardous Materials</p>
+                </li>
+                <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.P = !vm.endorsement.P" ng-class="{'selected': vm.endorsement.P}">
+                    <div class="toggle-item-content">
+                        <i class="ico ico-endorsement P" ng-class="{'light': vm.endorsement.P}"></i>
+                    </div>
+                    <p class="outer-label">Passenger</p>
+                </li>
+                <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.X = !vm.endorsement.X" ng-class="{'selected': vm.endorsement.X}">
+                    <div class="toggle-item-content">
+                        <i class="ico ico-endorsement X" ng-class="{'light': vm.endorsement.X}"></i>
+                    </div>
+                    <p class="outer-label">Tank & HazMat</p>
+                </li>
+            </ul>
+        </div>
 
     </ion-content>
 
     <div class="progress">
         <div class="row">
             <div class="col text-center">
-                <button class="button button-positive" ui-sref="signup.miles">continue</button>
+                <button class="button button-positive button-block" ui-sref="signup.miles">continue</button>
             </div>
         </div>
         <div class="row">
