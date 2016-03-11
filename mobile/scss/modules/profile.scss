@@ -154,6 +154,7 @@ and (max-device-height : 570px) {
         text-align: center;
         margin-left: -$padding-large-horizontal;
         margin-right: -$padding-large-horizontal;
+        padding-bottom: 12px;
     }
     
     .circle {
@@ -271,6 +272,10 @@ and (max-device-height : 570px) {
             font-size: 1.7em;
         }
       }
+  }
+  
+  ion-item.equipment.card.item{
+      margin-top: 0px;
   }
   
   .equipment.card {
