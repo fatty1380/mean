@@ -1,9 +1,9 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('signup')
-        .config(['$stateProvider', function ($stateProvider) {
+        .config(['$stateProvider', function($stateProvider) {
             $stateProvider
 
                 .state('home', {
@@ -28,22 +28,67 @@
                     abstract: true
                 })
 
+                /**
+                 *  Signup User Flow:
+                 *  1.  Register : Enter Email and Password
+                 *  2.  Handle : Enter Name and CB
+                 *  3.  CDL : Enter License Class
+                 *  4.  CDL : Enter License Endorsements
+                 *  5.  Miles : Enter Career Miles Driven
+                 *  6.  Exp : Enter Years of Experience
+                 *  7.  O/O : Are you an Owner Operator?
+                 *  8.  Truck : Enter Truck Make/Mfg
+                 *  9.  Trailer : Enter Trailer Experience
+                 *  10. Pic : Select Profile Picture
+                 *  11. Welcome : Congrats!!!
+                 */
+
                 .state('signup.register', {
                     url: '/register',
                     templateUrl: 'modules/signup/templates/register.html',
                     controller: 'RegisterCtrl as vm'
                 })
 
-                .state('signup.license', {
-                    url: '/license',
-                    templateUrl: 'modules/signup/templates/license.html',
+                .state('signup.handle', {
+                    url: '/handle',
+                    templateUrl: 'modules/signup/templates/handle.html',
+                    controller: 'RegisterCtrl as vm'
+                })
+
+                .state('signup.license-old', {
+                    url: '/license-old',
+                    templateUrl: 'modules/signup/templates/license-class.html',
                     controller: 'LicenseCtrl as vm'
                 })
 
-                .state('signup.engagement', {
-                    url: '/engagement',
-                    templateUrl: 'modules/signup/templates/engagement.html',
-                    controller: 'EngagementCtrl as vm'
+                .state('signup.license', {
+                    url: '/license',
+                    templateUrl: 'modules/signup/templates/circle-select.html',
+                    controller: 'ClassCtrl as vm'
+                })
+
+                .state('signup.endorsements', {
+                    url: '/endorsements',
+                    templateUrl: 'modules/signup/templates/endorsements.html',
+                    controller: 'LicenseCtrl as vm'
+                })
+
+                .state('signup.miles', {
+                    url: '/miles',
+                    templateUrl: 'modules/signup/templates/circle-select.html',
+                    controller: 'MilesCtrl as vm'
+                })
+
+                .state('signup.years', {
+                    url: '/years',
+                    templateUrl: 'modules/signup/templates/circle-select.html',
+                    controller: 'YearsCtrl as vm'
+                })
+
+                .state('signup.own-op', {
+                    url: '/own-op',
+                    templateUrl: 'modules/signup/templates/circle-select.html',
+                    controller: 'OwnOpCtrl as vm'
                 })
 
                 .state('signup.trucks', {
@@ -56,6 +101,12 @@
                     url: '/trailers',
                     templateUrl: 'modules/signup/templates/trailers.html',
                     controller: 'TrailersCtrl as vm'
+                })
+
+                .state('signup.engagement', {
+                    url: '/engagement',
+                    templateUrl: 'modules/signup/templates/engagement.html',
+                    controller: 'EngagementCtrl as vm'
                 })
 
                 .state('signup.friends', {
@@ -72,7 +123,7 @@
                         resolveContacts: false
                     },
                     resolve: {
-                        contacts: function ($stateParams, contactsService, LoadingService) {
+                        contacts: function($stateParams, contactsService, LoadingService) {
                             return contactsService.loadOrResolveContacts($stateParams.resolveContacts);
                         }
                     }
@@ -91,10 +142,10 @@
      * @desc check user logged in
     */
     loginCheckAndRedirect.$inject = ['$q', 'userService', '$state', 'tokenService', 'registerService', 'securityService'];
-    function loginCheckAndRedirect ($q, userService, $state, tokenService, registerService, securityService) {
+    function loginCheckAndRedirect($q, userService, $state, tokenService, registerService, securityService) {
         if (tokenService.get('access_token')) {
             return registerService.me()
-                .then(function (response) {
+                .then(function(response) {
                     if (response && response.success) {
                         if (response.message.data) {
                             securityService.initialize();
@@ -108,7 +159,7 @@
                     }
                     return false;
                 })
-                .catch(function (err) {
+                .catch(function(err) {
                     logger.error('Failed to load `me`', err);
                     return false;
                 });

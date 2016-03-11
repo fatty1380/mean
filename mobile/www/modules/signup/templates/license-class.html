@@ -1,0 +1,44 @@
+<ion-view class="license-screen">
+
+    <ion-content class="license-content">
+
+        <div class="description row">
+            <div class="col item item-text-wrap">
+                <p>What class is your driver license?</p>
+            </div>
+        </div>
+
+        <div class="list license">
+            <span class="oset-cb-item category-a" ng-click="vm.class='A'" ng-class="{'active':vm.class==='A'}">
+                    <div class="item-content">
+                        <i class="ico {{vm.class === 'A' ? 'ico-licenseaactive' : 'ico-licenseainactive'}}"></i>
+                    </div>
+                </span>
+            <span class="oset-cb-item category-b" ng-click="vm.class='B'" ng-class="{'active':vm.class==='B'}">
+                    <div class="item-content">
+                        <i class="ico {{vm.class === 'B' ? 'ico-licensebactive' : 'ico-licensebinactive'}}"></i>
+                    </div>
+                </span>
+            <span class="oset-cb-item category-c" ng-click="vm.class='C'" ng-class="{'active':vm.class==='C'}">
+                    <div class="item-content">
+                        <i class="ico {{vm.class === 'C' ? 'ico-licensecactive' : 'ico-licensecinactive'}}"></i>
+                    </div>
+                </span>
+        </div>
+        
+        <div class="row">
+            <div class="col text-center">
+                <button class="button button-positive" ng-click="vm.next()">continue</button>
+            </div>
+        </div>
+
+        <div class="description row">
+            <div class="col">
+                <progress class="progress-bar" max="11" value="4"> </progress>
+                <span class="progress-label">resume completion</span>
+            </div>
+        </div>
+
+    </ion-content>
+
+</ion-view>

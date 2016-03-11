@@ -1,0 +1,77 @@
+<ion-view class="register-screen">
+    <!--
+    <ion-header-bar align-title="center" class="bar-stable">
+        <div class="buttons">
+            <button class="button button-icon icon ion-ios-arrow-back" nav-direction="back" ui-sref="home"></button>
+        </div>
+        <h1 class="title">
+            <i class="app-brand dark"></i>
+        </h1>
+    </ion-header-bar>-->
+
+    <ion-content>
+        <!--<div class="bar bar-subheader hide-on-keyboard-open">
+            <h3 class="title">Create your TruckerLine account below</h3>
+        </div>-->
+        <div class="login-content">
+
+            <div class="description row">
+                <div class="col item item-text-wrap">
+                    <p>Welcome to TruckerLine!</p>
+                    <p>Let's get started with your name and&nbsp;CB&nbsp;Handle :)</p>
+                </div>
+            </div>
+
+            <form name="vm.mainForm" id="mainForm" class="list list-inset signup-form" ng-submit="vm.submitForm($event)" novalidate>
+
+
+                <div class="row">
+                    <div class="col">
+                        <ion-input class="item item-input">
+                            <input name="firstName" id="firstName" type="text" placeholder="First Name" ng-model="vm.user.firstName" focus required autocorrect="off"
+                            spellcheck="false" focus-me>
+                        </ion-input>
+                    </div>
+                    <div class="col">
+                        <ion-input class="item item-input">
+                            <input name="lastName" id="lastName" type="text" placeholder="Last Name" ng-model="vm.user.lastName" focus required autocorrect="off"
+                            spellcheck="false">
+                        </ion-input>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <ion-input class="item item-input">
+                            <input name="handle" id="handle" type="text" placeholder="Enter your CB Handle" ng-model="vm.handle" autofocus>
+                        </ion-input>
+                    </div>
+                </div>
+                <input style="position:absolute; left:9999px" type="submit" />
+
+                <br/>
+
+                <div class="row">
+                    <div class="col text-center">
+                        <button class="button button-positive" ui-sref="signup.license">continue</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="error" ng-if="vm.mainForm.$submitted && vm.mainForm.$invalid" role="alert" ng-messages="vm.mainForm.$error">
+                <div ng-message="email">Please enter a valid email address</div>
+                <div ng-message="minlength">Password must be at least 8 characters</div>
+                <div ng-message="password">Passwords do not match</div>
+                <div ng-message="compareTo">Passwords do not match</div>
+                <div ng-message="required">Please enter all required fields</div>
+            </div>
+
+            <div class="description row">
+                <div class="col">
+                    <progress class="progress-bar" max="10" value="1"> </progress>
+                    <span class="progress-label">resume completion</span>
+                </div>
+            </div>
+
+        </div>
+    </ion-content>
+</ion-view>

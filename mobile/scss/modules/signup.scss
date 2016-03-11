@@ -2,74 +2,19 @@ ion-content {
   .signup-title {
     text-align: center;
     margin: 50px 0 80px;
-    color: $light;;
+    color: $dark;
   }
 
   .engagement-title {
     text-align: center;
     margin: 45px 0 35px 0;
-    color: $light;;
+    color: $dark;
   }
 
   .title {
     text-align: center;
     margin: 20px;
-    color: $light;;
-  }
-}
-
-.signup-form{
-
-
-
-  .form-row{
-    position: relative;
-
-    .icon{
-      margin-right: 5px;
-      font-size: 20px;
-      color: $light;
-      position: absolute;
-      top: 50%;
-      right: 5px;
-      margin-top: -10px;
-      z-index: 3;
-    }
-  }
-
-  .item {
-    padding:0;
-    border: 0;
-    margin-bottom: 2px;
-    background: $signup-entry-row-bg;
-  }
-
-  .item-input {
-    padding:0;
-
-    input{
-      height: 50px;
-      padding: 15px 30px;
-      color: $light;
-      font-weight: bold;
-      font-size: $font-size-base - 1px;
-      line-height: $line-height-computed;
-      width: 100%;
-    }
-  }
-
-  .ng-dirty.ng-invalid {
-    border-left: 5px solid red;
-  }
-
-  .ng-dirty.ng-valid {
-    border:0;
-  }
-
-  .input-label {
-    width: 100%;
-    max-width: 100%;
-
+    color: $dark;
   }
 }
 
@@ -178,12 +123,10 @@ ion-content {
 .endorsements{
 
   p{
-    color: white;
-    font-size: 10px;
+    color: $dark;
+    // font-size: 10px;
     margin:10px 0;
     text-align:center;
-    font-weight:bold;
-    line-height: 12px;
   }
 
   .endorsements-bottom{
@@ -215,7 +158,7 @@ ion-content {
     margin: 0px -31px;
     padding: 0;
 
-    input:checked:before,  input:checked + .checkbox-icon:before {
+     input:checked:before,  input:checked + .checkbox-icon:before {
        background-image: url('../img/sprite.png');
        display: inline-block;
        vertical-align: top;
@@ -327,19 +270,28 @@ ion-content {
 
 /*  select truck */
 
+$logo-native-height: 72px;
+$logo-native-width: 102px;
+$logo-inline-zoom: ($button-signup-height - ($padding-small-vertical)) / $logo-native-height;
 
-
-.select-truck {
+.select-truck, .select-trailer {
 
   .item-radio  
   {
-    input ~ .radio-content > .item-content {
-      background-color: $signup-entry-row-bg;
+    input ~ .radio-content {
+        &  > .item-content {
+          background-color: $signup-entry-row-bg;
+          font-weight: 400;
+        }
     }
-
-    input:checked ~ .radio-content {
+    
+    input:checked ~ .radio-content, &.active {                
       & > .item-content {
-        background-color: $signup-entry-row-active-bg;
+        font-weight: 500;
+        background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
+           
+        //border: $button-circle-border-width solid $light;
+        //background-color: $signup-entry-row-active-bg;
         p {color: $dark; }
       }
 
@@ -348,31 +300,78 @@ ion-content {
       }
     }
   }
+  
+  .item-checkbox {
+        height: $button-signup-height;
+      
+        &  > .item-content {
+            background-color: $signup-entry-row-bg;
+            font-weight: 400;
 
-  .item{
-    margin:1px 0;
+            padding: $padding-large-horizontal;
+        }
+          
+        height: $button-signup-height;
+        top: 0;
+        margin-top: 0;
+
+        .ico.ico-checkboxselected {
+            display: none;
+            position: absolute;
+            right: 15px;
+            margin-left: -50px;
+            top: 50%;
+            margin-top: -10px;
+        }
+        
+        &.active { 
+            & > .item-content {
+                font-weight: 500; background: -o-linear-gradient(rgba(248,248,248,1) 0%, rgba(232,232,232,1) 100%);
+                background: linear-gradient(rgba(248,248,248,1) 0%, rgba(232,232,232,1) 100%); 
+            }
+        
+            .ico.ico-checkboxselected {
+                display: inline-block;
+            }
+        }
+    }   
+
+  .item, .item-checkbox {
+    padding: 0px;
+    margin-top: 2vw;
+    margin-bottom: 2vw;
     border: 0;
-    background: none;
-
-    p {
-      position:absolute;
-      color: $stable;
-      font-size: 22px;
-      margin-bottom: 2px;
-      top: 50%;
-      margin-top: -15px;
+    // background: none;
+    border-radius: $border-radius-large;
+    
+    &.active {
+        box-shadow: 1px 1px 10px rgba($action-text, 0.8);
     }
 
     .item-content{
-      height:90px;
+      height:$button-signup-height;
 
       .center-text{
         left:50%;
         margin-left: -30px;
       }
+      
+
+        p {
+        position:absolute;
+        color: $dark;
+        font-size: 22px;
+        top: 0;
+        margin: 0;
+        //   margin-bottom: 2px;
+        //   top: 50%;
+        //   margin-top: -15px;
+            line-height: $button-signup-height;
+        }
     }
 
     .logo {
+        zoom: $logo-inline-zoom;
       width: 102px;
       height: 72px;
       position: absolute;
@@ -382,9 +381,6 @@ ion-content {
       margin-top: -36px;
     }
   }
-  .item {
-    padding: 0px;
-  }
 }
 
 
@@ -392,119 +388,240 @@ ion-content {
 
 $but-height: 70px;
 
-.select-trailer {
-  .item-content{
-    background-color: white;
-    height:$but-height;
-    position:relative;
-    i{
-      position:relative;
-     /* top:-20px;*/
-    }
-  }
 
-  .item{
-    padding:0;
-    margin:1px 0 0;
-    height:$but-height;
-    background: none;
 
-    &:first-child{
-      margin-top: 0;
+.toggle-content {
+    
+    .content-body {
+        min-height: 50vh;
+        
+        // & >*:first-child {
+        //     height: 100%;
+        //     top: 10vh;
+        //     background-color: purple;
+        // }
     }
     
-    & .checkbox.active {
-      p {
-        color: $dark;
-      }
+    .list.toggle {
+        max-width: 380px;
+        
+        .toggle-item {
+            margin: 2vw; //$padding-small-horizontal/2;
+            display: inline-block;
+            
+            vertical-align: top;
+            
+            width: $button-circle-diameter;
+            height: $button-circle-diameter;
+            // max-width: 80px;
+            // max-height: 80px;
+            
+            border: $button-circle-border-width solid darken($action-text, 2%);
+            border-radius: 50%;
+            
+            background-color: $signup-entry-row-bg;
+            
+            &.selected {
+                font-weight: 500;
+                border: $button-circle-border-width solid $light;
+                box-shadow: 1px 1px 10px rgba($action-text, 0.8);
+                background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
+            }
+            
+            .title-val {
+                color: $dark;
+                position: relative;
+                line-height: $button-circle-inner-diameter;
+                left: 0;
+                width: 100%;
+                
+                &.gte::after {
+                    content: '+';
+                    font-size: 0.8em;
+                    position: absolute;
+                    right: -8px;
+                    top: 0;
+                    line-height: 10px;
+                }
+                
+                &.lte::before {
+                    content: '<';
+                    font-size: 0.8em;
+                    position: absolute;
+                    left: -8px;
+                    //top: 0;
+                    //line-height: 10px;
+                }
+            }
+         
+            .label-text {
+                text-transform: uppercase;
+                position: absolute;
+                text-align: center;
+                width: 100%;
+                left: 0;
+                font-size: 9px;
+                letter-spacing: -0.5px;
+                
+                &.top {
+                    bottom: 70%;
+                }
+                &.bot {
+                    top: 60%;
+                }
+            }
+            
+            &.years-item{
+                .title-val {
+                    top: -4px;
+                    font-size: 1.2em;
+                }
+            }
+            
+            &.license-class-item {
+                
+                &.selected {
+                    margin: 0;
+                    zoom: 1.2;
+                    
+                    .title-val {
+                        color: $positive;
+                    }
+                }
+                
+                .title-val {
+                    color: $light;
+                    font-size: 2.5em;
+                    &.gte::after {
+                        content: none;
+                    }
+                }
+            }
+            
+            &.endorsement {
+                
+                div {
+                    
+                    width: 100%;
+                    height: 100%;
+                    
+                    i {
+                        position: absolute;
+                        
+                        left: 50%;
+                        top: 50%;
+                        margin-left: -25px;
+                        margin-top: -25px;
+                    }
+                }
+                
+                margin-bottom: 50px;
+            }
+            
+            &.yes-no-item {
+                .title-val {
+                    font-size: 1.2em;
+                    
+                    &::before, &::after {
+                    display: none;
+                    }
+                }
+            }
+        }
     }
-
-    p{
-      position: absolute;
-      z-index: 100;
-      width: 100%;
-      text-align: center;
-      pointer-events: none;
-      left:0;
-      color:$stable;
-      font-size: 22px;
-      line-height: 26px;
-      height:$but-height;
-      padding-top:$but-height*0.3;
-    }
-
-    .center-text {
-      top:-3px;
-    }
-
-  }
-
-  .checkbox {
-    margin:0;
-    padding:0;
-    right: 0;
-    left: 0;
-    top: 0;
-    height: $but-height;
-
-    .item-content{
-      background-color: transparent;
-      // border: 1px solid yellow;
-      i{
-        top: 50%;
-        margin-top: -10px;
-        left: 35px;
-      }
-
-      // top: -20px;
-      height: $but-height;
-    }
-
-    &.active .item-content{
-      background-color: $signup-entry-row-active-bg;
-
-      i {
-         visibility:visible;
-      }
-    }
-
-    & .item-content {
-      background-color: $signup-entry-row-bg;
-      
-      i {
-        visibility:hidden;
-      }
-    }
-
-    &.active:before, input:checked + .checkbox-icon:before {
-      background-position: -2140px -2009px;
-      background:none;
-      border:0;
-
-    }
-    input:before, .checkbox-icon:before {
-      background-position: -2202px -2071px;
-      background:none;
-      border:0;
-    }
-
-    input:after, .checkbox-icon:after {
-      border:0;
-    }
-  }
 }
 
-.signup-section{
-  // background: url("../img/welcomeBackground@3x.jpg") 0 0 no-repeat ;
-  // -webkit-background-size: cover;
-  // background-size: cover;
+.signup-section {
+    
+    
   
-  background-color: $brand-bg;
+  //&:before {
+    // content: '';
+    // display: block;
+    // position: absolute;
+    // left: 0;
+    // top: 0;
+    // width: 100%;
+    // height: 100%;
+    // //opacity: 0.5;
+    // background-color: transparent;
+    // background-image: url('../img/bg-gradient-base-light.jpg');
+    // background-repeat: no-repeat;
+    // background-position: 50% 0;
+    // -ms-background-size: cover;
+    // -o-background-size: cover;
+    // -moz-background-size: cover;
+    // -webkit-background-size: cover;
+    // background-size: cover;
+      
+  // } 
+  
+//   background-color: $light;
 
 
   .header,
   .bar,
   .pane{background: none;}
+  
+  .bar-header {
+      .button.button-icon {
+      color: $positive;
+      }
+  }
+  
+  .bar-subheader {
+      h3 {
+      color: $dark;
+      }
+  }
+  
+  .progress {
+      position: absolute;
+      width: 100%;
+      bottom: 5vh;
+  }
+  
+  .description, .progress {
+      padding: $padding-base-vertical ($padding-base-horizontal+$padding-small-horizontal);
+      text-align: center;
+          
+      .item {
+          background-color: transparent;
+      }
+      
+      p {
+          margin: $padding-large-vertical 0;
+          font-size: $font-size-base;
+          line-height: $line-height-base;
+      }
+      
+      .progress-bar {
+          margin-top: $padding-large-vertical;
+          margin-bottom: $padding-small-vertical;
+          //color: $balanced;
+      }
+      .progress-label {
+          margin-top: 0;
+          margin-bottom: $padding-large-vertical;
+      }
+  }
+  
+    .has-progress-footer {
+        // bottom: 15vh;
+        // padding-bottom: 115px;
+        
+        
+        max-height: calc(100vh - 80px - 116px);
+        
+        & + .progress {
+            bottom: 0;
+        }
+    }
+  
+  
+  .button {
+      border-radius: $border-radius-large;
+  }
 
   .round-avatar{
     border-radius: 50px;
@@ -513,28 +630,9 @@ $but-height: 70px;
     height: 75px;
   }
 
-  input::-webkit-input-placeholder{
-    color: $light !important;
-  }
-
-  .button-other{
-    background-color: $signup-entry-row-bg;
-  }
-
-  .bar{
-    &.bar-subheader{
-      h3{
-        font-weight: normal;
-        color: $light;
-      }
-    }
-  }
-
-  &.full-size{
-    .bar .bar-subheader{
-      top:120px;
-    }
-  }
+//   input::-webkit-input-placeholder{
+//     color: $light !important;
+//   }
 
   .toggle-block{
     padding: 10px 30px;
@@ -565,12 +663,69 @@ $but-height: 70px;
     }
   }
 
+  
+
+.signup-form {
+    
+    background-color: transparent;
+
+    .form-row{ // Applies to login.html pages
+        position: relative;
+
+        .icon{
+            margin-right: 5px;
+            font-size: 20px;
+            color: $light;
+            position: absolute;
+            top: 50%;
+            right: 5px;
+            margin-top: -10px;
+            z-index: 3;
+        }
+    }
+  
+  
+    .item {
+        border: 1px solid $brand-blue;
+        border-radius: $border-radius-base;
+        
+        margin: $padding-base-vertical $padding-base-horizontal;
+        
+        .label {
+            background: $light;
+        }
+    }
+  
+  .item-input {
+      .icon.placeholder-icon {
+          color: $brand-blue;
+      }
+  }
+  
+  .ng-submitted {
+    .ng-dirty.ng-invalid {
+        :after {
+            content: '!!';
+            color: red;
+        }
+        border-left: 5px solid red;
+    }
+
+    .ng-dirty.ng-valid {
+        border:0;
+    }
+  }
+  
+  
+}
+  
 }
 .trailers-bg{
   background-image:url("../img/trailersBg.png");
 }
 
 .logo{
+    
   .freightliner-logo{
     @extend %text-indent;
     background-image:url("../img/freightliner_logo.png");
@@ -637,7 +792,7 @@ $but-height: 70px;
         
         h3{
           font-size: 18px;
-          color: $light;
+          color: $dark;
           font-weight: 300;
           text-align: center;
           line-height: 1.5em;
@@ -652,7 +807,7 @@ $but-height: 70px;
      bottom: 0;
      
      .slider-pager-page {
-        color: #FFF;
+        color: #dark;
       }
    }
 }
@@ -928,14 +1083,8 @@ $but-height: 70px;
 and (max-device-height : 568px) {
   .signup-section{
     .round-avatar{
-      border-radius: 50px;
-      border: 2px solid white;
       width: 75px;
       height: 75px;
-    }
-
-    input::-webkit-input-placeholder{
-      color: $light !important;
     }
 
     .button-other{
@@ -946,7 +1095,6 @@ and (max-device-height : 568px) {
       &.bar-subheader{
         h3{
           font-weight: normal;
-          color: $light;
         }
       }
     }

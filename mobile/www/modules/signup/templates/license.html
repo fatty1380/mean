@@ -11,9 +11,13 @@
     </ion-header-bar>
 
     <ion-content class="has-footer license-content">
-            <h4>Select your license Class</h4>
-
-
+            
+            <div class="description row">
+                <div class="col item item-text-wrap">
+                    <p>What class is your driver license?</p>
+                </div>
+            </div>
+            
             <div class="list license">
                 <span class="oset-cb-item category-a" ng-click="vm.class='A'" ng-class="{'active':vm.class==='A'}">
                     <div class="item-content">
@@ -31,16 +35,6 @@
                     </div>
                 </span>
             </div>
-    
-            <h4>Select your endorsements</h4>
-
-            <ion-list class="signup-list">
-              <ion-checkbox ng-model="vm.endorsement.T">Double/Triple Trailers</ion-checkbox>
-              <ion-checkbox ng-model="vm.endorsement.N">Tank Vehicles</ion-checkbox>
-              <ion-checkbox ng-model="vm.endorsement.H">Hazardous Materials</ion-checkbox>
-              <ion-checkbox ng-model="vm.endorsement.P">Passenger</ion-checkbox>
-              <ion-checkbox ng-model="vm.endorsement.X">Tank Vehicle and Hazardous Materials</ion-checkbox>
-            </ion-list>
 
     </ion-content>
 

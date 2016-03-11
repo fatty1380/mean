@@ -1,0 +1,36 @@
+<ion-view class="signup-screen engagement-screen">
+
+    <ion-content class="has-header toggle-content">
+
+        <div class="description row">
+            <div class="col item item-text-wrap">
+                <p>{{vm.intro}}</p>
+            </div>
+        </div>
+
+        <div class="description">
+            <ul class="list toggle">
+                <li class="item toggle-item {{vm.itemClass}} col" ng-repeat="val in vm.options"
+                    ng-click="vm.years = val.min" ng-class="{'selected':vm.years === val.min}">
+                    <span class="title-val" ng-class="{'lte':!val.min,'gte':!val.max}">{{val.title}}</span>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="row">
+            <div class="col text-center">
+                <button class="button button-positive" ng-click="vm.next()">continue</button>
+            </div>
+        </div>
+
+        <div class="description row">
+            <div class="col">
+                <progress class="progress-bar" max="11" value="{{vm.stepNumber}}"> </progress>
+                <span class="progress-label">resume completion</span>
+            </div>
+        </div>
+
+    </ion-content>
+
+</ion-view>
