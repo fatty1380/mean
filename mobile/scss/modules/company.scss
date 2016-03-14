@@ -4,6 +4,12 @@
     background-color: $ribbon-bg;
   }
   
+  .platform-ios & {
+      .bar h3 {
+          height: $bar-height * 2 - $ios-statusbar-height;
+      }
+  }
+  
   .bar {
     h3 {
       width: 100%;
