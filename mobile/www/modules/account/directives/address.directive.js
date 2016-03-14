@@ -59,11 +59,15 @@
         '<input type="text" name="addrLine2" ng-model="vm.address.streetAddresses[1]" placeholder="Line 2 (optional)">' +
         '</div>' +
         '<div class="item item-input">' +
+        '<ion-label>City</ion-label>' +
         '<input type="text" name="addrCity" ng-model="vm.address.city" placeholder="City">' +
         '</div>' +
-        '<select type="text" name="addrState" ng-options="state as state.name for state in vm.states" ng-model="vm.state" ng-change="vm.select()">' +
-        '</select>' +
+        '<div class="item item-select ">' +
+        '<ion-label>State</ion-label>' +
+        '<select name="addrState" ng-options="state as state.name for state in vm.states" ng-model="vm.state" ng-change="vm.select()"></select>' +
+        '</div>' +
         '<div class="item item-input">' +
+        '<ion-label>ZIP</ion-label>' +
         '<input type="tel" name="addrZip" ng-model="vm.address.zipCode" placeholder="Zip">' +
         '</div>';
 
@@ -107,7 +111,7 @@
         var vm = this;
     }
 
-    function AddrCtrl ($http) {
+    function AddrCtrl ($http, settings, API) {
         var vm = this;
         vm.select = select;
         vm.states = vm.states || null;
@@ -125,7 +129,7 @@
         }
         
         function getStates () {
-           return $http.get('http://outset-dev.elasticbeanstalk.com/config/states')
+            return API.doRequest(settings.stateAddress, 'GET')
                 .then(function success(states) {
                     vm.states = states.data;
                     return vm.states;
