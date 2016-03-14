@@ -966,7 +966,7 @@ and (max-device-height : 570px) {
 .edit-fields-list {
   .item {
     border-width: 0 0 1px;
-    input {
+    input, select {
       color: $content-body-text;
       ::-webkit-input-placeholder {
         color: #333;

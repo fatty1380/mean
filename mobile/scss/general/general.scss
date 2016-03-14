@@ -257,6 +257,25 @@ textarea{
   }
 }
 
+
+  
+.item-select {
+    padding: 12px 0 8px 16px;
+    select {
+        padding-top: 12px;
+        padding-left: 9px;
+        padding-bottom: 1px;
+        height: 35px;
+        vertical-align: middle;
+        line-height: 24px;
+        font-size: 16px;
+        width: 100%;
+        direction: ltr;
+        
+    }
+
+}
+
 .text-center {
     text-align: center;
 }
@@ -356,7 +375,7 @@ textarea{
     }
   }
 
-  .item-input{
+  .item-input, .item-select{
     padding: 5px 15px;
     border-width: 1px 1px 0 1px;
     border-color: #D2D2D2;
