@@ -40,7 +40,7 @@
         //
         var directive = {
             template: editTemplate,
-            controller: StubCtrl,
+            controller: AddrCtrl,
             bindToController: true,
             controllerAs: 'vm',
             restrict: 'E',
@@ -61,9 +61,8 @@
         '<div class="item item-input">' +
         '<input type="text" name="addrCity" ng-model="vm.address.city" placeholder="City">' +
         '</div>' +
-        '<div class="item item-input">' +
-        '<input type="text" name="addrState" ng-model="vm.address.state" placeholder="State">' +
-        '</div>' +
+        '<select type="text" name="addrState" ng-options="state as state.name for state in vm.states" ng-model="vm.state" ng-change="vm.select()">' +
+        '</select>' +
         '<div class="item item-input">' +
         '<input type="tel" name="addrZip" ng-model="vm.address.zipCode" placeholder="Zip">' +
         '</div>';
@@ -106,5 +105,36 @@
 
     function StubCtrl () {
         var vm = this;
+    }
+
+    function AddrCtrl ($http) {
+        var vm = this;
+        vm.select = select;
+        vm.states = vm.states || null;
+        
+        initialize();        
+        ////////////////////
+        function initialize(){
+            return getStates();
+        }
+        
+        function select() {
+            if (vm.state) {
+                vm.address.state = vm.state['alpha-2'];
+            }
+        }
+        
+        function getStates () {
+           return $http.get('http://outset-dev.elasticbeanstalk.com/config/states')
+                .then(function success(states) {
+                    vm.states = states.data;
+                    return vm.states;
+                })
+                .catch(function fail(err) {
+                    logger.error('Failed to retrieve list of states', err);
+                    vm.states = null; 
+                    return vm.states;
+                });
+        }
     }
 })();
