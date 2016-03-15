@@ -15,13 +15,15 @@
         <ion-scroll>
             <ul class="list document-list">
                 <li class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id">
-                    <ion-checkbox ng-model="doc.checked"></ion-checkbox>
-
-                    <div class="item-content">
-                        <strong>{{doc.name}}</strong>
-                        <span>{{doc.created | date : 'MMMM d, y'}}</span>
-                    </div>
-                    <oset-doc-view ng-if="!!doc.url" model="doc" btn-text="View"></oset-doc-view>
+                    <ion-checkbox ng-model="doc.checked">
+                        <div class="item-content" ng-class="{'no-date': !doc.created}">
+                            <strong>{{doc.name}}</strong>
+                            <span>{{doc.created | date : 'MMMM d, y' }}</span>
+                        </div>
+                        <!--<oset-doc-view ng-if="!!doc.url" model="doc" btn-text="View"></oset-doc-view>-->
+                        
+                    </ion-checkbox>
+                    <!--<button class="button button-small" ng-click="vm.rename($index)">Rename</button>-->
                 </li>
             </ul>
             <div class="button-holder text-center">
@@ -43,8 +45,7 @@
 </ion-modal-view>
 
 <!-- Modal step #2 -->
-<ion-modal-view class="lockbox lockbox-share view-section compact-size" 
-ng-class="{'compact-size': (vm.docsToShare && vm.docsToShare.length), 'min-size': (!vm.docsToShare || !vm.docsToShare.length)}"
+<ion-modal-view class="lockbox lockbox-share view-section compact-size" ng-class="{'compact-size': (vm.docsToShare && vm.docsToShare.length), 'min-size': (!vm.docsToShare || !vm.docsToShare.length)}"
 ng-if="vm.shareStep === 2">
 
     <ion-header-bar>
