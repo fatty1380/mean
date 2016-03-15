@@ -118,7 +118,7 @@
             LoadingService.showLoader('Saving');
             return registerUser()
                 .then(function (userProfile) {
-                    debugger;
+                    // debugger;
                     // $state.go(wizard.next || 'signup.handle', { profile: userProfile });
                     return userProfile;
                 })
