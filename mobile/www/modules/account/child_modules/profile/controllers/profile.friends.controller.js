@@ -83,7 +83,7 @@
         }
 
         function exitState () {
-            return $state.go('^');
+            return window.history.back();
         }
 
         function showRequestsModal () {

@@ -128,8 +128,12 @@ ion-content {
   }
 }
 
-.checkbox-icon:before{
+i.checkbox-icon:before{
   background: none;
+}
+
+i.checkbox-icon {
+  @include vertical-align();
 }
 
 .signup-list {
@@ -1078,13 +1082,18 @@ progress {
         }
 
         .button-small {
+        //   border: 5px solid yellow;
+          
+          color: $balanced;
+          border-color: $balanced;
           position: absolute;
           top: 50%;
           right: 15px;
           margin-top: -15px;
-          padding: 0 20px;
           min-width: 100px;
           max-width: 115px;
+          
+          @include list-button;
 
           &.selected{
             background: #37afb2;
@@ -1122,8 +1131,8 @@ progress {
       }
 
       &.user-friends-list .item .button{
-        color: #31999c;
-        border-color: #31999c;
+        color: $balanced;
+        border-color: $balanced;
       }
     }
 

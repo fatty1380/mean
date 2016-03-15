@@ -41,6 +41,7 @@
   font-size: 26px !important;
 }
 
+
 .profile-screen {
     .profile-pane {
         .scroll-view {
@@ -54,6 +55,20 @@
     
     .bar.bar-header > .button {
         z-index: 3;
+    }
+}
+
+@media only screen
+and (max-device-height : 570px) {
+    
+    .platform-android, .platform-ios{
+        .profile-screen {
+            .profile-pane {
+                .scroll-view {
+                    padding-top: 20px;
+                }
+            }
+        }
     }
 }
 
@@ -137,6 +152,7 @@
         text-align: center;
         margin-left: -$padding-large-horizontal;
         margin-right: -$padding-large-horizontal;
+        padding-bottom: 12px;
     }
     
     .circle {
@@ -254,6 +270,10 @@
             font-size: 1.7em;
         }
       }
+  }
+  
+  ion-item.equipment.card.item{
+      margin-top: 0px;
   }
   
   .equipment.card {
@@ -413,6 +433,8 @@
   .photo{
     position: relative;
     top: $padding-large-vertical; 
+    background: #333 url('../img/bg-profile-default.jpg') 50% no-repeat;
+  
     .platform-android & {
         top: $padding-large-vertical; 
     }
@@ -426,7 +448,6 @@
     height: $photo-dimension;
     -webkit-background-size: $photo-dimension $photo-dimension;
     background-size: $photo-dimension $photo-dimension;
-    border: 4px solid rgba($search-bar, 0.6);
     background-color: 4px solid rgba($search-bar, 0.6);
     text-align: center;
     @include rounded-corner(100%);
@@ -943,7 +964,7 @@
 .edit-fields-list {
   .item {
     border-width: 0 0 1px;
-    input {
+    input, select {
       color: $content-body-text;
       ::-webkit-input-placeholder {
         color: #333;

@@ -29,11 +29,14 @@
     settings.requests = settings.api + 'requests/';
     settings.companies = settings.api + 'companies/';
     settings.jobs = settings.api + 'jobs/';
+    
 
     // endpoints
     settings.signup = settings.oauth + 'signup/';
     settings.token = settings.oauth + 'token/';
     settings.signout = settings.auth + 'signout/';
+    
+    settings.stateAddress = settings.config + 'states/';    
 
     settings.search = settings.profiles + 'search/';
     settings.usersProfile = settings.users + 'me/';
