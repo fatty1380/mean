@@ -445,6 +445,7 @@
         function saveFileToDevice (file) {
             var path = vm.path;
 
+            debugger;            
             updateNewDocumentWithID(file);
 
             return $cordovaFile.checkDir(path, 'lockbox')
@@ -482,6 +483,7 @@
                 })
                 .then(function () {
                     path += user;
+                    debugger;
                     return $cordovaFile.writeFile(path, name, data, true);
                 })
                 .then(function (file) {
@@ -622,6 +624,7 @@
                         }
                         else {
                             // logger.debug('[LockboxDocsService] dirReader trying to resolve docs: ' + angular.toJson(entries));
+                            debugger;
                             resolveDocuments(entries)
                                 .then(function (entries) {
                                     logger.debug('[LockboxDocsService] dirReader resolving with entries: ', entries);
@@ -668,7 +671,11 @@
 
         function createDocumentPromise (entry) {
             var deferred = $q.defer();
-            var entryExtension = entry.name.split('.').pop();
+
+            logger.debug('Storing Document: %s', entry.name);
+            var nameBase = entry.name || '';
+            if (_.isEmpty(nameBase)) { debugger; }
+            var entryExtension = nameBase.split('.').pop();
             var userID = vm.userData.id;
             var path = vm.LOCKBOX_FOLDER + '/' + userID;
             var docObject;
