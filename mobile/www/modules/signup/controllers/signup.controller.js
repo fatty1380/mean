@@ -45,7 +45,7 @@
                 vm.nextState = vm.wizardState.nextState;
             }
 
-            if (!cState.noUser) {
+            if (!vm.wizardState.noUser) {
                 return UserService.getUserData()
                     .then(function success(userData) {
                         vm.profileData = userData;
@@ -60,6 +60,8 @@
 
             var targetCtrl = event.targetScope.vm || {};
             vm.stateAction = targetCtrl.save || $q.when;
+
+            targetCtrl.parentSubmit = goNext;            
 
             initCurrentWizardStep()
                 .then(function success(userData) {
@@ -88,7 +90,7 @@
 
         vm.icon = '';
 
-        vm.introText = [
+        vm.intro = [
             'Welcome to TruckerLine!',
             'In the next few pages, you will be filling in information about yourself and your career',
             'When you are done, you will have a professional resume you can send to anyone you like'
@@ -123,7 +125,7 @@
 
         function submitForm(event) {
             if (vm.lastElementFocused) {
-                return next();
+                _.isFunction(vm.parentSubmit) ? vm.parentSubmit() : save();
             }
 
             // TODO: Focus Next            
@@ -143,7 +145,7 @@
             logger.debug('Saving Props for User', data);
 
             return UserService.updateUserData(data);
-        };
+        }
     }
 })();
 
@@ -397,9 +399,9 @@
         .module('signup')
         .controller('PhotoCtrl', PhotoCtrl);
 
-    PhotoCtrl.$inject = ['$cordovaGoogleAnalytics', 'avatarService', 'userService'];
+    PhotoCtrl.$inject = ['$cordovaGoogleAnalytics', '$q', 'avatarService', 'userService'];
 
-    function PhotoCtrl($ga, avatarService, UserService) {
+    function PhotoCtrl($ga, $q, avatarService, UserService) {
 
         var vm = this;
 
@@ -452,8 +454,8 @@
                 avatar: vm.avatar
             };
 
-            return props;
-        };
+            return $q.when(props);
+        }
     }
 })();
 
@@ -470,7 +472,7 @@
 
         var vm = this;
 
-        vm.introText = [
+        vm.intro = [
             'Congratulations!',
             'You are now a TruckerLine driver!'
         ];

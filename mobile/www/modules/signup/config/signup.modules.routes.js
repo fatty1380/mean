@@ -222,7 +222,7 @@
                         wizard: function () {
                             return {
                                 stepNum: 9,
-                                nextState: 'signup.intro',
+                                nextState: 'signup.complete',
                                 btnText: 'continue'
                             };
                         }
@@ -239,7 +239,7 @@
                             return {
                                 stepNum: 0,
                                 nextState: 'account.profile',
-                                btnText: 'continue'
+                                btnText: 'show me my resume'
                             };
                         }
                     }

@@ -8,13 +8,13 @@
         .controller('RegisterCtrl', RegisterCtrl);
 
     RegisterCtrl.$inject = ['$scope', '$state', '$window', '$ionicPopup', '$cordovaGoogleAnalytics',
-        'LoadingService', 'tokenService', 'welcomeService', 'securityService', 'registerService', 'userService', 'lockboxDocuments', 'wizard'];
+        'LoadingService', 'tokenService', 'welcomeService', 'securityService', 'registerService', 'userService', 'lockboxDocuments'];
 
 
 
     function RegisterCtrl ($scope, $state, $window, $ionicPopup, $cordovaGoogleAnalytics,
         LoadingService, tokenService, welcomeService, securityService, registerService,
-        userService, lockboxDocuments, wizard) {
+        userService, lockboxDocuments) {
         var vm = this;
         vm.lastElementFocused = false;
 
@@ -39,7 +39,7 @@
          */
         function submitForm (event) {
             if (vm.lastElementFocused) {
-                return next();
+                _.isFunction(vm.parentSubmit) ? vm.parentSubmit() : next();
             }
 
             $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'formErr:notLast');
