@@ -73,7 +73,8 @@
                             return {
                                 stepNum: 0,
                                 nextState: 'signup.handle',
-                                btnText: 'continue'
+                                btnText: 'continue',
+                                disableBack: true
                             };
                         }
                     }

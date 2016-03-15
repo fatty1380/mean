@@ -49,6 +49,16 @@ ion-content {
         box-shadow: 1px 1px 15px rgba($ribbon-bg, 0.8);
     }
     
+    .ico.ico-photo-placeholder, img.round-avatar {
+        width: 200px;
+        height: 200px;
+        background-size: 200px 200px;
+        border: 4px solid rgba($search-bar, 0.6);
+        background-color: 4px solid rgba($search-bar, 0.6);
+        text-align: center;
+        @include rounded-corner(100%);
+    }
+    
     &:active {
         
         i.ico-photo-placeholder {
@@ -741,12 +751,12 @@ progress {
       border-radius: $border-radius-large;
   }
 
-  .round-avatar{
-    border-radius: 50px;
-    border: 2px solid white;
-    width: 75px;
-    height: 75px;
-  }
+//   .round-avatar{
+//     border-radius: 50px;
+//     border: 2px solid white;
+//     width: 75px;
+//     height: 75px;
+//   }
 
 //   input::-webkit-input-placeholder{
 //     color: $light !important;
@@ -1138,19 +1148,44 @@ progress {
   }
 }
 
+.intro-block {
+  
+  .image-holder {
+    width: 100%;
+    text-align: center;
+    display: block;
+    
+      i {
+      text-align: center;
+      color: $light;
+        font-size: 20em;
+        font-weight: light;
+        
+        &.icon {
+            display: block;
+        }
+    }
+  }
+  
+}
 
 .friends-block{
   .scroll{
     padding: 0 30px;
   }
   
-  .image-holder i {
+  .image-holder {
+      i {
       text-align: center;
       color: $light;
       display: block;
         font-size: 20em;
         font-weight: light;
     }
+    
+    text-align: center;
+    margin: auto;
+  }
   
   .description{
     color: $light;
@@ -1211,10 +1246,10 @@ progress {
 @media only screen
 and (max-device-height : 568px) {
   .signup-section{
-    .round-avatar{
-      width: 75px;
-      height: 75px;
-    }
+    // .round-avatar{
+    //   width: 75px;
+    //   height: 75px;
+    // }
 
     .button-other{
       background-color: $signup-entry-row-bg;

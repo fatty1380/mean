@@ -1,15 +1,15 @@
-<ion-view class="signup-screen intro">
+<ion-view class="signup-screen intro" hide-back-button="vm.disableBack" can-swipe-back="!vm.disableBack">
 
 
-    <ion-content class="friends-block has-header">
+    <ion-content class="intro-block has-header">
         <div class="image-holder">
-            <i class="icon {{vm.icon || 'ion-ios-people-outline'}}"></i>
+            <i class="{{vm.icon || 'icon ion-ios-people-outline'}}"></i>
         </div>
-        <span class="description">
+        <div class="description">
             <p ng-repeat="intro in vm.intro">
                 <span ng-bind-html="intro"></span>
             </p>
-        </span>
+        </div>
     </ion-content>
 
 </ion-view>

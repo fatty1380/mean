@@ -373,22 +373,24 @@
   background-size: 160px 176px;
 }
 
+.app-icon{
+  background-image: url('../img/logoBare@3x.png');
+  display: inline-block;
+  vertical-align: bottom;
+  pointer-events: none;
+  width: 149px;
+  height: 161px;
+  -webkit-background-size: 149px 161px;
+  background-size: 149px 161px;
+}
+
 /* app brand */
 
 .app-brand{
-  background-image: url('../img/tl-brand-white.png');
-  background-repeat: no-repeat;
-  display: inline-block;
-  vertical-align: middle;
-  pointer-events: none;
-  width: 149px;
-  height: 20px;
-  -webkit-background-size: 149px 18px;
-  background-size: 149px 18px;
-}
-
-.app-brand.dark{
+    &.dark {
   background-image: url('../img/tl-brand-blue.png');
+    }
+  background-image: url('../img/tl-brand-white.png');
   background-repeat: no-repeat;
   display: inline-block;
   vertical-align: middle;
@@ -475,14 +477,6 @@
 }
 
 .ico.ico-photo-placeholder {
-
-    width: 200px;
-    height: 200px;
-    background-size: 200px 200px;
-    border: 4px solid rgba($search-bar, 0.6);
-    background-color: 4px solid rgba($search-bar, 0.6);
-    text-align: center;
-    @include rounded-corner(100%);
     background: #333 url('../img/bg-profile-new.png') 50% no-repeat;
 }
 

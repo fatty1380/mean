@@ -88,7 +88,7 @@
 
         var vm = this;
 
-        vm.icon = '';
+        vm.icon = 'app-icon';
 
         vm.intro = [
             'Welcome to TruckerLine!',
