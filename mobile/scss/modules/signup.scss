@@ -1161,10 +1161,25 @@ progress {
         font-size: 20em;
         font-weight: light;
         
+        &.pic {
+            $pscale: calc(100vw/414px);
+            transform: scale($pscale);
+        }
+        
         &.icon {
             display: block;
         }
     }
+  }
+  
+  &.scroll-content {
+      .description {
+          //margin-bottom: 80px;
+          
+          p:last-child {
+              margin-bottom: $bar-midsize-height;
+          }
+      }
   }
   
 }

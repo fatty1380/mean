@@ -1,7 +1,11 @@
 <ion-view class="signup-screen intro" hide-back-button="vm.disableBack" can-swipe-back="!vm.disableBack">
 
 
-    <ion-content class="intro-block has-header">
+    <div class="bar bar-subheader" ng-if="vm.headerText">
+        <h3 class="title big-lineheight" ng-bind-html="vm.headerText"></h3>
+    </div>
+    
+    <ion-content class="intro-block has-header" ng-class="{'has-subheader':vm.headerText}">
         <div class="image-holder">
             <i class="{{vm.icon || 'icon ion-ios-people-outline'}}"></i>
         </div>

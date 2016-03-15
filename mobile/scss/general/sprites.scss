@@ -401,6 +401,8 @@
   background-size: 149px 18px;
 }
 
+
+
 /* "New" icons for profile */
 .ico {
 
@@ -521,4 +523,16 @@
         height: 50px;
         background-position: 0 -250px;
     }
+}
+
+i.welcome-joe {
+    display: inline-block;
+    width: 414px;
+    height: 674px;
+    -webkit-background-size: 414px 674px;
+    background-size: 414px 674px;
+    
+    background-repeat: no-repeat;
+    background-image: url('../img/welcome-joe-fade.png');
+    
 }

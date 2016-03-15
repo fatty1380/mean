@@ -102,9 +102,12 @@
         var vm = this;
 
         vm.icon = 'app-icon';
+        vm.icon = 'pic welcome-joe';
+
+        vm.headerText = 'Time to build your Resume!';
 
         vm.intro = [
-            'Welcome to TruckerLine!',
+            // 'Welcome to TruckerLine!',
             'In the next few pages, you will be filling in information about yourself and your career',
             'When you are done, you will have a professional resume you can send to anyone you like'
         ];
