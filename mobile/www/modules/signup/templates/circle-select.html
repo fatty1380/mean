@@ -1,0 +1,25 @@
+<ion-view class="signup-screen circle-select {{vm.screenClass}}">
+
+    <ion-content class="has-header toggle-content">
+
+        <div class="description row">
+            <div class="col item item-text-wrap">
+                <p ng-bind-html="vm.intro"></p>
+            </div>
+        </div>
+
+        <div class="description content-body">
+            <ul class="list toggle">
+                <li class="item toggle-item {{vm.itemClass}} col" ng-repeat="val in vm.options" ng-click="vm.selected = val.min" ng-class="{'selected':vm.selected === val.min}">
+                    <div class="toggle-item-content">
+                        <div class="title-val" ng-class="{'lte':!val.min,'gte':!val.max}">{{val.title}}</div>
+                        <span class="label-text {{vm.labelPos || 'bot'}}" ng-bind="vm.labelText"></span>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+
+    </ion-content>
+
+</ion-view>

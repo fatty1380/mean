@@ -253,6 +253,13 @@
                     });
             };
 
+            /**
+             * vm.showAddExperienceModal
+             * -------------------------
+             * This "function" is passed into the experienceList directive and references
+             * functionality defined therein
+             *  */
+
             vm.showExperienceListModal = function showExperienceListModal () {
                 return ProfileModals
                     .showListExperienceModal({ experience: vm.experience })

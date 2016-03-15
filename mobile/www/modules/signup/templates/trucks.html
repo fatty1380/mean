@@ -1,40 +1,26 @@
-<ion-view class="signup-section view-section">
-
-    <ion-header-bar align-title="center">
-        <button class="button button-icon icon ion-ios-arrow-back" nav-direction="back" ng-click="vm.goBack()"></button>
-        <h1 class="title">
-                <i class="app-brand"></i>
-            </h1>
-        <button class="button button-clear" ng-click="vm.continueToTrailers(false)">
-            skip
-        </button>
-    </ion-header-bar>
+<ion-view class="signup-screen trucks-screen">
 
     <div class="bar bar-subheader">
-        <h3 class="title big-lineheight">Choose Your Truck Make</h3>
+        <h3 class="title big-lineheight">What type of truck do you drive?</h3>
     </div>
 
-    <ion-content class="has-footer has-subheader">
-        <ion-list class="select-truck has-footer">
-            <span ng-repeat="truck in vm.trucks">
+    <ion-content class="has-subheader has-progress-footer">
+        <div class="description content-body">
+            <ion-list class="select-truck has-footer">
+                <span ng-repeat="truck in vm.trucks">
                 <ion-radio ng-class="{'active': vm.currentTruck === truck.name}"
                            type="radio" name="trucks" ng-model="vm.currentTruck" value="{{truck.name}}">
                     <p>{{ truck.name }}</p>
                     <div class="logo {{ truck.logoClass }}"></div>
                 </ion-radio> 
             </span>
-            <ion-item>
-                <ion-input class="item item-radio item-content button-other" ng-click="vm.addTruck()">
-                    <p class="center-text">other...</p>
-                </ion-input>
-            </ion-item>
-        </ion-list>
-    </ion-content>
-
-    <ion-footer-bar>
-        <div class="bar-clear button-bar action-buttons">
-            <button class="button secondary" nav-direction="forward" ng-click="vm.continueToTrailers(true)" type="submit">Continue</button>
+                <ion-item>
+                    <ion-input class="item item-radio item-content button-other" ng-click="vm.addTruck()">
+                        <p class="center-text">other...</p>
+                    </ion-input>
+                </ion-item>
+            </ion-list>
         </div>
-    </ion-footer-bar>
+    </ion-content>
 
 </ion-view>

@@ -3,11 +3,12 @@ $ionicons-font-path: "../../lib/ionic/release/fonts" !default;
 
 /** SASS Color Variables **/
 $icon-blue: #cfedff;
-$badge-green: #206B89;
+$badge-green: #3EAEB1;
+$old-badge-green: #206B89;
 $ribbon-bg: #4d4951;
 $brand-blue: #4896BB;
 $search-bar: #76a2bd;
-$gradient-bottom: #276b93;
+$gradient-bottom: #30769F;
 $list-title-bg: #2D729B;
 $tab-selected: #3e86b1;
 $content-bg: #f8f8f8;
@@ -16,6 +17,9 @@ $content-body-text: darken(#9b9b9b, 20%);
 $secondary-text-action: rgba(255, 255, 255, 1.0);
 $tab-text: #807b84;
 $danger: #B13E3E;
+
+$progress-green: #4CDA41;
+$bright-blue: #289EFF;
 
 //$brand-bg: #0A2422;
 //$brand-bg: #062733;
@@ -26,13 +30,13 @@ $brand-bg: $brand-blue;
 
 $light:                           #fff !default;
 $stable:                          #f8f8f8 !default;
-$positive:                        $badge-green !default; //#387ef5 !default;
+$positive:                        $bright-blue; // $old-badge-green; //  !default; //#387ef5 !default;
 $calm:                            $tab-selected !default; //#11c1f3 !default;
-$balanced:                        #3EAEB1 !default; // #3EAEB1 !default
+$balanced:                        $badge-green !default; // #3EAEB1 !default
 $energized:                       #dc9647 !default;
 $assertive:                       $danger !default; // #ef473a !default;
 $royal:                           #886aea !default;
-$dark:                            #444 !default;
+$dark:                            darken($ribbon-bg, 02%) !default;
 
 /** Outset Context specific variables **/
 $modal-primary-bg: $positive;
@@ -42,10 +46,19 @@ $modal-secondary-bg: $light;
 $modal-secondary-text: #858585;
 $modal-secondary-border: darken($light, 20%);
 
-$signup-entry-row-bg: rgba(255,255,255,0.2);
-$signup-entry-row-active-bg: rgba(250,250,250,1);
-$signup-entry-label-text: #EFEFEF;
+$signup-entry-row-bg: rgba($action-text,0.5);
+$signup-entry-row-inactive-bg: rgba($stable, 0.5);
+$signup-entry-row-active-bg: rgba($stable,1);
+$signup-entry-label-text: $dark; // #EFEFEF;
 $signup-entry-value-text: $light;
+
+@mixin vertical-align($position: 50%) {
+  position: relative;
+  top: $position;
+  -webkit-transform: translateY(-$position);
+  -ms-transform: translateY(-$position);
+  transform: translateY(-$position);
+}
 
 // Base
 // -------------------------------
@@ -56,9 +69,9 @@ $font-family-serif:               serif !default;
 $font-family-monospace:           monospace !default;
 
 $font-family-base:                $font-family-sans-serif !default;
-$font-size-small:                 14px !default;
-$font-size-base:                  16px !default;
-$font-size-large:                 18px !default;
+$font-size-small:                 15px !default;
+$font-size-base:                  18px !default;
+$font-size-large:                 20px !default;
 
 $line-height-base:                1.428571429 !default; // 20/14
 $line-height-computed:            floor($font-size-base * $line-height-base) !default; // ~20px
@@ -89,6 +102,7 @@ $padding-small-horizontal:        10px !default;
 $border-radius-base:              4px !default;
 $border-radius-large:             6px !default;
 $border-radius-small:             3px !default;
+
 
 
 // Content
@@ -186,6 +200,13 @@ $button-default-border:           #D2D2D2 !default;
 $button-default-active-bg:        $button-stable-active-bg !default;
 $button-default-active-border:    $button-stable-active-border !default;
 
+$button-circle-diameter:          76px;
+$button-circle-border-width:      2px;
+$button-circle-inner-diameter:     $button-circle-diameter - (2*$button-circle-border-width);
+
+$button-signup-height:            56px;
+
+
 
 // Bars
 // -------------------------------
@@ -269,6 +290,11 @@ $bar-default-border:              $bar-light-border !default;
 $bar-default-active-bg:           $bar-light-active-bg !default;
 $bar-default-active-border:       $bar-light-active-border !default;
 
+
+// Profile Pic s
+$profile-subheader-height :     $bar-midsize-height - $bar-height - 20px;
+$photo-dimension :              $profile-subheader-height * 1.1;
+$profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
 
 
 // Tabs

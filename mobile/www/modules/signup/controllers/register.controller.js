@@ -7,40 +7,12 @@
         .module('signup')
         .controller('RegisterCtrl', RegisterCtrl);
 
-    RegisterCtrl.$inject = ['$state', '$window', '$ionicPopup', '$cordovaGoogleAnalytics',
+    RegisterCtrl.$inject = ['$q', '$scope', '$state', '$window', '$ionicPopup', '$cordovaGoogleAnalytics',
         'LoadingService', 'tokenService', 'welcomeService', 'securityService', 'registerService', 'userService', 'lockboxDocuments'];
 
-    angular.module('signup')
-        .directive('focus', function () {
-            return {
-                restrict: 'A',
-                link: function ($scope, elem, attrs) {
 
-                    elem.bind('keydown', function (event) {
-                        if ((event.keyCode || event.which) === 13) {
-                            event.preventDefault();
-                            try {
-                                var e = elem.parent().next().children('input');
 
-                                if (_.isEmpty(e)) {
-                                    e = elem.parent().parent().next().children('input');
-                                }
-                                if (_.isEmpty(e)) {
-                                    throw new Error('Unable to locate password in parent or parent\'s parent');
-                                }
-
-                                event.preventDefault();
-                                e[0].focus();
-                            } catch (error) {
-                                logger.error('Focus change failed', error);
-                            }
-                        }
-                    });
-                }
-            };
-        });
-
-    function RegisterCtrl ($state, $window, $ionicPopup, $cordovaGoogleAnalytics,
+    function RegisterCtrl ($q, $scope, $state, $window, $ionicPopup, $cordovaGoogleAnalytics,
         LoadingService, tokenService, welcomeService, securityService, registerService,
         userService, lockboxDocuments) {
         var vm = this;
@@ -58,7 +30,7 @@
             branchData: branchData
         };
 
-        vm.continueToEngagement = continueToEngagement;
+        vm.save = next;
         vm.submitForm = submitForm;
         vm.clearConfirm = clearConfirm;
 
@@ -67,7 +39,7 @@
          */
         function submitForm (event) {
             if (vm.lastElementFocused) {
-                return continueToEngagement();
+                _.isFunction(vm.parentSubmit) ? vm.parentSubmit() : next();
             }
 
             $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'formErr:notLast');
@@ -77,7 +49,52 @@
             vm.user.confirmPassword = '';
         }
 
-        function continueToEngagement () {
+        function registerUser () {
+
+            var then = Date.now();
+
+            return registerService.registerUser(vm.user, true)
+                .then(function (response) {
+                    tokenService.set('access_token', '');
+                    return registerService.signIn({ email: response.data.username, password: vm.user.password }, true);
+                })
+                .then(function (signInResponse) {
+                    // TODO: Move tokenService actions into registerService
+                    tokenService.set('access_token', signInResponse.data.access_token);
+                    tokenService.set('refresh_token', signInResponse.data.refresh_token);
+                    tokenService.set('token_type', signInResponse.data.token_type);
+
+                    // set fields to show welcome screens for new user
+                    welcomeService.initialize();
+                    securityService.initialize();
+
+                    $window.localStorage.removeItem('referralCode');
+                    $window.localStorage.removeItem('branchData');
+
+                    return userService.getUserData();
+                })
+                .then(function success (profileData) {
+                    if (_.isEmpty(profileData)) {
+                        $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'signIn:error');
+                        $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'signIn:error');
+
+                        throw new Error('Signin Failed');
+                    }
+
+                    LoadingService.hide();
+                    $state.go('signup.license');
+
+                    lockboxDocuments.removeOtherUserDocuments(profileData.id);
+                    $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'signIn:success');
+                    $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'signIn:success');
+
+                    return profileData;
+                });
+        }
+
+        function next () {
+
+            vm.mainForm.$setSubmitted(true);
 
             if (vm.user.confirmPassword !== vm.user.password) {
                 // vm.user.confirmPassword = '';
@@ -87,75 +104,44 @@
                 // vm.mainForm.password.$setValidity('compareTo', false);
                 // vm.mainForm.confirmPassword.$setValidity('compareTo', false);
                 vm.focusPass = true;
-                return;
+                return $q.reject('Passwords do not match');
             }
 
             if (!vm.mainForm.$valid) {
                 vm.error = vm.error || 'Please correct errors above';
-                return;
+                return $q.reject('Form input is invalid: ' + vm.error);
             }
 
             vm.error = null;
-
             var then = Date.now();
 
             LoadingService.showLoader('Saving');
-            registerService.registerUser(vm.user)
-                .then(function (response) {
+            return registerUser()
+                .then(function (userProfile) {
+                    // debugger;
+                    // $state.go(wizard.next || 'signup.handle', { profile: userProfile });
+                    return userProfile;
+                })
+                .catch(function fail (err) {
+                    LoadingService.hide();
 
-                    if (response.success) {
-                        tokenService.set('access_token', '');
-                        registerService.signIn({ email: response.message.data.username, password: vm.user.password })
-                            .then(function (signInResponse) {
-                                if (signInResponse.success) {
-                                    // TODO: Move tokenService actions into registerService
-                                    tokenService.set('access_token', signInResponse.message.data.access_token);
-                                    tokenService.set('refresh_token', signInResponse.message.data.refresh_token);
-                                    tokenService.set('token_type', signInResponse.message.data.token_type);
+                    $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'error');
+                    $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'error');
 
-                                    // set fields to show welcome screens for new user
-                                    welcomeService.initialize();
-                                    securityService.initialize();
+                    // showPopup(null, err.statusText, err.data.error_description)
+                    showPopup(err, 'Registration Failed');
 
-                                    $window.localStorage.removeItem('referralCode');
-                                    $window.localStorage.removeItem('branchData');
-
-                                    return userService.getUserData();
-                                } else {
-                                    showPopup(null, signInResponse.title, signInResponse.message.data.error_description);
-                                }
-                            })
-                            .then(function success (profileData) {
-                                if (!!profileData) {
-                                    LoadingService.hide();
-                                    $state.go('signup.license');
-
-                                    lockboxDocuments.removeOtherUserDocuments(profileData.id);
-                                    $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'signIn:success');
-                                    $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'signIn:success');
-
-                                    return;
-                                }
-                                $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'signIn:error');
-                                $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'signIn:error');
-                            });
-                    } else {
-                        LoadingService.hide();
-
-                        $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'error');
-                        $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'error');
-
-                        showPopup(response, 'Registration Failed');
-                    }
+                    throw err;
                 });
         }
 
         function showPopup (response, title, message) {
             if (!!response) {
-                if (response.message.status === 0) {
+                if (response.status === 0) {
                     message = 'Request timed-out. Please, check your network connection.';
-                } else {
-                    message = response.message.data && response.message.data.message || 'Unable to Register at this time. Please try again later';
+                }
+                else {
+                    message = response.data && response.data.message || 'Unable to Register at this time. Please try again later';
                 }
             }
 
@@ -166,23 +152,25 @@
                     title: title || 'sorry',
                     template: message
                 });
-            } else {
+            }
+            else {
                 LoadingService.showFailure(message);
             }
         }
-        //
-        // $scope.$on('$ionicView.afterEnter', function () {
-        //    // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
-        //    if (window.cordova && window.cordova.plugins.Keyboard) {
-        //        window.cordova.plugins.Keyboard.disableScroll(true);
-        //    }
-        // });
-        // $scope.$on('$ionicView.beforeLeave', function () {
-        //    if (window.cordova && window.cordova.plugins.Keyboard) {
-        //        // return to keyboard default scroll state
-        //        window.cordova.plugins.Keyboard.disableScroll(false);
-        //    }
-        // });
+
+
+        $scope.$on('$ionicView.afterEnter', function () {
+            // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
+            if ($window.cordova && $window.cordova.plugins.Keyboard) {
+                $window.cordova.plugins.Keyboard.disableScroll(true);
+            }
+        });
+        $scope.$on('$ionicView.beforeLeave', function () {
+            if ($window.cordova && $window.cordova.plugins.Keyboard) {
+                // return to keyboard default scroll state
+                $window.cordova.plugins.Keyboard.disableScroll(false);
+            }
+        });
     }
 
 })();

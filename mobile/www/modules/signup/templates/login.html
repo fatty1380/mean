@@ -5,7 +5,7 @@
             <button class="button button-icon icon ion-ios-arrow-back" nav-direction="back" ui-sref="home"></button>
         </div>
         <h1 class="title">
-            <i class="app-brand"></i>
+            <i class="app-brand dark"></i>
         </h1>
     </ion-header-bar>
 
@@ -17,20 +17,22 @@
         <div class="login-content">
             <form name="vm.mainLoginForm" id="vm.mainLoginForm" class="list signup-form" ng-submit="vm.submitForm($event)" accessible-form
             novalidate>
-                <div class="form-row">
-                    <ion-input class="item item-input">
-                        <input type="email" name="email" placeholder="Email" ng-change="vm.echange()" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false"
-                        debounce required focus focus-me="vm.focus['email']">
-                    </ion-input>
+                <ion-input class="item item-input">
+                    <i class="icon ion-email placeholder-icon"></i>
+                    <input type="email" name="email" placeholder="Email" ng-change="vm.echange()" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false"
+                    debounce required oset-focus focus-me="vm.focus['email']">
                     <i class="icon ion-backspace-outline" ng-if="vm.user.email && vm.user.email.length" ng-click="vm.user.email = ''"></i>
-                </div>
-                <div class="form-row">
-                    <ion-input class="item item-input">
-                        <input id="password" type="password" placeholder="Password" ng-model="vm.user.password" name="password" ng-focus="vm.lastElementFocused = true"
-                        required focus-me="vm.focus['pass']">
-                    </ion-input>
+                </ion-input>
+
+
+                <ion-input class="item item-input">
+                    <i class="icon ion-locked placeholder-icon"></i>
+                    <input id="password" type="password" placeholder="Password" ng-model="vm.user.password" name="password" ng-focus="vm.lastElementFocused = true"
+                    required focus-me="vm.focus['pass']">
                     <i class="icon ion-backspace-outline" ng-if="vm.user.password.length > 0" ng-click="vm.user.password = ''"></i>
-                </div>
+                </ion-input>
+
+
                 <input style="position:absolute; left:9999px" type="submit" />
                 <div ng-if="vm.mainLoginForm.$submitted && (vm.mainLoginForm.$invalid || !!vm.error)" class="error">
                     <span ng-if="!vm.error && vm.mainLoginForm.password.$error.required && vm.mainLoginForm.email.$error.required">Please enter your email and password</span>
@@ -42,7 +44,7 @@
             </form>
 
             <div class="register-content">
-                <i class="app-logo"></i>
+                <i class="app-icon"></i>
             </div>
         </div>
     </ion-content>

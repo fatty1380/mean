@@ -360,6 +360,9 @@
 /* app logo */
 
 .app-logo{
+    &.dark {
+        background-image: url('../img/logo-dark@3x.png');
+    }
   background-image: url('../img/logo@3x.png');
   display: inline-block;
   vertical-align: bottom;
@@ -370,9 +373,23 @@
   background-size: 160px 176px;
 }
 
+.app-icon{
+  background-image: url('../img/logoBare@3x.png');
+  display: inline-block;
+  vertical-align: bottom;
+  pointer-events: none;
+  width: 149px;
+  height: 161px;
+  -webkit-background-size: 149px 161px;
+  background-size: 149px 161px;
+}
+
 /* app brand */
 
 .app-brand{
+    &.dark {
+  background-image: url('../img/tl-brand-blue.png');
+    }
   background-image: url('../img/tl-brand-white.png');
   background-repeat: no-repeat;
   display: inline-block;
@@ -383,6 +400,8 @@
   -webkit-background-size: 149px 18px;
   background-size: 149px 18px;
 }
+
+
 
 /* "New" icons for profile */
 .ico {
@@ -411,6 +430,56 @@
     &.ico-radio-badge {
         background-image: url('../img/radio_badge_sm@3x.png');
     }
+}
+
+.ico.ico-endorsement {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    background-size: 50px 50px;
+    
+    background-repeat: no-repeat;
+    
+    transform: scale(1.3);
+    
+    &.T, &.double-triple {
+        background-image: url('../img/doubleDark.svg');
+        &.light {
+            background-image: url('../img/doubleLight.svg');
+        }
+    }
+    
+    &.N, &.tank {
+        background-image: url('../img/tankDark.svg');
+        &.light {
+            background-image: url('../img/tankLight.svg');
+        }
+    }
+    
+    &.H, &.hazmat {
+        background-image: url('../img/hazMatDark.svg');
+        &.light {
+            background-image: url('../img/hazMatLight.svg');
+        }
+    }
+    
+    &.P, &.passenger {
+        background-image: url('../img/passDark.svg');
+        &.light {
+            background-image: url('../img/passLight.svg');
+        }
+    }
+    
+    &.X, &.tank-haz {
+        background-image: url('../img/tankHazDark.svg');
+        &.light {
+            background-image: url('../img/tankHazLight.svg');
+        }
+    }
+}
+
+.ico.ico-photo-placeholder {
+    background: #333 url('../img/bg-profile-new.png') 50% no-repeat;
 }
 
 .ico-t.ico {
@@ -454,4 +523,16 @@
         height: 50px;
         background-position: 0 -250px;
     }
+}
+
+i.welcome-joe {
+    display: inline-block;
+    width: 414px;
+    height: 674px;
+    -webkit-background-size: 414px 674px;
+    background-size: 414px 674px;
+    
+    background-repeat: no-repeat;
+    background-image: url('../img/welcome-joe-fade.png');
+    
 }

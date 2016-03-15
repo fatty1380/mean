@@ -5,16 +5,30 @@
         .module('signup')
         .controller('TrailersCtrl', TrailersCtrl);
 
-    TrailersCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', '$ionicHistory', 'userService', 'LoadingService', '$ionicPopup'];
+    TrailersCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', '$ionicHistory', 'userService', '$ionicPopup'];
 
-    function TrailersCtrl ($scope, $state, $cordovaGoogleAnalytics, $ionicHistory, userService, LoadingService, $ionicPopup) {
+    function TrailersCtrl ($scope, $state, $cordovaGoogleAnalytics, $ionicHistory, UserService, $ionicPopup) {
         var vm = this;
         vm.newTrailer = '';
 
         vm.addTrailer = addTrailer;
-        vm.goBack = goBack;
-        vm.continue = goNext;
         vm.trailers = getTrailers();
+        vm.save = save;
+        vm.activate = activate;
+
+        function activate () {
+            var props = UserService.profileData && UserService.profileData.props || {};
+
+            if (_.isArray(props.trailer)) {
+                _.map(props.trailer, function (t) {
+                    var tmp = _.find(vm.trailers, { name: t });
+
+                    if (tmp) {
+                        tmp.checked = true;
+                    }
+                });
+            }
+        }
 
         function addTrailer () {
             var then = Date.now();
@@ -52,76 +66,46 @@
             });
         }
 
-        function goNext (isSave) {
-            if (isSave) {
-                var then = Date.now();
-                LoadingService.showLoader('Saving');
+        function save () {
+            var then = Date.now();
 
-                return userService.updateUserProps({ trailer: getNameKeys(vm.trailers) })
-                    .then(function success (propsResponse) {
-                        $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'save');
-                        $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trailers', 'save');
-                        logger.debug('Trailers: Saved Successfully');
-                    })
-                    .catch(function fail (err) {
-                        $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'err: ' + err);
-                        $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trailers', 'err: ' + err);
-                        logger.error('Trailers: Save Failed', err);
-                    })
-                    .finally(function () {
-                        $state.go('signup.friends');
-                        LoadingService.hide();
-                    });
-            }
-
-            $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'skip');
-            $state.go('signup.friends');
-        }
-
-
-        function goBack () {
-            var backView = $ionicHistory.backView();
-
-            if (_.isEmpty(backView) || _.isEmpty(backView.stateName)) {
-                return $state.go('signup.trucks');
-            }
-
-            return $ionicHistory.goBack();
+            return UserService.updateUserProps({ trailer: getNameKeys(vm.trailers) })
+                .then(function success (propsResponse) {
+                    $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'save');
+                    $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trailers', 'save');
+                    logger.debug('Trailers: Saved Successfully');
+                    return propsResponse;
+                })
+                .catch(function fail (err) {
+                    $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'err: ' + err);
+                    $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trailers', 'err: ' + err);
+                    logger.error('Trailers: Save Failed', err);
+                });
         }
 
         function getNameKeys (obj) {
-            var keys = [];
-            for (var i in obj) {
-                if (obj.hasOwnProperty(i)) {
-                    if (obj[i].checked) {
-                        keys.push(obj[i].name);
-                    }
-                }
-            }
-            return keys;
+            return _(obj).map(function (t) { return t.checked ? t.name : null; }).omit(_.isEmpty).values().value();
         }
 
         function getTrailers () {
-            return TRAILERS;
+            return [
+                { name: 'Box', checked: false },
+                { name: 'Car Carrier', checked: false },
+                { name: 'Curtain Sider', checked: false },
+                { name: 'Drop Deck', checked: false },
+                { name: 'Double Decker', checked: false },
+                { name: 'Dry Bulk', checked: false },
+                { name: 'Dump Truck', checked: false },
+                { name: 'Flatbed', checked: false },
+                { name: 'Hopper Bottom', checked: false },
+                { name: 'Live Bottom', checked: false },
+                { name: 'Livestock', checked: false },
+                { name: 'Lowboy', checked: false },
+                { name: 'Refrigerator Trailer', checked: false },
+                { name: 'Refrigerator Tank', checked: false },
+                { name: 'Sidelifter', checked: false },
+                { name: 'Tank', checked: false }
+            ];
         }
     }
-
-    var TRAILERS = [
-        { name: 'Box', checked: false },
-        { name: 'Car Carrier', checked: false },
-        { name: 'Curtain Sider', checked: false },
-        { name: 'Drop Deck', checked: false },
-        { name: 'Double Decker', checked: false },
-        { name: 'Dry Bulk', checked: false },
-        { name: 'Dump Truck', checked: false },
-        { name: 'Flatbed', checked: false },
-        { name: 'Hopper Bottom', checked: false },
-        { name: 'Live Bottom', checked: false },
-        { name: 'Livestock', checked: false },
-        { name: 'Lowboy', checked: false },
-        { name: 'Refrigerator Trailer', checked: false },
-        { name: 'Refrigerator Tank', checked: false },
-        { name: 'Sidelifter', checked: false },
-        { name: 'Tank', checked: false }
-    ];
 })();

@@ -1,0 +1,22 @@
+<ion-view class="signup-screen engagement-screen">
+
+    <ion-content class="has-header toggle-content">
+
+        <div class="description row">
+            <div class="col item item-text-wrap">
+                <p ng-bind-html="vm.intro"></p>
+            </div>
+        </div>
+
+        <div class="description content-body">
+            <div class="avatar-wrapper">
+                <button type="button" class="avatar" ng-click="vm.showEditAvatar()">
+                    <i ng-if="!vm.avatar" class="ico ico-photo-placeholder ico-middle"></i>
+                    <img ng-if="vm.avatar" class="round-avatar" ng-src="{{ vm.avatar }}" />
+                </button>
+            </div>
+        </div>
+
+    </ion-content>
+
+</ion-view>

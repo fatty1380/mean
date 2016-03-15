@@ -9,15 +9,16 @@
         <h3 class="title">Your lockbox will contain all your secure documents.</h3>
     </div>
 
-    <ion-pane ng-class="{'has-footer': !vm.deleteDisabled }">
+    <ion-pane class="lockbox-edit-top" ng-class="{'has-footer': !vm.deleteDisabled }">
         <ion-scroll>
-            <ul class="list document-list">
-                <li class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id">
-                    <ion-checkbox ng-model="doc.checked"></ion-checkbox>
-                    <div class="item-content" ng-class="{'no-date': !doc.created}">
-                        <strong>{{doc.name}}</strong>
-                        <span>{{doc.created | date : 'MMMM d, y' }}</span>
-                    </div>
+            <ul class="list document-list">                     
+                <li class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id">    
+                        <ion-checkbox ng-model="doc.checked">
+                        <div class="item-content" ng-class="{'no-date': !doc.created}">
+                            <strong>{{doc.name}}</strong>
+                            <span>{{doc.created | date : 'MMMM d, y' }}</span>
+                        </div>
+                    </ion-checkbox>
                     <button class="button button-small" ng-click="vm.rename($index)">Rename</button>
                 </li>
             </ul>
@@ -25,7 +26,7 @@
         </ion-scroll>
     </ion-pane>
 
-    <ion-footer-bar ng-show="!vm.deleteDisabled" >
+    <ion-footer-bar ng-show="!vm.deleteDisabled">
         <div class="button-bar action-buttons">
             <button class="button button-assertive" ng-disabled="vm.deleteDisabled" ng-click="vm.deleteDocuments()">Delete</button>
         </div>

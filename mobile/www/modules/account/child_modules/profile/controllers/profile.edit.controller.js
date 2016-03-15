@@ -5,10 +5,10 @@
         .module('account')
         .controller('ProfileEditCtrl', ProfileEditCtrl);
 
-    ProfileEditCtrl.$inject = ['$filter', '$ionicScrollDelegate', '$location', '$rootScope', '$state', '$timeout',
+    ProfileEditCtrl.$inject = ['$filter', '$ionicHistory', '$ionicScrollDelegate', '$location', '$rootScope', '$state', '$timeout',
         'LoadingService', 'parameters', 'profileModalsService', 'tokenService', 'trailerService', 'truckService', 'userService'];
 
-    function ProfileEditCtrl ($filter, $ionicScrollDelegate, $location, $rootScope, $state, $timeout,
+    function ProfileEditCtrl ($filter, $ionicHistory, $ionicScrollDelegate, $location, $rootScope, $state, $timeout,
         LoadingService, parameters, profileModalsService, tokenService, trailerService, truckService, userService) {
         var vm = this;
 
@@ -55,7 +55,7 @@
         }
 
         function toggleMileUnit (unit) {
-            debugger;
+            // debugger;
             vm.mileUnit = unit || 'miles';
         }
 
@@ -125,7 +125,7 @@
                 // Update the started date
                 if (vm.owner !== null) { vm.profileData.props.owner = vm.owner; }
                 vm.profileData.props.mileUnit = vm.mileUnit;
-                debugger;
+                // debugger;
 
                 if (/\d{4,4}-\d{2,2}/.test(vm.started)) {
                     vm.profileData.props.started = vm.started;
@@ -137,7 +137,8 @@
                         if (success.id) {
                             vm.closeModal(success);
                             LoadingService.hide();
-                        } else {
+                        }
+                        else {
                             LoadingService.showFailure();
                             // vm.closeModal(null);
                         }
@@ -182,6 +183,10 @@
                         .catch(function (err) {
                             logger.error(err, 'Failed to change state to login');
                             LoadingService.showFailure('Sorry, Logout Failed');
+                        })
+                        .finally(function () {
+                            $ionicHistory.$clearHistory();
+                            $ionicHistory.clearCache();
                         });
                 });
         }

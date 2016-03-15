@@ -30,7 +30,8 @@
         function signOut () {
             return registerService.signOut().then(
                 function (response) {
-                    if (response.success) { vm.profileData = {};
+                    if (response.success) {
+                        vm.profileData = {};
                         $cordovaGoogleAnalytics.trackEvent('Lifecycle', 'signout');
                         $cordovaGoogleAnalytics.setUserId();
                     }

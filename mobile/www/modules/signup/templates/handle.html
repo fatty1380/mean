@@ -1,0 +1,53 @@
+<ion-view class="register-screen">
+
+    <ion-content class="has-header has-footer">
+        <div class="login-content">
+
+            <div class="description row">
+                <div class="col item item-text-wrap">
+                    <p ng-repeat="text in vm.intro"><span ng-bind-html="text"></span></p>
+                </div>
+            </div>
+
+            <form name="vm.mainForm" id="mainForm" class="list list-inset signup-form" ng-submit="vm.submitForm($event)" novalidate>
+                <div class="row">
+                    <div class="col">
+                        <ion-input class="item item-input">
+                            <i class="icon ion-person placeholder-icon"></i>
+                            <input name="firstName" id="firstName" type="text" placeholder="First Name" ng-model="vm.user.firstName" oset-focus required
+                            autocorrect="off" spellcheck="false" focus-me>
+                            <i class="icon ion-alert placeholder-icon validation-icon"></i>
+                        </ion-input>
+                    </div>
+                    <div class="col">
+                        <ion-input class="item item-input">
+                            <i class="icon ion-person placeholder-icon"></i>
+                            <input name="lastName" id="lastName" type="text" placeholder="Last Name" ng-model="vm.user.lastName" oset-focus required
+                            autocorrect="off" spellcheck="false">
+                            <i class="icon ion-alert placeholder-icon validation-icon"></i>
+                        </ion-input>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <ion-input class="item item-input">
+                            <i class="icon ico ico-radio-badge placeholder-icon"></i>
+                            <input name="handle" id="handle" type="text" placeholder="Enter your CB Handle" ng-model="vm.user.handle" autofocus>
+                        </ion-input>
+                    </div>
+                </div>
+                <input style="position:absolute; left:9999px" type="submit" />
+            </form>
+
+            <div class="error" ng-if="vm.mainForm.$submitted && vm.mainForm.$invalid" role="alert" ng-messages="vm.mainForm.$error">
+                <div ng-message="email">Please enter a valid email address</div>
+                <div ng-message="minlength">Password must be at least 8 characters</div>
+                <div ng-message="password">Passwords do not match</div>
+                <div ng-message="compareTo">Passwords do not match</div>
+                <div ng-message="required">Please enter all required fields</div>
+            </div>
+
+        </div>
+    </ion-content>
+
+</ion-view>

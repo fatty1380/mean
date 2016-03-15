@@ -28,7 +28,7 @@
                 reviews: 0
             };
 
-         // NOTE - this is the deprecated route of manually restarting `$timeout`-based interval service
+        // NOTE - this is the deprecated route of manually restarting `$timeout`-based interval service
         // $rootScope.$on(timerName + '-stopped', runUpdateProcess);
 
         $rootScope.$on(timerName + '-refresh', runUpdateProcess);

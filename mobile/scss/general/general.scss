@@ -20,6 +20,23 @@ body{
   // background-repeat: repeat-x;
   background-color: $tab-selected;
 
+
+  &.signup-section {
+    background-color: $light;
+    background-image: url('../img/bg-gradient-base-light.jpg');
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+    -ms-background-size: cover;
+    -o-background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    background-size: cover;
+    
+    .bar-header {
+        background: none;
+    }
+  }
+  
   &.full-size > .pane{
     top: $bar-fullsize-height;
     height: auto;
@@ -257,6 +274,25 @@ textarea{
   }
 }
 
+
+  
+.item-select {
+    padding: 12px 0 8px 16px;
+    select {
+        padding-top: 12px;
+        padding-left: 9px;
+        padding-bottom: 1px;
+        height: 35px;
+        vertical-align: middle;
+        line-height: 24px;
+        font-size: 16px;
+        width: 100%;
+        direction: ltr;
+        
+    }
+
+}
+
 .text-center {
     text-align: center;
 }
@@ -356,7 +392,7 @@ textarea{
     }
   }
 
-  .item-input{
+  .item-input, .item-select{
     padding: 5px 15px;
     border-width: 1px 1px 0 1px;
     border-color: #D2D2D2;
@@ -414,6 +450,12 @@ textarea{
 .content-button {
     background-color: rgba($content-bg, 0.7);
 }
+
+@mixin list-button{
+    min-width: 80px;
+    padding-left: $padding-small-horizontal;
+    padding-right: $padding-small-horizontal;
+ }
 
 .popup-container{
   input{

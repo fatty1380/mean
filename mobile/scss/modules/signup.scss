@@ -2,74 +2,19 @@ ion-content {
   .signup-title {
     text-align: center;
     margin: 50px 0 80px;
-    color: $light;;
+    color: $dark;
   }
 
   .engagement-title {
     text-align: center;
     margin: 45px 0 35px 0;
-    color: $light;;
+    color: $dark;
   }
 
   .title {
     text-align: center;
     margin: 20px;
-    color: $light;;
-  }
-}
-
-.signup-form{
-
-
-
-  .form-row{
-    position: relative;
-
-    .icon{
-      margin-right: 5px;
-      font-size: 20px;
-      color: $light;
-      position: absolute;
-      top: 50%;
-      right: 5px;
-      margin-top: -10px;
-      z-index: 3;
-    }
-  }
-
-  .item {
-    padding:0;
-    border: 0;
-    margin-bottom: 2px;
-    background: $signup-entry-row-bg;
-  }
-
-  .item-input {
-    padding:0;
-
-    input{
-      height: 50px;
-      padding: 15px 30px;
-      color: $light;
-      font-weight: bold;
-      font-size: $font-size-base - 1px;
-      line-height: $line-height-computed;
-      width: 100%;
-    }
-  }
-
-  .ng-dirty.ng-invalid {
-    border-left: 5px solid red;
-  }
-
-  .ng-dirty.ng-valid {
-    border:0;
-  }
-
-  .input-label {
-    width: 100%;
-    max-width: 100%;
-
+    color: $dark;
   }
 }
 
@@ -88,11 +33,37 @@ ion-content {
   width:100%;
   text-align: center;
   margin: 25px 0 35px;
+  
   .avatar{
     cursor: pointer;
     margin:auto;
+    background-color: transparent;
+    border: none;
+    padding: 15px;
+    
     .button-clear {
         color: $light!important;
+    }
+    
+    i.ico-photo-placeholder {
+        box-shadow: 1px 1px 15px rgba($ribbon-bg, 0.8);
+    }
+    
+    .ico.ico-photo-placeholder, img.round-avatar {
+        width: 200px;
+        height: 200px;
+        background-size: 200px 200px;
+        border: 4px solid rgba($search-bar, 0.6);
+        background-color: 4px solid rgba($search-bar, 0.6);
+        text-align: center;
+        @include rounded-corner(100%);
+    }
+    
+    &:active {
+        
+        i.ico-photo-placeholder {
+            box-shadow: none
+        }
     }
   }
 }
@@ -157,8 +128,12 @@ ion-content {
   }
 }
 
-.checkbox-icon:before{
+i.checkbox-icon:before{
   background: none;
+}
+
+i.checkbox-icon {
+  @include vertical-align();
 }
 
 .signup-list {
@@ -178,12 +153,10 @@ ion-content {
 .endorsements{
 
   p{
-    color: white;
-    font-size: 10px;
+    color: $dark;
+    // font-size: 10px;
     margin:10px 0;
     text-align:center;
-    font-weight:bold;
-    line-height: 12px;
   }
 
   .endorsements-bottom{
@@ -215,7 +188,7 @@ ion-content {
     margin: 0px -31px;
     padding: 0;
 
-    input:checked:before,  input:checked + .checkbox-icon:before {
+     input:checked:before,  input:checked + .checkbox-icon:before {
        background-image: url('../img/sprite.png');
        display: inline-block;
        vertical-align: top;
@@ -327,20 +300,30 @@ ion-content {
 
 /*  select truck */
 
+$logo-native-height: 72px;
+$logo-native-width: 102px;
+$logo-inline-zoom: ($button-signup-height - ($padding-small-vertical)) / $logo-native-height;
 
-
-.select-truck {
+.select-truck, .select-trailer {
 
   .item-radio  
   {
-    input ~ .radio-content > .item-content {
-      background-color: $signup-entry-row-bg;
+    input ~ .radio-content {
+        &  > .item-content {
+          background-color: $signup-entry-row-inactive-bg; // $signup-entry-row-bg;
+          font-weight: 400;
+        }
     }
-
-    input:checked ~ .radio-content {
+    
+    input:checked ~ .radio-content, &.active {                
       & > .item-content {
-        background-color: $signup-entry-row-active-bg;
-        p {color: $dark; }
+        font-weight: 500;
+        background-color: $balanced; 
+        //background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
+           
+        //border: $button-circle-border-width solid $light;
+        //background-color: $signup-entry-row-active-bg;
+        p {color: $light; }
       }
 
       & > .radio-icon {
@@ -348,31 +331,88 @@ ion-content {
       }
     }
   }
+  
+  .item-checkbox {
+        height: $button-signup-height;
+      
+        &  > .item-content {
+            background-color: $signup-entry-row-inactive-bg; // $signup-entry-row-bg;
+            font-weight: 400;
 
-  .item{
-    margin:1px 0;
+            padding: $padding-large-horizontal;
+        }
+          
+        height: $button-signup-height;
+        top: 0;
+        margin-top: 0;
+
+        .ico.ico-checkboxselected, .icon.ion-checkmark {
+            display: none;
+            position: absolute;
+            right: 15px;
+            margin-left: -50px;
+            
+            
+            top: 50%;
+            margin-top: -11px;
+        }
+        
+        &.active { 
+            & > .item-content {
+                font-weight: 500; 
+                //background: linear-gradient(rgba(248,248,248,1) 0%, rgba(232,232,232,1) 100%);
+                background-color: $balanced; 
+               
+               p { color: $light;}
+            }
+            
+            .icon.ion-checkmark {
+                color: $light;
+                font-size: 1.7em;
+            }
+        
+            .ico.ico-checkboxselected, .icon.ion-checkmark {
+                display: inline-block;
+            }
+        }
+    }   
+
+  .item, .item-checkbox {
+    padding: 0px;
+    margin-top: 2vw;
+    margin-bottom: 2vw;
     border: 0;
-    background: none;
-
-    p {
-      position:absolute;
-      color: $stable;
-      font-size: 22px;
-      margin-bottom: 2px;
-      top: 50%;
-      margin-top: -15px;
+    // background: none;
+    border-radius: $border-radius-large;
+    
+    &.active {
+        box-shadow: 1px 1px 10px rgba($action-text, 0.8);
     }
 
     .item-content{
-      height:90px;
+      height:$button-signup-height;
 
       .center-text{
         left:50%;
         margin-left: -30px;
       }
+      
+
+        p {
+        position:absolute;
+        color: $dark;
+        font-size: 22px;
+        top: 0;
+        margin: 0;
+        //   margin-bottom: 2px;
+        //   top: 50%;
+        //   margin-top: -15px;
+            line-height: $button-signup-height;
+        }
     }
 
     .logo {
+        zoom: $logo-inline-zoom;
       width: 102px;
       height: 72px;
       position: absolute;
@@ -382,9 +422,6 @@ ion-content {
       margin-top: -36px;
     }
   }
-  .item {
-    padding: 0px;
-  }
 }
 
 
@@ -392,149 +429,342 @@ ion-content {
 
 $but-height: 70px;
 
-.select-trailer {
-  .item-content{
-    background-color: white;
-    height:$but-height;
-    position:relative;
-    i{
-      position:relative;
-     /* top:-20px;*/
-    }
-  }
 
-  .item{
-    padding:0;
-    margin:1px 0 0;
-    height:$but-height;
-    background: none;
 
-    &:first-child{
-      margin-top: 0;
+.toggle-content {
+    
+    .content-body {      
+        
+        @include vertical-align(20%);
+        // position: relative;
+        // top: 20%;
+        // transform: translateY(-50%);
+          
+        // & >*:first-child {
+        //     height: 100%;
+        //     top: 10vh;
+        //     background-color: purple;
+        // }
     }
     
-    & .checkbox.active {
-      p {
-        color: $dark;
-      }
+    // .list.toggle {
+    //     position: absolute;
+    //     top: 50%;
+    //     left: 50%;
+    //     right: 0;
+        
+    //     //width: 100%;
+    //     margin-top: calc(-80px - 20vh);
+    //     margin-left: calc(-24vw);
+        
+    // }
+    
+    .list.toggle {
+        
+        max-width: 510px;
+        
+        .toggle-item {
+            width: 23vw;
+            height: 23vw; 
+            
+            min-width: $button-circle-diameter;
+            min-height: $button-circle-diameter;
+            max-width: 120px;
+            max-height: 120px;
+            
+        
+            margin: 2vw; //$padding-small-horizontal/2;
+            display: inline-block;
+            
+            vertical-align: middle;
+            
+            //width: $button-circle-diameter;
+            //height: $button-circle-diameter;
+            // max-width: 80px;
+            // max-height: 80px;
+            
+            border: $button-circle-border-width solid darken($action-text, 2%);
+            border-radius: 50%;
+            
+            background-color: $signup-entry-row-inactive-bg;
+            
+            &.selected {
+                border: $button-circle-border-width solid $light;
+                box-shadow: 1px 1px 10px rgba($action-text, 0.8);
+                //background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%);
+                
+                background-color: $balanced;  
+                
+                transform: scale(1.1);
+                //margin: 0;
+                
+                
+                .title-val {
+                    color: $light;
+                font-size: 1.2em;
+                font-weight: 500;
+                }
+                
+                .outer-label {
+                    transform: scale(0.91) translateY(-2vw);
+
+                    //font-size: 1.0em;
+                    //font-weight: 400;
+                }
+            }
+            
+            .outer-label {
+                position: absolute;
+                top: 23vw; //20px;
+            }
+            
+            .title-val {
+                color: $dark;
+                
+                //@include vertical-align(-150%);
+                position: relative;
+                line-height: calc(22vw); // $button-circle-inner-diameter;
+                left: 0;
+                width: 100%;
+                
+                @media only screen and (min-device-width : 420px) {
+                    & {
+                        line-height: 120px;
+                        font-size: 1.2em;
+                    }
+                }
+                
+                &.gte::after {
+                    content: '+';
+                    font-size: 0.8em;
+                    position: absolute;
+                    right: -8px;
+                    top: 0;
+                    line-height: 10px;
+                }
+                
+                &.lte::before {
+                    content: '<';
+                    font-size: 0.8em;
+                    position: absolute;
+                    left: -8px;
+                    //top: 0;
+                    //line-height: 10px;
+                }
+            }
+         
+            .label-text {
+                text-transform: uppercase;
+                position: absolute;
+                text-align: center;
+                width: 100%;
+                left: 0;
+                font-size: 9px;
+                letter-spacing: -0.5px;
+                
+                &.top {
+                    bottom: 70%;
+                }
+                &.bot {
+                    top: 60%;
+                }
+            }
+            
+            &.years-item{
+                .title-val {
+                    top: -4px;
+                    font-size: 1.2em;
+                }
+            }
+            
+            &.license-class-item {
+                
+                &.selected {
+                    // margin: 0;
+                    // zoom: 1.2;
+                    
+                    font-size: 1.4em;
+                    
+                    // .title-val {
+                    //     color: $positive;
+                    // }
+                }
+                
+                .title-val {
+                    
+                    //color: $light;
+                    font-size: 3em;
+                    &.gte::after {
+                        content: none;
+                    }
+                }
+            }
+            
+            &.endorsement {
+                
+                div {
+                    
+                    width: 100%;
+                    height: 100%;
+                    
+                    i {
+                        position: absolute;
+                        
+                        left: 50%;
+                        top: 50%;
+                        margin-left: -25px;
+                        margin-top: -25px;
+                    }
+                }
+                
+                
+                p {
+                    margin-left: -8px;
+                    margin-right: -8px;
+                }
+                    
+                @media only screen and (max-device-width : 320px) {
+                    & {
+                        margin-bottom: 45px;
+                        
+                        p {
+                            font-size: 0.9em;
+                        }
+                    }
+                }
+                
+                margin-bottom: 80px;
+            }
+            
+            &.yes-no-item {
+                .title-val {
+                    font-size: 1.2em;
+                    
+                    &::before, &::after {
+                    display: none;
+                    }
+                }
+            }
+        }
     }
-
-    p{
-      position: absolute;
-      z-index: 100;
-      width: 100%;
-      text-align: center;
-      pointer-events: none;
-      left:0;
-      color:$stable;
-      font-size: 22px;
-      line-height: 26px;
-      height:$but-height;
-      padding-top:$but-height*0.3;
-    }
-
-    .center-text {
-      top:-3px;
-    }
-
-  }
-
-  .checkbox {
-    margin:0;
-    padding:0;
-    right: 0;
-    left: 0;
-    top: 0;
-    height: $but-height;
-
-    .item-content{
-      background-color: transparent;
-      // border: 1px solid yellow;
-      i{
-        top: 50%;
-        margin-top: -10px;
-        left: 35px;
-      }
-
-      // top: -20px;
-      height: $but-height;
-    }
-
-    &.active .item-content{
-      background-color: $signup-entry-row-active-bg;
-
-      i {
-         visibility:visible;
-      }
-    }
-
-    & .item-content {
-      background-color: $signup-entry-row-bg;
-      
-      i {
-        visibility:hidden;
-      }
-    }
-
-    &.active:before, input:checked + .checkbox-icon:before {
-      background-position: -2140px -2009px;
-      background:none;
-      border:0;
-
-    }
-    input:before, .checkbox-icon:before {
-      background-position: -2202px -2071px;
-      background:none;
-      border:0;
-    }
-
-    input:after, .checkbox-icon:after {
-      border:0;
-    }
-  }
 }
 
-.signup-section{
-  // background: url("../img/welcomeBackground@3x.jpg") 0 0 no-repeat ;
-  // -webkit-background-size: cover;
-  // background-size: cover;
-  
-  background-color: $brand-bg;
+progress {
+    
+    &::-webkit-progress-value {
+        background-color: $progress-green;
+        border-radius: $border-radius-base 0 0 $border-radius-base;
+    }
+    
+    &, &::-webkit-progress-bar {
+        background-color:  $signup-entry-row-inactive-bg; //rgba($signup-entry-row-bg, 0.4);
+        //border: thin solid $signup-entry-row-bg;
+        border-radius: $border-radius-base;
+    }
+}
 
-
+.signup-section {
+    
   .header,
   .bar,
   .pane{background: none;}
-
-  .round-avatar{
-    border-radius: 50px;
-    border: 2px solid white;
-    width: 75px;
-    height: 75px;
-  }
-
-  input::-webkit-input-placeholder{
-    color: $light !important;
-  }
-
-  .button-other{
-    background-color: $signup-entry-row-bg;
-  }
-
-  .bar{
-    &.bar-subheader{
-      h3{
-        font-weight: normal;
-        color: $light;
+  
+  .bar-header {
+      .button.button-icon {
+        color: $positive;
       }
+  }
+  
+  .bar-subheader {
+      h3 {
+        color: $dark;
+      }
+  }
+  
+  .bar-footer {
+      .button.button-block {
+          margin-left: $padding-base-horizontal+$padding-small-horizontal;
+          margin-right: $padding-base-horizontal+$padding-small-horizontal;
+          font-size: $font-size-base;
+      }
+      
+      .sub-button-progress {
+            text-align: center;
+            position: absolute;
+            left: 0;
+            bottom: $button-bar-button-height + 2*$padding-large-vertical;
+            width: 100%;
+            padding: 0 $padding-base-horizontal+$padding-small-horizontal;
+            
+            .progress-bar {
+                margin-top: $padding-small-vertical;
+            }
+            
+            .progress-label {
+                
+            }
+      }
+  }
+  
+  .progress {
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+  }
+  
+  .description, .progress {
+      padding: $padding-base-vertical ($padding-base-horizontal+$padding-small-horizontal);
+      text-align: center;
+          
+      .item {
+          background-color: transparent;
+      }
+      
+      p {
+          color: $dark;
+          margin: $padding-large-vertical 0;
+          font-size: $font-size-base;
+          line-height: $line-height-base;
+      }
+      
+      .progress-bar {
+          margin-top: $padding-large-vertical;
+          margin-bottom: $padding-small-vertical;
+          //color: $balanced;
+      }
+      .progress-label {
+          margin-top: 0;
+          margin-bottom: $padding-large-vertical;
+      }
+  }
+  
+    .has-progress-footer {
+        // bottom: 15vh;
+        // padding-bottom: 115px;
+        
+        
+        max-height: calc(100vh - 80px - 116px);
+        
+        & + .progress {
+            bottom: 0;
+        }
     }
+  
+  
+  .button {
+      border-radius: $border-radius-large;
   }
 
-  &.full-size{
-    .bar .bar-subheader{
-      top:120px;
-    }
-  }
+//   .round-avatar{
+//     border-radius: 50px;
+//     border: 2px solid white;
+//     width: 75px;
+//     height: 75px;
+//   }
+
+//   input::-webkit-input-placeholder{
+//     color: $light !important;
+//   }
 
   .toggle-block{
     padding: 10px 30px;
@@ -565,12 +795,82 @@ $but-height: 70px;
     }
   }
 
+  
+
+.signup-form {
+    
+    background-color: transparent;  
+  
+    .item {
+        border: 1px solid $brand-blue;
+        border-radius: $border-radius-base;
+        
+        margin: $padding-base-vertical $padding-base-horizontal;
+        
+        .label {
+            background: $light;
+        }
+    }
+  
+  .item-input {
+      .icon {
+          color: $brand-blue;
+          font-size: 26px;
+          
+          position: relative;
+          left: -9px;
+      }
+      
+      .icon.validation-icon {
+          font-size: 20px;
+          color: $danger;
+          right: 5px;
+          left: unset;
+          
+          display: none;
+      }
+      
+      
+      input {
+          color: $dark;
+          padding-right: $padding-small-horizontal;
+      }
+  }
+  
+  &.ng-submitted {
+    .ng-invalid.ng-dirty, .ng-invalid.ng-invalid-required {
+        & + .validation-icon {
+            display: block;
+            color: $danger;
+        }
+    }
+
+    .ng-valid {
+        & + .validation-icon {
+            display: none;
+        }
+    }
+  }
+  
+  .ng-invalid-required, .ng-invalid-email {
+      &.ng-touched{
+      & + .validation-icon {
+          display: block;
+          color: $danger;
+      }
+  }
+  }
+  
+  
+}
+  
 }
 .trailers-bg{
   background-image:url("../img/trailersBg.png");
 }
 
 .logo{
+    
   .freightliner-logo{
     @extend %text-indent;
     background-image:url("../img/freightliner_logo.png");
@@ -637,7 +937,7 @@ $but-height: 70px;
         
         h3{
           font-size: 18px;
-          color: $light;
+          color: $dark;
           font-weight: 300;
           text-align: center;
           line-height: 1.5em;
@@ -652,7 +952,7 @@ $but-height: 70px;
      bottom: 0;
      
      .slider-pager-page {
-        color: #FFF;
+        color: $dark;
       }
    }
 }
@@ -784,13 +1084,18 @@ $but-height: 70px;
         }
 
         .button-small {
+        //   border: 5px solid yellow;
+          
+          color: $balanced;
+          border-color: $balanced;
           position: absolute;
           top: 50%;
           right: 15px;
           margin-top: -15px;
-          padding: 0 20px;
           min-width: 100px;
           max-width: 115px;
+          
+          @include list-button;
 
           &.selected{
             background: #37afb2;
@@ -828,8 +1133,8 @@ $but-height: 70px;
       }
 
       &.user-friends-list .item .button{
-        color: #31999c;
-        border-color: #31999c;
+        color: $balanced;
+        border-color: $balanced;
       }
     }
 
@@ -854,19 +1159,59 @@ $but-height: 70px;
   }
 }
 
+.intro-block {
+  
+  .image-holder {
+    width: 100%;
+    text-align: center;
+    display: block;
+    
+      i {
+      text-align: center;
+      color: $light;
+        font-size: 20em;
+        font-weight: light;
+        
+        &.pic {
+            $pscale: calc(100vw/414px);
+            transform: scale($pscale);
+        }
+        
+        &.icon {
+            display: block;
+        }
+    }
+  }
+  
+  &.scroll-content {
+      .description {
+          //margin-bottom: 80px;
+          
+          p:last-child {
+              margin-bottom: $bar-midsize-height;
+          }
+      }
+  }
+  
+}
 
 .friends-block{
   .scroll{
     padding: 0 30px;
   }
   
-  .image-holder i {
+  .image-holder {
+      i {
       text-align: center;
       color: $light;
       display: block;
         font-size: 20em;
         font-weight: light;
     }
+    
+    text-align: center;
+    margin: auto;
+  }
   
   .description{
     color: $light;
@@ -927,16 +1272,10 @@ $but-height: 70px;
 @media only screen
 and (max-device-height : 568px) {
   .signup-section{
-    .round-avatar{
-      border-radius: 50px;
-      border: 2px solid white;
-      width: 75px;
-      height: 75px;
-    }
-
-    input::-webkit-input-placeholder{
-      color: $light !important;
-    }
+    // .round-avatar{
+    //   width: 75px;
+    //   height: 75px;
+    // }
 
     .button-other{
       background-color: $signup-entry-row-bg;
@@ -946,7 +1285,6 @@ and (max-device-height : 568px) {
       &.bar-subheader{
         h3{
           font-weight: normal;
-          color: $light;
         }
       }
     }

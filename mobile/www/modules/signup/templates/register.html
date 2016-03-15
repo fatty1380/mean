@@ -1,65 +1,47 @@
-<ion-view class="signup-section view-section register-screen">
+<ion-view class="register-screen">
 
-    <ion-header-bar align-title="center" class="bar-stable">
-        <div class="buttons">
-            <button class="button button-icon icon ion-ios-arrow-back" nav-direction="back" ui-sref="home"></button>
-        </div>
-        <h1 class="title">
-            <i class="app-brand"></i>
-        </h1>
-    </ion-header-bar>
+    <ion-content class="has-header has-footer">
 
-    <div class="bar bar-subheader">
-        <h3 class="title">Create your TruckerLine account</h3>
-    </div>
-
-    <ion-content class="has-subheader has-footer">
-        <!--<div class="bar bar-subheader hide-on-keyboard-open">
-            <h3 class="title">Create your TruckerLine account below</h3>
-        </div>-->
         <div class="login-content">
-            <form name="vm.mainForm" id="mainForm" class="list sign-up signup-form" ng-submit="vm.submitForm($event)" novalidate>
-                <ion-label class="item item-input">
-                    <input name="firstName" id="firstName" type="text" placeholder="First Name" ng-model="vm.user.firstName" focus required autocorrect="off"
-                    spellcheck="false" focus-me>
-                </ion-label>
-                <ion-label class="item item-input">
-                    <input name="lastName" type="text" placeholder="Last Name" ng-model="vm.user.lastName" focus required autocorrect="off" spellcheck="false">
-                </ion-label>
-                <ion-label class="item item-input">
-                    <input name="email" type="email" placeholder="Email" ng-model="vm.user.email" focus required>
-                </ion-label>
-                <ion-label class="item item-input">
-                    <input name="password" type="password" placeholder="Password" ng-model="vm.user.password" ng-minlength="8" focus required
-                    focus-me="vm.focusPass">
-                </ion-label>
-                <ion-label class="item item-input item-ass">
-                    <input name="confirmPassword" type="password" placeholder="Confirm Password" ng-model="vm.user.confirmPassword" 
-                    compare-to="vm.user.password"
-                    ng-focus="vm.lastElementFocused = true; vm.clearConfirm();" ng-blur="vm.lastElementFocused = false" required>
-                </ion-label>
+
+            <form name="vm.mainForm" id="mainForm" class="list list-inset signup-form" ng-submit="vm.submitForm($event)" novalidate>
+
+                <ion-input class="item item-input">
+                    <i class="icon ion-email placeholder-icon"></i>
+                    <input name="email" id="email" type="email" placeholder="Email" ng-model="vm.user.email" oset-focus focus-me required>
+                    <i class="icon ion-alert placeholder-icon validation-icon"></i>
+                </ion-input>
+                <br/>
+                <ion-input class="item item-input">
+                    <i class="icon ion-locked placeholder-icon"></i>
+                    <input name="password" id="password" type="password" placeholder="Password" ng-model="vm.user.password" ng-minlength="8"
+                    oset-focus required focus-me="vm.focusPass">
+                    <i class="icon ion-alert placeholder-icon validation-icon"></i>
+                </ion-input>
+                <ion-input class="item item-input">
+                    <i class="icon ion-locked placeholder-icon"></i>
+                    <input name="confirmPassword" id="confirmpass" type="password" placeholder="Confirm Password" ng-model="vm.user.confirmPassword"
+                    compare-to="vm.user.password" ng-focus="vm.lastElementFocused = true; vm.clearConfirm();" ng-blur="vm.lastElementFocused = false"
+                    required>
+                    <i class="icon ion-alert placeholder-icon validation-icon"></i>
+                </ion-input>
                 <input style="position:absolute; left:9999px" type="submit" />
+
             </form>
-            
+
             <div class="error" ng-if="vm.mainForm.$submitted && vm.mainForm.$invalid" role="alert" ng-messages="vm.mainForm.$error">
                 <div ng-message="email">Please enter a valid email address</div>
                 <div ng-message="minlength">Password must be at least 8 characters</div>
                 <div ng-message="password">Passwords do not match</div>
                 <div ng-message="compareTo">Passwords do not match</div>
-                <div ng-message="required">Please enter all required fields</div>
+                <div ng-message="required">Please fill in all fields</div>
             </div>
-            
-            
-            
-            <div ng-if="!vm.mainForm.$submitted && !vm.error || !vm.mainForm.$invalid" class="register-content">
-                <i class="app-logo"></i>
-            </div>
+
         </div>
     </ion-content>
-
+    <!--
     <ion-footer-bar>
-        <div class="bar-clear button-bar action-buttons">
-            <button class="button secondary submit" ng-disabled="vm.mainForm.$invalid" ng-click="vm.continueToEngagement()">Create Account</button>
-        </div>
-    </ion-footer-bar>
+        <button class="button button-block button-positive" ng-click="vm.next()">create my account</button>
+    </ion-footer-bar>-->
+
 </ion-view>

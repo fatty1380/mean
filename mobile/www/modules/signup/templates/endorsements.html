@@ -1,0 +1,47 @@
+<ion-view class="endorsement-screen">
+
+    <ion-content class="has-footer license-content toggle-content">
+
+        <div class="description row">
+            <div class="col item item-text-wrap">
+                <p>Which endorsements do you have?</p>
+            </div>
+        </div>
+
+        <div class="description content-body">
+            <ul class="list toggle endorsements">
+                <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.T = !vm.endorsement.T" ng-class="{'selected': vm.endorsement.T}">
+                    <div class="toggle-item-content">
+                        <i class="ico ico-endorsement T" ng-class="{'light': vm.endorsement.T}"></i>
+                    </div>
+                    <p class="outer-label">Double or Triple</p>
+                </li>
+                <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.N = !vm.endorsement.N" ng-class="{'selected': vm.endorsement.N}">
+                    <div class="toggle-item-content">
+                        <i class="ico ico-endorsement N" ng-class="{'light': vm.endorsement.N}"></i>
+                    </div>
+                    <p class="outer-label">Tank Vehicle</p>
+                </li>
+                <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.H = !vm.endorsement.H" ng-class="{'selected': vm.endorsement.H}">
+                    <div class="toggle-item-content">
+                        <i class="ico ico-endorsement H" ng-class="{'light': vm.endorsement.H}"></i>
+                    </div>
+                    <p class="outer-label">Hazardous Materials</p>
+                </li>
+                <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.P = !vm.endorsement.P" ng-class="{'selected': vm.endorsement.P}">
+                    <div class="toggle-item-content">
+                        <i class="ico ico-endorsement P" ng-class="{'light': vm.endorsement.P}"></i>
+                    </div>
+                    <p class="outer-label">Passenger</p>
+                </li>
+                <li class="item toggle-item item-text-wrap endorsement col" ng-click="vm.endorsement.X = !vm.endorsement.X" ng-class="{'selected': vm.endorsement.X}">
+                    <div class="toggle-item-content">
+                        <i class="ico ico-endorsement X" ng-class="{'light': vm.endorsement.X}"></i>
+                    </div>
+                    <p class="outer-label">Tank & HazMat</p>
+                </li>
+            </ul>
+        </div>
+
+    </ion-content>
+</ion-view>
