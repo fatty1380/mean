@@ -5,10 +5,10 @@
         .module('account')
         .controller('ProfileEditCtrl', ProfileEditCtrl);
 
-    ProfileEditCtrl.$inject = ['$filter', '$ionicScrollDelegate', '$location', '$rootScope', '$state', '$timeout',
+    ProfileEditCtrl.$inject = ['$filter', '$ionicHistory', '$ionicScrollDelegate', '$location', '$rootScope', '$state', '$timeout',
         'LoadingService', 'parameters', 'profileModalsService', 'tokenService', 'trailerService', 'truckService', 'userService'];
 
-    function ProfileEditCtrl ($filter, $ionicScrollDelegate, $location, $rootScope, $state, $timeout,
+    function ProfileEditCtrl ($filter, $ionicHistory, $ionicScrollDelegate, $location, $rootScope, $state, $timeout,
         LoadingService, parameters, profileModalsService, tokenService, trailerService, truckService, userService) {
         var vm = this;
 

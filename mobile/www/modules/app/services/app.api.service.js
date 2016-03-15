@@ -4,7 +4,7 @@
     angular.module(AppConfig.appModuleName)
         .factory('API', serverConnectionService);
 
-    serverConnectionService.$inject = ['$http', '$q'];    
+    serverConnectionService.$inject = ['$http', '$q'];
 
     function serverConnectionService ($http, $q) {
         var service = {
@@ -25,7 +25,7 @@
                 timeout: 30 * 1000
             });
 
-            return req;            
+            return req;
         }
     }
 

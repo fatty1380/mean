@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -7,7 +7,7 @@
 
     SignupCtrl.$inject = ['$ionicHistory', '$q', '$scope', '$state', 'userService'];
 
-    function SignupCtrl($ionicHistory, $q, $scope, $state, UserService) {
+    function SignupCtrl ($ionicHistory, $q, $scope, $state, UserService) {
 
         var vm = this;
 
@@ -30,17 +30,18 @@
         vm.next = goNext;
         vm.getCurrentStep = initCurrentWizardStep;
 
-        function goNext() {
+        function goNext () {
             return vm.stateAction()
-                .then(function(success) {
+                .then(function (success) {
                     $state.go(vm.nextState, { data: success });
                 });
         }
 
-        function initCurrentWizardStep() {
+        function initCurrentWizardStep () {
             var cState = $state.current && $state.current.resolve;
             if (cState && _.isFunction(cState.wizard)) {
                 vm.wizardState = cState.wizard() || {};
+
                 vm.stepNum = vm.wizardState.stepNum;
                 vm.nextState = vm.wizardState.nextState;
                 vm.disableBack = Boolean(vm.wizardState.disableBack);
@@ -48,7 +49,7 @@
 
             if (!vm.wizardState.noUser) {
                 return UserService.getUserData()
-                    .then(function success(userData) {
+                    .then(function success (userData) {
                         vm.profileData = userData;
                         return userData;
                     });
@@ -57,7 +58,7 @@
             return $q.when(null);
         }
 
-        $scope.$on('$ionicView.enter', function(event) {
+        $scope.$on('$ionicView.enter', function (event) {
 
             var targetCtrl = event.targetScope.vm || {};
             vm.stateAction = targetCtrl.save || $q.when;
@@ -87,7 +88,7 @@
     }
 })();
 
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -96,7 +97,7 @@
 
     IntroCtrl.$inject = [];
 
-    function IntroCtrl() {
+    function IntroCtrl () {
 
         var vm = this;
 
@@ -110,7 +111,7 @@
     }
 })();
 
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -119,7 +120,7 @@
 
     HandleCtrl.$inject = ['userService'];
 
-    function HandleCtrl(UserService) {
+    function HandleCtrl (UserService) {
 
         var vm = this;
         vm.intro = ['Welcome to TruckerLine!', 'Let\'s get started with your name and&nbsp;CB&nbsp;Handle :)'];
@@ -135,15 +136,15 @@
         vm.save = save;
         vm.submitForm = submitForm;
 
-        function submitForm(event) {
+        function submitForm (event) {
             if (vm.lastElementFocused) {
                 _.isFunction(vm.parentSubmit) ? vm.parentSubmit() : save();
             }
 
-            // TODO: Focus Next            
+            // TODO: Focus Next
         }
 
-        function save() {
+        function save () {
 
             vm.mainForm.$setSubmitted(true);
 
@@ -161,7 +162,7 @@
     }
 })();
 
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -170,7 +171,7 @@
 
     ClassCtrl.$inject = ['userService'];
 
-    function ClassCtrl(UserService) {
+    function ClassCtrl (UserService) {
 
         var vm = this;
 
@@ -190,12 +191,12 @@
 
         // ////////////////////////////////////////////////////////////////////
 
-        function activate() {
+        function activate () {
             vm.profileData = UserService.profileData;
             vm.selected = vm.profileData.license && vm.profileData.license.class || null;
         }
 
-        function save() {
+        function save () {
 
             var license = vm.profileData && vm.profileData.license || {};
 
@@ -208,11 +209,11 @@
             logger.debug('Saving Props for User', props);
 
             return UserService.updateUserData(props);
-        };
+        }
     }
 })();
 
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -221,7 +222,7 @@
 
     EndorsementCtrl.$inject = ['userService'];
 
-    function EndorsementCtrl(UserService) {
+    function EndorsementCtrl (UserService) {
 
         var vm = this;
 
@@ -233,18 +234,18 @@
 
         // ////////////////////////////////////////////////////////////////////
 
-        function activate() {
+        function activate () {
             vm.profileData = UserService.profileData;
             var endorsements = vm.profileData.license && vm.profileData.license.endorsements || [];
 
-            endorsements.map(function(e) { vm.endorsement[e] = true; });
+            endorsements.map(function (e) { vm.endorsement[e] = true; });
         }
 
-        function save() {
+        function save () {
 
             var license = vm.profileData && vm.profileData.license || {};
 
-            var endorsements = _(vm.endorsement).keys().filter(function(k) { return vm.endorsement[k]; }).value();
+            var endorsements = _(vm.endorsement).keys().filter(function (k) { return vm.endorsement[k]; }).value();
 
             license.endorsements = endorsements;
 
@@ -255,11 +256,11 @@
             logger.debug('Saving Props for User', props);
 
             return UserService.updateUserData(props);
-        };
+        }
     }
 })();
 
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -268,7 +269,7 @@
 
     MilesCtrl.$inject = ['userService'];
 
-    function MilesCtrl(UserService) {
+    function MilesCtrl (UserService) {
 
         var vm = this;
         vm.save = save;
@@ -286,12 +287,12 @@
             { min: 2000000, max: null, title: '2M' }
         ];
 
-        function activate() {
+        function activate () {
             var props = UserService.profileData && UserService.profileData.props || {};
             vm.selected = props.miles;
         }
 
-        function save() {
+        function save () {
             var props = {
                 miles: vm.selected
             };
@@ -299,11 +300,11 @@
             logger.debug('Saving Props for User', props);
 
             return UserService.updateUserProps(props);
-        };
+        }
     }
 })();
 
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -312,7 +313,7 @@
 
     YearsCtrl.$inject = ['userService'];
 
-    function YearsCtrl(UserService) {
+    function YearsCtrl (UserService) {
 
         var vm = this;
 
@@ -333,7 +334,7 @@
             { min: 15, max: null, title: '15' }
         ];
 
-        function activate() {
+        function activate () {
             var props = UserService.profileData && UserService.profileData.props || {};
 
             if (props.started) {
@@ -342,7 +343,7 @@
             }
         }
 
-        function save() {
+        function save () {
             var numYears = Number(vm.selected);
             var base = moment([moment().year(), 0, 1]);
             var started = base.subtract(numYears, 'years');
@@ -354,11 +355,11 @@
             logger.debug('Saving Props for User', props);
 
             return UserService.updateUserProps(props);
-        };
+        }
     }
 })();
 
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -367,7 +368,7 @@
 
     OwnOpCtrl.$inject = ['userService'];
 
-    function OwnOpCtrl(UserService) {
+    function OwnOpCtrl (UserService) {
 
         var vm = this;
 
@@ -385,12 +386,12 @@
             { min: false, title: 'NO' }
         ];
 
-        function activate() {
+        function activate () {
             var props = UserService.profileData && UserService.profileData.props || {};
             vm.selected = props.owner;
         }
 
-        function save() {
+        function save () {
 
             var props = {
                 owner: vm.selected
@@ -399,11 +400,11 @@
             logger.debug('Saving Props for User', props);
 
             return UserService.updateUserProps(props);
-        };
+        }
     }
 })();
 
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -412,7 +413,7 @@
 
     PhotoCtrl.$inject = ['$cordovaGoogleAnalytics', '$q', 'avatarService', 'userService'];
 
-    function PhotoCtrl($ga, $q, avatarService, UserService) {
+    function PhotoCtrl ($ga, $q, avatarService, UserService) {
 
         var vm = this;
 
@@ -420,7 +421,7 @@
         vm.activate = activate;
         vm.showEditAvatar = showEditAvatar;
 
-        vm.intro = 'Click the button below to upload&nbsp;a&nbsp;profile&nbsp;picture';
+        vm.intro = 'Click the button below to upload a&nbsp;photo&nbsp;for&nbsp;your&nbsp;profile';
         vm.nextStep = 'signup.trucks';
 
         vm.options = [
@@ -428,7 +429,7 @@
             { min: false, title: 'NO' }
         ];
 
-        function activate() {
+        function activate () {
             vm.profileData = UserService.profileData || {};
             vm.avatar = vm.profileData.profileImageURL;
         }
@@ -439,12 +440,12 @@
          * Opens an action sheet which leads to either taking
          * a photo, or selecting from device photos.
          */
-        function showEditAvatar(parameters) {
+        function showEditAvatar (parameters) {
             $ga.trackEvent('signup', 'engagement', 'editAvatar');
             var then = Date.now();
 
             avatarService.getNewAvatar(parameters, vm.profileData)
-                .then(function processNewAvatar(avatarResult) {
+                .then(function processNewAvatar (avatarResult) {
                     if (_.isEmpty(avatarResult)) {
                         $ga.trackTiming('signup', Date.now() - then, 'engagement', 'newAvatar:cancel');
                         return;
@@ -459,7 +460,7 @@
                 });
         }
 
-        function save() {
+        function save () {
 
             var props = {
                 avatar: vm.avatar
@@ -470,7 +471,7 @@
     }
 })();
 
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -479,7 +480,7 @@
 
     CompleteCtrl.$inject = [];
 
-    function CompleteCtrl() {
+    function CompleteCtrl () {
 
         var vm = this;
 

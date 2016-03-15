@@ -28,8 +28,8 @@
             confirmPassword: '',
             referralCode: $window.localStorage.getItem('referralCode'),
             branchData: branchData
-        };      
-        
+        };
+
         vm.save = next;
         vm.submitForm = submitForm;
         vm.clearConfirm = clearConfirm;
@@ -92,7 +92,7 @@
                 });
         }
 
-        function next() {
+        function next () {
             debugger;
 
             if (vm.user.confirmPassword !== vm.user.password) {
@@ -118,7 +118,7 @@
             return registerUser()
                 .then(function (userProfile) {
                     debugger;
-                    //$state.go(wizard.next || 'signup.handle', { profile: userProfile });
+                    // $state.go(wizard.next || 'signup.handle', { profile: userProfile });
                     return userProfile;
                 })
                 .catch(function fail (err) {
@@ -130,7 +130,7 @@
                     // showPopup(null, err.statusText, err.data.error_description)
                     showPopup(err, 'Registration Failed');
 
-                    throw err;                    
+                    throw err;
                 });
         }
 

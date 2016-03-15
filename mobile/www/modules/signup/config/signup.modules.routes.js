@@ -1,9 +1,9 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('signup')
-        .config(['$stateProvider', function($stateProvider) {
+        .config(['$stateProvider', function ($stateProvider) {
             $stateProvider
 
                 .state('home', {
@@ -25,9 +25,9 @@
                 .state('signup', {
                     url: '/signup',
                     templateUrl: 'modules/signup/templates/signup-base.html',
-                    abstract: true
                     controller: 'SignupCtrl as vm',
-                    parent: 'app'
+                    abstract: true,
+                    // parent: 'app'
                 })
 
                 /**
@@ -260,7 +260,7 @@
                         resolveContacts: false
                     },
                     resolve: {
-                        contacts: function($stateParams, contactsService, LoadingService) {
+                        contacts: function ($stateParams, contactsService, LoadingService) {
                             return contactsService.loadOrResolveContacts($stateParams.resolveContacts);
                         }
                     }
@@ -279,10 +279,10 @@
      * @desc check user logged in
     */
     loginCheckAndRedirect.$inject = ['$q', 'userService', '$state', 'tokenService', 'registerService', 'securityService'];
-    function loginCheckAndRedirect($q, userService, $state, tokenService, registerService, securityService) {
+    function loginCheckAndRedirect ($q, userService, $state, tokenService, registerService, securityService) {
         if (tokenService.get('access_token')) {
             return registerService.me()
-                .then(function(response) {
+                .then(function (response) {
                     if (response && response.success) {
                         if (response.message.data) {
                             securityService.initialize();
@@ -296,7 +296,7 @@
                     }
                     return false;
                 })
-                .catch(function(err) {
+                .catch(function (err) {
                     logger.error('Failed to load `me`', err);
                     return false;
                 });

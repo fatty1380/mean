@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -7,7 +7,7 @@
 
     TrailersCtrl.$inject = ['$scope', '$state', '$cordovaGoogleAnalytics', '$ionicHistory', 'userService', '$ionicPopup'];
 
-    function TrailersCtrl($scope, $state, $cordovaGoogleAnalytics, $ionicHistory, UserService, $ionicPopup) {
+    function TrailersCtrl ($scope, $state, $cordovaGoogleAnalytics, $ionicHistory, UserService, $ionicPopup) {
         var vm = this;
         vm.newTrailer = '';
 
@@ -16,12 +16,12 @@
         vm.save = save;
         vm.activate = activate;
 
-        function activate() {
+        function activate () {
             var props = UserService.profileData && UserService.profileData.props || {};
 
             if (_.isArray(props.trailer)) {
-                _.map(props.trailer, function(t) {
-                    var tmp = _.find(vm.trailers, { name: t })
+                _.map(props.trailer, function (t) {
+                    var tmp = _.find(vm.trailers, { name: t });
 
                     if (tmp) {
                         tmp.checked = true;
@@ -30,7 +30,7 @@
             }
         }
 
-        function addTrailer() {
+        function addTrailer () {
             var then = Date.now();
             $ionicPopup.show({
                 template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.newTrailer" autofocus>',
@@ -39,7 +39,7 @@
                 buttons: [
                     {
                         text: 'Cancel',
-                        onTap: function(e) {
+                        onTap: function (e) {
                             vm.newTrailer = '';
                             $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'addCustom:cancel');
                             $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trailers', 'addCustom:cancel');
@@ -48,7 +48,7 @@
                     {
                         text: 'Save',
                         type: 'button-positive',
-                        onTap: function(e) {
+                        onTap: function (e) {
                             if (!vm.newTrailer) {
                                 e.preventDefault();
                                 $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'addCustom:empty');
@@ -66,29 +66,28 @@
             });
         }
 
-        function save() {
+        function save () {
             var then = Date.now();
-            debugger;
 
             return UserService.updateUserProps({ trailer: getNameKeys(vm.trailers) })
-                .then(function success(propsResponse) {
+                .then(function success (propsResponse) {
                     $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'save');
                     $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trailers', 'save');
                     logger.debug('Trailers: Saved Successfully');
                     return propsResponse;
                 })
-                .catch(function fail(err) {
+                .catch(function fail (err) {
                     $cordovaGoogleAnalytics.trackEvent('signup', 'trailers', 'err: ' + err);
                     $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'trailers', 'err: ' + err);
                     logger.error('Trailers: Save Failed', err);
-                })
+                });
         }
 
-        function getNameKeys(obj) {
-            return _(obj).map(function(t) { return t.checked ? t.name : null; }).omit(_.isEmpty).values().value();
+        function getNameKeys (obj) {
+            return _(obj).map(function (t) { return t.checked ? t.name : null; }).omit(_.isEmpty).values().value();
         }
 
-        function getTrailers() {
+        function getTrailers () {
             return [
                 { name: 'Box', checked: false },
                 { name: 'Car Carrier', checked: false },
