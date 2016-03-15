@@ -93,7 +93,7 @@
         }
 
         function next () {
-            debugger;
+            // debugger;
 
             if (vm.user.confirmPassword !== vm.user.password) {
                 // vm.user.confirmPassword = '';
@@ -117,7 +117,7 @@
             LoadingService.showLoader('Saving');
             return registerUser()
                 .then(function (userProfile) {
-                    debugger;
+                    // debugger;
                     // $state.go(wizard.next || 'signup.handle', { profile: userProfile });
                     return userProfile;
                 })

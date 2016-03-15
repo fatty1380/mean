@@ -27,7 +27,7 @@ function viewer () {
                 scope.onImageEvent({ type: 'loadComplete' });
             };
             img.onerror = function (err) {
-                debugger;
+                // debugger;
                 scope.onImageEvent({ type: 'loadError', err: err });
             };
         };

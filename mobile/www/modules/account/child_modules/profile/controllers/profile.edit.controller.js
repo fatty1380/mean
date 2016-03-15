@@ -55,7 +55,7 @@
         }
 
         function toggleMileUnit (unit) {
-            debugger;
+            // debugger;
             vm.mileUnit = unit || 'miles';
         }
 
@@ -125,7 +125,7 @@
                 // Update the started date
                 if (vm.owner !== null) { vm.profileData.props.owner = vm.owner; }
                 vm.profileData.props.mileUnit = vm.mileUnit;
-                debugger;
+                // debugger;
 
                 if (/\d{4,4}-\d{2,2}/.test(vm.started)) {
                     vm.profileData.props.started = vm.started;
