@@ -183,6 +183,10 @@
                         .catch(function (err) {
                             logger.error(err, 'Failed to change state to login');
                             LoadingService.showFailure('Sorry, Logout Failed');
+                        })
+                        .finally(function () {
+                            $ionicHistory.$clearHistory();
+                            $ionicHistory.clearCache();
                         });
                 });
         }

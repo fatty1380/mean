@@ -43,6 +43,7 @@
                 vm.wizardState = cState.wizard() || {};
                 vm.stepNum = vm.wizardState.stepNum;
                 vm.nextState = vm.wizardState.nextState;
+                vm.disableBack = Boolean(vm.wizardState.disableBack);
             }
 
             if (!vm.wizardState.noUser) {
@@ -61,15 +62,26 @@
             var targetCtrl = event.targetScope.vm || {};
             vm.stateAction = targetCtrl.save || $q.when;
 
-            targetCtrl.parentSubmit = goNext;            
+            targetCtrl.parentSubmit = goNext;
 
             initCurrentWizardStep()
-                .then(function success(userData) {
+                .then(function success (userData) {
                     if (_.isFunction(targetCtrl.activate)) {
                         targetCtrl.activate(userData);
                     }
+
+                    targetCtrl.disableBack = vm.disableBack;
                 })
-                .catch(function fail(err) {
+                .then(function disableHistory () {
+                    if (vm.disableBack) {
+                        // debugger;
+                        $ionicHistory.clearHistory();
+                        // $ionicHistory.currentView().canSwipeBack = false;
+                        // $ionicHistory.currentView().backViewId = null;
+                    }
+                })
+                .catch(function fail (err) {
+                    logger.error('initWizardStep failed with error', err);
                 });
         });
     }
@@ -276,7 +288,6 @@
 
         function activate() {
             var props = UserService.profileData && UserService.profileData.props || {};
-            debugger;
             vm.selected = props.miles;
         }
 
