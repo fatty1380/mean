@@ -7,12 +7,12 @@
         .module('signup')
         .controller('RegisterCtrl', RegisterCtrl);
 
-    RegisterCtrl.$inject = ['$scope', '$state', '$window', '$ionicPopup', '$cordovaGoogleAnalytics',
+    RegisterCtrl.$inject = ['$q', '$scope', '$state', '$window', '$ionicPopup', '$cordovaGoogleAnalytics',
         'LoadingService', 'tokenService', 'welcomeService', 'securityService', 'registerService', 'userService', 'lockboxDocuments'];
 
 
 
-    function RegisterCtrl ($scope, $state, $window, $ionicPopup, $cordovaGoogleAnalytics,
+    function RegisterCtrl ($q, $scope, $state, $window, $ionicPopup, $cordovaGoogleAnalytics,
         LoadingService, tokenService, welcomeService, securityService, registerService,
         userService, lockboxDocuments) {
         var vm = this;
@@ -93,7 +93,8 @@
         }
 
         function next () {
-            debugger;
+
+            vm.mainForm.$setSubmitted(true);
 
             if (vm.user.confirmPassword !== vm.user.password) {
                 // vm.user.confirmPassword = '';
@@ -103,12 +104,12 @@
                 // vm.mainForm.password.$setValidity('compareTo', false);
                 // vm.mainForm.confirmPassword.$setValidity('compareTo', false);
                 vm.focusPass = true;
-                return;
+                return $q.reject('Passwords do not match');
             }
 
             if (!vm.mainForm.$valid) {
                 vm.error = vm.error || 'Please correct errors above';
-                return;
+                return $q.reject('Form input is invalid: ' + vm.error);
             }
 
             vm.error = null;

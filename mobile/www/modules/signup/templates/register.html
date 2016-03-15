@@ -3,24 +3,27 @@
     <ion-content class="has-header has-footer">
 
         <div class="login-content">
-            
+
             <form name="vm.mainForm" id="mainForm" class="list list-inset signup-form" ng-submit="vm.submitForm($event)" novalidate>
 
                 <ion-input class="item item-input">
                     <i class="icon ion-email placeholder-icon"></i>
                     <input name="email" id="email" type="email" placeholder="Email" ng-model="vm.user.email" oset-focus focus-me required>
+                    <i class="icon ion-alert placeholder-icon validation-icon"></i>
                 </ion-input>
                 <br/>
                 <ion-input class="item item-input">
                     <i class="icon ion-locked placeholder-icon"></i>
                     <input name="password" id="password" type="password" placeholder="Password" ng-model="vm.user.password" ng-minlength="8"
                     oset-focus required focus-me="vm.focusPass">
+                    <i class="icon ion-alert placeholder-icon validation-icon"></i>
                 </ion-input>
                 <ion-input class="item item-input">
                     <i class="icon ion-locked placeholder-icon"></i>
                     <input name="confirmPassword" id="confirmpass" type="password" placeholder="Confirm Password" ng-model="vm.user.confirmPassword"
                     compare-to="vm.user.password" ng-focus="vm.lastElementFocused = true; vm.clearConfirm();" ng-blur="vm.lastElementFocused = false"
                     required>
+                    <i class="icon ion-alert placeholder-icon validation-icon"></i>
                 </ion-input>
                 <input style="position:absolute; left:9999px" type="submit" />
 
@@ -31,12 +34,12 @@
                 <div ng-message="minlength">Password must be at least 8 characters</div>
                 <div ng-message="password">Passwords do not match</div>
                 <div ng-message="compareTo">Passwords do not match</div>
-                <div ng-message="required">Please enter all required fields</div>
+                <div ng-message="required">Please fill in all fields</div>
             </div>
 
         </div>
     </ion-content>
-<!--
+    <!--
     <ion-footer-bar>
         <button class="button button-block button-positive" ng-click="vm.next()">create my account</button>
     </ion-footer-bar>-->

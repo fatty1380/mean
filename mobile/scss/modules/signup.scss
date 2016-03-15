@@ -852,11 +852,13 @@ progress {
     }
   }
   
-  .ng-invalid-required.ng-touched {
+  .ng-invalid-required, .ng-invalid-email {
+      &.ng-touched{
       & + .validation-icon {
           display: block;
           color: $danger;
       }
+  }
   }
   
   
