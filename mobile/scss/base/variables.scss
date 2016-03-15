@@ -104,6 +104,7 @@ $border-radius-large:             6px !default;
 $border-radius-small:             3px !default;
 
 
+
 // Content
 // -------------------------------
 
@@ -289,6 +290,11 @@ $bar-default-border:              $bar-light-border !default;
 $bar-default-active-bg:           $bar-light-active-bg !default;
 $bar-default-active-border:       $bar-light-active-border !default;
 
+
+// Profile Pic s
+$profile-subheader-height :     $bar-midsize-height - $bar-height - 20px;
+$photo-dimension :              $profile-subheader-height * 1.1;
+$profile-header-height:         $photo-dimension/1.3 + $padding-large-vertical;
 
 
 // Tabs

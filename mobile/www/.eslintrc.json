@@ -29,7 +29,7 @@
         ],
         "angular/controller-name": [
             2,
-            "/[A-Z][a-zA-Z]*.controlller$/"
+            "/[A-Z][a-zA-Z]*Ctrl$/"
         ],
         "angular/deferred": 2,
         "angular/definedundefined": 0,
@@ -55,7 +55,8 @@
             2,
             {
                 "typeSeparator": "dot",
-                "ignoreTypeSuffix": true
+                "ignoreTypeSuffix": true,
+                "ignorePrefix": "oset"
             }
         ],
         "angular/filter-name": 2,

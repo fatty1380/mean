@@ -1,9 +1,9 @@
 'use strict';
 
 (function () {
-    describe('engagementCtrl ', function () {
+    describe('signupCtrl ', function () {
 
-        var engagementCtrl;
+        var signupCtrl;
 
         beforeEach(module(AppConfig.appModuleName));
 
@@ -13,7 +13,7 @@
 
         beforeEach(inject(function ($rootScope, $controller) {
             var scope = $rootScope.$new();
-            engagementCtrl = $controller('EngagementCtrl', {
+            signupCtrl = $controller('SignupCtrl', {
                 $scope: scope
             });
         }));
@@ -21,8 +21,8 @@
         it('set form', function () {
             var form = { testKey: 'testValue' };
 
-            engagementCtrl.initEngagementForm(form);
-            expect(engagementCtrl.form).toEqual(form);
+            signupCtrl.initEngagementForm(form);
+            expect(signupCtrl.form).toEqual(form);
         });
 
     });

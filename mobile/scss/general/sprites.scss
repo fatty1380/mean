@@ -474,6 +474,18 @@
     }
 }
 
+.ico.ico-photo-placeholder {
+
+    width: 200px;
+    height: 200px;
+    background-size: 200px 200px;
+    border: 4px solid rgba($search-bar, 0.6);
+    background-color: 4px solid rgba($search-bar, 0.6);
+    text-align: center;
+    @include rounded-corner(100%);
+    background: #333 url('../img/bg-profile-new.png') 50% no-repeat;
+}
+
 .ico-t.ico {
     background-image: url('../img/truck_logos_sm@3x.png');
     display: inline-block;

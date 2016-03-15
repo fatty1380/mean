@@ -1,12 +1,26 @@
 <ion-view class="signup-section view-section">
 
-    <ion-header-bar align-title="center">
-        <button class="button button-icon icon ion-ios-arrow-back" nav-direction="back" ng-click="vm.goBack()"></button>
-        
-        <h1 class="title">
+    <ion-nav-bar align-title="center">
+        <ion-nav-back-button></ion-nav-back-button>
+        <!--<button class="button button-icon icon ion-ios-arrow-back" nav-direction="back" ng-click="vm.goBack()"></button>-->
+
+        <ion-nav-title>
             <i class="app-brand dark"></i>
-        </h1>
-    </ion-header-bar>
+        </ion-nav-title>
+
+    </ion-nav-bar>
+
     <ion-nav-view></ion-nav-view>
 
+    <div style="display:none">
+        StepNum: {{vm.stepNum}}, Next Step: {{vm.nextState}}
+    </div>
+
+    <ion-footer-bar>
+        <button class="button button-block button-positive" nav-direction="forward" ng-click="vm.next()" >{{vm.wizardState.btnText || 'continue'}}</button>
+        <div class="sub-button-progress" ng-if="vm.stepNum">
+            <span class="progress-label">resume completion</span>
+            <progress class="progress-bar" max="11" value="{{vm.stepNum}}"> </progress>
+        </div>
+    </ion-footer-bar>
 </ion-view>

@@ -137,7 +137,8 @@
                         if (success.id) {
                             vm.closeModal(success);
                             LoadingService.hide();
-                        } else {
+                        }
+                        else {
                             LoadingService.showFailure();
                             // vm.closeModal(null);
                         }

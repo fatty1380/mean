@@ -5,9 +5,9 @@
         .module('signup')
         .controller('SignupCtrl', SignupCtrl);
 
-    SignupCtrl.$inject = ['$ionicHistory', 'NavSvc'];
+    SignupCtrl.$inject = ['$ionicHistory', '$q', '$scope', '$state', 'userService'];
 
-    function SignupCtrl($ionicHistory, NavSvc) {
+    function SignupCtrl($ionicHistory, $q, $scope, $state, UserService) {
 
         var vm = this;
 
@@ -16,7 +16,7 @@
         vm.itemClass = 'miles-item';
         vm.stepNumber = 5;
         vm.intro = 'How many career miles have&nbsp;you&nbspdriven?';
-        vm.nextStep = 'signup.years';
+        vm.nextState = 'signup.years';
 
         vm.options = [
             { min: 0, max: 100000, title: '100k' },
@@ -27,7 +27,49 @@
             { min: 2000000, max: null, title: '2M' }
         ];
 
-        vm.next = function() { NavSvc.go(vm.nextStep); };
+        vm.next = goNext;
+        vm.getCurrentStep = initCurrentWizardStep;
+
+        function goNext() {
+            return vm.stateAction()
+                .then(function(success) {
+                    $state.go(vm.nextState, { data: success });
+                });
+        }
+
+        function initCurrentWizardStep() {
+            var cState = $state.current && $state.current.resolve;
+            if (cState && _.isFunction(cState.wizard)) {
+                vm.wizardState = cState.wizard() || {};
+                vm.stepNum = vm.wizardState.stepNum;
+                vm.nextState = vm.wizardState.nextState;
+            }
+
+            if (!cState.noUser) {
+                return UserService.getUserData()
+                    .then(function success(userData) {
+                        vm.profileData = userData;
+                        return userData;
+                    });
+            }
+
+            return $q.when(null);
+        }
+
+        $scope.$on('$ionicView.enter', function(event) {
+
+            var targetCtrl = event.targetScope.vm || {};
+            vm.stateAction = targetCtrl.save || $q.when;
+
+            initCurrentWizardStep()
+                .then(function success(userData) {
+                    if (_.isFunction(targetCtrl.activate)) {
+                        targetCtrl.activate(userData);
+                    }
+                })
+                .catch(function fail(err) {
+                });
+        });
     }
 })();
 
@@ -36,28 +78,21 @@
 
     angular
         .module('signup')
-        .controller('MilesCtrl', MilesCtrl);
+        .controller('IntroCtrl', IntroCtrl);
 
-    MilesCtrl.$inject = ['NavSvc'];
+    IntroCtrl.$inject = [];
 
-    function MilesCtrl(NavSvc) {
+    function IntroCtrl() {
 
         var vm = this;
-        vm.itemClass = 'miles-item';
-        vm.stepNumber = 5;
-        vm.intro = 'How many career miles have&nbsp;you&nbspdriven?';
-        vm.nextStep = 'signup.years';
 
-        vm.options = [
-            { min: 0, max: 100000, title: '100k' },
-            { min: 100000, max: 250000, title: '100-250k' },
-            { min: 250000, max: 500000, title: '250-500k' },
-            { min: 500000, max: 1000000, title: '500k-1M' },
-            { min: 1000000, max: 2000000, title: '1-2M' },
-            { min: 2000000, max: null, title: '2M' }
+        vm.icon = '';
+
+        vm.introText = [
+            'Welcome to TruckerLine!',
+            'In the next few pages, you will be filling in information about yourself and your career',
+            'When you are done, you will have a professional resume you can send to anyone you like'
         ];
-
-        vm.next = function() { NavSvc.go(vm.nextStep); };
     }
 })();
 
@@ -66,30 +101,49 @@
 
     angular
         .module('signup')
-        .controller('YearsCtrl', YearsCtrl);
+        .controller('HandleCtrl', HandleCtrl);
 
-    YearsCtrl.$inject = ['NavSvc'];
+    HandleCtrl.$inject = ['userService'];
 
-    function YearsCtrl(NavSvc) {
+    function HandleCtrl(UserService) {
 
         var vm = this;
-        vm.itemClass = 'years-item';
-        vm.stepNumber = 6;
-        vm.intro = 'How many years have you been&nbsp;a&nbsp;truck&nbsp;driver?';
-        vm.labelText = 'years';
-        vm.labelPos = 'bot';
-        vm.nextStep = 'signup.own-op';
+        vm.intro = ['Welcome to TruckerLine!', 'Let\'s get started with your name and&nbsp;CB&nbsp;Handle :)'];
+        vm.labelText = null; //  'class';
+        vm.labelPos = 'top';
 
         vm.options = [
-            { min: 0, max: 1, title: '1' },
-            { min: 1, max: 3, title: '1-3' },
-            { min: 3, max: 5, title: '3-5' },
-            { min: 5, max: 10, title: '5-10' },
-            { min: 10, max: 15, title: '10-15' },
-            { min: 15, max: null, title: '15' }
+            { min: 'A', title: 'A' },
+            { min: 'B', title: 'B' },
+            { min: 'C', title: 'C' }
         ];
 
-        vm.next = function() { NavSvc.go(vm.nextStep); };
+        vm.save = save;
+        vm.submitForm = submitForm;
+
+        function submitForm(event) {
+            if (vm.lastElementFocused) {
+                return next();
+            }
+
+            // TODO: Focus Next            
+        }
+
+        function save() {
+
+            vm.mainForm.$setSubmitted(true);
+
+            if (!vm.mainForm.$valid) {
+                vm.error = vm.error || 'Please correct errors above';
+                throw new Error(vm.error);
+            }
+
+            var data = vm.user;
+
+            logger.debug('Saving Props for User', data);
+
+            return UserService.updateUserData(data);
+        };
     }
 })();
 
@@ -100,17 +154,19 @@
         .module('signup')
         .controller('ClassCtrl', ClassCtrl);
 
-    ClassCtrl.$inject = ['NavSvc'];
+    ClassCtrl.$inject = ['userService'];
 
-    function ClassCtrl(NavSvc) {
+    function ClassCtrl(UserService) {
 
         var vm = this;
+
+        vm.save = save;
+        vm.activate = activate;
+
         vm.itemClass = 'license-class-item';
-        vm.stepNumber = 3;
         vm.intro = 'What class is your driver license?';
         vm.labelText = null; //  'class';
         vm.labelPos = 'top';
-        vm.nextStep = 'signup.endorsements';
 
         vm.options = [
             { min: 'A', title: 'A' },
@@ -118,7 +174,174 @@
             { min: 'C', title: 'C' }
         ];
 
-        vm.next = function() { NavSvc.go(vm.nextStep); };
+        // ////////////////////////////////////////////////////////////////////
+
+        function activate() {
+            vm.profileData = UserService.profileData;
+            vm.selected = vm.profileData.license && vm.profileData.license.class || null;
+        }
+
+        function save() {
+
+            var license = vm.profileData && vm.profileData.license || {};
+
+            license.class = vm.selected;
+
+            var props = {
+                license: license
+            };
+
+            logger.debug('Saving Props for User', props);
+
+            return UserService.updateUserData(props);
+        };
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('signup')
+        .controller('EndorsementCtrl', EndorsementCtrl);
+
+    EndorsementCtrl.$inject = ['userService'];
+
+    function EndorsementCtrl(UserService) {
+
+        var vm = this;
+
+        vm.save = save;
+        vm.activate = activate;
+
+        vm.intro = 'Which endorsements do you have?';
+        vm.endorsement = vm.endorsement || {};
+
+        // ////////////////////////////////////////////////////////////////////
+
+        function activate() {
+            vm.profileData = UserService.profileData;
+            var endorsements = vm.profileData.license && vm.profileData.license.endorsements || [];
+
+            endorsements.map(function(e) { vm.endorsement[e] = true; });
+        }
+
+        function save() {
+
+            var license = vm.profileData && vm.profileData.license || {};
+
+            var endorsements = _(vm.endorsement).keys().filter(function(k) { return vm.endorsement[k]; }).value();
+
+            license.endorsements = endorsements;
+
+            var props = {
+                license: license
+            };
+
+            logger.debug('Saving Props for User', props);
+
+            return UserService.updateUserData(props);
+        };
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('signup')
+        .controller('MilesCtrl', MilesCtrl);
+
+    MilesCtrl.$inject = ['userService'];
+
+    function MilesCtrl(UserService) {
+
+        var vm = this;
+        vm.save = save;
+        vm.activate = activate;
+
+        vm.itemClass = 'miles-item';
+        vm.intro = 'How many career miles have&nbsp;you&nbspdriven?';
+
+        vm.options = [
+            { min: 0, max: 100000, title: '100k' },
+            { min: 100000, max: 250000, title: '100-250k' },
+            { min: 250000, max: 500000, title: '250-500k' },
+            { min: 500000, max: 1000000, title: '500k-1M' },
+            { min: 1000000, max: 2000000, title: '1-2M' },
+            { min: 2000000, max: null, title: '2M' }
+        ];
+
+        function activate() {
+            var props = UserService.profileData && UserService.profileData.props || {};
+            debugger;
+            vm.selected = props.miles;
+        }
+
+        function save() {
+            var props = {
+                miles: vm.selected
+            };
+
+            logger.debug('Saving Props for User', props);
+
+            return UserService.updateUserProps(props);
+        };
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('signup')
+        .controller('YearsCtrl', YearsCtrl);
+
+    YearsCtrl.$inject = ['userService'];
+
+    function YearsCtrl(UserService) {
+
+        var vm = this;
+
+        vm.save = save;
+        vm.activate = activate;
+
+        vm.itemClass = 'years-item';
+        vm.intro = 'How many years have you been&nbsp;a&nbsp;truck&nbsp;driver?';
+        vm.labelText = 'years';
+        vm.labelPos = 'bot';
+
+        vm.options = [
+            { min: 0, max: 1, title: '1' },
+            { min: 1, max: 3, title: '1-3' },
+            { min: 3, max: 5, title: '3-5' },
+            { min: 5, max: 10, title: '5-10' },
+            { min: 10, max: 15, title: '10-15' },
+            { min: 15, max: null, title: '15' }
+        ];
+
+        function activate() {
+            var props = UserService.profileData && UserService.profileData.props || {};
+
+            if (props.started) {
+                var started = moment(props.started, 'YYYY-MM');
+                vm.selected = moment().diff(started, 'year');
+            }
+        }
+
+        function save() {
+            var numYears = Number(vm.selected);
+            var base = moment([moment().year(), 0, 1]);
+            var started = base.subtract(numYears, 'years');
+
+            var props = {
+                started: started.format('YYYY-MM')
+            };
+
+            logger.debug('Saving Props for User', props);
+
+            return UserService.updateUserProps(props);
+        };
     }
 })();
 
@@ -129,13 +352,16 @@
         .module('signup')
         .controller('OwnOpCtrl', OwnOpCtrl);
 
-    OwnOpCtrl.$inject = ['NavSvc'];
+    OwnOpCtrl.$inject = ['userService'];
 
-    function OwnOpCtrl(NavSvc) {
+    function OwnOpCtrl(UserService) {
 
         var vm = this;
+
+        vm.save = save;
+        vm.activate = activate;
+
         vm.itemClass = 'yes-no-item';
-        vm.stepNumber = 7;
         vm.intro = 'Are you an Owner-Operator?';
         vm.labelText = null;
         vm.labelPos = 'top';
@@ -146,28 +372,107 @@
             { min: false, title: 'NO' }
         ];
 
-        vm.next = function() { NavSvc.go(vm.nextStep); };
+        function activate() {
+            var props = UserService.profileData && UserService.profileData.props || {};
+            vm.selected = props.owner;
+        }
+
+        function save() {
+
+            var props = {
+                owner: vm.selected
+            };
+
+            logger.debug('Saving Props for User', props);
+
+            return UserService.updateUserProps(props);
+        };
     }
 })();
-
 
 (function() {
     'use strict';
 
     angular
         .module('signup')
-        .service('NavSvc', NavSvc);
+        .controller('PhotoCtrl', PhotoCtrl);
 
-    NavSvc.$inject = ['$state'];
+    PhotoCtrl.$inject = ['$cordovaGoogleAnalytics', 'avatarService', 'userService'];
 
-    function NavSvc($state) {
+    function PhotoCtrl($ga, avatarService, UserService) {
 
         var vm = this;
 
-        vm.go = function goNext(stateName, params) {
-            $state.go(stateName, params);
-        };
+        vm.save = save;
+        vm.activate = activate;
+        vm.showEditAvatar = showEditAvatar;
 
-        return this;
+        vm.intro = 'Click the button below to upload&nbsp;a&nbsp;profile&nbsp;picture';
+        vm.nextStep = 'signup.trucks';
+
+        vm.options = [
+            { min: true, title: 'YES' },
+            { min: false, title: 'NO' }
+        ];
+
+        function activate() {
+            vm.profileData = UserService.profileData || {};
+            vm.avatar = vm.profileData.profileImageURL;
+        }
+
+        /**
+         * showEditAvatar
+         * --------------
+         * Opens an action sheet which leads to either taking
+         * a photo, or selecting from device photos.
+         */
+        function showEditAvatar(parameters) {
+            $ga.trackEvent('signup', 'engagement', 'editAvatar');
+            var then = Date.now();
+
+            avatarService.getNewAvatar(parameters, vm.profileData)
+                .then(function processNewAvatar(avatarResult) {
+                    if (_.isEmpty(avatarResult)) {
+                        $ga.trackTiming('signup', Date.now() - then, 'engagement', 'newAvatar:cancel');
+                        return;
+                    }
+
+                    $ga.trackEvent('signup', 'engagement', 'newAvatar');
+                    if (vm.avatar !== avatarResult) {
+                        vm.avatar = avatarResult;
+                    }
+                    $ga.trackTiming('signup', Date.now() - then, 'engagement', 'newAvatar:saved');
+
+                });
+        }
+
+        function save() {
+
+            var props = {
+                avatar: vm.avatar
+            };
+
+            return props;
+        };
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('signup')
+        .controller('CompleteCtrl', CompleteCtrl);
+
+    CompleteCtrl.$inject = [];
+
+    function CompleteCtrl() {
+
+        var vm = this;
+
+        vm.introText = [
+            'Congratulations!',
+            'You are now a TruckerLine driver!'
+        ];
     }
 })();

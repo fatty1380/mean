@@ -117,16 +117,8 @@
 
     // ///////////////////////////////////////////////////////
 
-    function getEndorsementKeys (obj) {
-        var keys = [];
-        for (var i in obj) {
-            if (obj.hasOwnProperty(i)) {
-                if (obj[i]) {
-                    keys.push(i);
-                }
-            }
-        }
-        return keys;
+    function getEndorsementKeys(obj) {
+        return _(obj).keys().filter(function(k) { return obj[k]; }).value();
     }
 
     function mapEndorsementKeys (keys) {

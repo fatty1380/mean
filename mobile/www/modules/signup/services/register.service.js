@@ -53,25 +53,34 @@
 
         // //////////////////////////////////////////////////////////////
 
-        function registerUser (data) {
+        function registerUser (data, skipHandlers) {
             if (!data) { return $q.reject('No Data'); }
-            return API.doRequest(settings.signup, 'post', data)
-                .then(handleSuccess, handleError);
+            var req = API.doRequest(settings.signup, 'post', data);
+
+            if (skipHandlers) { return req; }
+
+            return req.then(handleSuccess, handleError);
         }
 
-        function updateUser (data) {
+        function updateUser (data, skipHandlers) {
             if (!data) { return $q.reject('No Data'); }
-            return API.doRequest(settings.users, 'put', data)
-                .then(handleSuccess, handleError);
+            var req = API.doRequest(settings.users, 'put', data);
+
+            if (skipHandlers) { return req; }
+
+            return req.then(handleSuccess, handleError);
         }
 
-        function updateUserProps (data) {
+        function updateUserProps (data, skipHandlers) {
             if (!data) { return $q.reject('No Data'); }
-            return API.doRequest(settings.usersProps, 'put', data)
-                .then(handleSuccess, handleError);
+            var req = API.doRequest(settings.usersProps, 'put', data);
+
+            if (skipHandlers) { return req; }
+
+            return req.then(handleSuccess, handleError);
         }
 
-        function signIn (data) {
+        function signIn (data, skipHandlers) {
             if (!data) { return $q.reject('No Data'); }
 
             var signinData = {
@@ -84,28 +93,43 @@
             data['grant_type'] = signinData['grant_type'];
             data['client_id'] = signinData['client_id'];
             data['client_secret'] = signinData['client_secret'];
-            return API.doRequest(settings.token, 'post', data)
-                .then(handleSuccess, handleError);
+            var req = API.doRequest(settings.token, 'post', data);
+
+            if (skipHandlers) { return req; }
+
+            return req.then(handleSuccess, handleError);
         }
 
-        function signOut () {
-            return API.doRequest(settings.signout, 'get')
-                .then(handleSuccess, handleError);
+        function signOut (skipHandlers) {
+            var req = API.doRequest(settings.signout, 'get');
+
+            if (skipHandlers) { return req; }
+
+            return req.then(handleSuccess, handleError);
         }
 
-        function me () {
-            return API.doRequest(settings.usersProfile, 'get')
-                .then(handleSuccess, handleError);
+        function me (skipHandlers) {
+            var req = API.doRequest(settings.usersProfile, 'get');
+
+            if (skipHandlers) { return req; }
+
+            return req.then(handleSuccess, handleError);
         }
 
-        function getProfiles () {
-            return API.doRequest(settings.profiles, 'get')
-                .then(handleSuccess, handleError);
+        function getProfiles (skipHandlers) {
+            var req = API.doRequest(settings.profiles, 'get');
+
+            if (skipHandlers) { return req; }
+
+            return req.then(handleSuccess, handleError);
         }
 
-        function getProfileById (profileId) {
-            return API.doRequest(settings.profiles + profileId, 'get')
-                .then(handleSuccess, handleError);
+        function getProfileById (profileId, skipHandlers) {
+            var req = API.doRequest(settings.profiles + profileId, 'get');
+
+            if (skipHandlers) { return req; }
+
+            return req.then(handleSuccess, handleError);
         }
 
         // //////////////////////////////////////////////////////////////
