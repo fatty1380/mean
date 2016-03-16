@@ -176,7 +176,7 @@ and (max-device-height : 570px) {
     color: $positive;
     
     .miles-badge, .license-badge, .experience-badge {
-        color: $positive; // $ribbon-bg;
+        color: $calm; // $positive; // $ribbon-bg;
         font-size: 1.8em;
         line-height: 9vw;
         position: relative;
@@ -200,6 +200,7 @@ and (max-device-height : 570px) {
         }
         
         .label-text {
+            color: $dark;
             text-transform: uppercase;
             position: absolute;
             text-align: center;
