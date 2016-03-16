@@ -44,7 +44,6 @@
       "id": "cordova-plugin-transport-security"
     },
     "cordova-plugin-file",
-    "cordova-plugin-inappbrowser",
     "cordova-plugin-file-transfer",
     "cordova-plugin-google-analytics",
     "cordova-plugin-camera",
@@ -55,10 +54,11 @@
     {
       "locator": "https://github.com/BranchMetrics/Cordova-Ionic-PhoneGap-Deferred-Deep-Linking-SDK.git#v1.8.0-locked",
       "id": "io.branch.sdk"
-    }
+    },
+    "cordova-plugin-inappbrowser"
   ],
   "cordovaPlatforms": [
-    "ios",
-    "android"
+    "android",
+    "ios"
   ]
 }

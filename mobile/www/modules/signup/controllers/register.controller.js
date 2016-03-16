@@ -1,18 +1,18 @@
 /* global logger */
 /* global _ */
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('signup')
         .controller('RegisterCtrl', RegisterCtrl);
 
-    RegisterCtrl.$inject = ['$q', '$scope', '$state', '$window', '$ionicPopup', '$cordovaGoogleAnalytics',
+    RegisterCtrl.$inject = ['$cordovaOauth', '$http', '$q', '$scope', '$state', '$window', '$ionicPopup', '$cordovaGoogleAnalytics',
         'LoadingService', 'tokenService', 'welcomeService', 'securityService', 'registerService', 'userService', 'lockboxDocuments'];
 
 
 
-    function RegisterCtrl ($q, $scope, $state, $window, $ionicPopup, $cordovaGoogleAnalytics,
+    function RegisterCtrl($cordovaOauth, $http, $q, $scope, $state, $window, $ionicPopup, $cordovaGoogleAnalytics,
         LoadingService, tokenService, welcomeService, securityService, registerService,
         userService, lockboxDocuments) {
         var vm = this;
@@ -33,11 +33,12 @@
         vm.save = next;
         vm.submitForm = submitForm;
         vm.clearConfirm = clearConfirm;
+        vm.fbLogin = facebookLogin;
 
         /**
          * @description Submit form if last field in focus
          */
-        function submitForm (event) {
+        function submitForm(event) {
             if (vm.lastElementFocused) {
                 _.isFunction(vm.parentSubmit) ? vm.parentSubmit() : next();
             }
@@ -45,58 +46,75 @@
             $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'formErr:notLast');
         }
 
-        function clearConfirm () {
+        function clearConfirm() {
             vm.user.confirmPassword = '';
         }
 
-        function registerUser () {
 
-            var then = Date.now();
 
-            return registerService.registerUser(vm.user, true)
-                .then(function (response) {
-                    tokenService.set('access_token', '');
-                    return registerService.signIn({ email: response.data.username, password: vm.user.password }, true);
+        function facebookLogin() {
+            debugger;
+
+            var fbAppId = '1682496348706520'; // prod: '1634305163525639'
+
+            var fbGetTokenRequest = !_.isEmpty(tokenService.get('fb_access_token')) && moment().isBefore(moment(tokenService.get('fb_access_expires'))) ?
+                $q.when(tokenService.get('fb_access_token')) :
+                $cordovaOauth.facebook(fbAppId, ['email', 'read_stream', 'user_website', 'user_location', 'user_relationships'])
+                    .then(function(result) {
+
+                        tokenService.set('fb_access_token', result.access_token);
+                        tokenService.set('fb_access_expires', moment().add(result.expires_in, 'seconds').toISOString());
+
+                        return tokenService.get('fb_access_token');
+                    });
+
+            return fbGetTokenRequest
+                .then(function(accessToken) {
+
+                    var fields = ['id', 'email', 'name', 'first_name', 'last_name', 'work', 'picture'];
+
+                    return $http.get('https://graph.facebook.com/v2.4/me', {
+                        params: {
+                            'access_token': accessToken,
+                            fields: fields.join(','),
+                            format: 'json'
+                        }
+                    });
                 })
-                .then(function (signInResponse) {
-                    // TODO: Move tokenService actions into registerService
-                    tokenService.set('access_token', signInResponse.data.access_token);
-                    tokenService.set('refresh_token', signInResponse.data.refresh_token);
-                    tokenService.set('token_type', signInResponse.data.token_type);
+                .then(function(result) {
+                    var fbProfile = result.data;
 
-                    // set fields to show welcome screens for new user
-                    welcomeService.initialize();
-                    securityService.initialize();
+                    var profilePic = 'https//graph.facebook.com/' + fbProfile.id + '/picture?type=large';
 
-                    $window.localStorage.removeItem('referralCode');
-                    $window.localStorage.removeItem('branchData');
+                    vm.user = {
+                        firstName: fbProfile.first_name,
+                        lastName: fbProfile.last_name,
+                        email: fbProfile.email,
+                        profileImageURL: profilePic || fbProfile.picture && fbProfile.picture.data && fbProfile.picture.data.url,
+                        password: tokenService.get('fb_access_token'),
+                        provider: 'facebook',
+                        providerData: { accessToken: tokenService.get('fb_access_token') },
+                        props: { facebookId: fbProfile.id }
+                    };
 
-                    return userService.getUserData();
+                    return vm.parentSubmit();
+
+                    debugger;
                 })
-                .then(function success (profileData) {
-                    if (_.isEmpty(profileData)) {
-                        $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'signIn:error');
-                        $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'signIn:error');
-
-                        throw new Error('Signin Failed');
-                    }
-
-                    LoadingService.hide();
-                    $state.go('signup.license');
-
-                    lockboxDocuments.removeOtherUserDocuments(profileData.id);
-                    $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'signIn:success');
-                    $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'signIn:success');
-
-                    return profileData;
+                .then(function(result) {
+                    debugger;
+                })
+                .catch(function fail(err) {
+                    debugger;
+                    logger.error('Facebook Login Failed', err);
                 });
         }
 
-        function next () {
+        function next() {
 
             vm.mainForm.$setSubmitted(true);
 
-            if (vm.user.confirmPassword !== vm.user.password) {
+            if (_.isEm(vm.user.provider) && vm.user.confirmPassword !== vm.user.password) {
                 // vm.user.confirmPassword = '';
                 // vm.user.password = '';
                 // vm.error = 'Passwords do not match';
@@ -117,12 +135,12 @@
 
             LoadingService.showLoader('Saving');
             return registerUser()
-                .then(function (userProfile) {
+                .then(function(userProfile) {
                     // debugger;
                     // $state.go(wizard.next || 'signup.handle', { profile: userProfile });
                     return userProfile;
                 })
-                .catch(function fail (err) {
+                .catch(function fail(err) {
                     LoadingService.hide();
 
                     $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'error');
@@ -135,7 +153,50 @@
                 });
         }
 
-        function showPopup (response, title, message) {
+        function registerUser() {
+
+            var then = Date.now();
+
+            return registerService.registerUser(vm.user, true)
+                .then(function(response) {
+                    tokenService.set('access_token', '');
+                    return registerService.signIn({ email: response.data.username, password: vm.user.password }, true);
+                })
+                .then(function(signInResponse) {
+                    // TODO: Move tokenService actions into registerService
+                    tokenService.set('access_token', signInResponse.data.access_token);
+                    tokenService.set('refresh_token', signInResponse.data.refresh_token);
+                    tokenService.set('token_type', signInResponse.data.token_type);
+
+                    // set fields to show welcome screens for new user
+                    welcomeService.initialize();
+                    securityService.initialize();
+
+                    $window.localStorage.removeItem('referralCode');
+                    $window.localStorage.removeItem('branchData');
+
+                    return userService.getUserData();
+                })
+                .then(function success(profileData) {
+                    if (_.isEmpty(profileData)) {
+                        $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'signIn:error');
+                        $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'signIn:error');
+
+                        throw new Error('Signin Failed');
+                    }
+
+                    LoadingService.hide();
+                    $state.go('signup.license');
+
+                    lockboxDocuments.removeOtherUserDocuments(profileData.id);
+                    $cordovaGoogleAnalytics.trackEvent('signup', 'register', 'signIn:success');
+                    $cordovaGoogleAnalytics.trackTiming('signup', Date.now() - then, 'register', 'signIn:success');
+
+                    return profileData;
+                });
+        }
+
+        function showPopup(response, title, message) {
             if (!!response) {
                 if (response.status === 0) {
                     message = 'Request timed-out. Please, check your network connection.';
@@ -159,13 +220,13 @@
         }
 
 
-        $scope.$on('$ionicView.afterEnter', function () {
+        $scope.$on('$ionicView.afterEnter', function() {
             // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
             if ($window.cordova && $window.cordova.plugins.Keyboard) {
                 $window.cordova.plugins.Keyboard.disableScroll(true);
             }
         });
-        $scope.$on('$ionicView.beforeLeave', function () {
+        $scope.$on('$ionicView.beforeLeave', function() {
             if ($window.cordova && $window.cordova.plugins.Keyboard) {
                 // return to keyboard default scroll state
                 $window.cordova.plugins.Keyboard.disableScroll(false);
