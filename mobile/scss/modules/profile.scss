@@ -143,7 +143,7 @@ and (max-device-height : 570px) {
                     
                     padding-left: 4px;
                     padding-right: 4px;
-                }
+                } 
             }
         }
     }
@@ -161,6 +161,7 @@ and (max-device-height : 570px) {
     
     vertical-align: top;
     
+    
     width: 76px;
     height: 76px;
     // max-width: 80px;
@@ -176,7 +177,19 @@ and (max-device-height : 570px) {
     color: $positive;
     
     .miles-badge, .license-badge, .experience-badge {
-        color: $calm; // $positive; // $ribbon-bg;
+        
+        .lte::before {
+            content: '<';
+            font-size: 0.8em;
+        }
+        
+        // override to prevent `.experience-badge>.value::after` from applying to miles badge
+        span.value.lte::after {
+            content: '';
+            font-size: 0.8em;
+        }
+        
+        color: $calm; // $ribbon-bg;
         font-size: 1.8em;
         line-height: 9vw;
         position: relative;

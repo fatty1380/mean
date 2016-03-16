@@ -56,11 +56,11 @@
                         <div class="handle" ng-if="!!vm.profileData.handle">
                             <i class="ico ico-radio-badge"></i> {{vm.profileData.handle | uppercase}}
                         </div>
-                        
+
                         <div class="handle" ng-if="!vm.profileData.handle" ng-click="vm.showEditModal('handle')">
                             <i class="ico ico-radio-badge"></i> Edit CB Handle
                         </div>
-                        
+
                         <div class="friends clickable" ng-click="vm.showFriends($event);">
                             <i class="ico ico-friend-badge"></i>{{vm.profileData.friends.length}} Friends
                             <span class="badge-container">
@@ -80,9 +80,11 @@
                     <ion-item class="profile-bubbles">
                         <div class="circle" ng-click="vm.showEditModal('miles')">
                             <div class="miles-badge">
-                                <span ng-if="vm.thousandsOfMiles">
+                                
+                                <span ng-if="vm.thousandsOfMiles" ng-class="{'lte':vm.milesMin}">
                                 {{vm.thousandsOfMiles}}<span class="small">{{vm.mileUnit}}</span>
                                 </span>
+                                
                                 <span ng-if="!vm.thousandsOfMiles" class="empty"> <i class="ion ion-compose"></i> </span>
                                 <span class="label-text bot">miles</span>
                             </div>
@@ -96,7 +98,7 @@
                         </div>
                         <div class="circle" ng-click="vm.showEditModal('started')">
                             <div class="experience-badge">
-                                <span ng-if="vm.yearsDriving" class="value">
+                                <span ng-if="vm.yearsDriving" ng-class="{'lte':vm.timeMin}" class="value">
                                 {{vm.yearsDriving}}
                                 </span>
                                 <span ng-if="!vm.yearsDriving" class="empty"> <i class="ion ion-compose"></i> </span>
