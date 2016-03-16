@@ -85,18 +85,22 @@
 
             vm.thousandsOfMiles = null;
             vm.mileType = null;
+            vm.milesMin = null;
+            vm.milesMax = null;
+            vm.timeMin = null;
 
             if (!_.isEmpty(vm.profileData.props)) {
                 var props = vm.profileData.props;
 
                 var miles;
+                                
                 if (!!props.careerMiles) {
                     vm.mileType = 'career';
                     vm.mileUnits = props.mileUnit;
                     miles = Number(props.careerMiles);
                     vm.thousandsOfMiles = miles / 1000;
                 }
-                else if (!!props.miles) {
+                else if (!!props.miles || props.miles === 0) {
                     vm.mileType = 'year';
                     miles = Number(props.miles);
                     vm.thousandsOfMiles = miles >= 1000 ? miles / 1000 : miles;
@@ -106,6 +110,12 @@
                         vm.thousandsOfMiles = Number(vm.thousandsOfMiles / 1000).toFixed(1);
                         vm.mileUnit = 'm';
                     }
+
+                    else if (vm.thousandsOfMiles === 0) {
+                        vm.thousandsOfMiles = 100;
+                        vm.milesMin = true;
+                    }
+
                     else {
                         vm.thousandsOfMiles = Number(miles >= 1000 ? miles / 1000 : miles).toFixed(0);
                     }
@@ -113,11 +123,14 @@
 
                 if (!!props.started) {
                     vm.yearsDriving = moment().diff(moment(props.started, 'YYYY-MM'), 'years');
+                    
+                    if (vm.yearsDriving === 0) {
+                        vm.yearsDriving = 1;
+                        vm.timeMin = true;
+                    }
                 }
             }
         }
-
-        //
 
         vm.welcomeExperience = angular.fromJson(StorageService.get('welcome.experience')) || !_.isEmpty(vm.user.experience);
         vm.welcomeReview = true;
