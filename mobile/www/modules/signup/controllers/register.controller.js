@@ -10,8 +10,6 @@
     RegisterCtrl.$inject = ['$cordovaOauth', '$http', '$q', '$scope', '$state', '$window', '$ionicPopup', '$cordovaGoogleAnalytics',
         'LoadingService', 'tokenService', 'welcomeService', 'securityService', 'registerService', 'userService', 'lockboxDocuments'];
 
-
-
     function RegisterCtrl($cordovaOauth, $http, $q, $scope, $state, $window, $ionicPopup, $cordovaGoogleAnalytics,
         LoadingService, tokenService, welcomeService, securityService, registerService,
         userService, lockboxDocuments) {
@@ -49,8 +47,6 @@
         function clearConfirm() {
             vm.user.confirmPassword = '';
         }
-
-
 
         function facebookLogin() {
             debugger;
@@ -114,7 +110,7 @@
 
             vm.mainForm.$setSubmitted(true);
 
-            if (_.isEm(vm.user.provider) && vm.user.confirmPassword !== vm.user.password) {
+            if (_.isEmpty(vm.user.provider) && vm.user.confirmPassword !== vm.user.password) {
                 // vm.user.confirmPassword = '';
                 // vm.user.password = '';
                 // vm.error = 'Passwords do not match';
@@ -125,7 +121,7 @@
                 return $q.reject('Passwords do not match');
             }
 
-            if (!vm.mainForm.$valid) {
+            if (_.isEmpty(vm.user.provider) && !vm.mainForm.$valid) {
                 vm.error = vm.error || 'Please correct errors above';
                 return $q.reject('Form input is invalid: ' + vm.error);
             }
