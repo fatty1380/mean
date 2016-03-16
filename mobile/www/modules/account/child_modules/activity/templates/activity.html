@@ -8,10 +8,7 @@
         <h1 class="title" ng-click='vm.changeFeedSource()'>
             <span ng-bind="vm.feedData.buttonName"></span>
             <i class="{{vm.getFeedButtonClass()}}"></i>
-        </h1>
-        <!--<button class="button button-clear" ng-click="vm.showAddActivityModal()"><i class="ion-plus"></i> </button>-->
-        <button class="button button-clear" ng-click="vm.showAddActivityModal()"><i class="ion ion-plus"></i> </button>
-        
+        </h1>      
     </ion-header-bar>
     
     <ion-pane class="pane content-pane button-padding-bottom" ng-class="{' button-padding-top': !!vm.updates.activities}">
