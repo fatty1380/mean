@@ -297,6 +297,12 @@ textarea{
     text-align: center;
 }
 
+.ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .no-content {
   text-align: center;
   font-size: 16px;
