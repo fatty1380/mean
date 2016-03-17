@@ -153,8 +153,8 @@
                 LoadingService.showFailure('Sorry, an error occured');
             }
 
-            $timeout(function () {
-                $('input.ng-invalid').focus();
+            $timeout(function() {
+                angular.element('input.ng-invalid').focus();
             }, 1000);
 
         }
