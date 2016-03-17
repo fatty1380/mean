@@ -181,17 +181,26 @@ and (max-device-height : 570px) {
         
         .lte::before {
             content: '<';
-            font-size: 0.8em;
+            font-size: 15px;
+            position: relative;
+            left: 6px;
         }
-        
+            
         // override to prevent `.experience-badge>.value::after` from applying to miles badge
         span.value.lte::after {
             content: '';
             font-size: 0.8em;
         }
         
+        .gte::after {
+            // content: '+';
+            font-size: 10px;
+            position: relative;
+            
+        }
+
         color: $calm; // $ribbon-bg;
-        font-size: 1.8em;
+        font-size: 1.7em;
         line-height: 9vw;
         position: relative;
         left: 0;
@@ -222,6 +231,7 @@ and (max-device-height : 570px) {
             left: 0;
             font-size: 9px;
             letter-spacing: -0.5px;
+            font-weight: 400;
             
             &.top {
                 bottom: 70%;
@@ -234,10 +244,11 @@ and (max-device-height : 570px) {
     
     .experience-badge>.value::after {
         content: '+';
-        font-size: 5vw;
+        font-size: 4vw;
         position: absolute;
         //left: -2vw;
-        bottom: 2vw;
+        // bottom: 2vw;
+        bottom: -1vw;
     }
     
     .equipment-logo {
@@ -269,13 +280,26 @@ and (max-device-height : 570px) {
         font-size: 12vw;
         font-weight: 500;
         
-        top: 6vw;
-        
+        top: 3vw;
+                
+        .label-text {
+            &.bot {
+                top: 7vw;
+            }
+        }
+    }
+    
+    .experience-badge {
         .label-text {
             &.bot {
                 top: 6vw;
             }
         }
+    }
+    
+    .miles-badge {
+       
+        font-size: 1.6em;
     }
   }
   
