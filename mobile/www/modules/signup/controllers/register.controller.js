@@ -7,12 +7,12 @@
         .module('signup')
         .controller('RegisterCtrl', RegisterCtrl);
 
-    RegisterCtrl.$inject = ['$cordovaOauth', '$http', '$q', '$scope', '$state', '$window', '$ionicPopup', '$cordovaGoogleAnalytics',
-        'LoadingService', 'tokenService', 'welcomeService', 'securityService', 'registerService', 'userService', 'lockboxDocuments'];
+    RegisterCtrl.$inject = ['$http', '$q', '$scope', '$state', '$window', '$ionicPopup', '$cordovaGoogleAnalytics',
+        'FacebookService', 'LoadingService', 'tokenService', 'securityService', 'registerService', 'userService', 'lockboxDocuments', 'welcomeService'];
 
-    function RegisterCtrl($cordovaOauth, $http, $q, $scope, $state, $window, $ionicPopup, $cordovaGoogleAnalytics,
-        LoadingService, tokenService, welcomeService, securityService, registerService,
-        userService, lockboxDocuments) {
+    function RegisterCtrl( $http, $q, $scope, $state, $window, $ionicPopup, $cordovaGoogleAnalytics,
+        FacebookService, LoadingService, tokenService, securityService, registerService,
+        userService, lockboxDocuments, welcomeService) {
         var vm = this;
         vm.lastElementFocused = false;
 
@@ -51,53 +51,13 @@
         function facebookLogin() {
             debugger;
 
-            var fbAppId = '1682496348706520'; // prod: '1634305163525639'
-
-            var fbGetTokenRequest = !_.isEmpty(tokenService.get('fb_access_token')) && moment().isBefore(moment(tokenService.get('fb_access_expires'))) ?
-                $q.when(tokenService.get('fb_access_token')) :
-                $cordovaOauth.facebook(fbAppId, ['email', 'read_stream', 'user_website', 'user_location', 'user_relationships'])
-                    .then(function(result) {
-
-                        tokenService.set('fb_access_token', result.access_token);
-                        tokenService.set('fb_access_expires', moment().add(result.expires_in, 'seconds').toISOString());
-
-                        return tokenService.get('fb_access_token');
-                    });
-
-            return fbGetTokenRequest
-                .then(function(accessToken) {
-
-                    var fields = ['id', 'email', 'name', 'first_name', 'last_name', 'work', 'picture'];
-
-                    return $http.get('https://graph.facebook.com/v2.4/me', {
-                        params: {
-                            'access_token': accessToken,
-                            fields: fields.join(','),
-                            format: 'json'
-                        }
-                    });
-                })
+            FacebookService.login()
                 .then(function(result) {
-                    var fbProfile = result.data;
 
-                    var profilePic = 'https//graph.facebook.com/' + fbProfile.id + '/picture?type=large';
-
-                    vm.user = {
-                        firstName: fbProfile.first_name,
-                        lastName: fbProfile.last_name,
-                        email: fbProfile.email,
-                        profileImageURL: profilePic || fbProfile.picture && fbProfile.picture.data && fbProfile.picture.data.url,
-                        password: tokenService.get('fb_access_token'),
-                        provider: 'facebook',
-                        providerData: { accessToken: tokenService.get('fb_access_token') },
-                        props: { facebookId: fbProfile.id }
-                    };
+                    vm.user = result;
 
                     return vm.parentSubmit();
 
-                    debugger;
-                })
-                .then(function(result) {
                     debugger;
                 })
                 .catch(function fail(err) {
