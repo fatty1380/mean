@@ -1,4 +1,12 @@
 .activity {
+    
+  .bar-header {
+     .title {
+        .ion-chevron-down {
+            vertical-align: middle;
+        } 
+     }
+  }
 
   #map {
     height:200px;
@@ -50,7 +58,6 @@
     
     
   }
-
    
     //margin-bottom: 2px;
     //padding:$item-padding/2 $item-padding;

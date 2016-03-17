@@ -1,16 +1,12 @@
 <ion-view class="activity view-section min-size">
-    
     <ion-header-bar align-title="center">
-        <button class="button button-clear" ng-click="vm.addFriends()">
-            <!--<i class="ico ico-friends ico-middle"></i>-->
-            Friends
-        </button>
+        <button class="button button-icon ion-person-add" ng-click="vm.addFriends()"></button>       
         <h1 class="title" ng-click='vm.changeFeedSource()'>
             <span ng-bind="vm.feedData.buttonName"></span>
             <i class="{{vm.getFeedButtonClass()}}"></i>
-        </h1>      
+        </h1>
     </ion-header-bar>
-    
+
     <ion-pane class="pane content-pane button-padding-bottom" ng-class="{' button-padding-top': !!vm.updates.activities}">
         <button class="button button-positive content-top-button" ng-show="!!vm.updates.activities" ng-click="vm.updateWithNewActivities()">
             {{vm.updates.activities}} new Updates
@@ -27,10 +23,10 @@
 
             <!--<ion-infinite-scroll ng-if="vm.feed.length > 2" distance="5%" on-infinite="vm.loadMore()" immediate-check="false"></ion-infinite-scroll>-->
         </ion-scroll>
-        
-    </ion-pane>   
-    
-     <div class="material-action">
+
+    </ion-pane>
+
+    <div class="material-action">
         <button class="button button-calm" ng-click="vm.showAddActivityModal()">
             <i class="icon ion-plus"></i>
         </button>
