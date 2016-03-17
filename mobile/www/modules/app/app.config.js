@@ -1,18 +1,27 @@
 'use strict';
 
-var AppConfig = (function () { // eslint-disable-line no-unused-vars
+var AppConfig = (function() { // eslint-disable-line no-unused-vars
     var appModuleName = 'truckerline';
     var appModuleDependencies = [
         'ionic',
         'ngMessages',
         'ui.router',
         'ionic.rating',
-        'ngCordova.plugins.file',
-        'ngCordova.plugins.fileTransfer',
         'ngIOS9UIWebViewPatch',
         'ngSanitize',
         'monospaced.elastic'
     ];
+
+    var isDevice = /^file/.test(window.location.href);
+
+    if (isDevice) {
+        appModuleDependencies.concat([
+            'ngCordova.plugins.file',
+            'ngCordova.plugins.fileTransfer']);
+    }
+    else {
+        appModuleDependencies.push('ngCordovaMocks');
+    }
 
     // ////////////////////////////////////////////////////////////////////////////////////
     // TODO: Find more appropriate place to put this code (if there is one)
@@ -43,6 +52,11 @@ var AppConfig = (function () { // eslint-disable-line no-unused-vars
         local: 'UA-52626400-3'
     };
 
+    var fbKeys = {
+        prod: '1634305163525639',
+        dev: '1682496348706520'
+    };
+
     var debug = debugModes[envMode] || false;
 
     return {
@@ -50,23 +64,28 @@ var AppConfig = (function () { // eslint-disable-line no-unused-vars
         appModuleDependencies: appModuleDependencies,
         registerModule: registerModule,
         debug: debug,
-        getUrl: function (env) {
+        getUrl: function(env) {
             env = env || envMode;
             return URLs[env] || URLs.dev;
         },
-        getBranchKey: function (env) {
+        getBranchKey: function(env) {
             env = env || envMode || debug ? 'dev' : 'prod';
 
             return branchKeys[env] || branchKeys.dev;
         },
-        getGAKey: function (env) {
+        getGAKey: function(env) {
             env = env || envMode || debug ? 'dev' : 'prod';
             return gaKeys[env] || gaKeys.dev;
-        }
+        },
+        getFBKey: function(env) {
+            env = env || envMode || debug ? 'dev' : 'prod';
+            return fbKeys[env] || fbKeys.dev;
+        },
+        isDevice: isDevice
     };
     /** ---------------------------------------------------------- */
 
-    function registerModule (moduleName, dependencies) {
+    function registerModule(moduleName, dependencies) {
         // create angular module
         angular.module(moduleName, dependencies || []);
         // Add the module to the AngularJS configuration file
