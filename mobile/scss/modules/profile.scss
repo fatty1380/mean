@@ -161,12 +161,9 @@ and (max-device-height : 570px) {
     display: inline-block;
     
     vertical-align: top;
-    
-    
+       
     width: 76px;
     height: 76px;
-    // max-width: 80px;
-    // max-height: 80px;
     
     border: 2px solid $light;
     border-radius: 50%;
@@ -261,9 +258,6 @@ and (max-device-height : 570px) {
             position: relative;
             bottom: 10px;
             
-            // margin-right: auto;
-            // margin-left: auto;
-            
             right: unset;
             left: unset;
             top: unset;
@@ -343,8 +337,6 @@ and (max-device-height : 570px) {
           .badge {
               bottom: 0; // $padding-base-vertical;
               text-align: center;
-              
-              //text-align: right;
           }
       }
   }
@@ -354,9 +346,8 @@ and (max-device-height : 570px) {
       padding-right: $padding-base-horizontal;
             
       .item-label {
-            padding-top: $padding-large-vertical;
-            padding-bottom: $padding-small-vertical;
-          //border-bottom: 1px solid black;
+          padding-top: $padding-large-vertical;
+          padding-bottom: $padding-small-vertical;
           color: $tab-text;
           font-weight: 400;
           font-size: 1.15em;
@@ -729,18 +720,6 @@ and (max-device-height : 570px) {
           }
       }
   }
-  
-//   .profile-list {
-//       .card {
-//          & > .row {
-//               position: relative;
-// 	          top: -20px;
-//           }
-      
-//         //padding-bottom: 0!important;
-      
-//       }
-//   }
 
   .scroll > :last-child {
       padding-bottom: 275px;
