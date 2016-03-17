@@ -30,11 +30,19 @@
       top: 128px;
   }
   
-  .platform-android &, .platform-ios & {
-        ion-pane.pane.content-pane{
-            top: 120px;
-        }
-    }
+  .platform-android &{
+      ion-pane.pane.content-pane{
+         top: 120px;
+      }
+   }
+   
+  .platform-ios &{
+      ion-pane.pane.content-pane{
+         top: 140px;
+      }
+   }
+    
+    
 
 }
 @media only screen
