@@ -26,8 +26,9 @@
     
     <script src="lib/moment/min/moment.min.js"></script>
 
-    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
-    <!--<script src="lib/ngCordova/dist/ng-cordova-mocks.js"></script>-->
+    <script ng-if="AppConfig.isDevice" src="lib/ngCordova/dist/ng-cordova.js"></script>
+    <script ng-if="!AppConfig.isDevice" src="lib/ngCordova/dist/ng-cordova-mocks.js"></script>
+   
     <script src="cordova.js"></script>
 
     <!-- temp ionic IOS9 patch for webView-->
