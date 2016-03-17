@@ -6,7 +6,7 @@
   .bar-header  {
       i {
           font-size: 1.8em;
-          line-height: 1.55em;;
+          line-height: 1.55em;
       }
   }
   
@@ -107,6 +107,11 @@ and (max-device-height : 568px) {
             
             .ion, .icon {
                 font-size: 1.8em;
+            }
+            
+            .no-date .ion-plus {
+               font-size: 1.8em;
+               line-height: 1.55em;
             }
         }
         
