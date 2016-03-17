@@ -10,7 +10,7 @@
     RegisterCtrl.$inject = ['$http', '$q', '$scope', '$state', '$window', '$ionicPopup', '$cordovaGoogleAnalytics',
         'FacebookService', 'LoadingService', 'tokenService', 'securityService', 'registerService', 'userService', 'lockboxDocuments', 'welcomeService'];
 
-    function RegisterCtrl( $http, $q, $scope, $state, $window, $ionicPopup, $cordovaGoogleAnalytics,
+    function RegisterCtrl($http, $q, $scope, $state, $window, $ionicPopup, $cordovaGoogleAnalytics,
         FacebookService, LoadingService, tokenService, securityService, registerService,
         userService, lockboxDocuments, welcomeService) {
         var vm = this;
@@ -61,6 +61,11 @@
                     debugger;
                 })
                 .catch(function fail(err) {
+
+                    if (err && /browser/i.test(err.reason)) {
+                        return LoadingService.showFailure('Sorry, FB Signup only available on-device');
+                    }
+
                     debugger;
                     logger.error('Facebook Login Failed', err);
                 });

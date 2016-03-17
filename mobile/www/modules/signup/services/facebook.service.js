@@ -129,7 +129,14 @@
                         return tokenService.get('fb_access_token');
                     });
 
-            return fbGetTokenRequest;
+            return fbGetTokenRequest
+                .catch(function(err) {
+                    if (/cannot authenticate via a web browser/i.test(err)) {
+                        return $q.reject({ message: err, reason: 'BROWSER' });
+                    }
+
+                    throw err;
+                });
         }
     }
 })();

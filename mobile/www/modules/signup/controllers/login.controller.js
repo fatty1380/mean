@@ -56,6 +56,11 @@
                     return signIn();
                 })
                 .catch(function(err) {
+
+                    if (err && /browser/i.test(err.reason)) {
+                        return LoadingService.showFailure('Sorry, FB Login only available on-device');
+                    }
+
                     logger.error('FBLogin Failed', err);
                     debugger;
                 });
