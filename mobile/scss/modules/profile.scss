@@ -88,8 +88,8 @@ and (max-device-height : 570px) {
         background-color: white;
         color: $positive;
         
-        margin-left: -$padding-large-horizontal;
-        margin-right: -$padding-large-horizontal;
+        margin-left: -$list-side-gutter-width;
+        margin-right: -$list-side-gutter-width;
         
         div {
             padding: $padding-base-vertical $padding-small-horizontal;
@@ -150,9 +150,10 @@ and (max-device-height : 570px) {
     
     .item.profile-bubbles {
         text-align: center;
-        margin-left: -$padding-large-horizontal;
-        margin-right: -$padding-large-horizontal;
-        padding-bottom: 12px;
+        margin-left: -$list-side-gutter-width;
+        margin-right: -$list-side-gutter-width;
+        
+        padding-bottom: $padding-large-vertical + 2px; // Accomodate optical aligment issues due to drop-shadow
     }
     
     .circle {
@@ -284,10 +285,10 @@ and (max-device-height : 570px) {
             font-size: 1.7em;
         }
       }
-  }
-  
-  ion-item.equipment.card.item{
-      margin-top: 0px;
+      
+      &.item {
+          margin-top: 0;
+      }  
   }
   
   .equipment.card {
@@ -298,8 +299,7 @@ and (max-device-height : 570px) {
       }
       
       .hanger {
-          
-      margin-right: 76 + $padding-base-horizontal;
+          margin-right: 76 + $padding-base-horizontal;
       }
       
       .circle {
@@ -742,8 +742,8 @@ and (max-device-height : 570px) {
           padding: 0;
       }
       
-      margin-left: $padding-large-horizontal;
-      margin-right: $padding-large-horizontal;
+      margin-left: $list-side-gutter-width;
+      margin-right: $list-side-gutter-width;
       
       > .item {
         //background: none;
