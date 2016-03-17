@@ -497,9 +497,9 @@
             var path = vm.LOCKBOX_FOLDER;
 
             return $cordovaFile.checkDir(path, user)
-                .then(function (fsPath) {
-                    logger.debug('[LockboxDocsService] Lockbox: Removing Documents for User ' + user + ' at path: ', fsPath);
-                    return $cordovaFile.removeRecursively(fsPath, user);
+                .then(function (docDirectoryEntryObj) {
+                    logger.debug('[LockboxDocsService] Lockbox: Removing Documents for User ' + user + ' at path: ', docDirectoryEntryObj);
+                    return $cordovaFile.removeRecursively(docDirectoryEntryObj.nativeURL, user);
                 }, function (err) {
                     return $q.reject(err);
                 })

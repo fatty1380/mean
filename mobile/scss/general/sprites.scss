@@ -530,7 +530,9 @@ i.welcome-joe {
     width: 414px;
     height: 674px;
     -webkit-background-size: 414px 674px;
-    background-size: 414px 674px;
+    //background-size: 414px 674px;
+    background-position-x: 50%;
+    background-size: contain;
     
     background-repeat: no-repeat;
     background-image: url('../img/welcome-joe-fade.png');

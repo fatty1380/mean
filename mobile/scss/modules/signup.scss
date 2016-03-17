@@ -1173,8 +1173,10 @@ progress {
         font-weight: light;
         
         &.pic {
-            $pscale: calc(100vw/414px);
+            $pscale: calc(100vw / 414px);
             transform: scale($pscale);
+            
+            width: 100vw;
         }
         
         &.icon {

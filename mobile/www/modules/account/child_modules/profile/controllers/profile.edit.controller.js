@@ -185,7 +185,7 @@
                             LoadingService.showFailure('Sorry, Logout Failed');
                         })
                         .finally(function () {
-                            $ionicHistory.$clearHistory();
+                            $ionicHistory.clearHistory();
                             $ionicHistory.clearCache();
                         });
                 });

@@ -88,8 +88,8 @@ and (max-device-height : 570px) {
         background-color: white;
         color: $positive;
         
-        margin-left: -$padding-large-horizontal;
-        margin-right: -$padding-large-horizontal;
+        margin-left: -$list-side-gutter-width;
+        margin-right: -$list-side-gutter-width;
         
         div {
             padding: $padding-base-vertical $padding-small-horizontal;
@@ -143,16 +143,17 @@ and (max-device-height : 570px) {
                     
                     padding-left: 4px;
                     padding-right: 4px;
-                }
+                } 
             }
         }
     }
     
     .item.profile-bubbles {
         text-align: center;
-        margin-left: -$padding-large-horizontal;
-        margin-right: -$padding-large-horizontal;
-        padding-bottom: 12px;
+        margin-left: -$list-side-gutter-width;
+        margin-right: -$list-side-gutter-width;
+        
+        padding-bottom: $padding-large-vertical + 2px; // Accomodate optical aligment issues due to drop-shadow
     }
     
     .circle {
@@ -160,6 +161,7 @@ and (max-device-height : 570px) {
     display: inline-block;
     
     vertical-align: top;
+    
     
     width: 76px;
     height: 76px;
@@ -176,7 +178,19 @@ and (max-device-height : 570px) {
     color: $positive;
     
     .miles-badge, .license-badge, .experience-badge {
-        color: $positive; // $ribbon-bg;
+        
+        .lte::before {
+            content: '<';
+            font-size: 0.8em;
+        }
+        
+        // override to prevent `.experience-badge>.value::after` from applying to miles badge
+        span.value.lte::after {
+            content: '';
+            font-size: 0.8em;
+        }
+        
+        color: $calm; // $ribbon-bg;
         font-size: 1.8em;
         line-height: 9vw;
         position: relative;
@@ -200,6 +214,7 @@ and (max-device-height : 570px) {
         }
         
         .label-text {
+            color: $dark;
             text-transform: uppercase;
             position: absolute;
             text-align: center;
@@ -270,10 +285,10 @@ and (max-device-height : 570px) {
             font-size: 1.7em;
         }
       }
-  }
-  
-  ion-item.equipment.card.item{
-      margin-top: 0px;
+      
+      &.item {
+          margin-top: 0;
+      }  
   }
   
   .equipment.card {
@@ -284,8 +299,7 @@ and (max-device-height : 570px) {
       }
       
       .hanger {
-          
-      margin-right: 76 + $padding-base-horizontal;
+          margin-right: 76 + $padding-base-horizontal;
       }
       
       .circle {
@@ -728,8 +742,8 @@ and (max-device-height : 570px) {
           padding: 0;
       }
       
-      margin-left: $padding-large-horizontal;
-      margin-right: $padding-large-horizontal;
+      margin-left: $list-side-gutter-width;
+      margin-right: $list-side-gutter-width;
       
       > .item {
         //background: none;
