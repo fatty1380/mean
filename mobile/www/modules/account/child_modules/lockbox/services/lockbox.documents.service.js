@@ -617,7 +617,7 @@
                         if (results.length) {
                             logger.debug('[LockboxDocsService] dirReader Length ' + results.length);
 
-                            entries = entries.concat(Array(results));
+                            entries = entries.concat(_.isArray(results) ? results : Array(results));
                             readEntries();
                         }
                         else {
