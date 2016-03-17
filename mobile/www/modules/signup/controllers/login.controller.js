@@ -6,10 +6,10 @@
         .controller('LoginCtrl', LoginCtrl);
 
     LoginCtrl.$inject = ['$state', 'lockboxDocuments', '$window', '$cordovaGoogleAnalytics',
-        'registerService', 'LoadingService', 'tokenService', 'userService', 'securityService'];
+        'FacebookService', 'registerService', 'LoadingService', 'tokenService', 'userService', 'securityService'];
 
-    function LoginCtrl ($state, lockboxDocuments, $window, $cordovaGoogleAnalytics,
-        registerService, LoadingService, tokenService, userService, securityService) {
+    function LoginCtrl($state, lockboxDocuments, $window, $cordovaGoogleAnalytics,
+        FacebookService, registerService, LoadingService, tokenService, userService, securityService) {
         var vm = this;
         vm.lastElementFocused = false;
 
@@ -24,17 +24,18 @@
             pass: false
         };
 
+        vm.fbLogin = fbLogin;
         vm.signIn = signIn;
         vm.submitForm = submitForm;
 
-        vm.echange = function () {
+        vm.echange = function() {
             vm.error = '';
             // logger.warn(' vm.user --->>>', vm.user.email);
         };
         /**
          * @description Submit form if last field in focus
         */
-        function submitForm (event) {
+        function submitForm(event) {
             vm.error = '';
 
             if (vm.lastElementFocused) {
@@ -46,11 +47,25 @@
             $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'err:notLast');
         }
 
+        function fbLogin() {
+            FacebookService.login()
+                .then(function(fbLoginUser) {
+                    _.extend(vm.user, fbLoginUser);
+                    vm.user.password = fbLoginUser.providerData.accessToken;
+                    debugger;
+                    return signIn();
+                })
+                .catch(function(err) {
+                    logger.error('FBLogin Failed', err);
+                    debugger;
+                });
+        }
+
         /**
          * @description
          * Sign In
          */
-        function signIn () {
+        function signIn() {
 
             if (vm.mainLoginForm.$invalid) {
                 $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'err:formInvalid');
@@ -73,33 +88,33 @@
 
                         userService.getUserData()
                             .then(
-                                function success (profileData) {
-                                    securityService.initialize();
-                                    lockboxDocuments.removeOtherUserDocuments(profileData.id);
+                            function success(profileData) {
+                                securityService.initialize();
+                                lockboxDocuments.removeOtherUserDocuments(profileData.id);
 
-                                    $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'success');
-                                    $cordovaGoogleAnalytics.trackTiming('login', Date.now() - then, 'submit', 'success');
+                                $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'success');
+                                $cordovaGoogleAnalytics.trackTiming('login', Date.now() - then, 'submit', 'success');
 
+                                LoadingService.hide();
+                                $state.go('account.profile');
+
+                                vm.user.password = '';
+                            },
+                            function fail(err) {
+                                logger.error('Unable to retrieve user information', err);
+                                LoadingService.showAlert('Sorry, unable to login at this time');
+                            })
+                            .catch(
+                            function fail(err) {
+                                logger.error('Unknown error occurred after loading user data', err);
+
+                                if (_.isEmpty(userService.profileData)) {
+                                    LoadingService.showAlert('Sorry, unable to login at this time');
+                                } else {
                                     LoadingService.hide();
                                     $state.go('account.profile');
-
-                                    vm.user.password = '';
-                                },
-                                function fail (err) {
-                                    logger.error('Unable to retrieve user information', err);
-                                    LoadingService.showAlert('Sorry, unable to login at this time');
-                                })
-                            .catch(
-                                function fail (err) {
-                                    logger.error('Unknown error occurred after loading user data', err);
-
-                                    if (_.isEmpty(userService.profileData)) {
-                                        LoadingService.showAlert('Sorry, unable to login at this time');
-                                    } else {
-                                        LoadingService.hide();
-                                        $state.go('account.profile');
-                                    }
-                                });
+                                }
+                            });
 
                         vm.error = '';
                     } else {

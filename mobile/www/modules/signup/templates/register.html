@@ -12,24 +12,33 @@
                     <i class="icon ion-alert placeholder-icon validation-icon"></i>
                 </ion-input>
                 <br/>
-                <ion-input class="item item-input">
+                <ion-input class="item item-input" ng-hide="vm.user.provider">
                     <i class="icon ion-locked placeholder-icon"></i>
                     <input name="password" id="password" type="password" placeholder="Password" ng-model="vm.user.password" ng-minlength="8"
                     oset-focus required focus-me="vm.focusPass">
                     <i class="icon ion-alert placeholder-icon validation-icon"></i>
                 </ion-input>
-                <ion-input class="item item-input">
+                <ion-input class="item item-input" ng-hide="vm.user.provider">
                     <i class="icon ion-locked placeholder-icon"></i>
                     <input name="confirmPassword" id="confirmpass" type="password" placeholder="Confirm Password" ng-model="vm.user.confirmPassword"
                     compare-to="vm.user.password" ng-focus="vm.lastElementFocused = true; vm.clearConfirm();" ng-blur="vm.lastElementFocused = false"
                     required>
                     <i class="icon ion-alert placeholder-icon validation-icon"></i>
                 </ion-input>
+                <div class="description">
+                    or
+                    <br/>
+                </div>
+                <div class="description">
+                    <button type="button" class="button button-facebook icon-left ion-social-facebook" ng-click="vm.fbLogin()">
+                        &nbsp;|&nbsp;Sign Up With Facebook
+                    </button>
+                </div>
                 <input style="position:absolute; left:9999px" type="submit" />
 
             </form>
 
-            <div class="error" ng-if="vm.mainForm.$submitted && vm.mainForm.$invalid" role="alert" ng-messages="vm.mainForm.$error">
+            <div class="error" ng-if="!vm.user.provider && vm.mainForm.$submitted && vm.mainForm.$invalid" role="alert" ng-messages="vm.mainForm.$error">
                 <div ng-message="email">Please enter a valid email address</div>
                 <div ng-message="minlength">Password must be at least 8 characters</div>
                 <div ng-message="password">Passwords do not match</div>

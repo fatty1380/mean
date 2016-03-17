@@ -21,6 +21,8 @@ $danger: #B13E3E;
 $progress-green: #4CDA41;
 $bright-blue: #289EFF;
 
+$fb-blue: #3b5998;
+
 //$brand-bg: #0A2422;
 //$brand-bg: #062733;
 $brand-bg: $brand-blue;
@@ -200,6 +202,12 @@ $button-default-text:             $modal-secondary-text !default;
 $button-default-border:           #D2D2D2 !default;
 $button-default-active-bg:        $button-stable-active-bg !default;
 $button-default-active-border:    $button-stable-active-border !default;
+
+$button-facebook-bg:                  $fb-blue !default;
+$button-facebook-text:                #fff !default;
+$button-facebook-border:              darken($fb-blue, 10%) !default;
+$button-facebook-active-bg:           darken($fb-blue, 10%) !default;
+$button-facebook-active-border:       darken($fb-blue, 10%) !default;
 
 $button-circle-diameter:          76px;
 $button-circle-border-width:      2px;

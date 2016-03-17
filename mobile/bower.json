@@ -5,12 +5,13 @@
     "angular-google-staticmaps": "~0.3.0",
     "ionic": "~1.2.4",
     "ionic-rating": "~0.1.0",
-    "ngCordova": "~0.1.20-alpha",
+    "ngCordova": "~0.1.24-alpha",
     "pdfjs-dist": "~1.1.343",
     "angular-elastic": "~2.5.0",
     "moment": "~2.10.6",
     "lodash": "~3.10.0",
-    "angular-messages": "^1.4.9"
+    "angular-messages": "^1.4.9",
+    "ng-cordova-oauth": "^0.2.3"
   },
   "resolutions": {
     "angular": "1.4.3"
