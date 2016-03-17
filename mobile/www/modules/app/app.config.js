@@ -9,7 +9,7 @@ var AppConfig = (function() { // eslint-disable-line no-unused-vars
         'ionic.rating',
         'ngCordova.plugins.file',
         'ngCordova.plugins.fileTransfer',
-        'ngCordovaOauth',
+        'oauth.facebook',
         'ngIOS9UIWebViewPatch',
         'ngSanitize',
         'monospaced.elastic'
