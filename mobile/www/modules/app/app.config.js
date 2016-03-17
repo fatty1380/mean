@@ -44,6 +44,11 @@ var AppConfig = (function() { // eslint-disable-line no-unused-vars
         local: 'UA-52626400-3'
     };
 
+    var fbKeys = {
+        prod: '1634305163525639',
+        dev: '1682496348706520'
+    };
+
     var debug = debugModes[envMode] || false;
 
     return {
@@ -63,6 +68,10 @@ var AppConfig = (function() { // eslint-disable-line no-unused-vars
         getGAKey: function(env) {
             env = env || envMode || debug ? 'dev' : 'prod';
             return gaKeys[env] || gaKeys.dev;
+        },
+        getFBKey: function(env) {
+            env = env || envMode || debug ? 'dev' : 'prod';
+            return fbKeys[env] || fbKeys.dev;
         }
     };
     /** ---------------------------------------------------------- */

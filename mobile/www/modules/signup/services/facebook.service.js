@@ -19,7 +19,7 @@
         };
 
 
-        var fbAppId = '1682496348706520'; // prod: '1634305163525639'
+        var fbAppId = AppConfig.getFBKey();
 
         return service;
 
