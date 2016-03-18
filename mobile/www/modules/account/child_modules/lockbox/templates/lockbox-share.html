@@ -2,18 +2,15 @@
 <ion-modal-view class="lockbox lockbox-share view-section compact-size" ng-if="vm.shareStep === 1">
 
     <ion-header-bar>
-        <button class="button button-clear" ng-click="vm.cancel()">Cancel</button>
-        <h1 class="title">Share Profile</h1>
-        <button class="button button-clear" ng-click="vm.skipDocs()">skip</button>
+        <button class="button button-icon ion-close-round" ng-click="vm.cancel()"></button>
+        <h1 class="title">Select Documents</h1>
     </ion-header-bar>
 
-    <div class="bar bar-subheader">
-        <h3 class="title">Select documents to share along with your profile</h3>
-    </div>
+    <h3 class="title">Select documents to share along with your resume</h3>
 
     <ion-pane class="has-footer">
         <ion-scroll>
-            <ul class="list document-list">
+            <ul class="list document-list list-inset">
                 <li class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id">
                     <ion-checkbox ng-model="doc.checked">
                         <div class="item-content" ng-class="{'no-date': !doc.created}">
@@ -26,18 +23,13 @@
                     <!--<button class="button button-small" ng-click="vm.rename($index)">Rename</button>-->
                 </li>
             </ul>
-            <div class="button-holder text-center">
-                <a class="button button-clear manual-add" ng-click="vm.skipDocs()">
-                    Send Profile Only
-                </a>
-            </div>
         </ion-scroll>
     </ion-pane>
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button primary" ng-click="vm.addDocumentsToShare();">
-                continue ...
+                Continue
             </button>
         </div>
     </ion-footer-bar>
@@ -49,14 +41,12 @@
 ng-if="vm.shareStep === 2">
 
     <ion-header-bar>
-        <button class="button button-clear" ng-show="vm.canAccess" ng-click="vm.back()">Back</button>
+        <button class="button button-icon ion-ios-arrow-back" ng-show="vm.canAccess" ng-click="vm.back()"></button>
         <button class="button button-clear" ng-hide="vm.canAccess" ng-click="vm.cancel()">Cancel</button>
-        <h1 class="title">Share Profile</h1>
+        <h1 class="title">Share Resume</h1>
     </ion-header-bar>
 
-    <div class="bar bar-subheader" ng-if="vm.docsToShare.length">
-        <h3 class="title">Sharing profile and {{vm.docsToShare.length}} Document{{vm.docsToShare.length === 1 ? '' : 's'}}</h3>
-    </div>
+    <h3 class="title" ng-if="vm.docsToShare.length">Enter Email and Message to send Resume & Selected Documents</h3>
 
     <ion-pane class="has-footer">
         <ion-scroll>
@@ -66,7 +56,6 @@ ng-if="vm.shareStep === 2">
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
             <button class="button primary" ng-class="{'disabled': !(vm.contact.phone || vm.contact.email)}" ng-click="vm.shareDocuments()">Share</button>
         </div>
     </ion-footer-bar>

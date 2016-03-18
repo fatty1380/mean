@@ -30,18 +30,28 @@ body{
 
 
   &.signup-section {
-    background-color: $light;
-    background-image: url('../img/bg-gradient-base-light.jpg');
-    background-repeat: no-repeat;
-    background-position: 50% 0;
-    -ms-background-size: cover;
-    -o-background-size: cover;
-    -moz-background-size: cover;
-    -webkit-background-size: cover;
-    background-size: cover;
+    @include base-light-bg();
     
     .bar-header {
         background: none;
+    }
+  }
+  
+  &.modal {
+    @include base-light-bg();
+    
+    ion-pane {
+      background: transparent;
+      top: 15%;
+    }
+    
+    h3.title {
+      color: $content-body-text;
+      white-space: normal;
+      height: 80px;
+      font-size: 20px;
+      text-align: center;
+      padding: 30px 15px;
     }
   }
   
@@ -101,7 +111,7 @@ body{
     }
 
     .button{
-        color: $secondary-text-action;
+      color: $secondary-text-action;
       font-size: $bar-title-font-size;
       font-weight: $headings-font-weight;
       padding: 0 5px;
@@ -123,6 +133,10 @@ body{
         i{
           display: none;
         }
+      }
+      
+      &.ion-close-round::before {
+        font-size: 1.4em !important;
       }
     }
   }
@@ -386,10 +400,15 @@ textarea{
 }
 
 
-.share-form{
+.share-form {
   // height: 100%;
   display: flex;
   flex-direction: column;
+  
+  button {
+    background-color: #289EFF;
+    color: white;
+  }
   
   &.list-inset {
     background: none;
@@ -406,13 +425,14 @@ textarea{
     }
   }
 
-  .item-input, .item-select{
+  .item-input, .item-select {
     padding: 5px 15px;
-    border-width: 1px 1px 0 1px;
-    border-color: #D2D2D2;
+    border: 1px solid $brand-blue;
+    border-radius: 4px;
     background-color: $light;
+    margin: 6px 12px;
 
-    &:last-child{
+    &:last-child{ 
       //align-items: stretch;
       border-bottom-style: solid; 
       border-bottom-width: 1px;
@@ -437,9 +457,9 @@ textarea{
     }
     
     i.icon {
-      font-size: 1.4em;
+      font-size: 1.8em;
       margin-right: 20px;
-      float: right;
+      color: $brand-blue;
     }
 
     textarea{
@@ -447,6 +467,7 @@ textarea{
       padding: 8px 0 0;
       resize: none;
       vertical-align: top;
+      display: inline-block;
     }
   }
 }
