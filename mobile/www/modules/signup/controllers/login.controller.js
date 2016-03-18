@@ -8,7 +8,7 @@
     LoginCtrl.$inject = ['$state', 'lockboxDocuments', '$window', '$cordovaGoogleAnalytics',
         'FacebookService', 'registerService', 'LoadingService', 'tokenService', 'userService', 'securityService'];
 
-    function LoginCtrl ($state, lockboxDocuments, $window, $cordovaGoogleAnalytics,
+    function LoginCtrl($state, lockboxDocuments, $window, $cordovaGoogleAnalytics,
         FacebookService, registerService, LoadingService, tokenService, userService, securityService) {
         var vm = this;
         vm.lastElementFocused = false;
@@ -28,14 +28,14 @@
         vm.signIn = signIn;
         vm.submitForm = submitForm;
 
-        vm.echange = function () {
+        vm.echange = function() {
             vm.error = '';
             // logger.warn(' vm.user --->>>', vm.user.email);
         };
         /**
          * @description Submit form if last field in focus
         */
-        function submitForm (event) {
+        function submitForm(event) {
             vm.error = '';
 
             if (vm.lastElementFocused) {
@@ -47,15 +47,20 @@
             $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'err:notLast');
         }
 
-        function fbLogin () {
+        function fbLogin() {
             FacebookService.login()
-                .then(function (fbLoginUser) {
+                .then(function(fbLoginUser) {
                     _.extend(vm.user, fbLoginUser);
                     vm.user.password = fbLoginUser.providerData.accessToken;
                     debugger;
                     return signIn();
                 })
-                .catch(function (err) {
+                .catch(function(err) {
+
+                    if (err && /browser/i.test(err.reason)) {
+                        return LoadingService.showFailure('Sorry, FB Login only available on-device');
+                    }
+
                     logger.error('FBLogin Failed', err);
                     debugger;
                 });
@@ -65,7 +70,7 @@
          * @description
          * Sign In
          */
-        function signIn () {
+        function signIn() {
 
             if (vm.mainLoginForm.$invalid) {
                 $cordovaGoogleAnalytics.trackEvent('login', 'submit', 'err:formInvalid');
@@ -88,7 +93,7 @@
 
                         userService.getUserData()
                             .then(
-                            function success (profileData) {
+                            function success(profileData) {
                                 securityService.initialize();
                                 lockboxDocuments.removeOtherUserDocuments(profileData.id);
 
@@ -100,12 +105,12 @@
 
                                 vm.user.password = '';
                             },
-                            function fail (err) {
+                            function fail(err) {
                                 logger.error('Unable to retrieve user information', err);
                                 LoadingService.showAlert('Sorry, unable to login at this time');
                             })
                             .catch(
-                            function fail (err) {
+                            function fail(err) {
                                 logger.error('Unknown error occurred after loading user data', err);
 
                                 if (_.isEmpty(userService.profileData)) {

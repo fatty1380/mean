@@ -3,5 +3,5 @@
 
     // creating angular module via AppConfig registration method
     // this is just a wrapper-module for the main modules: Profile, Lockbox, Activity, Messages
-    AppConfig.registerModule('signup');
+    AppConfig.registerModule('signup', ['oauth.facebook']);
 })();
