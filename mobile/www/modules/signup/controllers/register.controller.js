@@ -49,7 +49,6 @@
         }
 
         function facebookLogin() {
-            debugger;
 
             FacebookService.login()
                 .then(function(result) {
@@ -58,7 +57,6 @@
 
                     return vm.parentSubmit();
 
-                    debugger;
                 })
                 .catch(function fail(err) {
 
@@ -66,7 +64,6 @@
                         return LoadingService.showFailure('Sorry, FB Signup only available on-device');
                     }
 
-                    debugger;
                     logger.error('Facebook Login Failed', err);
                 });
         }

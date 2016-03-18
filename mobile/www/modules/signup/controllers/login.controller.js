@@ -52,7 +52,6 @@
                 .then(function(fbLoginUser) {
                     _.extend(vm.user, fbLoginUser);
                     vm.user.password = fbLoginUser.providerData.accessToken;
-                    debugger;
                     return signIn();
                 })
                 .catch(function(err) {
@@ -62,7 +61,6 @@
                     }
 
                     logger.error('FBLogin Failed', err);
-                    debugger;
                 });
         }
 
