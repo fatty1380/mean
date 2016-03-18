@@ -15,7 +15,6 @@
 
         vm.back = back;
         vm.cancel = cancel;
-        vm.skipDocs = skipDocs;
         vm.documents = getRealDocs(parameters.documents || []);
         vm.addDocumentsToShare = addDocumentsToShare;
         vm.shareDocuments = shareDocuments;
