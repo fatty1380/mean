@@ -101,7 +101,6 @@
                     vm.thousandsOfMiles = miles / 1000;
                 }
                 else if (!!props.miles || props.miles === 0) {
-                    debugger;
                     vm.mileType = 'year';
                     miles = Number(props.miles);
                     if (miles < 1000) {
