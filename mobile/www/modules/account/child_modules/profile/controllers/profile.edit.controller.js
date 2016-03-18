@@ -154,7 +154,7 @@
             }
 
             $timeout(function () {
-                $('input.ng-invalid').focus();
+                angular.element('input.ng-invalid').focus();
             }, 1000);
 
         }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <meta http-equiv="Content-Security-Policy" content="default-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src  'self' 'unsafe-inline' *">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://graph.facebook.com https://maps.googleapis.com *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src  'self' 'unsafe-inline' *">
     <title>TruckerLine</title>
     <link href="assets/css/styles.css" rel="stylesheet">
 </head>
@@ -26,9 +26,13 @@
     
     <script src="lib/moment/min/moment.min.js"></script>
 
-    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
-    <!--<script src="lib/ngCordova/dist/ng-cordova-mocks.js"></script>-->
-    <script src="cordova.js"></script>
+    <script ng-if="AppConfig.isDevice" src="lib/ngCordova/dist/ng-cordova.js"></script>
+    <script ng-if="!AppConfig.isDevice" src="lib/ngCordova/dist/ng-cordova-mocks.js"></script>
+   
+    <!--<script src="lib/ng-cordova-oauth/lib/ng-cordova-oauth.js"></script>-->
+    <script src="lib/ng-cordova-oauth/src/utility.js"></script>
+    <script src="lib/ng-cordova-oauth/src/oauth.facebook.js"></script>
+    <!--<script src="cordova.js"></script>-->
 
     <!-- temp ionic IOS9 patch for webView-->
     <script src="modules/app/patch/webViewPatch.js"></script>
@@ -94,6 +98,7 @@
     <script src="modules/signup/directives/ng-img-crop.js"></script>
 
     <script src="modules/signup/services/register.service.js"></script>
+    <script src="modules/signup/services/facebook.service.js"></script>
     <script src="modules/signup/services/trailers.service.js"></script>
     <script src="modules/signup/services/trucks.service.js"></script>
     <script src="modules/signup/services/welcome.service.js"></script>

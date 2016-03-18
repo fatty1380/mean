@@ -7,12 +7,21 @@ var AppConfig = (function () { // eslint-disable-line no-unused-vars
         'ngMessages',
         'ui.router',
         'ionic.rating',
-        'ngCordova.plugins.file',
-        'ngCordova.plugins.fileTransfer',
         'ngIOS9UIWebViewPatch',
         'ngSanitize',
         'monospaced.elastic'
     ];
+
+    var isDevice = /^file/.test(window.location.href);
+
+    if (isDevice) {
+        appModuleDependencies.concat([
+            'ngCordova.plugins.file',
+            'ngCordova.plugins.fileTransfer']);
+    }
+    else {
+        appModuleDependencies.push('ngCordovaMocks');
+    }
 
     // ////////////////////////////////////////////////////////////////////////////////////
     // TODO: Find more appropriate place to put this code (if there is one)
@@ -43,6 +52,11 @@ var AppConfig = (function () { // eslint-disable-line no-unused-vars
         local: 'UA-52626400-3'
     };
 
+    var fbKeys = {
+        prod: '1634305163525639',
+        dev: '1682496348706520'
+    };
+
     var debug = debugModes[envMode] || false;
 
     return {
@@ -62,7 +76,12 @@ var AppConfig = (function () { // eslint-disable-line no-unused-vars
         getGAKey: function (env) {
             env = env || envMode || debug ? 'dev' : 'prod';
             return gaKeys[env] || gaKeys.dev;
-        }
+        },
+        getFBKey: function (env) {
+            env = env || envMode || debug ? 'dev' : 'prod';
+            return fbKeys[env] || fbKeys.dev;
+        },
+        isDevice: isDevice
     };
     /** ---------------------------------------------------------- */
 

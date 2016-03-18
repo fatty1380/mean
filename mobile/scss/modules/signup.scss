@@ -532,12 +532,11 @@ $but-height: 70px;
                         line-height: 120px;
                         font-size: 1.2em;
                     }
-                }
+                }         
                 
                 &.gte::after {
                     content: '+';
                     font-size: 0.8em;
-                    position: absolute;
                     right: -8px;
                     top: 0;
                     line-height: 10px;
@@ -546,10 +545,7 @@ $but-height: 70px;
                 &.lte::before {
                     content: '<';
                     font-size: 0.8em;
-                    position: absolute;
                     left: -8px;
-                    //top: 0;
-                    //line-height: 10px;
                 }
             }
          

@@ -130,14 +130,21 @@
         vm.labelText = null; //  'class';
         vm.labelPos = 'top';
 
-        vm.options = [
-            { min: 'A', title: 'A' },
-            { min: 'B', title: 'B' },
-            { min: 'C', title: 'C' }
-        ];
-
         vm.save = save;
         vm.submitForm = submitForm;
+        vm.activate = activate;
+
+        // ////////////////////////////////////////////////////////////////////
+
+        function activate () {
+            vm.profileData = UserService.profileData;
+
+            vm.user = {
+                firstName: vm.profileData.firstName,
+                lastName: vm.profileData.lastName,
+                handle: vm.profileData.handle
+            };
+        }
 
         function submitForm (event) {
             if (vm.lastElementFocused) {
@@ -337,6 +344,8 @@
             { min: 15, max: null, title: '15' }
         ];
 
+        // ////////////////////////////////////////////////////////////////////
+
         function activate () {
             var props = UserService.profileData && UserService.profileData.props || {};
 
@@ -389,6 +398,8 @@
             { min: false, title: 'NO' }
         ];
 
+        // ////////////////////////////////////////////////////////////////////
+
         function activate () {
             var props = UserService.profileData && UserService.profileData.props || {};
             vm.selected = props.owner;
@@ -431,6 +442,8 @@
             { min: true, title: 'YES' },
             { min: false, title: 'NO' }
         ];
+
+        // ////////////////////////////////////////////////////////////////////
 
         function activate () {
             vm.profileData = UserService.profileData || {};
