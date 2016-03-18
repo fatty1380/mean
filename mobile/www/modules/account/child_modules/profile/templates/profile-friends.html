@@ -1,7 +1,7 @@
 <ion-view class="friends-screen view-section min-size" cache-view="false">
 
     <ion-header-bar>
-        <button class="button button-clear" ng-click="vm.exitState();">Close</button>
+        <button class="button button-icon ion-close-round" ng-click="vm.exitState();"></button>
         <h1 class="title">{{vm.title}}</h1>
         <button class="button button-clear" ng-if="vm.canEdit" ng-click="vm.showRequestsModal();"><span ng-if="vm.newRequests" class="badge badge-assertive">{{vm.newRequests}}</span> Requests</button>
     </ion-header-bar>

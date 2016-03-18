@@ -30,31 +30,29 @@ body{
 
 
   &.signup-section {
-    background-color: $light;
-    background-image: url('../img/bg-gradient-base-light.jpg');
-    background-repeat: no-repeat;
-    background-position: 50% 0;
-    -ms-background-size: cover;
-    -o-background-size: cover;
-    -moz-background-size: cover;
-    -webkit-background-size: cover;
-    background-size: cover;
+    @include base-light-bg();
     
     .bar-header {
         background: none;
     }
   }
   
-  &.lockbox {
-    background-color: $light;
-    background-image: url('../img/bg-gradient-base-light.jpg');
-    background-repeat: no-repeat;
-    background-position: 50% 0;
-    -ms-background-size: cover;
-    -o-background-size: cover;
-    -moz-background-size: cover;
-    -webkit-background-size: cover;
-    background-size: cover;
+  &.modal {
+    @include base-light-bg();
+    
+    ion-pane {
+      background: transparent;
+      top: 15%;
+    }
+    
+    h3.title {
+      color: $content-body-text;
+      white-space: normal;
+      height: 80px;
+      font-size: 20px;
+      text-align: center;
+      padding: 30px 15px;
+    }
   }
   
   &.full-size > .pane{
@@ -113,7 +111,7 @@ body{
     }
 
     .button{
-        color: $secondary-text-action;
+      color: $secondary-text-action;
       font-size: $bar-title-font-size;
       font-weight: $headings-font-weight;
       padding: 0 5px;
@@ -135,6 +133,10 @@ body{
         i{
           display: none;
         }
+      }
+      
+      &.ion-close-round::before {
+        font-size: 1.4em !important;
       }
     }
   }

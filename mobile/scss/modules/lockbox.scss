@@ -15,21 +15,6 @@
       }
   }
   
-    h3.title {
-      padding-top: $padding-base-vertical;
-      padding-bottom: $padding-base-vertical;
-      color: $content-body-text;
-      white-space: normal;
-      height: 80px;
-      padding-top: 30px;
-      font-size: 20px;
-      text-align: center;
-    }
-  
-  ion-pane {
-    background: transparent;
-  }
-  
   ion-pane.lockbox-edit-top.pane{
       top: 128px;
   }
@@ -64,8 +49,9 @@ and (max-device-height : 568px) {
 
 
 // document list
-.document-list{
-    
+.document-list {
+  background-color: transparent;
+  
     button.button-small.button {
         color: $balanced;
         border-color: $balanced;
@@ -139,13 +125,17 @@ and (max-device-height : 568px) {
             box-shadow: inset 1px 1px 15px rgba($action-text, 0.9);
         }
     }
+    
+    .item {
+      background-color: transparent !important;
+    }
   
-  &::last-child {
-  border-bottom: 1px solid #D2D2D2;
+  li.item:last-child {
+    border-bottom: 2px solid #D2D2D2;
   }
 
-  .item {
-    border-top: 1px solid #D2D2D2;
+  li.item {
+    border-top: 2px solid #D2D2D2;
     padding-left: 62px;
     padding-right: 100px;
     min-height: 70px;
@@ -191,11 +181,12 @@ and (max-device-height : 568px) {
         position: absolute;
         top: 50%;
         left: 21px;
-      }
-      
-      i.checkbox-icon::after {
-        width: 72%;
-        height: 30%;
+        
+        &::after {
+          width: 72%;
+          height: 30%;
+          left: 20%;
+        }
       }
     }
 
