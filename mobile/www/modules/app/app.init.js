@@ -30,9 +30,9 @@
     function configDefaultTabPosition ($ionicConfigProvider) {
         $ionicConfigProvider.tabs.position('bottom');
 
-        // TLINE-152/189 : Check icons on ios and android devices        
+        // TLINE-152/189 : Check icons on ios and android devices
         // $ionicConfigProvider.backButton.icon('ion-ios-arrow-back');
-         $ionicConfigProvider.backButton.text(null);
+        $ionicConfigProvider.backButton.text(null);
     }
 
     configDefaultRoute.$inject = ['$urlRouterProvider'];

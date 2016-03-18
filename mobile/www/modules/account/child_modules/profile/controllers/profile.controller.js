@@ -93,7 +93,7 @@
                 var props = vm.profileData.props;
 
                 var miles;
-                                
+
                 if (!!props.careerMiles) {
                     vm.mileType = 'career';
                     vm.mileUnits = props.mileUnit;
@@ -101,29 +101,40 @@
                     vm.thousandsOfMiles = miles / 1000;
                 }
                 else if (!!props.miles || props.miles === 0) {
+                    debugger;
                     vm.mileType = 'year';
                     miles = Number(props.miles);
-                    vm.thousandsOfMiles = miles >= 1000 ? miles / 1000 : miles;
-                    vm.mileUnit = 'k';
-
-                    if (vm.thousandsOfMiles >= 1000) {
-                        vm.thousandsOfMiles = Number(vm.thousandsOfMiles / 1000).toFixed(1);
-                        vm.mileUnit = 'm';
+                    if (miles < 1000) {
+                        vm.mileUnit = '';
+                        vm.thousandsOfMiles = miles;
                     }
-
-                    else if (vm.thousandsOfMiles === 0) {
-                        vm.thousandsOfMiles = 100;
-                        vm.milesMin = true;
-                    }
-
                     else {
-                        vm.thousandsOfMiles = Number(miles >= 1000 ? miles / 1000 : miles).toFixed(0);
+                        vm.thousandsOfMiles = miles >= 1000 ? miles / 1000 : miles;
+                        vm.mileUnit = 'k';
+
+                        if (vm.thousandsOfMiles >= 1000) {
+                            if (vm.thousandsOfMiles === 2000) {
+                                vm.milesMax = true;
+                            }
+                            vm.thousandsOfMiles = Number(vm.thousandsOfMiles / 1000).toFixed(1);
+                            vm.mileUnit = 'm';
+                        }
+
+                        else if (vm.thousandsOfMiles === 0) {
+                            vm.thousandsOfMiles = 100;
+                            vm.milesMin = true;
+                        }
+
+                        else {
+                            vm.thousandsOfMiles = Number(miles >= 1000 ? miles / 1000 : miles).toFixed(0);
+                        }
                     }
+
                 }
 
                 if (!!props.started) {
                     vm.yearsDriving = moment().diff(moment(props.started, 'YYYY-MM'), 'years');
-                    
+
                     if (vm.yearsDriving === 0) {
                         vm.yearsDriving = 1;
                         vm.timeMin = true;
@@ -233,7 +244,7 @@
             getExperience();
 
             vm.expInstructText = '<p>This is your profile’s experience section where you can keep a digital record of your work experience - think of it like a digital resume. Add your past jobs here and add details about all your responsibilities to present a full picture of your professional abilities.</p>' +
-            '<p class="message">Get started with the <strong>Add Experience</strong> button below</p>';
+                '<p class="message">Get started with the <strong>Add Experience</strong> button below</p>';
 
             /**
              * showEditAvatar
@@ -290,9 +301,9 @@
                     .then(function (result) {
                         logger.debug(result);
                     },
-                        function (err) {
-                            logger.debug(err);
-                        });
+                    function (err) {
+                        logger.debug(err);
+                    });
             };
 
             vm.showRequestReviewModal = function (parameters) {
@@ -304,9 +315,9 @@
                     .then(function (result) {
                         logger.debug(result);
                     },
-                        function (err) {
-                            logger.debug(err);
-                        });
+                    function (err) {
+                        logger.debug(err);
+                    });
             };
         }
         // END: vm.canEdit

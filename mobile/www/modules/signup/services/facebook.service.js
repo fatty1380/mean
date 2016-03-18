@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -6,7 +6,7 @@
         .factory('FacebookService', FacebookService);
 
     FacebookService.$inject = ['$ngCordovaFacebook', '$http', '$q', 'settings', 'tokenService'];
-    function FacebookService(facebook, $http, $q, settings, tokenService) {
+    function FacebookService (facebook, $http, $q, settings, tokenService) {
 
         var _userData = {
             props: {}
@@ -25,15 +25,15 @@
 
         // //////////////////////////////////////////////////////////////
 
-        function getFBUser() {
+        function getFBUser () {
 
             return getFBToken()
-                .then(function(accessToken) {
+                .then(function (accessToken) {
 
                     var fields = ['id', 'email', 'name', 'first_name', 'last_name', 'work', 'picture'];
 
                     return getUserInfo(fields)
-                        .then(function(result) {
+                        .then(function (result) {
                             var fbProfile = result.data;
 
                             var profilePic = 'https//graph.facebook.com/' + fbProfile.id + '/picture?type=large';
@@ -54,9 +54,9 @@
                 });
         }
 
-        function doFBLogin() {
+        function doFBLogin () {
             return getFBToken()
-                .then(function(accessToken) {
+                .then(function (accessToken) {
 
                     var fields = ['id', 'email'];
 
@@ -68,7 +68,7 @@
                         }
                     });
                 })
-                .then(function(result) {
+                .then(function (result) {
                     var fbProfile = result.data;
 
                     var profilePic = 'https//graph.facebook.com/' + fbProfile.id + '/picture?type=large';
@@ -84,7 +84,7 @@
                 });
         }
 
-        function getUserInfo(fields) {
+        function getUserInfo (fields) {
 
             fields = fields || ['id', 'email'];
 
@@ -97,7 +97,7 @@
                             fields: fields.join(','),
                             format: 'json'
                         }
-                    })
+                    });
             }
 
             if (_.isEmpty(tokenService.get('fb_access_token'))) {
@@ -105,23 +105,23 @@
             }
 
             if (moment().isAfter(moment(tokenService.get('fb_access_expires')))) {
-                return $q.reject('FB Access Token is Expired')
+                return $q.reject('FB Access Token is Expired');
             }
 
             return $q.reject('No Valid FB Access Token');
         }
 
-        // ////////////////////////////////////////////////////////////////////        
+        // ////////////////////////////////////////////////////////////////////
 
-        function isValidToken() {
+        function isValidToken () {
             return !_.isEmpty(tokenService.get('fb_access_token')) && moment().isBefore(moment(tokenService.get('fb_access_expires')));
         }
 
-        function getFBToken() {
+        function getFBToken () {
             var fbGetTokenRequest = isValidToken() ?
                 $q.when(tokenService.get('fb_access_token')) :
                 facebook.signin(fbAppId, ['email', 'read_stream', 'user_website', 'user_location', 'user_relationships'])
-                    .then(function(result) {
+                    .then(function (result) {
 
                         tokenService.set('fb_access_token', result.access_token);
                         tokenService.set('fb_access_expires', moment().add(result.expires_in, 'seconds').toISOString());

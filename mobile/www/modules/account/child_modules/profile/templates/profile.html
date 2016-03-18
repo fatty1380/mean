@@ -81,7 +81,7 @@
                         <div class="circle" ng-click="vm.showEditModal('miles')">
                             <div class="miles-badge">
                                 
-                                <span ng-if="vm.thousandsOfMiles" ng-class="{'lte':vm.milesMin}">
+                                <span ng-if="vm.thousandsOfMiles" ng-class="{'lte':vm.milesMin, 'gte':vm.milesMax}">
                                 {{vm.thousandsOfMiles}}<span class="small">{{vm.mileUnit}}</span>
                                 </span>
                                 
@@ -92,7 +92,7 @@
                         <div class="circle" ng-click="vm.showEditModal('license')">
                             <div class="license-badge">
                                 <span ng-if="!vm.profileData.license || !vm.profileData.license.class" class="empty"> <i class="ion ion-compose"></i> </span>
-                                <span class="label-text top">class</span> {{vm.profileData.license.class}}
+                                <span class="label-text bot">license</span> {{vm.profileData.license.class}}
                                 <span class="label-text bot hide">license</span>
                             </div>
                         </div>
