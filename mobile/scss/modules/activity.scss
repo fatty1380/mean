@@ -54,9 +54,7 @@
     &.item{
       padding-top: 4px!important;
       padding-bottom: 4px!important;
-    }
-    
-    
+    } 
   }
    
     //margin-bottom: 2px;
@@ -70,10 +68,14 @@
       margin-right: 15px;
     }
 
-    .activity-item{
+    .activity-item {
       overflow: hidden;
 
-      .ico {vertical-align: middle;}
+      .ico { 
+        vertical-align: middle;
+        margin-top: 0;
+        margin-bottom: 2px;
+      }
 
       .panel{
         position: relative;
@@ -94,6 +96,10 @@
 
         .text{
           overflow: hidden;
+          padding-bottom: 5px;
+          margin-bottom: 10px;
+          border-bottom: 1px solid $bright-blue;
+           
           .holder{
             overflow: hidden;
           }
@@ -153,6 +159,7 @@
       
       .title {
         font-weight: 500;
+        font-size: $bar-title-font-size;
       }
 
       .title, .notes-content {
@@ -172,6 +179,7 @@
         border-color: $stable;
         border-style: solid;
         border-collapse: collapse;
+        background-color: $item-divider-bg;
       }
       // .notes.active {
       //   border-top: 1px solid purple;
@@ -186,7 +194,9 @@
     
     .static-map {
       position: relative;
-      left: -$item-padding;
+      left: -$item-padding / 2;
+      
+      
       //bottom: -$item-padding + (-4px);
     }
   
@@ -317,7 +327,11 @@
 
   }
   
-    .notes i.ion{vertical-align: middle;}
+    .notes i.icon {
+      vertical-align: middle;
+      color: $icon-notes-yellow;
+      font-size: 1.2em;
+    }
 
     .dist, .time {
       font-weight: 400;
@@ -329,12 +343,13 @@
         padding-left: 2px;
       }
       
-      .lbl, .dist.mi:after  {
+      .dist.mi:after  {
         font-size: 0.7em;
         text-transform: uppercase;
       }
       
       .lbl {
+        text-transform: capitalize;
         padding-left: 0;
       }
   

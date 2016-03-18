@@ -33,14 +33,13 @@
                         </div>
 
                         <div class="title">{{ vm.entry.title }}</div>
-                        <div class="notes-content" ng-if="!vm.entry.company" ng-show="!!vm.showNotes">
-                            <span ng-bind="vm.entry.notes"></span>
-                        </div>
 
                         <div class="clearfix props" ng-if="!vm.entry.company">
                             <div class="left notes" ng-class="{'active':!!vm.showNotes}" ng-if="!!vm.entry.notes" ng-click="vm.showNotes = !vm.showNotes">
-                                <i class="ion-document-text"></i>
+                                <i class="icon ion-ios-list-outline"></i>
                                 <span class="lbl">notes</span>&nbsp;
+                                <i class="ion-chevron-up" ng-hide="!!vm.showNotes"></i>
+                                <i class="ion-chevron-down" ng-show="!!vm.showNotes"></i>
                             </div>
 
                             <div class="right dist driven" ng-if="!!vm.entry.props.distance">
@@ -53,6 +52,10 @@
                                 <i class="ico ico-freight"></i>
                                 <span>{{vm.entry.props.freight}}</span>
                             </div>
+                        </div>
+                        
+                        <div class="notes-content" ng-if="!vm.entry.company" ng-show="!!vm.showNotes">
+                            <span ng-bind="vm.entry.notes"></span>
                         </div>
                     </div>
                 </div>
