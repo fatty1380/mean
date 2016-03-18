@@ -1,5 +1,5 @@
 /* global logger */
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -7,7 +7,7 @@
         .directive('tlineExperienceList', tlineExperienceList);
 
     tlineExperienceList.$inject = [];
-    function tlineExperienceList() {
+    function tlineExperienceList () {
         // Usage:
         //
         // Creates:
@@ -31,21 +31,21 @@
         };
         return directive;
 
-        function link(scope, element, attrs) {
+        function link (scope, element, attrs) {
             scope.dm.activate();
         }
     }
     /* @ngInject */
 
     ExperienceListController.$inject = ['$cordovaGoogleAnalytics', 'profileModalsService', 'experienceService'];
-    function ExperienceListController($cordovaGoogleAnalytics, profileModalsService, experienceService) {
+    function ExperienceListController ($cordovaGoogleAnalytics, profileModalsService, experienceService) {
         var dm = this;
 
         dm.activate = activate;
 
         // ///////////////////////////////////////////////////////////////////////////////
 
-        function activate() {
+        function activate () {
             if (dm.canEdit) {
                 getExperience();
             }
@@ -56,11 +56,11 @@
             }
         }
 
-        function showAddExperienceModal(parameters) {
+        function showAddExperienceModal (parameters) {
             $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'addExperience');
             profileModalsService
                 .showAddExperienceModal(parameters)
-                .then(function(experienceResult) {
+                .then(function (experienceResult) {
                     if (_.isEmpty(experienceResult)) {
                         return;
                     }
@@ -71,16 +71,16 @@
                         dm.experience.push(experienceResult);
                     }
                 })
-                .catch(function(err) {
+                .catch(function (err) {
                     if (!!err) { logger.debug(err); }
                 });
         }
 
-        function showEditExperienceModal(experienceItem) {
+        function showEditExperienceModal (experienceItem) {
             $cordovaGoogleAnalytics.trackEvent('Profile', 'main', 'editExperience');
             profileModalsService
                 .showEditExperienceModal(experienceItem)
-                .then(function(experienceResult) {
+                .then(function (experienceResult) {
                     logger.debug('Edited Experience ', experienceResult);
 
                     if (_.isArray(experienceResult)) {
@@ -93,17 +93,17 @@
                     // experienceItem = result;
                     getExperience();
                 })
-                .catch(function(err) {
+                .catch(function (err) {
                     if (!!err) { logger.debug(err); }
                 });
         }
 
 
 
-        function getExperience() {
+        function getExperience () {
             experienceService
                 .getUserExperience()
-                .then(function(response) {
+                .then(function (response) {
                     dm.experience = response.data || [];
                 });
         }

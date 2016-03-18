@@ -1,6 +1,6 @@
 'use strict';
 
-var AppConfig = (function() { // eslint-disable-line no-unused-vars
+var AppConfig = (function () { // eslint-disable-line no-unused-vars
     var appModuleName = 'truckerline';
     var appModuleDependencies = [
         'ionic',
@@ -64,20 +64,20 @@ var AppConfig = (function() { // eslint-disable-line no-unused-vars
         appModuleDependencies: appModuleDependencies,
         registerModule: registerModule,
         debug: debug,
-        getUrl: function(env) {
+        getUrl: function (env) {
             env = env || envMode;
             return URLs[env] || URLs.dev;
         },
-        getBranchKey: function(env) {
+        getBranchKey: function (env) {
             env = env || envMode || debug ? 'dev' : 'prod';
 
             return branchKeys[env] || branchKeys.dev;
         },
-        getGAKey: function(env) {
+        getGAKey: function (env) {
             env = env || envMode || debug ? 'dev' : 'prod';
             return gaKeys[env] || gaKeys.dev;
         },
-        getFBKey: function(env) {
+        getFBKey: function (env) {
             env = env || envMode || debug ? 'dev' : 'prod';
             return fbKeys[env] || fbKeys.dev;
         },
@@ -85,7 +85,7 @@ var AppConfig = (function() { // eslint-disable-line no-unused-vars
     };
     /** ---------------------------------------------------------- */
 
-    function registerModule(moduleName, dependencies) {
+    function registerModule (moduleName, dependencies) {
         // create angular module
         angular.module(moduleName, dependencies || []);
         // Add the module to the AngularJS configuration file

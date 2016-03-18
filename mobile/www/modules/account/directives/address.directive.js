@@ -115,28 +115,28 @@
         var vm = this;
         vm.select = select;
         vm.states = vm.states || null;
-        
-        initialize();        
-        ////////////////////
-        function initialize(){
+
+        initialize();
+        // //////////////////
+        function initialize () {
             return getStates();
         }
-        
-        function select() {
+
+        function select () {
             if (vm.state) {
                 vm.address.state = vm.state['alpha-2'];
             }
         }
-        
+
         function getStates () {
             return API.doRequest(settings.stateAddress, 'GET')
-                .then(function success(states) {
+                .then(function success (states) {
                     vm.states = states.data;
                     return vm.states;
                 })
-                .catch(function fail(err) {
+                .catch(function fail (err) {
                     logger.error('Failed to retrieve list of states', err);
-                    vm.states = null; 
+                    vm.states = null;
                     return vm.states;
                 });
         }
