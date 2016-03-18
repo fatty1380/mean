@@ -1,5 +1,5 @@
 <!-- Modal step #1 -->
-<ion-modal-view class="lockbox lockbox-share view-section compact-size" ng-if="vm.shareStep === 1">
+<ion-modal-view class="lockbox lockbox-share view-section compact-size bg-transparent" ng-if="vm.shareStep === 1">
 
     <ion-header-bar>
         <button class="button button-icon ion-close-round" ng-click="vm.cancel()"></button>
@@ -37,7 +37,7 @@
 </ion-modal-view>
 
 <!-- Modal step #2 -->
-<ion-modal-view class="lockbox lockbox-share view-section compact-size" ng-class="{'compact-size': (vm.docsToShare && vm.docsToShare.length), 'min-size': (!vm.docsToShare || !vm.docsToShare.length)}"
+<ion-modal-view class="lockbox lockbox-share view-section compact-size bg-transparent" ng-class="{'compact-size': (vm.docsToShare && vm.docsToShare.length), 'min-size': (!vm.docsToShare || !vm.docsToShare.length)}"
 ng-if="vm.shareStep === 2">
 
     <ion-header-bar>

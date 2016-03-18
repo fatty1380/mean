@@ -37,7 +37,7 @@ body{
     }
   }
   
-  &.modal {
+  &.bg-transparent {
     @include base-light-bg();
     
     ion-pane {
