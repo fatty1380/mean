@@ -26,7 +26,7 @@ exports.config = {
     },
     
   
-    seleniumServerJar: 'node_modules/gulp-protractor/node_modules/protractor/selenium/selenium-server-standalone-2.48.2.jar',
+    seleniumServerJar: 'node_modules/gulp-protractor/node_modules/protractor/selenium/selenium-server-standalone-2.51.0.jar',
     // seleniumAddress: 'http://localhost:4444/wd/hub',
 
     baseUrl: 'http://localhost:8100'
