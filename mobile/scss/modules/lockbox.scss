@@ -8,22 +8,26 @@
           font-size: 1.8em;
           line-height: 1.55em;
       }
+      
+      .button-clear .icon::before {
+        font-size: 1em;
+        padding: 5px;
+      }
   }
   
-  .bar-subheader {
-      background-color: $stable;
-      
+    h3.title {
       padding-top: $padding-base-vertical;
       padding-bottom: $padding-base-vertical;
-      
+      color: $content-body-text;
+      white-space: normal;
       height: 80px;
-      
-      h3.title {
-        color: $content-body-text;
-        white-space: normal;
-        height: 80px;
-        padding-top: 20px;
-      }
+      padding-top: 30px;
+      font-size: 20px;
+      text-align: center;
+    }
+  
+  ion-pane {
+    background: transparent;
   }
   
   ion-pane.lockbox-edit-top.pane{
@@ -41,10 +45,8 @@
          top: 140px;
       }
    }
-    
-    
-
 }
+
 @media only screen
 and (max-device-height : 568px) {
     
@@ -151,9 +153,14 @@ and (max-device-height : 568px) {
     .item-content{
       text-overflow: initial;
       white-space: normal;
+      display: inline-block;
 
       strong,
       span{display: block;}
+      
+      strong {
+        font-size: 18px;
+      }
 
       &.no-date{
         strong{
@@ -172,12 +179,23 @@ and (max-device-height : 568px) {
       bottom: 0;
       padding-right: 0px;
       position: absolute;
+      
+      .checkbox {
+        display: inline-block;
+        position: static;
+      }
 
-      i.checkbox-icon{
+      i.checkbox-icon {
+        width: 30px;
+        height: 30px;
         position: absolute;
         top: 50%;
-        margin-top: -10px;
         left: 21px;
+      }
+      
+      i.checkbox-icon::after {
+        width: 72%;
+        height: 30%;
       }
     }
 
