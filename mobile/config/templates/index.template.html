@@ -8,7 +8,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://graph.facebook.com https://maps.googleapis.com *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src  'self' 'unsafe-inline' *">
+    <meta http-equiv="Content-Security-Policy" 
+          content="
+          default-src 'self' data: gap: https://*.truckerline.com 127.0.0.1:* localhost:* http://*.elasticbeanstalk.com/ https://*.elasticbeanstalk.com ws://localhost:*/ https://*.facebook.com/;
+          script-src 'self' 'unsafe-inline' 'unsafe-eval' 127.0.0.1:* http://localhost:*/ https://*.googleapis.com/ http://*.google-analytics.com/ https://api.branch.io/ ; 
+          img-src 'self' https://*.facebook.com https://*.gstatic.com http://www.google-analytics.com/;
+          style-src  'self' 'unsafe-inline' *">
     <title>TruckerLine</title>
     
     <!--Application CSS Files-->{% for cssFile in cssFiles %}
