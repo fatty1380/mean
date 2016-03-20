@@ -167,10 +167,6 @@
 
                     LoadingService.showLoader('Logging Out');
 
-                    tokenService.set('access_token', '');
-                    tokenService.set('refresh_token', '');
-                    tokenService.set('token_type', '');
-
                     vm.cancelModal('logout');
 
                     // clear controllers data

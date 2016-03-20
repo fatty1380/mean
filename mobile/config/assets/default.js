@@ -8,12 +8,13 @@ module.exports = {
                 'lib/ionic/release/js/ionic.bundle.js',
                 'lib/ionic-rating/ionic-rating.js',
                 'lib/lodash/lodash.js',
+                'lib/moment/min/moment.min.js', 
                 'lib/angular-elastic/elastic.js',
                 'lib/angular-messages/angular-messages.js',
                 'lib/angular-google-staticmaps/angular-google-staticmaps.js',
-                'lib/moment/min/moment.min.js',
                 'lib/ngCordova/dist/ng-cordova.js',
-                'lib/ngCordova/dist/ng-cordova-mocks.js',
+                //'lib/ngCordova/dist/ng-cordova-mocks.js',
+                'cordova.js',
                 'lib/ng-cordova-oauth/src/utility.js',
                 'lib/ng-cordova-oauth/src/oauth.facebook.js',
                 'lib/pdfjs-dist/build/pdf.js',
@@ -45,6 +46,7 @@ module.exports = {
             'modules/app/directives/add.contact.directive.js',
             'modules/app/directives/debounce.input.directive.js',
             'modules/app/directives/focus.input.directive.js',
+            'modules/app/directives/focusMe.input.directive.js',
             'modules/app/directives/toggle.directive.js',
             'modules/app/constants/settings.js',
             'modules/avatar/avatar.module.js',
@@ -72,6 +74,7 @@ module.exports = {
             'modules/signup/services/trucks.service.js',
             'modules/signup/services/welcome.service.js',
             'modules/signup/services/token.service.js',
+            'modules/signup/services/storage.service.js',
             'modules/signup/services/interceptor.service.js',
             'modules/account/account.module.js',
             'modules/account/config/account.module.routes.js',
@@ -134,7 +137,7 @@ module.exports = {
         ],
         fonts: [],
         css: [
-            'modules/theme/client/css/styles.css'
+            'assets/css/styles.css'
         ],
         less: [
             'modules/*/client/less/*.less'

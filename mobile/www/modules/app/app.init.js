@@ -134,11 +134,12 @@
             if ($window.cordova && $window.cordova.plugins && $window.cordova.plugins.Keyboard) {
                 $cordovaKeyboard.hideAccessoryBar(false);
                 // cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
-            } else if ($window.cordova) {
+            }
+            else if ($window.cordova) {
                 logger.error('Cordova Plugins are not Defined - not configuring keyboard');
             }
 
-            if (!!$window.StatusBar) {
+            if ($window.StatusBar) {
                 $cordovaStatusbar.style(1);
                 // StatusBar.styleDefault();
             }
@@ -149,7 +150,6 @@
                 screen.lockOrientation('portrait');
             }
         });
-        // }, 5000);
     }
 
     initializeBranch.$inject = ['$ionicPlatform', '$window', 'settings'];

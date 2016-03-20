@@ -129,22 +129,3 @@
         }
     }
 })();
-
-angular.module('activity').directive('focusMe', function ($timeout) {
-    'use strict';
-
-    return {
-        scope: { trigger: '=focusMe' },
-        link: function (scope, element) {
-            scope.$watch('trigger', function (value) {
-                if (value === true) {
-          // logger.debug('trigger',value);
-                    $timeout(function () {
-                        element[0].focus();
-                        scope.trigger = false;
-                    }, 100);
-                }
-            });
-        }
-    };
-});
