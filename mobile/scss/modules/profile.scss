@@ -315,8 +315,14 @@
       color: $dark;
     }
     
-    .col {
+    .col, .col-50 {
       padding: 0;
+    }
+    
+    // add styling to allow for more text before ellipsis
+    .company-container {
+      max-width: 70%;
+      padding-left: 0;
     }
     
     .company {
@@ -325,6 +331,19 @@
       text-transform: uppercase;
       color: $dark;
       padding-bottom: $padding-small-vertical;
+    }
+    
+    .time-container {
+      position: absolute;
+      right: 30%;
+      
+      .time {
+        position: absolute;
+      }
+    }
+    
+    .job-title {
+      margin-right: 5px;
     }
     
     h4 {

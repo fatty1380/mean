@@ -31,10 +31,10 @@
         <div ng-repeat="exp in (dm.experience) track by $index" ng-if="dm.showCompact">
             <div class="exp-item">
                 <div class="row">
-                    <div class="col-50">
+                    <div class="company-container">
                         <div class="company ellipsis" ng-if="!!exp.company"> {{exp.company}}</div>
                     </div>
-                    <div class="col-50 text-right">
+                    <div class="time-container text-right">
                         <div class="time" ng-if="!!exp.startDate || exp.endDate">
                             <i class="ico ico-timesmall"></i>
                             <span ng-if="!!exp.startDate">{{exp.startDate | monthDate | date : 'yyyy'}}</span>
@@ -47,7 +47,7 @@
 
                 <div class="row">
                     <div class="col-50">
-                        <div class="title ellipsis">{{exp.title}}</div>
+                        <div class="job-title ellipsis">{{exp.title}}</div>
                     </div>
                     <div class="col-50 text-right">
                         <div class="locations ellipsis" ng-if="!!exp.location">{{exp.location}}</div>
