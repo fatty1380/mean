@@ -10,7 +10,6 @@
     function tokenService($rootScope, $window) {
 
         $rootScope.$on('clear', function() {
-            debugger;
             $window.localStorage.removeItem('access_token');
             $window.localStorage.removeItem('refresh_token');
             $window.localStorage.removeItem('token_type');
