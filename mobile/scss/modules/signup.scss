@@ -847,7 +847,19 @@ progress {
 /* edit avatar */
 .edit-avatar {
   ion-pane {
-    background-color: $gradient-bottom;
+    background-color: white;
+  }
+  
+  .bar-header {
+    background-color: $tab-selected;
+    
+    .button-icon, h1 {
+      color: white;
+    }
+  }
+  
+  .bar-subheader.title {
+    padding: 5px;
   }
 
   .cropArea {
