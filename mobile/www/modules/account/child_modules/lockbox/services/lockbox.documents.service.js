@@ -374,13 +374,11 @@
 
 
             var promises = _.map(documents, function(doc) {
-                // debugger
                 logger.debug('[LockboxDocsService] Removing Doc: %s w/ ID: %s ', doc.sku, doc.id);
 
 
                 return API.doRequest(settings.documents + doc.id, 'delete')
                     .catch(function fail(err) {
-                        debugger;
                         if (err.status === 404) {
                             logger.debug('document not found on server', err);
                             return;
@@ -393,7 +391,6 @@
                         return removeOneDocument(doc);
                     })
                     .then(function(success) {
-                        debugger;
                         var stub = _.find(docTypeDefinitions, { sku: doc.sku });
                         var alreadyHasStub = _.find(vm.documents, { sku: doc.sku });
                         if (!!stub && !alreadyHasStub) {
@@ -401,7 +398,6 @@
                         }
                     })
                     .catch(function fail(err) {
-                        debugger;
                         logger.error('failed to delete documents ', err);
                     });;
 
@@ -426,10 +422,9 @@
             return $cordovaFileTransfer.download(doc.url, path, { encodeURI: false }, true)
                 .then(function success (entry) {
                     logger.debug('Downloaded and saved doc `%s`', id);
-
-
-                    debugger;
-                    return _.extend(doc, entry)        
+                    logger.debug(entry);
+                    var temp = {name: doc.name};
+                    return _.extend(doc, entry, temp);       
                 })
                 .catch(function fail (err) {
                     logger.error('Error downloading doc `%s`', id, err);
@@ -513,7 +508,6 @@
 
             return $cordovaFile.checkDir(path, user)
                 .then(function(docDirectoryEntryObj) {
-                    debugger;
                     logger.debug('[LockboxDocsService] Lockbox: Removing Documents for User ' + user + ' at path: ', docDirectoryEntryObj);
                     return $cordovaFile.removeRecursively(docDirectoryEntryObj.nativeURL, user);
                 }, function (err) {
@@ -529,7 +523,6 @@
         function removeOneDocument (doc) {
             logger.warn(' removeOneDocument() doc >>>', doc);
             if (!doc) return;
-            debugger;
 
             var sku = doc.sku;
 
@@ -539,13 +532,11 @@
                 
             return $cordovaFile.checkDir(path, userID)
                 .then(function(dir) {
-                    debugger;
                     path += userID;
                     var docPath = userID + '/' + documentName;
                     return $cordovaFile.removeFile(path, documentName);
                 })
                 .then(function(res) {
-                    debugger;
                 })
                 .catch(function(err) {
                     logger.warn(' remove doc err --->>>', err);
@@ -582,7 +573,6 @@
             if (_.isEmpty(doc.sku + doc.id + doc.url)) {
                 return false;
             }
-            // debugger;
             var i = -1;
             var sku = (doc.sku || 'misc').toLowerCase();
             
@@ -743,7 +733,6 @@
 
 
         function getFileName(source) {
-            debugger;
             var extensionMatcher = /.*(\.\w{3,4})/;
             var extension = '.txt';
 
