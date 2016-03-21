@@ -8,7 +8,6 @@ var gutil = require('gulp-util');
 var bower = require('bower');
 var _ = require('lodash');
 // var concat = require('gulp-concat');
-var runSequence = require('run-sequence');
 var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
