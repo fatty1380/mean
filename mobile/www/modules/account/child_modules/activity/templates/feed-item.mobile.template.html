@@ -15,7 +15,8 @@
                         </a>
                     </div>
                     <div class="time" ng-if="vm.entry.created">
-                        <i class="ico ico-timesmall"></i> {{vm.entry.created | date:'mediumDate'}}
+                        <i class="ico ico-timesmall"></i> 
+                        <span>{{vm.entry.created | date:'mediumDate'}}</
                     </div>
                 </div>
                 <div class="holder last-location" ng-if="vm.entry.location.placeName || vm.entry._location[0].placeName">
@@ -28,7 +29,7 @@
 
         <div class="clearfix props" ng-if="!vm.entry.company">
             <div class="left notes" ng-if="!!vm.entry.notes">
-                <i class="ion ion-document-text"></i>
+                <i class="ion icon ion-ios-list-outline"></i>
                 <span class="lbl">notes</span>
             </div>
             <div class="right dist driven" ng-if="!!vm.entry.props.distance">

@@ -46,7 +46,9 @@
 
                     $rootScope.$broadcast('clear');
 
-                    return $location.path('/home');
+                    $location.path('/home');
+
+                    return $q.reject(rejection);
                 }
                 return $q.reject(rejection);
             }

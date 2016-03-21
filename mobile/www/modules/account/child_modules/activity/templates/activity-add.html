@@ -26,15 +26,13 @@
                         <div class="col">
                             <ion-input class="item item-input item-floating-label">
                                 <ion-label ng-show="vm.activity.props.freight || vm.activity.props.distance">Miles Driven:</ion-label>
-                                <input type="tel" ng-model="vm.activity.props.distance" placeholder="Distance Driven">
+                                <input type="number" ng-model="vm.activity.props.distance" placeholder="Distance Driven">
                             </ion-input>
                         </div>
                     </div>
 
                     <ion-input class="item item-input">
-                        <ion-label>Notes:</ion-label>
-                        <!--<div class="notes-holder" ng-bind="vm.activity.notes"></div>-->
-                        
+                        <ion-label>Notes:</ion-label>                        
                         <textarea msd-elastic class="optional" placeholder="Enter notes about your drive (optional)" ng-model="vm.activity.notes"></textarea>
                     </ion-input>
 

@@ -1,45 +1,36 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('signup')
         .factory('tokenService', tokenService);
 
-    tokenService.$inject = ['$window'];
+    tokenService.$inject = ['$rootScope', '$window'];
 
-    function tokenService ($window) {
+    function tokenService($rootScope, $window) {
+
+        $rootScope.$on('clear', function() {
+            debugger;
+            $window.localStorage.removeItem('access_token');
+            $window.localStorage.removeItem('refresh_token');
+            $window.localStorage.removeItem('token_type');
+        });
+
         return {
-            set: function (key, value) {
-                $window.localStorage[key] = value;
-            },
-            get: function (key, defaultValue) {
-                return $window.localStorage[key] || defaultValue;
-            }
+            set: set,
+            get: get
         };
-    }
-})();
 
-(function () {
-    'use strict';
+        /** ----------------------------------------------------------- */
+        function set(key, value) {
+            $window.localStorage[key] = value;
+        }
 
-    angular
-        .module('signup')
-        .factory('StorageService', StorageService);
+        function get(key, defaultValue) {
+            return $window.localStorage[key] || defaultValue;
+        }
 
-    StorageService.$inject = ['$window', 'userService'];
 
-    function StorageService ($window, userService) {
-        return {
-            set: function (key, value, id) {
-                $window.localStorage[id || userService.userId + '.' + key] = value;
-            },
-            get: function (key, defaultValue, id) {
-                return $window.localStorage[id || userService.userId + '.' + key] || defaultValue || null;
-            },
-            remove: function (key, id) {
-                return $window.localStorage.removeItem(id || userService.userId + '.' + key);
-            }
-        };
     }
 })();
 
