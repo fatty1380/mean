@@ -1018,6 +1018,10 @@
   
   .toggle-block {
     border-width: 0 0 1px;
+    
+    .button-bar .button.active {
+      background: $badge-green;
+    }
   }
 }
 

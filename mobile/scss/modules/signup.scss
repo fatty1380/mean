@@ -580,10 +580,6 @@ progress {
     background: none;
   }
   
-  .bar-header .button.button-icon {
-    color: $positive;
-  }
-  
   .bar-subheader h3 {
     color: $dark;  
   }
@@ -1018,6 +1014,10 @@ progress {
     .no-friends {
       padding: 10px 20px;
     }
+  }
+  
+  .bar-header {
+    background-color: $tab-selected;
   }
 }
 

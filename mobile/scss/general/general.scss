@@ -32,6 +32,14 @@ body {
   &.bg-transparent {
     @include base-light-bg();
     
+    .bar-header {
+      background-color: $tab-selected;
+      
+      .button.button-icon {
+        color: white;
+      }
+    }
+    
     ion-pane {
       background: transparent;
       top: 15%;
