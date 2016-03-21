@@ -1,50 +1,49 @@
 .lockbox {
-  .img-holder{
-    img{width: 100%;}
+  .img-holder img {
+    width: 100%;
   }
   
-  .bar-header  {
-      i {
-          font-size: 1.8em;
-          line-height: 1.55em;
-      }
-      
-      .button-clear .icon::before {
-        font-size: 1em;
-        padding: 5px;
-      }
+  .bar-header {
+    i {
+      font-size: 1.8em;
+      line-height: 1.55em;
+    }
+    
+    .button-clear .icon::before {
+      font-size: 1em;
+      padding: 5px;
+    }
   }
   
-  ion-pane.lockbox-edit-top.pane{
-      top: 128px;
+  ion-pane.lockbox-edit-top.pane {
+    top: 128px;
   }
   
-  .platform-android &{
-      ion-pane.pane.content-pane{
-         top: 120px;
-      }
+  .platform-android & {
+    ion-pane.pane.content-pane {
+      top: 120px;
+    }
    }
    
-  .platform-ios &{
-      ion-pane.pane.content-pane{
-         top: 140px;
-      }
-   }
+  .platform-ios & {
+    ion-pane.pane.content-pane {
+      top: 140px;
+    }
+  }
 }
 
-@media only screen
-and (max-device-height : 568px) {
-    
-    .lockbox {
-        .bar-subheader h3.title{
-            padding-top: 4px;
-        }
-        .platform-android &, .platform-ios & {
-            ion-pane.pane.content-pane{
-                top: 108px;
-            }
-        }
+@media only screen and (max-device-height : 568px) {  
+  .lockbox {
+    .bar-subheader h3.title {
+      padding-top: 4px;
     }
+    
+    .platform-android &, .platform-ios & {
+      ion-pane.pane.content-pane {
+        top: 108px;
+      }
+    }
+  }
 }
 
 
@@ -52,83 +51,72 @@ and (max-device-height : 568px) {
 .document-list {
   background-color: transparent;
   
-    button.button-small.button {
-        color: $balanced;
-        border-color: $balanced;
-        @include list-button;
+  button.button-small.button {
+    color: $balanced;
+    border-color: $balanced;
+    @include list-button;
+  }
+  
+  .doc {
+    padding: 10px;
+    border: 1px solid $action-text;      
+    min-height: 150px;
+    
+    &.blank {
+      border: none;
     }
     
-    .doc {
-        padding: 10px;
-        border: 1px solid $action-text;
-        //margin: 5px;
+    .button-document, .button-stub {
+      position: relative;
+      top: 70px;
+      transform: translateY(-50%);
+      background: transparent;
+      width: 100%;      
+      white-space: normal;
+      word-wrap: normal;
+      font-weight: 400;
+      text-transform: uppercase;
+      text-align: center; 
+      
+      .doc-name {
+        font-size: 1.6em;
+        line-height: 1.3em;
+      }
+      
+      .doc-date {
+        color: $action-text;
+      }
+      
+      .ion, .icon {
+        font-size: 1.8em;
+      }
+      
+      .no-date .ion-plus {
+        font-size: 1.8em;
+        line-height: 1.55em;
+      }
+    }
+    
+    .button-stub {
+      color: $energized;
+    }
+    
+    &.real-document {
+      background-color: $light;
         
-        min-height: 150px;
-        
-        &.blank {
-            border: none;
-        }
-        
-        .button-document, .button-stub {
-            position: relative;
-            top: 70px;
-            transform: translateY(-50%);
-            
-            background: transparent;
-            width: 100%;
-            //height: 100%;
-            
-            white-space: normal;
-            word-wrap: normal;
-            font-weight: 400;
-            text-transform: uppercase;
-            text-align: center; 
-            
-            .doc-name {
-                font-size: 1.6em;
-                line-height: 1.3em;
-            }
-            
-            .doc-date {
-                color: $action-text;
-            }
-            
-            .ion, .icon {
-                font-size: 1.8em;
-            }
-            
-            .no-date .ion-plus {
-               font-size: 1.8em;
-               line-height: 1.55em;
-            }
-        }
-        
-        // .button-document {
-        //     color: $balanced;
-        // }
-        
+      .item-content {
+        color: $gradient-bottom;
+      }
+    }
 
-        
-        .button-stub {
-            color: $energized;
-        }
-        
-        &.real-document {
-            background-color: $light;
-            
-            .item-content {
-                color: $gradient-bottom;
-            }
-        }
-    
-        &.stub-document { 
-            box-shadow: inset 1px 1px 15px rgba($action-text, 0.9);
-        }
+    &.stub-document { 
+      box-shadow: inset 1px 1px 15px rgba($action-text, 0.9);
     }
-    
-    .item {
-      background-color: transparent !important;
-    }
+  }
+  
+  .item {
+    background-color: transparent !important;
+  }
   
   li.item:last-child {
     border-bottom: 2px solid #D2D2D2;
@@ -140,28 +128,27 @@ and (max-device-height : 568px) {
     padding-right: 100px;
     min-height: 70px;
 
-    .item-content{
+    .item-content {
       text-overflow: initial;
       white-space: normal;
       display: inline-block;
 
-      strong,
-      span{display: block;}
+      strong, span {
+        display: block;
+      }
       
       strong {
         font-size: 18px;
       }
 
-      &.no-date{
-        strong{
-          display: block;
-          line-height:30px;
-          padding-top:3px;
-        }
+      &.no-date strong {
+        display: block;
+        line-height:30px;
+        padding-top:3px;
       }
     }
     
-    label.item.item-checkbox.ng-valid{    
+    label.item.item-checkbox.ng-valid {    
       left: 0;
       right: 0;
       top: 0;
@@ -190,7 +177,7 @@ and (max-device-height : 568px) {
       }
     }
 
-    .button{
+    .button {
       padding: 0 25px;
       position: absolute;
       right: 16px;
@@ -201,11 +188,9 @@ and (max-device-height : 568px) {
   }
 }
 
-
 /* action-sheet */
 .action-sheet {
-
-  .action-sheet-group{
+  .action-sheet-group {
     background-color:$sheet-options-bg-color;
   }
 
@@ -219,7 +204,7 @@ and (max-device-height : 568px) {
     }
   }
 
-  .button{
+  .button {
     font-size: 18px;
     padding: 8px;
   }
@@ -238,7 +223,7 @@ input.pin-input {
 
 
 /* lockbox modal preview */
-.preview{
+.preview {
   background-color: transparent;
   top: 5%;
   right: 2%;
@@ -246,21 +231,19 @@ input.pin-input {
   left: 2%;
   width: 96%;
 
-  .bar{
-    .title{
-      height: 43px;
-      line-height: 44px;
-    }
+  .bar .title{
+    height: 43px;
+    line-height: 44px;
   }
 
-  &.full-screen{
+  &.full-screen {
     top: 0;
     right: 0;
     bottom: 0;
     width: 100%;
     left: 0;
 
-    .bar{
+    .bar {
       background-color: rgba(0,0,0,0.5);
       height: 44px;
 
@@ -285,15 +268,17 @@ input.pin-input {
       }
     }
     
-    #pdf-view-content{
+    #pdf-view-content {
       margin: 0;
       padding: 0;
       bottom: 44px;
       background: none;
 
-      &.controls-hidden{bottom: 0;}
+      &.controls-hidden {
+        bottom: 0;
+      }
 
-      .image-container{
+      .image-container {
         position: static;
         top: auto;
         left: auto;
@@ -303,12 +288,14 @@ input.pin-input {
     }
   }
 
-  #pdf-view-content{
+  #pdf-view-content {
     background-color: white;
 
-    &.ionic-scroll{height: auto;}
+    &.ionic-scroll {
+      height: auto;
+    }
 
-    .image-container{
+    .image-container {
       top: 2px;
       left: 2px;
       right: 2px;
@@ -316,17 +303,17 @@ input.pin-input {
       width: auto;
       height: auto;
 
-      div{
+      div {
         height: 100%;
         width: 100%;
       }
     }
   }
 
-  .bar{
+  .bar {
     background-color: transparent;
 
-    .button{
+    .button {
       &.preview-cancel-button, &:last-child {
         font-size: $bar-title-font-size;
         font-weight: $headings-font-weight;
@@ -342,29 +329,25 @@ input.pin-input {
     }
   }
 
-  .title{
+  .title {
     color:white;
   }
-
 }
 
 .lockbox {
-    &.lockbox-edit {
-        .content-top {
-            padding-left: 0;
-            padding-right: 0;
-            
-            .input-label {
-                width: auto;
-                text-align: left;
-                display: inline-block;
-            }
-            
-            select {
-                max-width: unset;
-                display: inline-block
-                
-            }
-        }
+  &.lockbox-edit .content-top {
+    padding-left: 0;
+    padding-right: 0;
+    
+    .input-label {
+      width: auto;
+      text-align: left;
+      display: inline-block;
     }
+    
+    select {
+      max-width: unset;
+      display: inline-block;
+    } 
+  }
 }

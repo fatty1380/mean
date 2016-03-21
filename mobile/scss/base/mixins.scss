@@ -5,13 +5,20 @@
 }
 
 @mixin base-light-bg {
-    background-color: $light;
-    background-image: url('../img/bg-gradient-base-light.jpg');
-    background-repeat: no-repeat;
-    background-position: 50% 0;
-    -ms-background-size: cover;
-    -o-background-size: cover;
-    -moz-background-size: cover;
-    -webkit-background-size: cover;
-    background-size: cover;
+  background-color: $light;
+  background-image: url('../img/bg-gradient-base-light.jpg');
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  -ms-background-size: cover;
+  -o-background-size: cover;
+  -moz-background-size: cover;
+  -webkit-background-size: cover;
+  background-size: cover;
+}
+
+@mixin truck-company-logo($logoUrl) {
+  @extend %text-indent;
+  background-image:url($logoUrl);
+  width: 102px;
+  height: 72px;
 }
