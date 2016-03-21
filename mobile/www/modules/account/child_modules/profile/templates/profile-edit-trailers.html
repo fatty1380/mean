@@ -8,14 +8,12 @@
         <ion-scroll>
             <ion-list class="list select-trailer">
 
-                <li class="item item-checkbox" ng-repeat="trailer in vm.trailers" ng-click="trailer.checked = !trailer.checked">
-                    <div class="checkbox"  ng-class="{'active': !!trailer.checked}" >
-                        <div class="item-content">
-                            <p> {{ trailer.name }} </p>
-                            <i class="ico ico-checkboxselected" ></i>
-                        </div>
+                <div class="item item-checkbox" ng-repeat="trailer in vm.trailers" ng-click="trailer.checked = !trailer.checked" ng-class="{'active': !!trailer.checked}">
+                    <div class="item-content">
+                        <p> {{ trailer.name }} </p>
+                        <i class="icon ion-checkmark"></i>
                     </div>
-                </li>
+                </div>
 
                 <ion-item>
                     <ion-input class="item item-radio item-content button-other" ng-click="vm.addTrailer()">

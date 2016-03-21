@@ -361,9 +361,8 @@ $logo-inline-zoom: ($button-signup-height - ($padding-small-vertical)) / $logo-n
   }   
 
   .item, .item-checkbox {
-    padding: 0px;
-    margin-top: 2vw;
-    margin-bottom: 2vw;
+    padding: 0;
+    margin: 2vw $list-side-gutter-width;
     border: 0;
     border-radius: $border-radius-large;
     
