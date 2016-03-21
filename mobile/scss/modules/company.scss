@@ -1,13 +1,12 @@
-.company-screen{
-
+.company-screen {
   .content-top {
     background-color: $ribbon-bg;
   }
   
   .platform-ios & {
-      .bar h3 {
-          height: $bar-height * 2 - $ios-statusbar-height;
-      }
+    .bar h3 {
+      height: $bar-height * 2 - $ios-statusbar-height;
+    }
   }
   
   .bar {
@@ -16,6 +15,7 @@
       text-align: center;
       height: $bar-height * 2;
     }
+    
     img.brand-img {
       top: -20px;
       max-height: 100%;
@@ -26,13 +26,11 @@
   }
   
   .profile-pane {
-      margin-top: 0px;
+    margin-top: 0px;
   }
 
-  .news-list{
-    div{
-      white-space: normal;
-    }
+  .news-list div {
+    white-space: normal;
   }
   
   .profile-tabs {
@@ -45,82 +43,73 @@
       height: auto;
       bottom: 0;
 
-      div.list{
+      div.list {
         overflow: hidden;
       }
     }
   }
 }
 
-.job-details {
-  .job-item{
+.job-details .job-item {
+  h1 {
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+    font-size: 1.6em;
+  }
       
-      h1 {
-          text-align: center;
-          border-bottom: 1px solid #ccc;
-          font-size: 1.6em;
-      }
-      
-      p{ 
-      overflow: visible!important;
-      text-overflow: clip;
-      white-space: normal;
-      margin-bottom: 10px;
-      }
-      
-    .visual{
-      mg{
-        width: auto;
-        height: auto;
-        -webkit-border-radius: 0;
-        -moz-border-radius: 0;
-        border-radius: 0;
-        top:auto;
-        left:auto;
-        margin: 0;
-      }
-    }
-    
-    .title{
-      font-size: 14px;
-      margin: 0;
-      padding: 10px 0;
-      color: #333;
-      text-align: center;
-    }
+  p { 
+    overflow: visible !important;
+    text-overflow: clip;
+    white-space: normal;
+    margin-bottom: 10px;
+  }
+  
+  .visual mg {
+    width: auto;
+    height: auto;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    top:auto;
+    left:auto;
+    margin: 0;  
   }
 
-  
+  .title {
+    font-size: 14px;
+    margin: 0;
+    padding: 10px 0;
+    color: #333;
+    text-align: center;
+  } 
 }
 
-.company-about {
-    .item {
-      padding: $item-padding;
+.company-about .item {
+  padding: $item-padding;
       
-      h3 {
-        font-size: 1.4em;
-        line-height: 1.5em;
-        text-align: center;
-      }
-      
-      p {
-        font-size: 1.2em;
-        line-height: 1.2em;
-        overflow: visible;
-        white-space: normal;
-        text-align: justify;
-        padding: $item-padding 0;
-      }
-      
-      li {
-        white-space: normal;
-        line-height: 1.3em;
-        
-        &.item {
-            font-size: 1.1em;
-            padding-top: 0.8em;
-            padding-bottom: 0.8em;
-        }
-      }
+  h3 {
+    font-size: 1.4em;
+    line-height: 1.5em;
+    text-align: center;
+  }
+  
+  p {
+    font-size: 1.2em;
+    line-height: 1.2em;
+    overflow: visible;
+    white-space: normal;
+    text-align: justify;
+    padding: $item-padding 0;
+  }
+  
+  li {
+    white-space: normal;
+    line-height: 1.3em;
+    
+    &.item {
+      font-size: 1.1em;
+      padding-top: 0.8em;
+      padding-bottom: 0.8em;
     }
   }
+}
