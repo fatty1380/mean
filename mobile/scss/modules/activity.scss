@@ -1,45 +1,38 @@
-.activity {
-    
-  .bar-header {
-     .title {
-        .ion-chevron-down {
-            vertical-align: middle;
-        } 
-     }
+.activity {  
+  .bar-header .title .ion-chevron-down {
+    vertical-align: middle;
   }
 
   #map {
     height:200px;
   }
 
-  .button-padding-top{
+  .button-padding-top {
     padding-top: 44px;
   }
 
-  .button-padding-bottom{
+  .button-padding-bottom {
     padding-bottom: 44px;
   }
 
-  .content-pane {
-    .content-top-button {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      font-size: 14px;
-      min-height: 44px;
-      border-width: 1px 0 0;
-      text-align: left;
+  .content-pane .content-top-button {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    font-size: 14px;
+    min-height: 44px;
+    border-width: 1px 0 0;
+    text-align: left;
 
-      .ico{
-        float: right;
-        margin: 15px 10px 0 0;
-        vertical-align: middle;
-      }
-    }
+    .ico {
+      float: right;
+      margin: 15px 10px 0 0;
+      vertical-align: middle;
+    }    
   }
 
-  .map{
+  .map {
     height:200px;
   }
 
@@ -51,164 +44,154 @@
     overflow: wrap;
     border-color: $stable;
     
-    &.item{
-      padding-top: 4px!important;
-      padding-bottom: 4px!important;
+    &.item {
+      padding-top: 4px !important;
+      padding-bottom: 4px !important;
     } 
   }
-   
-    //margin-bottom: 2px;
-    //padding:$item-padding/2 $item-padding;
-    .card {
-      padding: 0;
+  .card {
+    padding: 0;
+  }
+
+  > .ico {
+    float: left;
+    margin-right: 15px;
+  }
+
+  .activity-item {
+    overflow: hidden;
+
+    .ico { 
+      vertical-align: middle;
+      margin-top: 0;
+      margin-bottom: 2px;
     }
 
-    > .ico{
-      float: left;
-      margin-right: 15px;
-    }
-
-    .activity-item {
+    .panel {
+      position: relative;
       overflow: hidden;
+      min-height: 15px;
 
-      .ico { 
+      .visual {
+        margin-right: 5px;
+        float: left;
+
+        .avatar {
+          max-width: 32px;
+          max-height: 32px;
+          vertical-align: top;
+          border-radius: 50%;
+        }
+      }
+
+      .text {
+        overflow: hidden;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid $bright-blue;
+          
+        .holder {
+          overflow: hidden;
+        }
+      }
+
+      .activity-summary {
+        display: inline-block;
+        overflow: hidden;
         vertical-align: middle;
-        margin-top: 0;
-        margin-bottom: 2px;
       }
+    }
 
-      .panel{
-        position: relative;
-        overflow: hidden;
-        min-height: 15px;
+    &.company-item .panel {
+      .visual {
+        max-width: 100px;
 
-        .visual{
-          margin-right: 5px;
-          float: left;
-
-          .avatar {
-            max-width: 32px;
-            max-height: 32px;
-            vertical-align: top;
-            border-radius: 50%;
-          }
-        }
-
-        .text{
-          overflow: hidden;
-          padding-bottom: 5px;
-          margin-bottom: 10px;
-          border-bottom: 1px solid $bright-blue;
-           
-          .holder{
-            overflow: hidden;
-          }
-        }
-
-        .activity-summary {
-          display: inline-block;
-          overflow: hidden;
-          vertical-align: middle;
-        }
-      }
-
-      &.company-item .panel{
-        .visual{
+        .avatar{
           max-width: 100px;
-
-          .avatar{
-            max-width: 100px;
-          }
-        }
-
-        .text{
-          line-height: 32px;
         }
       }
 
-      .last-location,
-      .current-location{
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: block;
-          margin-top: 2px;
-          line-height: 1.2em;
+      .text {
+        line-height: 32px;
       }
+    }
 
-      a.user-link {
-        text-decoration: none;
-        text-transform: capitalize;
-            color: #ff8000;
-        }
+    .last-location, .current-location {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+      margin-top: 2px;
+      line-height: 1.2em;
+    }
 
-      &.top, &.bottom {
-        padding: $item-padding/2 $item-padding;
-        overflow: hidden;
-        height: auto;
+    a.user-link {
+      text-decoration: none;
+      text-transform: capitalize;
+      color: #ff8000;
+    }
 
-        .miles, .likes, .driven, .left {
-          float: left;
-          padding-right: 4px;
-        }
-        .comments, .right {
-          float: right;
-          padding-left: 4px;
-        }
+    &.top, &.bottom {
+      padding: $item-padding/2 $item-padding;
+      overflow: hidden;
+      height: auto;
+
+      .miles, .likes, .driven, .left {
+        float: left;
+        padding-right: 4px;
       }
       
-      .title {
-        font-weight: 500;
-        font-size: $bar-title-font-size;
+      .comments, .right {
+        float: right;
+        padding-left: 4px;
       }
-
-      .title, .notes-content {
-        padding: 6px 0;
-        display: block;
-        display: -webkit-box;
-        margin-bottom: 0;
-        overflow: hidden;
-        white-space: normal;
-        text-overflow: ellipsis;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 10;
-      }
-      
-      .notes-content {
-        border-width: 1px 0;
-        border-color: $stable;
-        border-style: solid;
-        border-collapse: collapse;
-        background-color: $item-divider-bg;
-      }
-      // .notes.active {
-      //   border-top: 1px solid purple;
-      //   border-collapse: collapse;
-      // }
     }
     
-    .static-pic {
-      position: relative;
-      width: 100%;
+    .title {
+      font-weight: 500;
+      font-size: $bar-title-font-size;
+    }
+
+    .title, .notes-content {
+      padding: 6px 0;
+      display: block;
+      display: -webkit-box;
+      margin-bottom: 0;
+      overflow: hidden;
+      white-space: normal;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 10;
     }
     
-    .static-map {
-      position: relative;
-      left: -$item-padding / 2;
-      
-      
-      //bottom: -$item-padding + (-4px);
-    }
-  
-
-  .item-detail {
-    padding:10px 15px;
-    font-size: 14px;
-
-    .val {
-      float: right;
+    .notes-content {
+      border-width: 1px 0;
+      border-color: $stable;
+      border-style: solid;
+      border-collapse: collapse;
+      background-color: $item-divider-bg;
     }
   }
+  
+  .static-pic {
+    position: relative;
+    width: 100%;
+  }
+  
+  .static-map {
+    position: relative;
+    left: -$item-padding / 2;
+  }
+
+
+.item-detail {
+  padding:10px 15px;
+  font-size: 14px;
+
+  .val {
+    float: right;
+  }
+}
 
 
   /* add activity */
@@ -223,19 +206,19 @@
         width:auto;
         font-weight: 500;
         color: inherit;
-        max-width: 500px;
-        
+        max-width: 500px;    
         margin-right: 5px;
       }
       
       input, textarea {
         background-color: transparent;
-        font-size:14px;
+        font-size: 14px;
         color: $content-body-text;
+        line-height: 22px;
+        
         ::-webkit-input-placeholder {
           color: $ribbon-bg;
         }
-        line-height: 22px;
       }
       
       input {
@@ -246,7 +229,8 @@
         padding-bottom: 7px;
         border: 0;
       }
-      div{
+      
+      div {
         white-space: normal;
         font-size:15px;
         color: $content-body-text;
@@ -262,20 +246,21 @@
   /* details activity */
   .details-activity-pane {
     .scroll, .item {
-    background-color: $light;
+      background-color: $light;
     }
+    
     .item {
       padding: 10px;
 
-      .top .props{
+      .top .props {
         border-width: 0;
         padding: 0;
       }
 
-      .likes{
+      .likes {
         float: left;
 
-        strong{
+        strong {
           display: inline;
         }
       }
@@ -297,6 +282,8 @@
     border-style: solid;
     border-color: $stable;
     font-size: 14px;
+    overflow: hidden;
+    height: auto;
     
     & > * {
       display: inline-block;
@@ -306,65 +293,64 @@
     & > div {
       height: 19px;
     }
-    
-    //padding: $item-padding/2 $item-padding;
-    overflow: hidden;
-    height: auto;
   
     .miles, .driven, .left {
       float: left;
       padding-right: 4px;
     }
+    
     .comments, .likes, .time, .right {
       float: right;
       padding-left: 4px;
     }
     
-    .freight{
+    .freight {
+      text-transform: capitalize;
       padding-left: 14px;
     }
-
-
   }
   
-    .notes i.icon {
-      vertical-align: middle;
-      color: $icon-notes-yellow;
-      font-size: 1.2em;
-    }
-
-    .dist, .time {
-      font-weight: 400;
-    }
-      .dist.mi:after {
-        content: 'MI';
-        position: relative;
-        bottom: 0;
-        padding-left: 2px;
-      }
-      
-      .dist.mi:after  {
-        font-size: 0.7em;
-        text-transform: uppercase;
-      }
-      
-      .lbl {
-        text-transform: capitalize;
-        padding-left: 0;
-      }
+  .notes i.icon {
+    vertical-align: middle;
+    color: $icon-notes-yellow;
+    font-size: 1.2em;
+  }
   
-  .time, .time-inline {
-      font-size: 0.8em;
+  .dist {
+    font-weight: 400;
+    
+    .mi:after {
+      content: 'MI';
+      position: relative;
+      bottom: 0;
+      padding-left: 2px;
+      font-size: 0.7em;
       text-transform: uppercase;
     }
+  }
+  
+  .lbl {
+    text-transform: capitalize;
+    padding-left: 0;
+  }
 
-  .time{float: right;}
-  .time-inline {display: inline;}
+  .time {
+    float: right;
+    font-weight: 400;
+    font-size: 0.8em;
+    text-transform: uppercase;
+  }
+  
+  .time-inline {
+    display: inline;
+    font-size: 0.8em;
+    text-transform: uppercase;
+  }
 }
 
 
 /* ion-google-place */
-.ion-google-place-container{
+.ion-google-place-container {
   position: fixed;
   top: 0;
   right: 0;
@@ -373,7 +359,7 @@
   z-index: 20;
   display: none;
 
-  input.ion-google-place[readonly]{
+  input.ion-google-place[readonly] {
     background-color: transparent;
     cursor: text;
   }
