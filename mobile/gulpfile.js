@@ -6,6 +6,7 @@
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var bower = require('bower');
+var _ = require('lodash');
 // var concat = require('gulp-concat');
 var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
@@ -20,8 +21,11 @@ var webdriverUpdate = require('gulp-protractor').webdriver_update;
 var webdriverStandalone = require('gulp-protractor').webdriver_standalone;
 var nunjucksRender = require('gulp-nunjucks-render');
 
+var argv = require('yargs').argv;
+
 var assets = require('./config/assets/default');
 
+var isDevice = false;
 
 var paths = {
     sass: ['scss/styles.scss', 'scss/**/*.scss'],
@@ -29,9 +33,19 @@ var paths = {
     css: 'www/assets/css'
 };
 
-gulp.task('default', ['template', 'sass']);
+gulp.task('default', ['setupEnv', 'template', 'sass', 'lint']);
 
-gulp.task('sass', function (done) {
+gulp.task('setupEnv', function(done) {
+    process.env.NODE_ENV = argv.env || 'dev';
+    isDevice = !!argv.device;
+
+    console.log('Running Gulp with Environment SETUP: ', process.env);
+    console.log('Running Gulp with ARGS: ', argv);
+
+    done();
+});
+
+gulp.task('sass', function(done) {
     gulp.src('./scss/styles.scss')
         .pipe(sass({
             errLogToConsole: true
@@ -45,7 +59,20 @@ gulp.task('sass', function (done) {
         .on('end', done);
 });
 
-gulp.task('template', function() {
+gulp.task('template', ['setupEnv'], function() {
+
+    console.log('PROCESS: ', process.env.NODE_ENV)
+    console.log('DEVICE: ', isDevice);
+
+    if (isDevice) {
+        console.log('Removing ngCordova Mocks');
+        _.remove(assets.mobile.lib.js, function(lib) { return /ng-cordova-mocks.js$/i.test(lib); });
+    }
+    else {
+        console.log('Removing ngCordova');
+        _.remove(assets.mobile.lib.js, function(lib) { return /ng-cordova.js$/i.test(lib); });
+    }
+
     console.log('Templating assets: ' + assets.mobile.lib.js);
 
     return gulp.src('config/templates/*.html')
@@ -64,7 +91,7 @@ gulp.task('template', function() {
         .pipe(gulp.dest('www/'));
 });
 
-gulp.task('lint', function () {
+gulp.task('lint', function() {
     // ESLint ignores files with "node_modules" paths.
     // So, it's best to have gulp ignore the directory as well.
     // Also, Be sure to return the stream from the task;
@@ -81,26 +108,26 @@ gulp.task('lint', function () {
         .pipe(eslint.failAfterError());
 });
 
-gulp.task('watch', function () {
+gulp.task('watch', function() {
     gulp.watch(paths.sass, ['sass']);
     gulp.watch(paths.template, ['template']);
 });
 
-gulp.task('install', ['git-check'], function () {
+gulp.task('install', ['git-check'], function() {
     return bower.commands.install()
-        .on('log', function (data) {
+        .on('log', function(data) {
             gutil.log('bower', gutil.colors.cyan(data.id), data.message);
         });
 });
 
-gulp.task('git-check', function (done) {
+gulp.task('git-check', function(done) {
     if (!sh.which('git')) {
         console.log(
             '  ' + gutil.colors.red('Git is not installed.'),
             '\n  Git, the version control system, is required to download Ionic.',
             '\n  Download git here:', gutil.colors.cyan('http://git-scm.com/downloads') + '.',
             '\n  Once git is installed, run \'' + gutil.colors.cyan('gulp install') + '\' again.'
-            );
+        );
         process.exit(1);
     }
     done();
@@ -119,7 +146,7 @@ gulp.task('test', ['webdriver_update'], function(done) {
 });
 
 
-gulp.task('plugins', function () {
+gulp.task('plugins', function() {
     var plugins = packageJSON.cordovaPlugins;
     return gulp.src('./plugins')
         .pipe(plugin(plugins));

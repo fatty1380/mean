@@ -61,7 +61,6 @@
 
         // TODO: Refactor to be "refresh documents"
         function loadDocsFromServer (saveToDevice) {
-
             vm.userData = userService.profileData;
 
             if (_.isEmpty(vm.userData)) {
@@ -371,27 +370,37 @@
 
         }
 
-        function removeDocuments (documents) {
+        function removeDocuments(documents) {
 
-            var promises = _.map(documents, function (doc) {
+
+            var promises = _.map(documents, function(doc) {
                 logger.debug('[LockboxDocsService] Removing Doc: %s w/ ID: %s ', doc.sku, doc.id);
 
 
                 return API.doRequest(settings.documents + doc.id, 'delete')
-                    .then(function (success) {
+                    .catch(function fail(err) {
+                        if (err.status === 404) {
+                            logger.debug('document not found on server', err);
+                            return;
+                        }
+                        logger.error('failed to delete documents ', err);
+                        throw err;
+                    })
+                    .then(function(success) {
                         _.remove(vm.documents, { id: doc.id });
                         return removeOneDocument(doc);
                     })
-                    .then(function (success) {
+                    .then(function(success) {
                         var stub = _.find(docTypeDefinitions, { sku: doc.sku });
                         var alreadyHasStub = _.find(vm.documents, { sku: doc.sku });
                         if (!!stub && !alreadyHasStub) {
                             addDocument(stub);
                         }
                     })
-                    .catch(function fail (err) {
+                    .catch(function fail(err) {
                         logger.error('failed to delete documents ', err);
-                    });
+                    });;
+
 
 
 
@@ -413,8 +422,9 @@
             return $cordovaFileTransfer.download(doc.url, path, { encodeURI: false }, true)
                 .then(function success (entry) {
                     logger.debug('Downloaded and saved doc `%s`', id);
-
-                    return entry;
+                    logger.debug(entry);
+                    var temp = {name: doc.name};
+                    return _.extend(doc, entry, temp);       
                 })
                 .catch(function fail (err) {
                     logger.error('Error downloading doc `%s`', id, err);
@@ -497,7 +507,7 @@
             var path = vm.LOCKBOX_FOLDER;
 
             return $cordovaFile.checkDir(path, user)
-                .then(function (docDirectoryEntryObj) {
+                .then(function(docDirectoryEntryObj) {
                     logger.debug('[LockboxDocsService] Lockbox: Removing Documents for User ' + user + ' at path: ', docDirectoryEntryObj);
                     return $cordovaFile.removeRecursively(docDirectoryEntryObj.nativeURL, user);
                 }, function (err) {
@@ -519,13 +529,16 @@
             var path = vm.LOCKBOX_FOLDER,
                 userID = getUserId(doc),
                 documentName = doc.id + '-' + getFileName(doc);
-
+                
             return $cordovaFile.checkDir(path, userID)
-                .then(function (dir) {
+                .then(function(dir) {
                     path += userID;
+                    var docPath = userID + '/' + documentName;
                     return $cordovaFile.removeFile(path, documentName);
                 })
-                .catch(function (err) {
+                .then(function(res) {
+                })
+                .catch(function(err) {
                     logger.warn(' remove doc err --->>>', err);
                 });
                 // .finally(function() {
@@ -560,9 +573,9 @@
             if (_.isEmpty(doc.sku + doc.id + doc.url)) {
                 return false;
             }
-
             var i = -1;
             var sku = (doc.sku || 'misc').toLowerCase();
+            
 
 
             var def = _.find(docTypeDefinitions, { sku: doc.sku }) || {};
@@ -704,7 +717,7 @@
             return $cordovaFile.moveFile(path, oldName, path, newName);
         }
 
-        function parseDocFromFilename (filename) {
+        function parseDocFromFilename(filename) {
             var params = filename.split('-');
             var doc = {};
             var i = 0;
@@ -719,7 +732,7 @@
         }
 
 
-        function getFileName (source) {
+        function getFileName(source) {
             var extensionMatcher = /.*(\.\w{3,4})/;
             var extension = '.txt';
 
@@ -728,6 +741,9 @@
             }
             else if (extensionMatcher.test(source.name)) {
                 extension = source.name.match(extensionMatcher).pop();
+            }
+            else if (extensionMatcher.test(source.url)) {
+                extension = source.url.match(extensionMatcher).pop();
             }
 
             return source.sku + '-' + source.name.replace(/ /g, '_') + extension;
