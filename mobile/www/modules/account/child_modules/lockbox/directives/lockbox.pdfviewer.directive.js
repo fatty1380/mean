@@ -47,8 +47,8 @@ function PdfViewerService ($rootScope) {
     return svc;
 }
 
-PdfViewerDirective.$inject = ['$log', '$q'];
-function PdfViewerDirective ($log, $q) {
+PdfViewerDirective.$inject = ['$q'];
+function PdfViewerDirective ($q) {
     var _pageToShow = 0;
     var canvas = [];
     var instanceId = null;
@@ -91,14 +91,14 @@ function PdfViewerDirective ($log, $q) {
 
 
             $scope.renderDocument = function () {
-                $log.debug('Render Document');
+                logger.debug('Render Document');
 
                 angular.forEach(canvas, function (c, index) {
                     if (index == 0)
                         $scope.renderInProgress = true;
                     var pageNumber = index + $scope.pageNum;
                     $scope.renderPage(pageNumber, c, function (success) {
-                        $log.debug('Rendered Page <' + pageNumber + '> SUCCESS <' + success + '>');
+                        logger.debug('Rendered Page <' + pageNumber + '> SUCCESS <' + success + '>');
                         if (pageNumber == canvas.length) {
                             $scope.renderInProgress = false;
                             $scope.forceReRender = false;
@@ -108,33 +108,34 @@ function PdfViewerDirective ($log, $q) {
             };
 
             $scope.loadPDF = function (path) {
-                $log.debug('loadPDF <' + path + '>');
+                logger.debug('loadPDF <' + path + '>');
                 $scope.onPdfEvent({ type: 'loadStart' });
 
                 var deferred = $q.defer();
-                PDFJS.getDocument(path, null, null, $scope.documentProgress).then(function (_pdfDoc) {
-                    $log.debug('Document read');
-                    $scope.pdfDoc = _pdfDoc;
-                    if ($scope.loadProgress) {
-                        $scope.loadProgress({ state: 'finished', loaded: 0, total: 0 });
-                    }
-                    deferred.resolve($scope.pdfDoc);
-                }, function (message, exception) {
-                    $log.debug('PDF load error: ' + message + ' <' + exception + '> ');
-                    $scope.onPdfEvent({ type: 'loadError', err: exception, message: message });
-                    deferred.reject(message);
-                    if ($scope.loadProgress) {
-                        $scope.loadProgress({ state: 'error', loaded: 0, total: 0 });
-                    }
-                });
+                PDFJS.getDocument(path, null, null, $scope.documentProgress)
+                    .then(function (_pdfDoc) {
+                        logger.debug('Document read');
+                        $scope.pdfDoc = _pdfDoc;
+                        if ($scope.loadProgress) {
+                            $scope.loadProgress({ state: 'finished', loaded: 0, total: 0 });
+                        }
+                        deferred.resolve($scope.pdfDoc);
+                    }, function (message, exception) {
+                        logger.debug('PDF load error: ' + message + ' <' + exception + '> ');
+                        $scope.onPdfEvent({ type: 'loadError', err: exception, message: message });
+                        deferred.reject(message);
+                        if ($scope.loadProgress) {
+                            $scope.loadProgress({ state: 'error', loaded: 0, total: 0 });
+                        }
+                    });
                 return deferred.promise;
             };
 
             $scope.renderPage = function (num, canvas, callback) {
-                $log.debug('renderPage #' + num);
+                logger.debug('renderPage #' + num);
                 var renderedPageInCanvas = canvas.getAttribute('rendered');
                 if (renderedPageInCanvas == num && !$scope.forceReRender) {
-                    $log.debug('Skipping page <' + num + '>');
+                    logger.debug('Skipping page <' + num + '>');
                     if (callback) {
                         callback(true);
                     }
@@ -164,9 +165,9 @@ function PdfViewerDirective ($log, $q) {
                             if (callback) {
                                 callback(false);
                             }
-                            $log.debug('page.render failed');
+                            logger.debug('page.render failed');
                         }
-                        );
+                    );
                 });
             };
 
@@ -239,7 +240,7 @@ function PdfViewerDirective ($log, $q) {
             };
 
             iAttr.$observe('src', function (v) {
-                $log.debug('src attribute changed, new value is <' + v + '>');
+                logger.debug('src attribute changed, new value is <' + v + '>');
                 if (v !== undefined && v !== null && v !== '') {
                     scope.pageNum = 1;
 
@@ -251,14 +252,14 @@ function PdfViewerDirective ($log, $q) {
                     }
 
                     scope.loadPDF(scope.src).then(function (pdfDoc) {
-                        $log.debug('PDF Loaded');
+                        logger.debug('PDF Loaded');
                         scope.pagesToShow = scope.pagesToShow == 0 ? scope.pdfDoc.numPages : scope.pagesToShow;
                         createCanvas(iElement, scope.pagesToShow);
                         scope.renderDocument();
                         scope.onPdfEvent({ type: 'loadComplete' });
 
                     }, function (meg) {
-                        $log.debug(meg);
+                        logger.debug(meg);
                     });
                 }
             });
@@ -270,7 +271,7 @@ function PdfViewerDirective ($log, $q) {
                     return;
                 }
 
-                $log.debug('pages-to-show attribute changed, new value is <' + v + '>');
+                logger.debug('pages-to-show attribute changed, new value is <' + v + '>');
                 scope.pagesToShow = scope.pagesToShow == 0 ? scope.pdfDoc.numPages : scope.pagesToShow;
 
                 createCanvas(iElement, scope.pagesToShow);
@@ -285,7 +286,7 @@ function PdfViewerDirective ($log, $q) {
                 logger.debug('PDF: Changed `$scope` to `scope`. Confirm Functionality');
 
                 scope.forceReRender = true;
-                $log.debug('scale attribute changed, new value is <' + v + '>');
+                logger.debug('scale attribute changed, new value is <' + v + '>');
                 scope.renderDocument();
             });
 
