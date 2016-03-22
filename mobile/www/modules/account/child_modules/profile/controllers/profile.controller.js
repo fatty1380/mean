@@ -13,6 +13,8 @@
         activityService, reviewService, LoadingService, experienceService,
         friendsService, avatarService, ProfileModals, cameraService, user, profile) {
 
+        var watchers = {};
+
         var vm = this;
 
         logger.debug('Loading $state: `%s`', $state.current.name);
@@ -24,7 +26,10 @@
         vm.updates = updateService.getLastUpdates();
 
         // vm.reviews = [];
-        // [{ rating: 5, title: 'A real professional driver!', created: 1443285630631, text: 'Sergey is incredibly professional, and in the 5 years he has been delivering freight to my job sites, he has never let me down', name: 'Rob' }, { rating: 4, text: 'Serge is a good driver, has never let me down', title: 'He is the best', name: 'John', created: 1443285630631 }];
+        // [{ rating: 5, title: 'A real professional driver!', created: 1443285630631,
+        // text: 'Sergey is incredibly professional, and in the 5 years he has been delivering freight to my job sites, he has never let me down',
+        // name: 'Rob' }, { rating: 4, text: 'Serge is a good driver, has never let me down', title: 'He is the best', name: 'John',
+        // created: 1443285630631 }];
 
         vm.canEdit = vm.profileData && vm.user ? vm.profileData.id === vm.user.id : false;
 
@@ -51,10 +56,10 @@
 
         var unbindUpdatesHandler = null;
         function destroy () {
-            _.isFunction(unbindUpdatesHandler) && unbindUpdatesHandler();
+            if (_.isFunction(unbindUpdatesHandler)) { unbindUpdatesHandler(); }
         }
 
-        $rootScope.$on('clear', function () {
+        watchers['clear'] = $rootScope.$on('clear', function () {
             logger.debug('ProfileCtrl my event occurred');
             vm.profileData = profile || user;
             vm.user = user;
@@ -63,10 +68,10 @@
             destroy();
         });
 
-        $scope.$on('$ionicView.enter', function (event) {
+        $scope.$on('$ionicView.enter', function () {
             if (_.isEmpty(unbindUpdatesHandler)) {
                 unbindUpdatesHandler = $rootScope.$on('updates-available', function (event, updates) {
-                    logger.debug('ProfileCtrl: %d New updates available: ', updates);
+                    logger.debug('ProfileCtrl: %d New updates available: ', updates, event);
                     vm.updates = updates;
                 });
             }
@@ -76,7 +81,7 @@
             getReviews();
         });
 
-        $scope.$on('$ioncView.unloaded', function (event) {
+        $scope.$on('$ioncView.unloaded', function () {
             destroy();
         });
 
@@ -94,7 +99,7 @@
 
                 var miles;
 
-                if (!!props.careerMiles) {
+                if (props.careerMiles) {
                     vm.mileType = 'career';
                     vm.mileUnits = props.mileUnit;
                     miles = Number(props.careerMiles);
@@ -131,7 +136,7 @@
 
                 }
 
-                if (!!props.started) {
+                if (props.started) {
                     vm.yearsDriving = moment().diff(moment(props.started, 'YYYY-MM'), 'years');
 
                     if (vm.yearsDriving === 0) {
@@ -162,7 +167,7 @@
                 return;
             }
 
-            var title = !!vm.profileData.license.class ? '<h3>Class ' + vm.profileData.license.class + '</h3>' : '<h3>License</h3>';
+            var title = vm.profileData.license.class ? '<h3>Class ' + vm.profileData.license.class + '</h3>' : '<h3>License</h3>';
 
             var listItems = _.map(vm.profileData.license.endorsements,
                 function (e) {
@@ -197,12 +202,12 @@
 
                 activityService
                     .getFeed().then(function (result) {
-                        var uniqueResults = _.uniq(result),
-                            sortedItems = [];
+                        var uniqueResults = _.uniq(result);
+                        var sortedItems = [];
 
                         for (var i = 0; i < uniqueResults.length; i++) {
-                            var item = uniqueResults[i],
-                                userID = item.user && item.user.id;
+                            var item = uniqueResults[i];
+                            var userID = item.user && item.user.id;
 
                             if (userID === vm.profileData.id) {
                                 sortedItems.push(item);
@@ -216,7 +221,7 @@
                         vm.feedLoading = false;
                     });
 
-                vm.messageClick = function (event) {
+                vm.messageClick = function () {
                     openChat();
                 };
             }
@@ -328,14 +333,14 @@
         vm.getExperienceBadge = getExperienceBadge;
 
         function showProfileTab (event) {
-            !!event && event.preventDefault();
+            if (event) { event.preventDefault(); }
 
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
             $cordovaGoogleAnalytics.trackView(vm.canEdit ? 'account.profile' : 'user.profile');
         }
 
         function showReviewTab (event) {
-            !!event && event.preventDefault();
+            if (event) { event.preventDefault(); }
 
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showReviews');
             $cordovaGoogleAnalytics.trackView((vm.canEdit ? 'account.profile' : 'user.profile') + '.reviews');
@@ -350,7 +355,7 @@
         }
 
         function showExperienceTab (event) {
-            !!event && event.preventDefault();
+            if (event) { event.preventDefault(); }
 
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'showExperience');
             $cordovaGoogleAnalytics.trackView((vm.canEdit ? 'account.profile' : 'user.profile') + '.experience');
@@ -363,7 +368,7 @@
         function getReviewBadge () {
             if (vm.canEdit) {
 
-                if (!!vm.updates.reviews) {
+                if (vm.updates.reviews) {
                     return vm.updates.reviews;
                 }
 
@@ -418,14 +423,12 @@
             }
         }
 
-
-
         // "Other User" functions - START
         function addUserToFriends () {
             $cordovaGoogleAnalytics.trackEvent('Profile', vm.canEdit ? 'home' : 'view', 'addUserToFriends');
             var friend = vm.profileData;
 
-            if (!friend) return;
+            if (!friend) { return; }
 
             var requestData = {
                 to: friend.id,
