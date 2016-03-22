@@ -11,37 +11,39 @@
         .module('signup')
         .factory('welcomeService', welcomeService);
 
-    welcomeService.$inject = ['modalService', '$q'];
+    welcomeService.$inject = ['modalService', '$q', 'StorageService'];
 
-    function welcomeService (modalService, $q) {
-        var showAcks = {};
-
-        // initialize();
+    function welcomeService (modalService, $q, StorageService) {
 
         return {
             showModal: showModal,
             initialize: initialize,
             acknowledge: acknowledge,
-            isAckd: function (state) { return !showAcks[state]; }
+            // isAckd: function (state) { return !showAcks[state]; }
+            isAckd: function (state) { return !StorageService.get(state); }
         };
 
         // //////////////////////////////////////////////////////
 
-        function initialize (key) {
+        function initialize(key) {
             if (!!key) {
-                showAcks[key] = true;
+                StorageService.set(key, true);
+                
             } else {
                 _.each(_.keys(screenConfigs), function (key) {
-                    showAcks[key] = true;
+                    StorageService.set(key, true);
                 });
             }
-        }
+        }        
+
+ 
 
         function acknowledge (state) {
-            showAcks[state] = false;
+            StorageService.set(state, false);
         }
 
-        function showModal (state, parameters) {
+        function showModal(state, parameters) {
+            debugger;
             var templateUrl = 'modules/account/child_modules/profile/templates/welcome-modal.html';
             var controller = 'WelcomeModalCtrl as vm';
 
@@ -49,14 +51,14 @@
 
             var key = parameters.stateName;
 
-            logger.info('Welcome Modal for state %s: %s', key, showAcks[key] ? 'yes' : 'no', showAcks);
+            logger.info('Welcome Modal for state %s: %s', key, StorageService.get(key) ? 'yes' : 'no');
 
-            if (showAcks[key]) {
+            if (StorageService.get(key)) {
                 return modalService
                     .show(templateUrl, controller, parameters)
                     .then(function (isAckd) {
                         if (isAckd) {
-                            showAcks[key] = false;
+                            StorageService.set(key, false);
                             return true;
                         }
 
@@ -78,6 +80,17 @@
     function WelcomeModalCtrl (parameters) {
         var vm = this;
         var screenConfig = screenConfigs[parameters.stateName];
+
+
+        // FIX ME - should change to indicator besides true/fasle bool to allow for >2 alternate screens
+        vm.default = true;        
+
+        if (parameters.stateName === 'documents.share') {
+            vm.default = false;
+        }
+        else {
+            vm.default = true;
+        }
 
         if (_.isEmpty(screenConfig)) {
             logger.error('Closing modal because of no config');
@@ -121,8 +134,12 @@
             text: 'Adding documents to your lockbox is easy. Simply place the document you want to add on a flat, well-list area and take a clear picture, trying to fill up the whole screen. Once you have a good picture, you can select the document type, save it, and it will be waiting securely in your lockbox anytime you need it.'
         },
         'documents.share': {
-            title: 'Test1234',
-            text: 'Test1234'
+            title: 'Sending Your Resume',
+            text: 'Adding documents to your lockbox is easy. Simply place the document you want to add on a flat, well-list area and take a clear picture, trying to fill up the whole screen. Once you have a good picture, you can select the document type, save it, and it will be waiting securely in your lockbox anytime you need it.'
+        },
+        'fiends.add': {
+            title: 'Adding Friends',
+            text: 'Adding documents to your lockbox is easy. Simply place the document you want to add on a flat, well-list area and take a clear picture, trying to fill up the whole screen. Once you have a good picture, you can select the document type, save it, and it will be waiting securely in your lockbox anytime you need it.'
         }
     };
 

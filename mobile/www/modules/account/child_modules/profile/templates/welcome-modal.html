@@ -3,7 +3,8 @@
     <ion-pane class="pane has-footer">
         <ion-scroll>
             <div class="welcome">
-                <i class="ico ico-steeringwheel"></i>
+                <i ng-if="!!vm.default" class="ico ico-steeringwheel"></i>
+                <i ng-if="!vm.default" class="ico ico-photo-placeholder ico-middle"></i>
                 <h3>{{vm.welcomeTitle}}</h3>
                 <p>{{vm.welcomeText}}</p>
             </div>

@@ -32,10 +32,9 @@
             return welcomeService.showModal('documents.share')
                 .then(function(item) {
                     debugger;
-                    return lockboxDocuments.checkAccess({ setNew: true, throwOnFail: true });
+                    return lockboxDocuments.checkAccess({ throwOnFail: true });
                 })
                 .then(function(isAccessible) {
-                    debugger;
                     vm.canAccess = isAccessible;
 
                     if (isAccessible) {
