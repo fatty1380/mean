@@ -3,10 +3,6 @@
     vertical-align: middle;
   }
 
-  #map {
-    height:200px;
-  }
-
   .button-padding-top {
     padding-top: 44px;
   }
@@ -30,10 +26,6 @@
       margin: 15px 10px 0 0;
       vertical-align: middle;
     }    
-  }
-
-  .map {
-    height:200px;
   }
 
   .comment {
@@ -173,12 +165,14 @@
       -webkit-line-clamp: 10;
     }
     
-    .notes-content {
-      border-width: 1px 0;
-      border-color: $stable;
-      border-style: solid;
-      border-collapse: collapse;
-      background-color: $item-divider-bg;
+    .notes-content {  
+      border: 1px solid $item-divider-bg;
+      background-color: $stable;
+      margin-top: 5px;
+        
+      span {
+        padding-left: 10px;
+      }
     }
   }
   

@@ -1,9 +1,9 @@
 <ion-modal-view class="activity view-section min-size">
 
     <ion-header-bar align-title="center">
-        <button class="button button-clear" ng-click="vm.close('activityDetails')">Close</button>
+        <button class="button button-icon ion-close-round" ng-click="vm.close('activityDetails')"></button>
         <h1 class="title">Activity Details</h1>
-        <button class="button button-clear" ng-click="vm.likeActivity()">Like Post</button>
+        <button class="button button-clear" ng-click="vm.likeActivity()" ng-if="vm.showLikeButton">Like Post</button>
     </ion-header-bar>
 
     <ion-pane class="pane has-footer details-activity-pane">
@@ -62,7 +62,7 @@
             </ion-item>
 
             <div class="map" ng-if="!!vm.entry.location.coordinates">
-                <div id="map" data-tap-disabled="true"></div>
+                <static-gmap class="static-map" size="400x200" sensor="true" zoom="14"></static-gmap>
             </div>
 
             <img ng-if="vm.entry.imageURL" ng-src="{{vm.entry.imageURL}}" class="static-pic">
@@ -105,12 +105,12 @@
 
     <ion-footer-bar ng-if="!vm.isInputVisible">
         <div class="button-bar action-buttons">
-            <button class="button icon ion-ios-plus-outline primary" ng-click="vm.toggleInput($event, true)"> comment</button>
+            <button class="button icon ion-ios-plus-outline primary" ng-click="vm.toggleInput($event, true)"> Comment</button>
         </div>
     </ion-footer-bar>
 
     <ion-footer-bar ng-if="vm.isInputVisible" class="bar bar-footer item-input-inset">
-        <button class="button button-clear button-positive" ng-disabled="!vm.message" ng-click="vm.toggleInput($event, false)"><i class="ion-close-round"></i></button>
+        <button class="button button-clear button-positive" ng-click="vm.toggleInput($event, false)"><i class="ion-close-round"></i></button>
         <ion-input class="item-input-wrapper message-textarea">
             <i class="ion ico-messagesiconblue"></i>
             <textarea focus-me="vm.focusComment" msd-elastic id="message-field" name="commentInput" placeholder="&nbsp;Comment" ng-model="vm.message"></textarea>

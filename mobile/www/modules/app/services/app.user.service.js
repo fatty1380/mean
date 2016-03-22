@@ -17,6 +17,7 @@
         vm.updateUserData = updateUserData;
         vm.getAvatar = getAvatar;
         vm.updateUserProps = updateUserProps;
+        vm.isUserActivity = isUserActivity;
 
         Object.defineProperty(vm, 'userId', {
             enumerable: true,
@@ -109,6 +110,16 @@
             }
 
             return input;
+        }
+
+        /**
+         * Checks if this is a user activity.  Returns a boolean.
+         * @activityId - the id of the activity
+         */
+        function isUserActivity(activityId) {
+            return getUserData().then(function(result) {
+                return activityId === result.id;
+            });
         }
     }
 })();

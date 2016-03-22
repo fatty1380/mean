@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityDetailsCtrl', ActivityDetailsCtrl);
 
-    ActivityDetailsCtrl.$inject = ['parameters', 'activityService', '$state', '$timeout', '$ionicScrollDelegate'];
+    ActivityDetailsCtrl.$inject = ['parameters', 'activityService', '$state', '$timeout', '$ionicScrollDelegate', 'userService'];
 
-    function ActivityDetailsCtrl (parameters, activityService, $state, $timeout, $ionicScrollDelegate) {
+    function ActivityDetailsCtrl (parameters, activityService, $state, $timeout, $ionicScrollDelegate, userService) {
         angular.element(document).ready(initMap);
 
         var vm = this;
@@ -37,6 +37,10 @@
 
             vm.user = parameters.user || vm.entry.user;
             vm.avatar = activityService.getAvatar(vm.entry);
+
+            userService.isUserActivity(vm.user.id).then(function(isUser) {
+                vm.showLikeButton = !isUser;
+            });            
         }
 
         function initMap () {
