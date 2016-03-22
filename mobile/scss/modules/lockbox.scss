@@ -46,6 +46,37 @@
       display: inline-block;
     } 
   }
+  
+  &.lockbox-share {
+    textarea {
+      height: 200px;
+    }
+    
+    .included-documents {
+      margin: 30px 22px 10px;
+      
+      .title {
+        font-size: 16px;
+        font-weight: 500;
+        padding-bottom: 10px;
+      }
+      
+      ul {
+        padding-left: 10px;
+      }
+      
+      li {
+        font-size: 1.4em;
+        padding-bottom: 5px;
+        
+        i {
+          font-size: 1.4em;
+          margin-right: 10px;
+          color: $brand-blue;
+        }
+      }
+    }
+  }
 }
 
 @media only screen and (max-device-height : 568px) {  
@@ -119,6 +150,7 @@
     
     &.real-document {
       background-color: $light;
+      color: $badge-green;
         
       .item-content {
         color: $gradient-bottom;
@@ -129,67 +161,49 @@
       box-shadow: inset 1px 1px 15px rgba($action-text, 0.9);
     }
   }
-  
-  .item {
-    background-color: transparent !important;
-  }
-  
-  li.item:last-child {
-    border-bottom: 2px solid #D2D2D2;
-  }
 
-  li.item {
-    border-top: 2px solid #D2D2D2;
-    padding-left: 62px;
-    padding-right: 100px;
-    min-height: 70px;
+  .item {
+    padding: 20px;
+    margin: 2vw 16px;
+    border-radius: 6px;
+    height: 56px;
+    top: 0;
+
+    &.active {
+      background-color: $badge-green !important;
+      
+      .item-content {
+        color: white;
+      }
+      
+      .icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        margin-left: 50%;
+        margin-top: -11px;
+        font-size: 1.7em;
+      }
+    }
 
     .item-content {
       text-overflow: initial;
       white-space: normal;
       display: inline-block;
-
-      strong, span {
-        display: block;
-      }
       
       strong {
-        font-size: 18px;
+        font-size: 22px;
+        padding-right: 10px;
+      }
+      
+      span {
+        white-space: pre;
       }
 
       &.no-date strong {
         display: block;
         line-height:30px;
         padding-top:3px;
-      }
-    }
-    
-    label.item.item-checkbox.ng-valid {    
-      left: 0;
-      right: 0;
-      top: 0;
-      margin: 0;
-      bottom: 0;
-      padding-right: 0px;
-      position: absolute;
-      
-      .checkbox {
-        display: inline-block;
-        position: static;
-      }
-
-      i.checkbox-icon {
-        width: 30px;
-        height: 30px;
-        position: absolute;
-        top: 50%;
-        left: 21px;
-        
-        &::after {
-          width: 72%;
-          height: 30%;
-          left: 20%;
-        }
       }
     }
 
