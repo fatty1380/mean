@@ -8,7 +8,7 @@
     /**
      * Friends Controller
      * ------------------
-     * @resolve updates - get last updtaes from the updates service
+     * @resolve updates - get last updates from the updates service
      * @resolve profile - get the logged in (or visible) user's profile
      * @resolve friends - Gets a list of the `profile` user's friends
      *
@@ -66,7 +66,6 @@
 
             if (vm.canEdit) {
                 vm.title = 'Friends';
-                vm.yourFriendsTitle = 'Your Friends';
             }
             else {
                 vm.title = vm.profile.displayName;

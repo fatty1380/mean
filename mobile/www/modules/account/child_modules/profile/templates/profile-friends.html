@@ -17,7 +17,7 @@
 
         <ion-scroll delegate-handle="main-content-scroll">
             <!-- Friends -->
-            <div class="title" ng-if="vm.friends.length">{{vm.yourFriendsTitle}}</div>
+            <div class="title" ng-if="vm.yourFriendsTitle">{{vm.yourFriendsTitle}}</div>
             <ul class="list friends-list user-friends-list" ng-if="vm.friends.length">
                 <li class="item" ng-repeat="friend in friends = (vm.friends | filter:vm.searchText)" ng-click="vm.viewUser(friend, $event)"
                 ng-init="vm.initUser(friend)">
@@ -60,7 +60,7 @@
                 </div>
     
                 <!-- Outset users -->
-                <div class="title" ng-if="vm.searchText.length >= 3">TruckerLine Users</div>
+                <div class="title" ng-if="vm.searchText.length >= 3 || vm.users.length">TruckerLine Users</div>
                 <ul class="list friends-list" ng-if="vm.users.length && !contacts.length && vm.searchText.length >= 2">
                     <li class="item" ng-repeat="user in vm.users" ng-click="vm.viewUser(user, $event)" ng-init="vm.initUser(user)">
                         <i class="ico ico-avatarsmall" ></i>
