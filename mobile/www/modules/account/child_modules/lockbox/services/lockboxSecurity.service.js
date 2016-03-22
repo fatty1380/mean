@@ -2,8 +2,8 @@ angular
     .module('lockbox')
     .factory('lockboxSecurity', lockboxSecurity);
 
-lockboxSecurity.$inject = ['$rootScope', '$state', '$ionicPopup', 'LoadingService', '$q', '$timeout', '$cordovaGoogleAnalytics', 'securityService'];
-function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $timeout, $cordovaGoogleAnalytics, securityService) {
+lockboxSecurity.$inject = ['$cordovaGoogleAnalytics', '$ionicPopup', '$q', '$rootScope', 'LoadingService', 'securityService'];
+function lockboxSecurity ($cordovaGoogleAnalytics, $ionicPopup, $q, $rootScope, LoadingService, securityService) {
 
     return {
         checkAccess: checkAccess,
@@ -132,17 +132,20 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
 
                 $cordovaGoogleAnalytics.trackEvent('Lockbox', 'secure', 'init');
 
-            } else if (state.secured && PIN && (scopeData.pin === PIN)) {
+            }
+            else if (state.secured && PIN && scopeData.pin === PIN) {
                 // Successfully unlocked Lockbox
                 scopeData.closePopup(securityService.unlock(scopeData.pin));
 
                 $cordovaGoogleAnalytics.trackEvent('Lockbox', 'unlock', 'success');
                 LoadingService.showIcon('Unlocked', 'ion-unlocked');
-            } else if (state.secured && PIN && scopeData.pin != PIN) {
+            }
+            else if (state.secured && PIN && scopeData.pin !== PIN) {
                 // Incorrect PIN Number
                 $cordovaGoogleAnalytics.trackEvent('Lockbox', 'unlock', 'invalid');
                 scopeData.pin = '';
-            } else if (scopeData.confirm && !state.secured) {
+            }
+            else if (scopeData.confirm && !state.secured) {
                 if (scopeData.pin === scopeData.newPin) {
                     // Set new PIN
                     securityService.setPin(scopeData.pin);
@@ -151,7 +154,8 @@ function lockboxSecurity ($rootScope, $state, $ionicPopup, LoadingService, $q, $
                     $cordovaGoogleAnalytics.trackEvent('Lockbox', 'secure', 'confirmed');
 
                     LoadingService.showIcon('Documents Secured', 'ion-locked');
-                } else {
+                }
+                else {
                     // New PIN confirmation failed
                     scopeData.confirm = false;
                     scopeData.pin = '';

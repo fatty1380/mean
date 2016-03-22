@@ -5,11 +5,13 @@
         .module('profile')
         .factory('profileModalsService', profileModalsService);
 
-    profileModalsService.$inject = ['modalService', 'lockboxModalsService'];
+    profileModalsService.$inject = ['lockboxModalsService', 'modalService'];
 
-    function profileModalsService (modalService, lockboxModalsService) {
-        var templateUrl, controller, params,
-            defaultOptions = { animation: 'slide-in-up' };
+    function profileModalsService (lockboxModalsService, modalService) {
+        var templateUrl;
+        var controller;
+        var params;
+        var defaultOptions = { animation: 'slide-in-up' };
 
         return {
             showProfileEditModal: showProfileEditModal,
@@ -122,11 +124,11 @@
 
         /** Private Methods */
 
-        function showModal (template, controller, params, options) {
-            params = params || {};
+        function showModal (template, ctrl, localParams, options) {
+            localParams = localParams || {};
             options = angular.extend({}, defaultOptions, options);
             return modalService
-                .show(templateUrl, controller, params, options);
+                .show(templateUrl, ctrl, localParams, options);
         }
     }
 })();

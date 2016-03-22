@@ -8,7 +8,8 @@
     friendsService.$inject = ['$http', '$q', 'settings'];
 
     function friendsService ($http, $q, settings) {
-        var friends = [], users = [];
+        var friends = [];
+        var users = [];
 
         return {
             getFriends: getFriends,
@@ -63,7 +64,7 @@
         }
 
         function getFriendStatus (id) {
-            if (!id) return $q.reject('No ID Specified');
+            if (!id) { return $q.reject('No ID Specified'); }
 
             return $http.get(settings.friends + id);
         }
@@ -93,12 +94,12 @@
         }
 
         function loadRequest (id) {
-            if (!id) return $q.reject('No ID Specified');
+            if (!id) { return $q.reject('No ID Specified'); }
             return $http.get(settings.friends + id);
         }
 
         function updateRequest (id, data) {
-            if (!id) return $q.reject('No ID Specified');
+            if (!id) { return $q.reject('No ID Specified'); }
             return $http.put(settings.requests + id, data);
         }
 

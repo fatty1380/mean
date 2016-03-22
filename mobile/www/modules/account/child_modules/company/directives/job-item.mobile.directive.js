@@ -4,7 +4,7 @@
     'use strict';
 
     angular.module('company')
-        .directive('osetJobItem', jobItemDirective);
+        .directive('tlineJobItem', jobItemDirective);
 
     jobItemDirective.$inject = [];
 

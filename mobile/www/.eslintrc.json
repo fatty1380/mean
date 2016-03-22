@@ -41,7 +41,7 @@
         "angular/di-unused": 2,
         "angular/directive-name": [
             2,
-            "oset"
+            "tline"
         ],
         "angular/directive-restrict": [
             2,
@@ -56,7 +56,7 @@
             {
                 "typeSeparator": "dot",
                 "ignoreTypeSuffix": true,
-                "ignorePrefix": "oset"
+                "ignorePrefix": "tline"
             }
         ],
         "angular/filter-name": 2,

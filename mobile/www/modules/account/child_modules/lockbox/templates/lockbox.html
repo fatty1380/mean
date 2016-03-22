@@ -32,14 +32,14 @@
                             
                             <div class="doc col" 
                                  ng-class="{'stub-document': !(vm.documents[$index].url || vm.documents[$index].id), 'real-document': vm.documents[$index].url || vm.documents[$index].id}" 
-                                 oset-doc-attr-view model="vm.documents[$index]" new-doc-fn="vm[vm.documents[$index].fn] || vm.newDoc">
-                                <oset-doc-view model="vm.documents[$index]" new-doc-fn="vm[vm.documents[$index].fn] || vm.newDoc"></oset-doc-view>
+                                 tline-doc-attr-view model="vm.documents[$index]" new-doc-fn="vm[vm.documents[$index].fn] || vm.newDoc">
+                                <tline-doc-view model="vm.documents[$index]" new-doc-fn="vm[vm.documents[$index].fn] || vm.newDoc"></tline-doc-view>
                             </div>
                             
                             <div class="doc col" ng-if="!!vm.documents[$index+1]"
                                  ng-class="{'stub-document': !(vm.documents[$index+1].url || vm.documents[$index+1].id), 'real-document': vm.documents[$index+1].url || vm.documents[$index+1].id}" 
-                                 oset-doc-attr-view model="vm.documents[$index+1]" new-doc-fn="vm[vm.documents[$index+1].fn] || vm.newDoc">
-                                <oset-doc-view model="vm.documents[$index+1]" new-doc-fn="vm[vm.documents[$index+1].fn] || vm.newDoc"></oset-doc-view>
+                                 tline-doc-attr-view model="vm.documents[$index+1]" new-doc-fn="vm[vm.documents[$index+1].fn] || vm.newDoc">
+                                <tline-doc-view model="vm.documents[$index+1]" new-doc-fn="vm[vm.documents[$index+1].fn] || vm.newDoc"></tline-doc-view>
                             </div>
                             
                             <div class="doc col blank" ng-if="!vm.documents[$index+1]">&nbsp;</div>

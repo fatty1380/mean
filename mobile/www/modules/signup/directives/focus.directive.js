@@ -1,5 +1,5 @@
 angular.module('signup')
-    .directive('osetFocus', FocusDirective);
+    .directive('tlineFocus', FocusDirective);
 
 function FocusDirective () {
     return {

@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('activity')
-        .directive('osetFeedItem', FeedItemDirective);
+        .directive('tlineFeedItem', FeedItemDirective);
 
     FeedItemDirective.$inject = [];
 
