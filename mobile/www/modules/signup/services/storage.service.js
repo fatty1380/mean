@@ -29,7 +29,7 @@
                 $window.localStorage[id || userService.userId + '.' + key] = value;
             },
             get: function (key, defaultValue, id) {
-                return $window.localStorage[id || userService.userId + '.' + key] || defaultValue || null;
+                return angular.fromJson($window.localStorage[id || userService.userId + '.' + key] || defaultValue || null);
             },
             remove: function (key, id) {
                 return $window.localStorage.removeItem(id || userService.userId + '.' + key);
