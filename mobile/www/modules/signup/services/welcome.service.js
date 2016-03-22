@@ -119,6 +119,10 @@
         'lockbox.add': {
             title: 'Adding Lockbox Documents',
             text: 'Adding documents to your lockbox is easy. Simply place the document you want to add on a flat, well-list area and take a clear picture, trying to fill up the whole screen. Once you have a good picture, you can select the document type, save it, and it will be waiting securely in your lockbox anytime you need it.'
+        },
+        'documents.share': {
+            title: 'Test1234',
+            text: 'Test1234'
         }
     };
 
