@@ -130,7 +130,7 @@
                     });
 
             return fbGetTokenRequest
-                .catch(function(err) {
+                .catch(function (err) {
                     if (/cannot authenticate via a web browser/i.test(err)) {
                         return $q.reject({ message: err, reason: 'BROWSER' });
                     }

@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular.module(AppConfig.appModuleName)
@@ -6,17 +6,17 @@
 
     focusMe.$inject = ['$timeout'];
 
-    function focusMe($timeout) {
+    function focusMe ($timeout) {
 
         return {
             scope: { trigger: '=focusMe' },
             link: link
         };
-        function link(scope, element) {
-            scope.$watch('trigger', function focusMeTriggerFn(value) {
+        function link (scope, element) {
+            scope.$watch('trigger', function focusMeTriggerFn (value) {
                 if (value === true) {
                     // logger.debug('trigger',value);
-                    $timeout(function focusMeDoFocus() {
+                    $timeout(function focusMeDoFocus () {
                         element[0].focus();
                         scope.trigger = false;
                     }, 100);
