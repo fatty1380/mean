@@ -23,6 +23,7 @@
                 showEmail: '=?',
                 showPhone: '=?',
                 showName: '=?',
+                hideButton: '=?',
                 formInit: '&?'
             }
         };
@@ -32,6 +33,7 @@
             vm.showPhone = vm.showPhone !== false;
             vm.showMessage = vm.showMessage !== false;
             vm.showName = vm.showName !== false;
+            vm.hideButton = vm.hideButton || false;
 
             var fn = !!vm.formInit && _.isFunction(vm.formInit()) && vm.formInit() || _.noop;
             fn(vm.contactForm);
@@ -59,7 +61,7 @@
                     logger.debug('Selected Contact: ', selectedContact);
 
 					/**
-					 * Contacts returned with teh following schemas:
+					 * Contacts returned with the following schemas:
 					 * 'displayName' only available on android. 'formatted' may be used on ios
 					 * emails and phones arrays store objects with the following keys:
 					 * 		value : the email or phone number
@@ -97,7 +99,7 @@
 
     var contactTemplate = [
         '<form name="vm.contactForm" class="list list-inset share-form" ng-submit="vm.validate()">',
-        '   <button type="button" class="button button-block" ng-click="vm.pickContact();">Choose from Contacts</button>',
+        '   <button type="button" class="button button-block" ng-click="vm.pickContact();" ng-hide="vm.hideButton">Choose from Contacts</button>',
         '',
         '	<ion-input class="item item-input" ng-if="!!vm.showPhone">',
         '		<i class="icon ion-ios-telephone"></i>',

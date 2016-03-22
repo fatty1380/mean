@@ -10,19 +10,16 @@
 
     <ion-pane class="has-footer">
         <ion-scroll>
-            <ul class="list document-list list-inset">
-                <li class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id">
-                    <ion-checkbox ng-model="doc.checked">
-                        <div class="item-content" ng-class="{'no-date': !doc.created}">
-                            <strong>{{doc.name}}</strong>
-                            <span>{{doc.created | date : 'MMMM d, y' }}</span>
-                        </div>
-                        <!--<oset-doc-view ng-if="!!doc.url" model="doc" btn-text="View"></oset-doc-view>-->
-                        
-                    </ion-checkbox>
-                    <!--<button class="button button-small" ng-click="vm.rename($index)">Rename</button>-->
-                </li>
-            </ul>
+            <ion-list class="list document-list">
+                <div class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id"
+                  ng-click="doc.checked = !doc.checked" ng-class="{'active': !!doc.checked}">
+                    <div class="item-content" ng-class="{'no-date': !doc.created}">
+                        <strong>{{doc.name}}</strong>
+                        <span>{{doc.created | date : 'MMMM d, y' }}</span>
+                        <i class="icon ion-checkmark" ng-show="!!doc.checked"></i>
+                    </div>
+                </div>
+            </ion-list>
         </ion-scroll>
     </ion-pane>
 
@@ -43,20 +40,26 @@ ng-if="vm.shareStep === 2">
     <ion-header-bar>
         <button class="button button-icon ion-ios-arrow-back" ng-show="vm.canAccess" ng-click="vm.back()"></button>
         <button class="button button-clear" ng-hide="vm.canAccess" ng-click="vm.cancel()">Cancel</button>
-        <h1 class="title">Share Resume</h1>
+        <h1 class="title">Send Resume</h1>
     </ion-header-bar>
 
-    <h3 class="title" ng-if="vm.docsToShare.length">Enter Email and Message to send Resume & Selected Documents</h3>
+    <h3 class="title" ng-if="vm.docsToShare.length">Enter Email and Message to Send Resume & Selected Documents</h3>
 
     <ion-pane class="has-footer">
         <ion-scroll>
-            <oset-manual-contact model="vm.contact" show-message="true" show-phone="false"></oset-manual-contact>
+            <oset-manual-contact model="vm.contact" show-message="true" show-phone="false" hide-button="true"></oset-manual-contact>
+            <div class="included-documents">
+                <div class="title">Attached Documents</div>
+                <ul>
+                  <li ng-repeat="doc in vm.docsToShare"> <i class="ion-document-text"></i>{{doc.name}}</li>
+                </ul>
+            </div>
         </ion-scroll>
     </ion-pane>
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button primary" ng-class="{'disabled': !(vm.contact.phone || vm.contact.email)}" ng-click="vm.shareDocuments()">Share</button>
+            <button class="button primary" ng-class="{'disabled': !(vm.contact.phone || vm.contact.email)}" ng-click="vm.shareDocuments()">Send</button>
         </div>
     </ion-footer-bar>
 
