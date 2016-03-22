@@ -843,14 +843,14 @@ progress {
 /* edit avatar */
 .edit-avatar {
   ion-pane {
-    background-color: white;
+    background-color: $light;
   }
   
   .bar-header {
     background-color: $tab-selected;
     
     .button-icon, h1 {
-      color: white;
+      color: $light;
     }
   }
   

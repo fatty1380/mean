@@ -51,6 +51,10 @@
   }
   .card {
     padding: 0;
+    
+    .activity-item.bottom {
+      padding: $item-padding/2 0;
+    }
   }
 
   > .ico {
@@ -61,10 +65,11 @@
   .activity-item {
     overflow: hidden;
 
-    .ico { 
+    i { 
       vertical-align: middle;
       margin-top: 0;
       margin-bottom: 2px;
+      font-size: 1.2em;
     }
 
     .panel {
@@ -124,6 +129,10 @@
       margin-top: 2px;
       line-height: 1.2em;
     }
+    
+    .ion-location {
+      color: $icon-map-pin-red;
+    }
 
     a.user-link {
       text-decoration: none;
@@ -180,7 +189,7 @@
   
   .static-map {
     position: relative;
-    left: -$item-padding / 2;
+    max-width: 100%;
   }
 
 
@@ -311,15 +320,13 @@
   }
   
   .notes i.icon {
-    vertical-align: middle;
     color: $icon-notes-yellow;
-    font-size: 1.2em;
   }
   
   .dist {
     font-weight: 400;
     
-    .mi:after {
+    &.mi:after {
       content: 'MI';
       position: relative;
       bottom: 0;
