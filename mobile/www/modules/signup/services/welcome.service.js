@@ -31,7 +31,7 @@
             }
             else {
                 _.each(_.keys(screenConfigs), function(key) {
-                    if (key === 'friends.add') {
+                    if (key === 'account.home') {
                         StorageService.set(key, 2)
                     }
                     else {
@@ -52,12 +52,13 @@
 
             parameters = parameters || { stateName: state };
 
+
             var key = parameters.stateName;
             var remainingViews = StorageService.get(key);
 
             logger.info('Welcome Modal for state %s: %s', key, StorageService.get(key) ? 'yes' : 'no');
 
-            if (remainingViews > 0) {
+            if (!!remainingViews) {
                 return modalService
                     .show(templateUrl, controller, parameters)
                     .then(function (isAckd) {
@@ -87,14 +88,16 @@
 
 
         // FIX ME - should change to indicator besides true/fasle bool to allow for >2 alternate screens
-        vm.default = true;        
+        vm.template = 'default';
 
         if (parameters.stateName === 'documents.share') {
-            vm.default = false;
+            vm.default = 'docShare';
         }
-        else {
-            vm.default = true;
+
+        if (parameters.stateName === 'account.home') {
+            vm.template = 'accountHome';
         }
+
 
         if (_.isEmpty(screenConfig)) {
             logger.error('Closing modal because of no config');
@@ -103,6 +106,9 @@
 
         vm.welcomeText = screenConfig.text;
         vm.welcomeTitle = screenConfig.title || 'Welcome';
+        vm.subHeader = screenConfig.subHeader || '';
+        vm.subHeaderSec = screenConfig.subHeaderSec || '';
+        vm.textSec = screenConfig.textSec || '';
 
         vm.acknowledge = acknowledge;
 
@@ -138,12 +144,15 @@
             text: 'Adding documents to your lockbox is easy. Simply place the document you want to add on a flat, well-list area and take a clear picture, trying to fill up the whole screen. Once you have a good picture, you can select the document type, save it, and it will be waiting securely in your lockbox anytime you need it.'
         },
         'documents.share': {
-            title: 'Sending Your Resume',
-            text: 'Adding documents to your lockbox is easy. Simply place the document you want to add on a flat, well-list area and take a clear picture, trying to fill up the whole screen. Once you have a good picture, you can select the document type, save it, and it will be waiting securely in your lockbox anytime you need it.'
+            title: 'Sending Resume and Docs',
+            text: 'Select the Documents you\'d like to email with your Resume, and Securely email them from wherever! Let\'s get started by entering your Lockbox Password...'
         },
-        'friends.add': {
-            title: 'Adding Friends',
-            text: 'Adding documents to your lockbox is easy. Simply place the document you want to add on a flat, well-list area and take a clear picture, trying to fill up the whole screen. Once you have a good picture, you can select the document type, save it, and it will be waiting securely in your lockbox anytime you need it.'
+        'account.home': {
+            title: 'Grow your Convoy!',
+            subHeader: 'Daily Updates - ',
+            text: 'See what your Friends are Hauling & where they are in the US!',
+            subHeaderSec: 'Free MVR Offer - ',
+            textSec: 'Invite 5+ Truckers and receive a free MVR for your Lockbox!'
         }
     };
 

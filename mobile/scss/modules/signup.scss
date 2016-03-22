@@ -1098,6 +1098,15 @@ progress {
 
 .welcome-screen { 
   background: none;
+  
+
+  .ico.ico-photo-welcome {
+    background: #333 url('../img/bg-profile-welcome.png') 50% no-repeat;
+    height: 180px;
+    width: 180px;
+    border-radius: 100%;
+    zoom: 60%;
+   }
 
   .pane, .view {
     background: rgba(76,76,76,0.8);
@@ -1117,8 +1126,18 @@ progress {
       line-height: 1.2em;
     }
     
-    h3, p {
+    h3, h4, h5, p {
       color: $light;
+    }
+    
+    
+    h5, .friends {
+        text-align: left;
+    }
+    
+    .friends {
+        padding-left: 8%;
+        
     }
   }
 }

@@ -2,11 +2,19 @@
 
     <ion-pane class="pane has-footer">
         <ion-scroll>
-            <div class="welcome">
-                <i ng-if="!!vm.default" class="ico ico-steeringwheel"></i>
-                <i ng-if="!vm.default" class="ico ico-photo-placeholder ico-middle"></i>
+            <div ng-if="vm.template === 'default'" class="welcome">
+                <i class="ico ico-steeringwheel"></i>
                 <h3>{{vm.welcomeTitle}}</h3>
                 <p>{{vm.welcomeText}}</p>
+            </div>
+            <div ng-if="vm.template === 'accountHome'" class="welcome">
+                <i class="photo ico ico-photo-welcome ico-middle "></i>
+                <!--<i class="ico ico-steeringwheel"></i>                -->
+                <h3>{{vm.welcomeTitle}}</h3>
+                <h5>{{vm.subHeader}}</h5>
+                <p class='friends'>{{vm.welcomeText}}</p>
+                <h5>{{vm.subHeaderSec}}</h5>                
+                <p class='friends'>{{vm.textSec}}</p>
             </div>
         </ion-scroll>
     </ion-pane>
