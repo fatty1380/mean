@@ -8,19 +8,15 @@
     StorageService.$inject = ['$window', '$rootScope', 'userService'];
 
     function StorageService($window, $rootScope, userService) {
-        debugger;
-
         var userId = null;
 
         function setUserData () {
             userService.getUserData().then(function(profileData) {
-                debugger;
                 userId = profileData.id;
             });
         }
 
         function clearUserData() {
-            debugger;
             userId = null;
         }
 

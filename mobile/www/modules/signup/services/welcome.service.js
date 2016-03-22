@@ -19,49 +19,53 @@
             showModal: showModal,
             initialize: initialize,
             acknowledge: acknowledge,
-            // isAckd: function (state) { return !showAcks[state]; }
-            isAckd: function (state) { return !StorageService.get(state); }
+            isAckd: function (state) { return !!(StorageService.get(state) > 0); }
         };
 
         // //////////////////////////////////////////////////////
 
         function initialize(key) {
             if (!!key) {
-                StorageService.set(key, true);
+                StorageService.set(key, 1);
                 
-            } else {
-                _.each(_.keys(screenConfigs), function (key) {
-                    StorageService.set(key, true);
+            }
+            else {
+                _.each(_.keys(screenConfigs), function(key) {
+                    if (key === 'friends.add') {
+                        StorageService.set(key, 2)
+                    }
+                    else {
+                        StorageService.set(key, 1);
+                    }
                 });
             }
-        }        
+        }
 
- 
-
-        function acknowledge (state) {
-            StorageService.set(state, false);
+        function acknowledge (key) {
+            var viewCount = StorageService.get(key) - 1;
+            StorageService.set(key, viewCount);
         }
 
         function showModal(state, parameters) {
-            debugger;
             var templateUrl = 'modules/account/child_modules/profile/templates/welcome-modal.html';
             var controller = 'WelcomeModalCtrl as vm';
 
             parameters = parameters || { stateName: state };
 
             var key = parameters.stateName;
+            var remainingViews = StorageService.get(key);
 
             logger.info('Welcome Modal for state %s: %s', key, StorageService.get(key) ? 'yes' : 'no');
 
-            if (StorageService.get(key)) {
+            if (remainingViews > 0) {
                 return modalService
                     .show(templateUrl, controller, parameters)
                     .then(function (isAckd) {
                         if (isAckd) {
-                            StorageService.set(key, false);
+                            var viewCount = StorageService.get(key) - 1;
+                            StorageService.set(key, viewCount);
                             return true;
                         }
-
                         return false;
                     });
             }
@@ -137,7 +141,7 @@
             title: 'Sending Your Resume',
             text: 'Adding documents to your lockbox is easy. Simply place the document you want to add on a flat, well-list area and take a clear picture, trying to fill up the whole screen. Once you have a good picture, you can select the document type, save it, and it will be waiting securely in your lockbox anytime you need it.'
         },
-        'fiends.add': {
+        'friends.add': {
             title: 'Adding Friends',
             text: 'Adding documents to your lockbox is easy. Simply place the document you want to add on a flat, well-list area and take a clear picture, trying to fill up the whole screen. Once you have a good picture, you can select the document type, save it, and it will be waiting securely in your lockbox anytime you need it.'
         }

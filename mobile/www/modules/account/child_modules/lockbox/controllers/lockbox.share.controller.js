@@ -31,7 +31,6 @@
 
             return welcomeService.showModal('documents.share')
                 .then(function(item) {
-                    debugger;
                     return lockboxDocuments.checkAccess({ throwOnFail: true });
                 })
                 .then(function(isAccessible) {
