@@ -11,55 +11,62 @@
         .module('signup')
         .factory('welcomeService', welcomeService);
 
-    welcomeService.$inject = ['modalService', '$q'];
+    welcomeService.$inject = ['modalService', '$q', 'StorageService'];
 
-    function welcomeService (modalService, $q) {
-        var showAcks = {};
-
-        // initialize();
+    function welcomeService (modalService, $q, StorageService) {
 
         return {
             showModal: showModal,
             initialize: initialize,
             acknowledge: acknowledge,
-            isAckd: function (state) { return !showAcks[state]; }
+            isAckd: function (state) { return !!(StorageService.get(state) > 0); }
         };
 
         // //////////////////////////////////////////////////////
 
-        function initialize (key) {
+        function initialize(key) {
             if (!!key) {
-                showAcks[key] = true;
-            } else {
-                _.each(_.keys(screenConfigs), function (key) {
-                    showAcks[key] = true;
+                StorageService.set(key, 1);
+                
+            }
+            else {
+                _.each(_.keys(screenConfigs), function(key) {
+                    if (key === 'account.home') {
+                        StorageService.set(key, 2)
+                    }
+                    else {
+                        StorageService.set(key, 1);
+                    }
                 });
             }
         }
 
-        function acknowledge (state) {
-            showAcks[state] = false;
+        function acknowledge (key) {
+            var viewCount = StorageService.get(key) - 1;
+            StorageService.set(key, viewCount);
         }
 
-        function showModal (state, parameters) {
+        function showModal(state, parameters) {
             var templateUrl = 'modules/account/child_modules/profile/templates/welcome-modal.html';
             var controller = 'WelcomeModalCtrl as vm';
 
             parameters = parameters || { stateName: state };
 
+
             var key = parameters.stateName;
+            var remainingViews = StorageService.get(key);
 
-            logger.info('Welcome Modal for state %s: %s', key, showAcks[key] ? 'yes' : 'no', showAcks);
+            logger.info('Welcome Modal for state %s: %s', key, StorageService.get(key) ? 'yes' : 'no');
 
-            if (showAcks[key]) {
+            if (!!remainingViews) {
                 return modalService
                     .show(templateUrl, controller, parameters)
                     .then(function (isAckd) {
                         if (isAckd) {
-                            showAcks[key] = false;
+                            var viewCount = StorageService.get(key) - 1;
+                            StorageService.set(key, viewCount);
                             return true;
                         }
-
                         return false;
                     });
             }
@@ -79,6 +86,19 @@
         var vm = this;
         var screenConfig = screenConfigs[parameters.stateName];
 
+
+        // FIX ME - should change to indicator besides true/fasle bool to allow for >2 alternate screens
+        vm.template = 'default';
+
+        if (parameters.stateName === 'documents.share') {
+            vm.default = 'docShare';
+        }
+
+        if (parameters.stateName === 'account.home') {
+            vm.template = 'accountHome';
+        }
+
+
         if (_.isEmpty(screenConfig)) {
             logger.error('Closing modal because of no config');
             return vm.closeModal(false);
@@ -86,6 +106,9 @@
 
         vm.welcomeText = screenConfig.text;
         vm.welcomeTitle = screenConfig.title || 'Welcome';
+        vm.subHeader = screenConfig.subHeader || '';
+        vm.subHeaderSec = screenConfig.subHeaderSec || '';
+        vm.textSec = screenConfig.textSec || '';
 
         vm.acknowledge = acknowledge;
 
@@ -119,6 +142,17 @@
         'lockbox.add': {
             title: 'Adding Lockbox Documents',
             text: 'Adding documents to your lockbox is easy. Simply place the document you want to add on a flat, well-list area and take a clear picture, trying to fill up the whole screen. Once you have a good picture, you can select the document type, save it, and it will be waiting securely in your lockbox anytime you need it.'
+        },
+        'documents.share': {
+            title: 'Sending Resume and Docs',
+            text: 'Select the Documents you\'d like to email with your Resume, and Securely email them from wherever! Let\'s get started by entering your Lockbox Password...'
+        },
+        'account.home': {
+            title: 'Grow your Convoy!',
+            subHeader: 'Daily Updates - ',
+            text: 'See what your Friends are Hauling & where they are in the US!',
+            subHeaderSec: 'Free MVR Offer - ',
+            textSec: 'Invite 5+ Truckers and receive a free MVR for your Lockbox!'
         }
     };
 

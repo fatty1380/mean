@@ -181,7 +181,7 @@
                         return userService.getUserData();
                     }],
                     welcome: ['welcomeService', function (welcomeService) {
-                        welcomeService.showModal('account.activity');
+                        welcomeService.showModal('account.home');
                     }]
                 }
             });

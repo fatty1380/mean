@@ -5,9 +5,11 @@
         .module('lockbox', ['pdf'])
         .controller('LockboxCtrl', LockboxCtrl);
 
-    LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', '$ionicHistory', 'securityService', 'user', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup', '$cordovaGoogleAnalytics', 'LoadingService'];
+    LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', '$ionicHistory', 'securityService', 'user', 'documents', 'lockboxDocuments',
+        'lockboxModalsService', '$ionicPopup', '$cordovaGoogleAnalytics', 'LoadingService', 'welcomeService'];
 
-    function LockboxCtrl ($scope, $state, $rootScope, $ionicHistory, securityService, user, documents, lockboxDocuments, lockboxModalsService, $ionicPopup, $cordovaGoogleAnalytics, LoadingService) {
+    function LockboxCtrl($scope, $state, $rootScope, $ionicHistory, securityService, user, documents, lockboxDocuments,
+        lockboxModalsService, $ionicPopup, $cordovaGoogleAnalytics, LoadingService, welcomeService) {
 
 
         var vm = this;
@@ -203,23 +205,16 @@
 
             $cordovaGoogleAnalytics.trackEvent('Lockbox', 'share', null, vm.documents.length);
 
-            lockboxDocuments.checkAccess()
-                .then(function (access) {
-                    if (access !== -1 && access) {
-                        return lockboxModalsService.showShareModal(params);
-                    }
-
-                    LoadingService.showFailure('Lockbox Access Denied');
-                    throw new Error('Lockbox Access Denied');
+            return lockboxModalsService.showShareModal(params)
+                
+                .then(function(result) {
+                    logger.debug(result);
                 })
-                .then(
-                    function (result) {
-                        logger.debug(result);
-                    },
-                    function (err) {
-                        logger.debug(err);
-                    });
-        }
+                .catch(function(err) {
+                    LoadingService.showFailure('Lockbox Access Denied');
+                    throw new Error('Lockbox Access Denied', err);
+                });
+        }   
 
         function refreshDocuments () {
             $cordovaGoogleAnalytics.trackEvent('Lockbox', 'refresh', 'start', vm.documents.length);
