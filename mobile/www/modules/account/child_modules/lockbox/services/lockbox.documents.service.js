@@ -132,7 +132,7 @@
                                 id = doc.id;
                                 sku = doc.sku;
                                 name = doc.name;
-                                url = doc.url;
+                                url = doc.nativeURL || doc.url; // Use Local URL if available...
                             }
 
                             user = getUserId(doc);
