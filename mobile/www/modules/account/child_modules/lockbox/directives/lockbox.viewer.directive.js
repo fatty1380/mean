@@ -3,12 +3,12 @@
 
 	/**
 	 * @desc document Add directive that can be used anywhere across apps to get/gather contact information from the user.
-	 * @example <oset-manual-contact model="vm.contact" />
+	 * @example <tline-manual-contact model="vm.contact" />
 	 */
     angular.module(AppConfig.appModuleName)
         .controller('DocumentModalCtrl', DocumentModalCtrl)
-        .directive('osetDocView', ViewDocumentDirective)
-        .directive('osetDocAttrView', ViewDocAttrDirective);
+        .directive('tlineDocView', ViewDocumentDirective)
+        .directive('tlineDocAttrView', ViewDocAttrDirective);
 
     function ViewDocAttrDirective () {
         var directive = {

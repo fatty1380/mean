@@ -17,7 +17,7 @@
             <ion-refresher pulling-text="Pull to refresh ..." on-refresh="vm.refresh()"></ion-refresher>
             <ion-list>
                 <span ng-repeat="entry in vm.feed track by entry.id">
-                <oset-feed-item model="entry"></oset-feed-item>
+                <tline-feed-item model="entry"></tline-feed-item>
                 </span>
             </ion-list>
 

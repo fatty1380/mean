@@ -17,7 +17,7 @@
                             <strong>{{doc.name}}</strong>
                             <span>{{doc.created | date : 'MMMM d, y' }}</span>
                         </div>
-                        <!--<oset-doc-view ng-if="!!doc.url" model="doc" btn-text="View"></oset-doc-view>-->
+                        <!--<tline-doc-view ng-if="!!doc.url" model="doc" btn-text="View"></tline-doc-view>-->
                         
                     </ion-checkbox>
                     <!--<button class="button button-small" ng-click="vm.rename($index)">Rename</button>-->
@@ -50,7 +50,7 @@ ng-if="vm.shareStep === 2">
 
     <ion-pane class="has-footer">
         <ion-scroll>
-            <oset-manual-contact model="vm.contact" show-message="true" show-phone="false"></oset-manual-contact>
+            <tline-manual-contact model="vm.contact" show-message="true" show-phone="false"></tline-manual-contact>
         </ion-scroll>
     </ion-pane>
 

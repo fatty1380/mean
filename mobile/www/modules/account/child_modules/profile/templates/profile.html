@@ -166,7 +166,7 @@
                         <div class="text-center item-loading" ng-if="vm.feedLoading">
                             <ion-spinner></ion-spinner>
                         </div>
-                        <oset-feed-item ng-if="vm.feed.length" ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
+                        <tline-feed-item ng-if="vm.feed.length" ng-repeat="entry in vm.feed" model="entry"></tline-feed-item>
                         <div ng-if="!vm.feed.length && !vm.feedLoading" class="no-feed-items">{{ vm.feedMessage }}</div>
                     </div>
 

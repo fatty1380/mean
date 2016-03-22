@@ -3,10 +3,10 @@
 
 	/**
 	 * @desc Toggle directive that can be used anywhere across apps to get/gather contact information from the user.
-	 * @example <oset-toggle label="Owner Operator" type="button-small" model="vm.owner"></oset-toggle>
+	 * @example <tline-toggle label="Owner Operator" type="button-small" model="vm.owner"></tline-toggle>
 	 */
     angular.module(AppConfig.appModuleName)
-        .directive('osetToggle', ToggleDirective);
+        .directive('tlineToggle', ToggleDirective);
 
 
     function ToggleDirective () {

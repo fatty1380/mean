@@ -3,10 +3,10 @@
 
 	/**
 	 * @desc Contact Add directive that can be used anywhere across apps to get/gather contact information from the user.
-	 * @example <oset-manual-contact model="vm.contact" />
+	 * @example <tline-manual-contact model="vm.contact" />
 	 */
     angular.module(AppConfig.appModuleName)
-        .directive('osetManualContact', AddContactDirective);
+        .directive('tlineManualContact', AddContactDirective);
 
 
     function AddContactDirective () {

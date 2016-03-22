@@ -31,7 +31,7 @@
         };
         return directive;
 
-        function link (scope, element, attrs) {
+        function link (scope) {
             scope.dm.activate();
         }
     }
@@ -39,20 +39,20 @@
 
     ExperienceListController.$inject = ['$cordovaGoogleAnalytics', 'profileModalsService', 'experienceService'];
     function ExperienceListController ($cordovaGoogleAnalytics, profileModalsService, experienceService) {
-        var dm = this;
+        var vm = this;
 
-        dm.activate = activate;
+        vm.activate = activate;
 
         // ///////////////////////////////////////////////////////////////////////////////
 
         function activate () {
-            if (dm.canEdit) {
+            if (vm.canEdit) {
                 getExperience();
             }
 
-            if (dm.canEdit) {
-                dm.showAddExperienceModal = showAddExperienceModal;
-                dm.showEditExperienceModal = showEditExperienceModal;
+            if (vm.canEdit) {
+                vm.showAddExperienceModal = showAddExperienceModal;
+                vm.showEditExperienceModal = showEditExperienceModal;
             }
         }
 
@@ -66,13 +66,14 @@
                     }
 
                     if (_.isArray(experienceResult)) {
-                        dm.experience = experienceResult;
-                    } else {
-                        dm.experience.push(experienceResult);
+                        vm.experience = experienceResult;
+                    }
+                    else {
+                        vm.experience.push(experienceResult);
                     }
                 })
                 .catch(function (err) {
-                    if (!!err) { logger.debug(err); }
+                    if (err) { logger.debug(err); }
                 });
         }
 
@@ -84,27 +85,25 @@
                     logger.debug('Edited Experience ', experienceResult);
 
                     if (_.isArray(experienceResult)) {
-                        dm.experience = experienceResult;
+                        vm.experience = experienceResult;
                     }
                     else {
-                        dm.experience.push(experienceResult);
+                        vm.experience.push(experienceResult);
                     }
 
                     // experienceItem = result;
                     getExperience();
                 })
                 .catch(function (err) {
-                    if (!!err) { logger.debug(err); }
+                    if (err) { logger.debug(err); }
                 });
         }
-
-
 
         function getExperience () {
             experienceService
                 .getUserExperience()
                 .then(function (response) {
-                    dm.experience = response.data || [];
+                    vm.experience = response.data || [];
                 });
         }
     }

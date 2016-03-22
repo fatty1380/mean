@@ -20,7 +20,7 @@
      * @injecct $ionicScrollDelegate
      *
      * @section Outset/TruckerLine Services _________________________
-     * @inject $osetUsersService
+     * @inject UsersService
      * @inject utilsService
      * @inject friendsService
      * @inject contactsService
