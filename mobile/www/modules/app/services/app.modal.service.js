@@ -46,13 +46,13 @@
                 backdropClickToClose: options.backdropClickToClose,
                 hardwareBackButtonClose: options.hardwareBackButtonClose
             })
-                .then(function success(modal) {
-                        modalScope.modal = modal;
+                .then(function success (modal) {
+                    modalScope.modal = modal;
 
-                        modalScope.openModal = function openModal () {
+                    modalScope.openModal = function openModal () {
                             return modalScope.modal.show();
                         };
-                        modalScope.cancelModal = function cancelModal (result) {
+                    modalScope.cancelModal = function cancelModal (result) {
                             deferred.reject(result);
 
                             $cordovaGoogleAnalytics.trackTiming('ModalView', Date.now() - start, 'cancel', evt);
@@ -60,14 +60,14 @@
 
                             return modalScope.modal.hide();
                         };
-                        modalScope.closeModal = function closeModal (result) {
+                    modalScope.closeModal = function closeModal (result) {
                             deferred.resolve(result);
                             $cordovaGoogleAnalytics.trackTiming('ModalView', Date.now() - start, 'close', evt);
                             $cordovaGoogleAnalytics.trackView(location.hash);
                             return modalScope.modal.hide();
                         };
 
-                        modalScope.$on('modal.hidden', function (thisModal) {
+                    modalScope.$on('modal.hidden', function (thisModal) {
                             if (thisModal.currentScope) {
                                 var modalScopeId = thisModal.currentScope.$id;
                                 if (thisScopeId === modalScopeId) {
@@ -78,16 +78,16 @@
                         });
 
                         // Invoke the controller
-                        var locals = { '$scope': modalScope, 'parameters': parameters };
-                        var ctrlEval = _evalController(controller);
+                    var locals = { '$scope': modalScope, 'parameters': parameters };
+                    var ctrlEval = _evalController(controller);
 
-                        ctrlInstance = $controller(controller, locals);
+                    ctrlInstance = $controller(controller, locals);
 
-                        if (ctrlEval.isControllerAs) {
+                    if (ctrlEval.isControllerAs) {
                             _.extend(ctrlInstance, modalScope);
                         }
 
-                        modalScope.modal.show()
+                    modalScope.modal.show()
                             .then(function () {
                                 modalScope.$broadcast('modal.afterShow', modalScope.modal);
 
@@ -95,11 +95,11 @@
                                 LoadingService.hide();
                             });
 
-                        if (angular.isFunction(options.modalCallback)) {
+                    if (angular.isFunction(options.modalCallback)) {
                             options.modalCallback(modal);
                         }
 
-                    })
+                })
                 .catch(
                     function rejection (err) {
                         deferred.reject(err);

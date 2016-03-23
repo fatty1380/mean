@@ -1,5 +1,5 @@
-(function() {
-'use strict';
+(function () {
+    'use strict';
 
     angular
         .module('profile')
@@ -7,13 +7,13 @@
 
     badgeService.$inject = ['$http', '$q'];
 
-    function badgeService($http, $q) {
+    function badgeService ($http, $q) {
 
-        function getBadgeLevel() {
+        function getBadgeLevel () {
             return Math.floor(Math.random() * 4);
         }
 
-        function getIconClass() {
+        function getIconClass () {
             var badges = {
                 0: 'bronze',
                 1: 'silver',

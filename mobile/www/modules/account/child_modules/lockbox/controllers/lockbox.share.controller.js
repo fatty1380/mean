@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -8,7 +8,7 @@
     LockboxShareCtrl.$inject = ['$filter', '$ionicPopup', 'parameters', 'contactsService', 'lockboxModalsService', 'lockboxDocuments', 'welcomeService',
         'requestService', 'utilsService'];
 
-    function LockboxShareCtrl($filter, $ionicPopup, parameters, contactsService, lockboxModalsService, lockboxDocuments, welcomeService,
+    function LockboxShareCtrl ($filter, $ionicPopup, parameters, contactsService, lockboxModalsService, lockboxDocuments, welcomeService,
         requestService, utilsService) {
 
         var vm = this;
@@ -25,15 +25,15 @@
 
         // //////////////////////////////////////////////////////////
 
-        function activate() {
+        function activate () {
             vm.contact = {};
             vm.shareStep = 1;
 
             return welcomeService.showModal('documents.share')
-                .then(function(item) {
+                .then(function (item) {
                     return lockboxDocuments.checkAccess({ throwOnFail: true });
                 })
-                .then(function(isAccessible) {
+                .then(function (isAccessible) {
                     vm.canAccess = isAccessible;
 
                     if (isAccessible) {
@@ -55,10 +55,10 @@
                 });
         }
 
-        function getDocs() {
+        function getDocs () {
             return lockboxDocuments
                 .loadDocuments()
-                .then(function(response) {
+                .then(function (response) {
                     logger.debug('Documents List', response);
                     vm.documents = getRealDocs(_.isArray(response) ? response : []);
 
@@ -68,25 +68,25 @@
                 });
         }
 
-        function back() {
+        function back () {
             vm.shareStep = 1;
         }
 
-        function cancel(arg) {
+        function cancel (arg) {
             var self = this;
             self.shareStep = 1;
             vm.cancelModal(arg);
         }
 
-        function getRealDocs(source) {
-            return _.filter(source, function(src) { return !!src.id; });
+        function getRealDocs (source) {
+            return _.filter(source, function (src) { return !!src.id; });
         }
 
-        function skipDocs() {
+        function skipDocs () {
             return addDocumentsToShare(true);
         }
 
-        function addDocumentsToShare(skip) {
+        function addDocumentsToShare (skip) {
             if (!skip) {
                 var filter = $filter('getChecked'),
                     selectedDocs = filter(vm.documents);
@@ -100,7 +100,7 @@
         }
 
 
-        function shareDocuments() {
+        function shareDocuments () {
             var requestObj = {};
 
             if (!vm.contact || !vm.contact.email) {
@@ -120,14 +120,14 @@
 
             requestService
                 .createRequest(requestObj)
-                .then(function(response) {
+                .then(function (response) {
                     sentRequest = response;
                     return showSuccessPopup(response);
                 })
-                .then(function() {
+                .then(function () {
                     vm.closeModal(sentRequest);
                 })
-                .catch(function(err) {
+                .catch(function (err) {
                     logger.error(err, 'Unable to Send Request');
                     $ionicPopup.alert({
                         title: 'Sorry',
@@ -135,7 +135,7 @@
                     });
                 });
 
-            function getModifiedContactInfo(contact) {
+            function getModifiedContactInfo (contact) {
                 logger.debug(' contact --->>>', contact);
                 if (!contact) return;
 
@@ -159,7 +159,7 @@
                 return contactInfo;
             }
 
-            function showSuccessPopup() {
+            function showSuccessPopup () {
                 var config = {},
                     displayName = requestObj.contactInfo.displayName;
 

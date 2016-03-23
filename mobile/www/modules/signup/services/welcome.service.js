@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     /**
@@ -13,7 +13,7 @@
 
     welcomeService.$inject = ['modalService', '$q', 'StorageService'];
 
-    function welcomeService(modalService, $q, StorageService) {
+    function welcomeService (modalService, $q, StorageService) {
 
         return {
             showModal: showModal,
@@ -24,7 +24,7 @@
 
         // //////////////////////////////////////////////////////
 
-        function initialize(key, views, delayDays) {
+        function initialize (key, views, delayDays) {
 
             // FIX ME - should un-recurse this function
             var viewData = {
@@ -38,22 +38,22 @@
                 return;
             }
             else {
-                _.each(_.keys(screenConfigs), function(key) {
+                _.each(_.keys(screenConfigs), function (key) {
                     initialize(key, screenConfigs[key]['views'], screenConfigs[key]['delayDays']);
                 });
             }
         }
 
-        function acknowledge(key) {
+        function acknowledge (key) {
             return StorageService.get(key)
-                .then(function(data) {
+                .then(function (data) {
                     var modalData = data;
                     modalData.views --;
                     return StorageService.set(key, modalData);
                 });
         }
 
-        function showModal(state, parameters) {
+        function showModal (state, parameters) {
             var templateUrl = 'modules/account/child_modules/profile/templates/welcome-modal.html';
             var controller = 'WelcomeModalCtrl as vm';
 
@@ -61,29 +61,28 @@
             var key = parameters.stateName;
 
             return StorageService.get(key)
-                .then(function(data) {
+                .then(function (data) {
                     var modalData = data;
 
                     logger.info('Welcome Modal for state %s: %s', key, modalData ? 'yes' : 'no');
-                    
+
                     if (!modalData.views) {
                         return false;
                     }
-                    
+
                     if (!_.isEmpty(modalData.noViewBefore) && moment().isBefore(modalData.noViewBefore)) {
                         logger.debug('Modal should not been seen until', modalData.noViewBefore);
                         return false;
                     }
-                    
                     return modalService
                         .show(templateUrl, controller, parameters)
-                        .then(function(isAckd) {
+                        .then(function (isAckd) {
                             if (isAckd) {
                                 modalData.views--;
                                 modalData.noViewBefore = moment().add({ days: modalData.delayDays });
-                                
+
                                 return StorageService.set(key, modalData)
-                                    .then(function() {
+                                    .then(function () {
                                         return true;
                                     });
                             }
@@ -91,11 +90,11 @@
                         });
                 });
         }
-        
+
         // FIX ME - not sure if we need this method...not referenced anywhere else besides `welcome.service`
-        function isAcked(key) {
+        function isAcked (key) {
             return StorageService.get(key)
-                .then(function(data) {
+                .then(function (data) {
                     return !!data.views;
                 });
         }
@@ -107,7 +106,7 @@
 
     WelcomeModalCtrl.$inject = ['parameters'];
 
-    function WelcomeModalCtrl(parameters) {
+    function WelcomeModalCtrl (parameters) {
         var vm = this;
         var screenConfig = screenConfigs[parameters.stateName];
 
@@ -132,7 +131,7 @@
 
         // ///////////////////////////////////
 
-        function acknowledge() {
+        function acknowledge () {
             vm.closeModal(true);
         }
     }
