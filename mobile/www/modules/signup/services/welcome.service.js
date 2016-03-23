@@ -13,13 +13,13 @@
 
     welcomeService.$inject = ['modalService', '$q', 'StorageService'];
 
-    function welcomeService (modalService, $q, StorageService) {
+    function welcomeService(modalService, $q, StorageService) {
 
         return {
             showModal: showModal,
             initialize: initialize,
             acknowledge: acknowledge,
-            isAckd: function (state) { return !!(StorageService.get(state) > 0); }
+            isAckd: function(state) { return !!(StorageService.get(state) > 0); }
         };
 
         // //////////////////////////////////////////////////////
@@ -27,7 +27,7 @@
         function initialize(key) {
             if (!!key) {
                 StorageService.set(key, 1);
-                
+
             }
             else {
                 _.each(_.keys(screenConfigs), function(key) {
@@ -41,10 +41,10 @@
             }
         }
 
-        function acknowledge (key) {
+        function acknowledge(key) {
             var viewCount = StorageService.get(key) - 1;
             StorageService.set(key, viewCount);
-        }
+        }      
 
         function showModal(state, parameters) {
             var templateUrl = 'modules/account/child_modules/profile/templates/welcome-modal.html';
@@ -52,13 +52,18 @@
 
             parameters = parameters || { stateName: state };
 
+            if (state === 'badge.info') {
+                var alwaysShow = true;
+                templateUrl = 'modules/account/child_modules/profile/templates/badge-info-modal.html';
+            }
+
 
             var key = parameters.stateName;
             var remainingViews = StorageService.get(key);
 
             logger.info('Welcome Modal for state %s: %s', key, StorageService.get(key) ? 'yes' : 'no');
 
-            if (!!remainingViews) {
+            if (!!remainingViews || alwaysShow) {
                 return modalService
                     .show(templateUrl, controller, parameters)
                     .then(function (isAckd) {
@@ -71,7 +76,7 @@
                     });
             }
 
-            // If ack not required, resolve with false;
+            // If back not required, resolve with false;
             return $q.when(false);
         }
     }
@@ -80,9 +85,9 @@
         .module('signup')
         .controller('WelcomeModalCtrl', WelcomeModalCtrl);
 
-    WelcomeModalCtrl.$inject = ['parameters'];
+    WelcomeModalCtrl.$inject = ['parameters', 'tokenService', '$window', 'settings'];
 
-    function WelcomeModalCtrl (parameters) {
+    function WelcomeModalCtrl (parameters, tokenService, $window, settings) {
         var vm = this;
         var screenConfig = screenConfigs[parameters.stateName];
 
@@ -111,12 +116,21 @@
         vm.textSec = screenConfig.textSec || '';
 
         vm.acknowledge = acknowledge;
+        vm.goToOrderReports = goToOrderReports;
 
         // ///////////////////////////////////
 
         function acknowledge () {
             vm.closeModal(true);
         }
+
+        function goToOrderReports() {
+            var refreshToken = tokenService.get('refresh_token') || '';
+            var refreshQuery = !!refreshToken ? '?refresh_token=' + refreshToken : '';
+
+            $window.open(settings.baseUrl + 'reports/' + refreshQuery, '_system');
+            vm.closeModal('Opened Report Order Page');
+        }          
     }
 
     var screenConfigs = {
@@ -153,6 +167,10 @@
             text: 'See what your Friends are Hauling & where they are in the US!',
             subHeaderSec: 'Free MVR Offer - ',
             textSec: 'Invite 5+ Truckers and receive a free MVR for your Lockbox!'
+        },
+        'badge.info': {
+            title: '',
+            text: ''
         }
     };
 
