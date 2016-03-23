@@ -529,12 +529,32 @@ i.welcome-joe {
     display: inline-block;
     width: 414px;
     height: 674px;
-    -webkit-background-size: 414px 674px;
-    //background-size: 414px 674px;
     background-position-x: 50%;
-    background-size: contain;
-    
+    background-size: contain;   
     background-repeat: no-repeat;
     background-image: url('../img/welcome-joe-fade.png');
-    
 }
+
+  .icon-tier {
+    width: 147px;
+    height: 176px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    background-size: contain;
+    
+    &.gold {
+      background-image: url('../img/tier1.svg');
+    }
+    
+    &.silver {
+      background-image: url('../img/tier2.svg');
+    }
+    
+    &.bronze {
+      background-image: url('../img/tier3.svg');
+    } 
+    
+    &.none {
+      background-image: url('../img/tierNone.svg');
+    }
+  }
