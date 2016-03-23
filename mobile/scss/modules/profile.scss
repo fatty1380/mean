@@ -373,11 +373,9 @@
   z-index: 3;
   
   &.right {
-    right: $padding-base-horizontal;
-    
-    .button {
-      margin-left: $padding-small-horizontal;
-    }
+    margin-left: $padding-base-horizontal;
+    margin-top: 20px;
+    left:  calc(50vw + #{$photo-dimension} / 2);
   }
   
   &.left {
@@ -409,6 +407,11 @@
           padding-top: 3px;
       }
     }
+  }
+  
+  .icon-tier {
+    width: 63px;
+    height: 75px;
   }
 }
 

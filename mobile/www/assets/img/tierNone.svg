@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="184px" height="233px" viewBox="0 0 184 233" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.3 (12081) - http://www.bohemiancoding.com/sketch -->
+    <title>shield copy 4</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="13.1317761%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#C9C9C9" offset="0%"></stop>
+            <stop stop-color="#737373" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="56.6063483%" id="linearGradient-2">
+            <stop stop-color="#727272" offset="0%"></stop>
+            <stop stop-color="#5A5A5A" offset="100%"></stop>
+        </linearGradient>
+        <path id="path-3" d="M180.304219,38.6323462 C180.23827,35.6042991 178.179726,32.9923408 175.304478,32.5784239 C161.902452,30.6385375 148.68473,27.2635945 135.727564,22.2621505 C122.831636,17.2845983 108.562855,10.3361314 93.1729455,1.18465868 C91.2189189,0.0220300592 89.3808915,0.0148935611 87.4289258,1.18465868 C72.1455939,10.3314772 57.9789747,17.2653608 44.9811797,22.2621505 C32.019892,27.2446673 18.8086467,30.6410198 5.51319901,32.5784239 C2.6376562,32.996995 0.620036159,35.6042991 0.300007999,38.6323462 C-0.975394015,96.1481765 10.9784085,143.208727 36.0460053,179.790416 C49.7021103,199.71738 66.7919673,215.891477 87.4289258,228.224277 C89.024356,229.458581 91.5256984,229.365186 93.3863957,228.224277 C113.86702,215.68576 130.934207,199.62895 144.55881,179.790416 C169.659676,143.232619 181.516027,96.1503485 180.304219,38.6323462 L180.304219,38.6323462 Z"></path>
+    </defs>
+    <g id="Feed" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="shield-copy-4" sketch:type="MSLayerGroup" transform="translate(2.000000, 1.701215)">
+            <mask id="mask-4" sketch:name="Mask" fill="white">
+                <use xlink:href="#path-3"></use>
+            </mask>
+            <use id="Mask" stroke="url(#linearGradient-2)" stroke-width="3" fill="url(#linearGradient-1)" sketch:type="MSShapeGroup" xlink:href="#path-3"></use>
+            <g id="Add-Sm---Unselected" mask="url(#mask-4)" fill="#686868" sketch:type="MSShapeGroup">
+                <g transform="translate(70.000000, 81.000000)">
+                    <rect id="Rectangle-105" x="16.7777778" y="0.666666667" width="6.44444444" height="38.6666667"></rect>
+                    <rect id="Rectangle-105-Copy" x="0.666666667" y="16.7777778" width="38.6666667" height="6.44444444"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
