@@ -126,10 +126,6 @@
                     tokenService.set('refresh_token', signInResponse.data.refresh_token);
                     tokenService.set('token_type', signInResponse.data.token_type);
 
-                    // set fields to show welcome screens for new user
-                    welcomeService.initialize();
-                    securityService.initialize();
-
                     $window.localStorage.removeItem('referralCode');
                     $window.localStorage.removeItem('branchData');
 
@@ -142,6 +138,9 @@
 
                         throw new Error('Signin Failed');
                     }
+                    // set fields to show welcome screens for new user
+                    welcomeService.initialize();
+                    securityService.initialize();
 
                     LoadingService.hide();
                     $state.go('signup.license');

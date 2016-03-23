@@ -46,8 +46,8 @@
                 backdropClickToClose: options.backdropClickToClose,
                 hardwareBackButtonClose: options.hardwareBackButtonClose
             })
-                .then(
-                    function success (modal) {
+                .then(function success(modal) {
+                    // debugger;
                         modalScope.modal = modal;
 
                         modalScope.openModal = function openModal () {

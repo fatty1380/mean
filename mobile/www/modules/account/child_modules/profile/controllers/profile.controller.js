@@ -147,7 +147,7 @@
             }
         }
 
-        vm.welcomeExperience = angular.fromJson(StorageService.get('welcome.experience')) || !_.isEmpty(vm.user.experience);
+        vm.welcomeExperience = StorageService.get('welcome.experience') || !_.isEmpty(vm.user.experience);
         vm.welcomeReview = true;
 
         // ////////////////////////////////////////////////////////////////////////////////////////////
@@ -396,7 +396,7 @@
                 })
                 .finally(function () {
                     if (vm.canEdit) {
-                        vm.welcomeReview = !_.isEmpty(vm.reviews) || angular.fromJson(StorageService.get('welcome.review'));
+                        vm.welcomeReview = !_.isEmpty(vm.reviews) || StorageService.get('welcome.review');
                     }
                 });
         }

@@ -161,8 +161,10 @@
             $cordovaGoogleAnalytics.trackEvent('Activity', 'addActivity', 'start');
             var then = Date.now();
 
-            activityModalsService
-                .showAddActivityModal({ user: user })
+            return welcomeService.showModal('account.activity')
+                .then(function () {
+                    return activityModalsService.showAddActivityModal({ user: user })
+                })
                 .then(function (res) {
                     logger.debug(' res --->>>', res);
                     if (res) {
