@@ -98,6 +98,7 @@ module.exports = {
             'modules/account/child_modules/profile/services/review.service.js',
             'modules/account/child_modules/profile/services/experience.service.js',
             'modules/account/child_modules/profile/services/friends.service.js',
+            'modules/account/child_modules/profile/services/badge.service.js',
             'modules/account/child_modules/company/company.module.js',
             'modules/account/child_modules/company/config/company.module.routes.js',
             'modules/account/child_modules/company/services/company.service.js',
