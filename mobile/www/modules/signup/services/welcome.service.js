@@ -13,7 +13,7 @@
 
     welcomeService.$inject = ['modalService', '$q', 'StorageService'];
 
-    function welcomeService (modalService, $q, StorageService) {
+    function welcomeService(modalService, $q, StorageService) {
 
         return {
             showModal: showModal,
@@ -66,6 +66,11 @@
 
                     logger.info('Welcome Modal for state %s: %s', key, modalData ? 'yes' : 'no');
 
+                    if (state === 'badge.info') {
+                        templateUrl = 'modules/account/child_modules/profile/templates/badge-info-modal.html';
+                        modalData.views = 1;
+                    }                    
+
                     if (!modalData.views) {
                         return false;
                     }
@@ -74,6 +79,7 @@
                         logger.debug('Modal should not been seen until', modalData.noViewBefore);
                         return false;
                     }
+
                     return modalService
                         .show(templateUrl, controller, parameters)
                         .then(function (isAckd) {
@@ -104,9 +110,9 @@
         .module('signup')
         .controller('WelcomeModalCtrl', WelcomeModalCtrl);
 
-    WelcomeModalCtrl.$inject = ['parameters'];
+    WelcomeModalCtrl.$inject = ['parameters', 'tokenService', '$window', 'settings'];
 
-    function WelcomeModalCtrl (parameters) {
+    function WelcomeModalCtrl (parameters, tokenService, $window, settings) {
         var vm = this;
         var screenConfig = screenConfigs[parameters.stateName];
 
@@ -128,12 +134,21 @@
         vm.textSec = screenConfig.textSec || '';
 
         vm.acknowledge = acknowledge;
+        vm.goToOrderReports = goToOrderReports;
 
         // ///////////////////////////////////
 
         function acknowledge () {
             vm.closeModal(true);
         }
+
+        function goToOrderReports() {
+            var refreshToken = tokenService.get('refresh_token') || '';
+            var refreshQuery = !!refreshToken ? '?refresh_token=' + refreshToken : '';
+
+            $window.open(settings.baseUrl + 'reports/' + refreshQuery, '_system');
+            vm.closeModal('Opened Report Order Page');
+        }          
     }
 
     var screenConfigs = {
@@ -172,6 +187,10 @@
             textSec: 'Invite 5+ Truckers and receive a free MVR for your Lockbox!',
             views: 2,
             delayDays: 1
+        },
+        'badge.info': {
+            title: '',
+            text: ''
         }
     };
 

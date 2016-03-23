@@ -1,0 +1,59 @@
+<ion-modal-view class="welcome-screen badge-info-modal">
+    <ion-pane class="pane">
+         
+        <ion-scroll>
+            <button class="button-icon ion-close-round" ng-click="vm.acknowledge()"></button>
+             <h4 class="text-center">TruckerLine Badges</h4>
+             
+            <div class="row">
+                <div class="center">
+                    <div class="icon-tier gold"></div>
+                    <div class="text">
+                        <h4>Tier 1</h4>
+                        <ul>
+                            <li>Resume</li>
+                            <li>Motor Vehicle Report</li>
+                            <li>Background Check</li>
+                            <li>Employment Verification</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="center">
+                    <div class="icon-tier silver"></div>
+                    <div class="text">
+                        <h4>Tier 2</h4>
+                        <ul>
+                            <li>Resume</li>
+                            <li>Motor Vehicle Report</li>
+                            <li>Background Check</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="center">
+                    <div class="icon-tier bronze"></div>
+                    <div class="text">
+                        <h4>Tier 3</h4>
+                        <ul>
+                            <li>Resume</li>
+                            <li>Motor Vehicle Report</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <h4 class="footer-text text-center">Take Control of your Career & become a Badged Driver Today!</h4>
+            
+            <div class="row">
+                <div class="col text-center order-now">
+                    <button class="button button-block button-positive" ng-click="vm.goToOrderReports()">Order Now</button>
+                </div>
+            </div>
+        </ion-scroll>
+    </ion-pane>
+</ion-modal-view>

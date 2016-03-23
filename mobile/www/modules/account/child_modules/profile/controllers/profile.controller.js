@@ -7,11 +7,11 @@
 
     ProfileCtrl.$inject = ['$rootScope', '$scope', 'StorageService', 'updateService', 'appCache', '$state', '$cordovaGoogleAnalytics', '$ionicHistory',
         'activityService', 'reviewService', 'LoadingService', 'experienceService', 'badgeService',
-        'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
+        'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile', 'welcomeService'];
 
     function ProfileCtrl ($rootScope, $scope, StorageService, updateService, appCache, $state, $cordovaGoogleAnalytics, $ionicHistory,
         activityService, reviewService, LoadingService, experienceService, badgeService,
-        friendsService, avatarService, ProfileModals, cameraService, user, profile) {
+        friendsService, avatarService, ProfileModals, cameraService, user, profile, welcomeService) {
 
         var watchers = {};
 
@@ -285,6 +285,11 @@
                         }
                     });
             };
+
+            vm.clickBadge = function() {
+                welcomeService.initialize('badge.info');
+                welcomeService.showModal('badge.info');
+            };           
 
             /**
              * vm.showAddExperienceModal
