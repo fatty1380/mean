@@ -146,8 +146,13 @@
                 }
             }
         }
-
-        vm.welcomeExperience = StorageService.get('welcome.experience') || !_.isEmpty(vm.user.experience);
+        
+        // FIX ME - not sure how the correct way to set controller property via promise...
+        StorageService.get('welcome.experience')
+            .then(function(experience) {
+                vm.welcomeExperience = experience || !_.isEmpty(vm.user.experience);
+            });
+            
         vm.welcomeReview = true;
 
         // ////////////////////////////////////////////////////////////////////////////////////////////

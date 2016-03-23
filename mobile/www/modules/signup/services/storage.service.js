@@ -12,7 +12,10 @@
         function getUserId() {
             return userService.getUserData()
                 .then(function(profileData) {
-                    return profileData.id;
+                    return profileData.id || null;
+                })
+                .catch(function(err) {
+                    throw err;
                 });
         }
 
@@ -28,13 +31,10 @@
                     });
             },
             get: function(key, defaultValue, id) {
-                // debugger;
                 return getId(id)
                     .then(function(resolvedId) {
-                        debugger;
                         return angular.fromJson($window.localStorage[resolvedId + '.' + key] || null);
                     });
-                // return item;
             },
             remove: function(key, id) {
                 return getId(id)
