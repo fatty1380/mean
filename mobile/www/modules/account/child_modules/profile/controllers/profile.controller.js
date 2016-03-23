@@ -6,11 +6,11 @@
         .controller('ProfileCtrl', ProfileCtrl);
 
     ProfileCtrl.$inject = ['$rootScope', '$scope', 'StorageService', 'updateService', 'appCache', '$state', '$cordovaGoogleAnalytics', '$ionicHistory',
-        'activityService', 'reviewService', 'LoadingService', 'experienceService',
+        'activityService', 'reviewService', 'LoadingService', 'experienceService', 'badgeService',
         'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
     function ProfileCtrl ($rootScope, $scope, StorageService, updateService, appCache, $state, $cordovaGoogleAnalytics, $ionicHistory,
-        activityService, reviewService, LoadingService, experienceService,
+        activityService, reviewService, LoadingService, experienceService, badgeService,
         friendsService, avatarService, ProfileModals, cameraService, user, profile) {
 
         var watchers = {};
@@ -24,7 +24,7 @@
         vm.user = user;
         vm.camera = cameraService;
         vm.updates = updateService.getLastUpdates();
-
+        vm.badgeIcon = badgeService.getIconClass();
         // vm.reviews = [];
         // [{ rating: 5, title: 'A real professional driver!', created: 1443285630631,
         // text: 'Sergey is incredibly professional, and in the 5 years he has been delivering freight to my job sites, he has never let me down',

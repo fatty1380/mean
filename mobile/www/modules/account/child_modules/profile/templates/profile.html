@@ -47,6 +47,9 @@
             <ion-scroll class="list">
                 <!--<button class="button button-icon ion-compose button-pos-tr" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()"></button>-->
                 <div class="profile-list">
+                    <div ng-if="vm.badgeIcon === 'bronze'"> Bronze </div>
+                    <div ng-if="vm.badgeIcon === 'silver'"> Silver </div>
+                    <div ng-if="vm.badgeIcon === 'gold'"> Gold </div>
 
                     <div class="profile-title">
                         <h3>{{vm.profileData.displayName}}</h3>
