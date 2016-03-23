@@ -1,39 +1,53 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('signup')
         .factory('StorageService', StorageService);
 
-    StorageService.$inject = ['$window', '$rootScope', 'userService'];
+    StorageService.$inject = ['$window', '$q', '$rootScope', 'userService'];
 
-    function StorageService($window, $rootScope, userService) {
-        var userId = null;
-
-        function setUserData () {
-            userService.getUserData().then(function(profileData) {
-                userId = profileData.id;
-            });
+    function StorageService($window, $q, $rootScope, userService) {
+        
+        function getUserId() {
+            return userService.getUserData()
+                .then(function(profileData) {
+                    return profileData.id;
+                });
         }
 
-        function clearUserData() {
-            userId = null;
+        function getId(id) {
+            return !!id ? $q.when(id) : getUserId();
         }
 
-        setUserData();
-
-        $rootScope.$on('clear', clearUserData());
-   
         return {
-            set: function (key, value, id) {
-                $window.localStorage[id || userService.userId + '.' + key] = value;
+            set: function(key, value, id) {
+                return getId(id)
+                    .then(function(resolvedId) {
+                        return $window.localStorage[resolvedId + '.' + key] = angular.toJson(value);
+                    });
             },
-            get: function (key, defaultValue, id) {
-                return angular.fromJson($window.localStorage[id || userService.userId + '.' + key] || defaultValue || null);
+            get: function(key, defaultValue, id) {
+                // debugger;
+                return getId(id)
+                    .then(function(resolvedId) {
+                        debugger;
+                        return angular.fromJson($window.localStorage[resolvedId + '.' + key] || null);
+                    });
+                // return item;
             },
-            remove: function (key, id) {
-                return $window.localStorage.removeItem(id || userService.userId + '.' + key);
+            remove: function(key, id) {
+                return getId(id)
+                    .then(function(resolvedId) {
+                        return $window.localStorage.removeItem(resolvedId + '.' + key);
+                    });
             }
         };
     }
 })();
+
+
+
+
+
+
