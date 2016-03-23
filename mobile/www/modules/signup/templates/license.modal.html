@@ -7,7 +7,7 @@
     <ion-pane class="has-footer license-content">
         <ion-scroll>
 
-            <h4>Select your license Class</h4>
+            <h4>Select your License Class</h4>
             <div class="list license">
                 <span class="oset-cb-item category-a" ng-click="vm.class='A'" ng-class="{'active':vm.class==='A'}">
                     <div class="item-content">
@@ -26,14 +26,24 @@
                 </span>
             </div>
 
-            <h4>Select your endorsements</h4>
+            <h4>Select your Endorsements</h4>
             
             <ion-list class="signup-list">
-              <ion-checkbox ng-model="vm.endorsement.T">Double/Triple Trailers</ion-checkbox>
-              <ion-checkbox ng-model="vm.endorsement.N">Tank Vehicles</ion-checkbox>
-              <ion-checkbox ng-model="vm.endorsement.H">Hazardous Materials</ion-checkbox>
-              <ion-checkbox ng-model="vm.endorsement.P">Passenger</ion-checkbox>
-              <ion-checkbox ng-model="vm.endorsement.X">Tank Vehicle and Hazardous Materials</ion-checkbox>
+              <ion-checkbox ng-model="vm.endorsement.T" ng-class="{'selected': vm.endorsement.T}">
+                 Double/Triple Trailers <i class="icon ion-checkmark" ng-show="vm.endorsement.T"></i>
+              </ion-checkbox>
+              <ion-checkbox ng-model="vm.endorsement.N" ng-class="{'selected': vm.endorsement.N}">
+                  Tank Vehicles <i class="icon ion-checkmark" ng-show="vm.endorsement.N"></i>
+              </ion-checkbox>
+              <ion-checkbox ng-model="vm.endorsement.H" ng-class="{'selected': vm.endorsement.H}">
+                  Hazardous Materials <i class="icon ion-checkmark" ng-show="vm.endorsement.H"></i>
+              </ion-checkbox>
+              <ion-checkbox ng-model="vm.endorsement.P" ng-class="{'selected': vm.endorsement.P}">
+                  Passenger <i class="icon ion-checkmark" ng-show="vm.endorsement.P"></i>
+              </ion-checkbox>
+              <ion-checkbox ng-model="vm.endorsement.X" ng-class="{'selected': vm.endorsement.X}">
+                  Tank Vehicle and Hazardous Materials <i class="icon ion-checkmark" ng-show="vm.endorsement.X"></i>
+                </ion-checkbox>
             </ion-list>
 
         </ion-scroll>

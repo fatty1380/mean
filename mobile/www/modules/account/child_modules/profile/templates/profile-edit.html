@@ -36,7 +36,7 @@
             </ion-input>
             <ion-input id="phone" ng-class="{focused : vm.hash === 'phone' }" class="item item-input item-floating-label">
                 <ion-label>Phone Number</ion-label>
-                <input type="tel" ng-model="vm.profileData.phone" placeholder="Phone Number" name="phone">
+                <input type="number" ng-model="vm.profileData.phone" placeholder="Phone Number" name="phone">
             </ion-input>
 
             <div id="address" ng-class="{focused : vm.hash === 'address' }" class="item edit-profile-types">
@@ -82,7 +82,7 @@
                 <!--<ion-input id="miles" ng-class="{focused : vm.hash === 'miles' }" class="item item-input">-->
                 <!--<div class="col item-floating-label">-->
                 <ion-label>Career Miles Driven</ion-label>
-                <input type="tel" ng-model="vm.profileData.props.miles" placeholder="Career Miles Driven" name="miles">
+                <input type="number" ng-model="vm.profileData.props.miles" placeholder="Career Miles Driven" name="miles">
                 <!--</div>
                 <div class="col">
                     <div class="button-bar">
