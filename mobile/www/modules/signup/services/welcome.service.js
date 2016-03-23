@@ -46,7 +46,8 @@
 
         function acknowledge (key) {
             return StorageService.get(key)
-                .then(function (data) {
+                .then(function(data) {
+                    
                     var modalData = data;
                     modalData.views --;
                     return StorageService.set(key, modalData);
@@ -61,15 +62,20 @@
             var key = parameters.stateName;
 
             return StorageService.get(key)
-                .then(function (data) {
+                .then(function(data) {
+
                     var modalData = data;
+
+                    if (modalData === null) {
+                        return false;
+                    }
 
                     logger.info('Welcome Modal for state %s: %s', key, modalData ? 'yes' : 'no');
 
                     if (state === 'badge.info') {
                         templateUrl = 'modules/account/child_modules/profile/templates/badge-info-modal.html';
                         modalData.views = 1;
-                    }                    
+                    }
 
                     if (!modalData.views) {
                         return false;
@@ -82,13 +88,13 @@
 
                     return modalService
                         .show(templateUrl, controller, parameters)
-                        .then(function (isAckd) {
+                        .then(function(isAckd) {
                             if (isAckd) {
                                 modalData.views--;
                                 modalData.noViewBefore = moment().add({ days: modalData.delayDays });
 
                                 return StorageService.set(key, modalData)
-                                    .then(function () {
+                                    .then(function() {
                                         return true;
                                     });
                             }
