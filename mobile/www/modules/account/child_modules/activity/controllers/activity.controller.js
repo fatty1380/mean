@@ -163,7 +163,7 @@
 
             return welcomeService.showModal('account.activity')
                 .then(function () {
-                    return activityModalsService.showAddActivityModal({ user: user })
+                    return activityModalsService.showAddActivityModal({ user: user });
                 })
                 .then(function (res) {
                     logger.debug(' res --->>>', res);

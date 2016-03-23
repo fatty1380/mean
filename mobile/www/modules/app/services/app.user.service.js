@@ -116,8 +116,8 @@
          * Checks if this is a user activity.  Returns a boolean.
          * @activityId - the id of the activity
          */
-        function isUserActivity(activityId) {
-            return getUserData().then(function(result) {
+        function isUserActivity (activityId) {
+            return getUserData().then(function (result) {
                 return activityId === result.id;
             });
         }

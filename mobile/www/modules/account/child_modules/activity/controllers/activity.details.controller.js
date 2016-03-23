@@ -38,9 +38,9 @@
             vm.user = parameters.user || vm.entry.user;
             vm.avatar = activityService.getAvatar(vm.entry);
 
-            userService.isUserActivity(vm.user.id).then(function(isUser) {
+            userService.isUserActivity(vm.user.id).then(function (isUser) {
                 vm.showLikeButton = !isUser;
-            });            
+            });
         }
 
         function initMap () {

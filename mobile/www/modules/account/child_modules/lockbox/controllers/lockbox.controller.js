@@ -8,7 +8,7 @@
     LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', '$ionicHistory', 'securityService', 'user', 'documents', 'lockboxDocuments',
         'lockboxModalsService', '$ionicPopup', '$cordovaGoogleAnalytics', 'LoadingService', 'welcomeService'];
 
-    function LockboxCtrl($scope, $state, $rootScope, $ionicHistory, securityService, user, documents, lockboxDocuments,
+    function LockboxCtrl ($scope, $state, $rootScope, $ionicHistory, securityService, user, documents, lockboxDocuments,
         lockboxModalsService, $ionicPopup, $cordovaGoogleAnalytics, LoadingService, welcomeService) {
 
 
@@ -206,15 +206,15 @@
             $cordovaGoogleAnalytics.trackEvent('Lockbox', 'share', null, vm.documents.length);
 
             return lockboxModalsService.showShareModal(params)
-                
-                .then(function(result) {
+
+                .then(function (result) {
                     logger.debug(result);
                 })
-                .catch(function(err) {
+                .catch(function (err) {
                     LoadingService.showFailure('Lockbox Access Denied');
                     throw new Error('Lockbox Access Denied', err);
                 });
-        }   
+        }
 
         function refreshDocuments () {
             $cordovaGoogleAnalytics.trackEvent('Lockbox', 'refresh', 'start', vm.documents.length);

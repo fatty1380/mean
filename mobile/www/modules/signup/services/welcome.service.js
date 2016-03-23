@@ -19,65 +19,90 @@
             showModal: showModal,
             initialize: initialize,
             acknowledge: acknowledge,
-            isAckd: function(state) { return !!(StorageService.get(state) > 0); }
+            isAckd: isAcked
         };
 
         // //////////////////////////////////////////////////////
 
-        function initialize(key) {
-            if (!!key) {
-                StorageService.set(key, 1);
+        function initialize (key, views, delayDays) {
 
+            // FIX ME - should un-recurse this function
+            var viewData = {
+                key: key,
+                views: views || 1,
+                delayDays: delayDays || null
+            };
+
+            if (!!key) {
+                StorageService.set(key, viewData);
+                return;
             }
             else {
-                _.each(_.keys(screenConfigs), function(key) {
-                    if (key === 'account.home') {
-                        StorageService.set(key, 2)
-                    }
-                    else {
-                        StorageService.set(key, 1);
-                    }
+                _.each(_.keys(screenConfigs), function (key) {
+                    initialize(key, screenConfigs[key]['views'], screenConfigs[key]['delayDays']);
                 });
             }
         }
 
-        function acknowledge(key) {
-            var viewCount = StorageService.get(key) - 1;
-            StorageService.set(key, viewCount);
-        }      
+        function acknowledge (key) {
+            return StorageService.get(key)
+                .then(function (data) {
+                    var modalData = data;
+                    modalData.views --;
+                    return StorageService.set(key, modalData);
+                });
+        }
 
-        function showModal(state, parameters) {
+        function showModal (state, parameters) {
             var templateUrl = 'modules/account/child_modules/profile/templates/welcome-modal.html';
             var controller = 'WelcomeModalCtrl as vm';
 
             parameters = parameters || { stateName: state };
-
-            if (state === 'badge.info') {
-                var alwaysShow = true;
-                templateUrl = 'modules/account/child_modules/profile/templates/badge-info-modal.html';
-            }
-
-
             var key = parameters.stateName;
-            var remainingViews = StorageService.get(key);
 
-            logger.info('Welcome Modal for state %s: %s', key, StorageService.get(key) ? 'yes' : 'no');
+            return StorageService.get(key)
+                .then(function (data) {
+                    var modalData = data;
 
-            if (!!remainingViews || alwaysShow) {
-                return modalService
-                    .show(templateUrl, controller, parameters)
-                    .then(function (isAckd) {
-                        if (isAckd) {
-                            var viewCount = StorageService.get(key) - 1;
-                            StorageService.set(key, viewCount);
-                            return true;
-                        }
+                    logger.info('Welcome Modal for state %s: %s', key, modalData ? 'yes' : 'no');
+
+                    if (state === 'badge.info') {
+                        templateUrl = 'modules/account/child_modules/profile/templates/badge-info-modal.html';
+                        modalData.views = 1;
+                    }                    
+
+                    if (!modalData.views) {
                         return false;
-                    });
-            }
+                    }
 
-            // If back not required, resolve with false;
-            return $q.when(false);
+                    if (!_.isEmpty(modalData.noViewBefore) && moment().isBefore(modalData.noViewBefore)) {
+                        logger.debug('Modal should not been seen until', modalData.noViewBefore);
+                        return false;
+                    }
+
+                    return modalService
+                        .show(templateUrl, controller, parameters)
+                        .then(function (isAckd) {
+                            if (isAckd) {
+                                modalData.views--;
+                                modalData.noViewBefore = moment().add({ days: modalData.delayDays });
+
+                                return StorageService.set(key, modalData)
+                                    .then(function () {
+                                        return true;
+                                    });
+                            }
+                            return false;
+                        });
+                });
+        }
+
+        // FIX ME - not sure if we need this method...not referenced anywhere else besides `welcome.service`
+        function isAcked (key) {
+            return StorageService.get(key)
+                .then(function (data) {
+                    return !!data.views;
+                });
         }
     }
 
@@ -91,18 +116,11 @@
         var vm = this;
         var screenConfig = screenConfigs[parameters.stateName];
 
-
-        // FIX ME - should change to indicator besides true/fasle bool to allow for >2 alternate screens
         vm.template = 'default';
-
-        if (parameters.stateName === 'documents.share') {
-            vm.default = 'docShare';
-        }
 
         if (parameters.stateName === 'account.home') {
             vm.template = 'accountHome';
         }
-
 
         if (_.isEmpty(screenConfig)) {
             logger.error('Closing modal because of no config');
@@ -166,7 +184,9 @@
             subHeader: 'Daily Updates - ',
             text: 'See what your Friends are Hauling & where they are in the US!',
             subHeaderSec: 'Free MVR Offer - ',
-            textSec: 'Invite 5+ Truckers and receive a free MVR for your Lockbox!'
+            textSec: 'Invite 5+ Truckers and receive a free MVR for your Lockbox!',
+            views: 2,
+            delayDays: 1
         },
         'badge.info': {
             title: '',
