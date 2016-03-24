@@ -21,6 +21,7 @@
             retrieveFriends: retrieveFriends,
             getFriendStatus: getFriendStatus,
             getRequestsList: getRequestsList,
+            getInviteStatus: getInviteStatus,
             sendFriendRequests: sendFriendRequests,
             createRequest: createRequest,
             loadRequest: loadRequest,
@@ -73,6 +74,16 @@
             return $http.get(settings.requests);
         }
 
+        function getInviteStatus () {
+            return $http.get(settings.requests, {
+                params: {
+                    sentRequests: true,
+                    requestType: ['friendRequest'],
+                    promoCheck: true
+                }
+            });
+        }
+
         function sendFriendRequests (recipients) {
             var promises = _.map(recipients, function (recipient) {
                 return createRequest({ contactInfo: recipient });
@@ -85,7 +96,7 @@
                 })
                 .catch(function fail (err) {
                     logger.error(err, 'Failed to send requests');
-                    return false;
+                    throw err;
                 });
         }
 

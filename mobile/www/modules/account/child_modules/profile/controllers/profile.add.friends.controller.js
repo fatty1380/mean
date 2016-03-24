@@ -68,7 +68,19 @@
 
             friendsService.sendFriendRequests(newInvites)
                 .then(function (response) {
+                    return friendsService.getInviteStatus();
+                })
+                .then(function (response) {
                     LoadingService.showSuccess('Invitations sent!');
+
+                    var info = response.data;
+
+                    if (info.promoCode && moment(info.expires).isAfter(moment())) {
+                        LoadingService.showSuccess('PROMO CODE ... BOOM!<br><strong>' + info.promoCode + '</strong>');
+                    } else {
+                        debugger;
+                        LoadingService.showFailure('No Promo for You :(');
+                    }
 
                     vm.closeModal(response);
                 })
