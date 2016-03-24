@@ -47,7 +47,7 @@
       padding-top: 20px;
     }
     
-    .license-badge {
+    .license.badge {
       top: 4vw;
     }
   }
@@ -135,70 +135,73 @@
     background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
     background: -webkit-linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%);       
     color: $positive;
-  
-  .miles-badge, .license-badge, .experience-badge {
-    color: $calm;
-    font-size: 1.7em;
-    line-height: 9vw;
-    position: relative;
-    left: 0;
-    width: 100%;
-    top: 4vw;
     
-    .lte::before {
-      content: '<';
-      font-size: 15px;
-      position: relative;
-      left: 6px;
-    }
-        
-    // override to prevent `.experience-badge>.value::after` from applying to miles badge
-    span.value.lte::after {
-      content: '';
-      font-size: 0.8em;
-    }
-    
-    .gte::after {
-      font-size: 10px;
-      position: relative;      
-    }
-  
-    .small {
-      font-size: 0.7em;
-    }
-    
-    .empty {
+    .badge {
       color: $calm;
-      font-size: 0.7em;
-      text-transform: uppercase;
-      
-      i.ion {
-        font-size: 1.1em;
-      }
-    }
-    
-    .label-text {
-      color: $dark;
-      text-transform: uppercase;
-      position: absolute;
-      text-align: center;
-      width: 100%;
+      font-size: 1.7em;
+      line-height: 9vw;
+      position: relative;
       left: 0;
-      font-size: 9px;
-      letter-spacing: -0.5px;
-      font-weight: 400;
-        
-      &.top {
-        bottom: 70%;
+      width: 100%;
+      top: 4vw;
+      text-align: center;
+      
+      .lte::before {
+        content: '<';
+        font-size: 15px;
+        position: relative;
+        left: 6px;
+      }
+          
+      // override to prevent `.experience-badge>.value::after` from applying to miles badge
+      span.value.lte::after {
+        content: '';
+        font-size: 0.8em;
       }
       
-      &.bot {
-        top: 60%;
+      .gte::after {
+        font-size: 10px;
+        position: relative;      
+      }
+    
+      .small {
+        font-size: 0.7em;
+      }
+      
+      .empty {
+        color: $calm;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        width: 100%;
+        
+        
+        i.ion {
+          font-size: 1.1em;
+        }
+      }
+      
+      .label-text {
+        color: $dark;
+        text-transform: uppercase;
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        left: 0;
+        font-size: 9px;
+        letter-spacing: -0.5px;
+        font-weight: 400;
+          
+        &.top {
+          bottom: 70%;
+        }
+        
+        &.bot {
+          top: 60%;
+        }
       }
     }
-  }
 
-    .experience-badge>.value::after {
+    .badge.experience>.value::after {
       content: '+';
       font-size: 4vw;
       position: absolute;
@@ -224,11 +227,19 @@
         max-width: 76px + 2*$button-bar-button-padding;
       }   
     }
+    
+    .badge.truck-type {
+      color: $light;
+      width: auto;
+    }
 
-    .license-badge {
-      font-size: 2.7em;
-      font-weight: 500;
-      top: 3vw;
+    .badge.license {
+        font-size: 2.7em;
+        
+      .text {
+          margin: auto;
+          font-weight: normal; 
+      }
               
       .label-text {
         &.bot {
@@ -237,16 +248,23 @@
       }
     }
 
-    .experience-badge {
+    .badge.experience {
+      .value.text{
+          font-weight: normal; 
+          margin: auto;
+          padding-right: inherit;
+      }
       .label-text {
           &.bot {
-              top: 6vw;
+              top: 6.5vw;
           }
       }
     }
 
-    .miles-badge {
-      font-size: 1.6em;
+    .badge.miles {
+        .text, .small {
+            font-weight: normal;
+        }
     }
     
     @media only screen and (max-device-height : 570px) {
@@ -437,7 +455,7 @@
     height: 95px;
   }
   
- @media only screen and (max-device-height : 570px) {
+  @media only screen and (max-device-height : 570px) {
    .platform-ios & {
      &.right {
         margin-top: 10px !important;
@@ -451,7 +469,7 @@
    }
  }
  
- @media only screen and (max-device-height : 650px) {
+  @media only screen and (max-device-height : 650px) {
    .platform-android & {
      &.right {
        left:  calc(50vw + #{$photo-dimension} / 2);
@@ -459,6 +477,16 @@
    }
  }
 }
+
+// @media only screen and (max-device-height : 570px) {
+//     .header-actions.right {
+//         left: calc(50vw + 100px / 1.6);
+//         top: 55px;
+//         .icon-tier {
+//            width: 63 * 0.83;
+//        }
+//     }
+// }
 
 .profile-visual {
   text-align: center;
@@ -1092,7 +1120,7 @@
   }
 }
 
-@media only screen and (max-device-height : 568px) {
+@media only screen and (max-device-height : 570px) {
   .profile-visual {
     height: 84px;
 
