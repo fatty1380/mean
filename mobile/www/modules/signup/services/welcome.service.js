@@ -19,7 +19,7 @@
             showModal: showModal,
             initialize: initialize,
             acknowledge: acknowledge,
-            isAckd: isAcked
+            isAckd: isAckd
         };
 
         // //////////////////////////////////////////////////////
@@ -104,10 +104,12 @@
         }
 
         // FIX ME - not sure if we need this method...not referenced anywhere else besides `welcome.service`
-        function isAcked (key) {
+        // This is used in the activity service, but there was an inconsistent spelling: `isAcked` vs `isAckd`
+        function isAckd (key) {
             return StorageService.get(key)
-                .then(function (data) {
-                    return !!data.views;
+                .then(function(data) {
+                    // Fixing null pointer exception:
+                    return data && !!data.views;
                 });
         }
     }
