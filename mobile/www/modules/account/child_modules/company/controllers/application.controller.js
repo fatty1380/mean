@@ -4,18 +4,6 @@
 (function () {
     'use strict';
 
-
-    angular
-        .module('company')
-        .filter('capitalize', function () {
-            return function (input, scope) {
-                if (input !== null) {
-                    input = input.toLowerCase();
-                }
-                return input.substring(0, 1).toUpperCase() + input.substring(1);
-            };
-        });
-
     angular
         .module('company')
         .controller('JobApplicationCtrl', JobApplicationCtrl);
