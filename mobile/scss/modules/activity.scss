@@ -2,6 +2,10 @@
   .bar-header .title .ion-chevron-down {
     vertical-align: middle;
   }
+  
+  #map, .map {
+    height:200px;
+  }
 
   .button-padding-top {
     padding-top: 44px;
@@ -183,7 +187,7 @@
   
   .static-map {
     position: relative;
-    max-width: 100%;
+    left: -$item-padding;
   }
 
 
