@@ -35,21 +35,28 @@
     }
   }
   
-  &.lockbox-edit .content-top {
-    padding-left: 0;
-    padding-right: 0;
+  &.lockbox-edit {
+    .content-top {
+      padding-left: 0;
+      padding-right: 0;
     
-    .input-label {
-      width: auto;
-      text-align: left;
-      display: inline-block;
+      .input-label {
+        width: auto;
+        text-align: left;
+        display: inline-block;
+      }
+      
+      select {
+        max-width: unset;
+        display: inline-block;
+      } 
     }
     
-    select {
-      max-width: unset;
-      display: inline-block;
-    } 
+    .item-content {
+      overflow: visible;
+    }
   }
+
   
   &.lockbox-share {
     textarea {
@@ -83,7 +90,7 @@
   }
 }
 
-@media only screen and (max-device-height : 568px) {  
+@media only screen and (max-device-height : 570px) {  
   .lockbox {
     .bar-subheader h3.title {
       padding-top: 4px;
@@ -97,16 +104,95 @@
   }
 }
 
-
-// document list
+// document list (selecteable docs)
 .document-list {
-  background-color: transparent;
-  
   button.button-small.button {
     color: $balanced;
     border-color: $balanced;
     @include list-button;
   }
+  
+  .item {
+    padding: 20px;
+    margin: 2vw 16px;
+    border-radius: 6px;
+    height: 56px;
+    top: 0;
+
+    &.active {
+      background-color: $badge-green !important;
+      
+      .item-content {
+        color: $light;
+      }
+      
+      .icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        margin-left: 50%;
+        margin-top: -11px;
+        font-size: 1.7em;
+      }
+    }
+
+    .item-content {
+      text-overflow: initial;
+      white-space: normal;
+      display: inline-block;
+      
+      strong {
+        font-size: 22px;
+        padding-right: 10px;
+      }
+      
+      span {
+        white-space: pre;
+      }
+
+      &.no-date strong {
+        display: block;
+        line-height:30px;
+        padding-top:3px;
+      }
+    }
+
+    .button {
+      padding: 0 25px;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      margin-top: -15px;
+      z-index: 4;
+    }
+  }
+}
+
+@media only screen and (max-device-height : 570px) {
+  .lockbox.lockbox-edit {
+    .title {
+      margin-top: 40px;
+    }
+    
+    .document-list {
+      .item .item-content {
+        strong {
+          font-size: $font-size-small !important;
+          padding-right: 5px;
+        }
+        
+        span {
+          font-size: 12px !important;
+        }
+      }
+    }
+  } 
+}
+
+
+// document grid (lockbox)
+.document-grid {
+  background-color: transparent;
   
   .doc {
     padding: 10px;
@@ -163,61 +249,6 @@
 
     &.stub-document { 
       box-shadow: inset 1px 1px 15px rgba($action-text, 0.9);
-    }
-  }
-
-  .item {
-    padding: 20px;
-    margin: 2vw 16px;
-    border-radius: 6px;
-    height: 56px;
-    top: 0;
-
-    &.active {
-      background-color: $badge-green !important;
-      
-      .item-content {
-        color: $light;
-      }
-      
-      .icon {
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        margin-left: 50%;
-        margin-top: -11px;
-        font-size: 1.7em;
-      }
-    }
-
-    .item-content {
-      text-overflow: initial;
-      white-space: normal;
-      display: inline-block;
-      
-      strong {
-        font-size: 22px;
-        padding-right: 10px;
-      }
-      
-      span {
-        white-space: pre;
-      }
-
-      &.no-date strong {
-        display: block;
-        line-height:30px;
-        padding-top:3px;
-      }
-    }
-
-    .button {
-      padding: 0 25px;
-      position: absolute;
-      right: 16px;
-      top: 50%;
-      margin-top: -15px;
-      z-index: 4;
     }
   }
 }

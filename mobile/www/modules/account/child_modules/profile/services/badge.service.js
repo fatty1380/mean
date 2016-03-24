@@ -18,7 +18,7 @@
                 0: 'bronze',
                 1: 'silver',
                 2: 'gold',
-                4: 'none'
+                3: 'none'
             };
 
             return badges[getBadgeLevel()];

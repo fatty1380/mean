@@ -23,7 +23,7 @@
     <ion-pane class="pane content-pane">
         <ion-scroll>
             <ion-refresher pulling-text="Pull to refresh ..." on-refresh="vm.refreshDocuments()"></ion-refresher>
-            <ion-list class="document-list">
+            <ion-list class="document-grid">
                 <div ng-if="vm.documents.length">
                     <div ng-repeat="doc in vm.documents track by $index">
                         <div class="row" ng-if="$even">
