@@ -61,9 +61,11 @@
                 </div>
             </ion-item>
 
-            <div class="map" ng-if="!!vm.entry.location.coordinates">
-                <static-gmap class="static-map" size="400x200" sensor="true" zoom="14"></static-gmap>
+            <div class="map">
+                <div id="map" data-tap-disabled="true" ng-if="vm.entry.location.coordinates.length > 0"></div>
+                <static-gmap class="static-map" size="400x200" sensor="true" zoom="14" ng-if="!vm.entry.location.coordinates.length"></static-gmap>
             </div>
+            
 
             <img ng-if="vm.entry.imageURL" ng-src="{{vm.entry.imageURL}}" class="static-pic">
 

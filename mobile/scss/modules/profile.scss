@@ -1167,8 +1167,14 @@
       color: $light;
     }
     
+    .button-icon {
+      position: relative;
+      top: $ios-statusbar-height;
+    }
+    
     .row {
-      margin-bottom: 30px;
+      margin-bottom: 25px;
+      height: 129px;
     }
     
     .center {
@@ -1215,13 +1221,24 @@
       font-size: $font-size-base;
     }
     
-    @media only screen and (max-device-height : 570px) {
-        .col-33 {
-           margin-left: auto; //not enough space for left margin on small devices
-        }
-        
-        li {
-          font-size: 14px;
-        }
+    @media only screen and (max-device-height : 568px) {
+      .row {
+        height: 117px;
+        margin-bottom: 10px;
+      }
+      
+      .col-33 {
+          margin-left: auto; //not enough space for left margin on small devices
+      }
+      
+      li {
+        font-size: 14px;
+      }
+      
+      .icon-tier {
+        width: 90px;
+        height: 90px;
+        margin-left: 10px;
+      }
     }
 }
