@@ -9,17 +9,17 @@
 
     <ion-pane class="lockbox-edit-top" ng-class="{'has-footer': !vm.deleteDisabled }">
         <ion-scroll>
-            <ul class="list document-list">                     
-                <li class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id">    
-                        <ion-checkbox ng-model="doc.checked">
-                        <div class="item-content" ng-class="{'no-date': !doc.created}">
-                            <strong>{{doc.name}}</strong>
-                            <span>{{doc.created | date : 'MMMM d, y' }}</span>
-                        </div>
-                    </ion-checkbox>
-                    <button class="button button-small" ng-click="vm.rename($index)">Rename</button>
-                </li>
-            </ul>
+            <ion-list class="list document-list">
+                <div class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id"
+                  ng-click="doc.checked = !doc.checked" ng-class="{'active': !!doc.checked}">
+                    <div class="item-content" ng-class="{'no-date': !doc.created}">
+                        <strong>{{doc.name}}</strong>
+                        <span>{{doc.created | date : 'MMMM d, y' }}</span>
+                        <button class="button button-small" ng-click="vm.rename($index)">Rename</button>
+                    </div>
+                </div>
+            </ion-list>
+            
             <div ng-if="!vm.documents.length" class="no-content">No documents to edit</div>
         </ion-scroll>
     </ion-pane>
