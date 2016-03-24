@@ -82,29 +82,26 @@
 
                     <ion-item class="profile-bubbles">
                         <div class="circle" ng-click="vm.showEditModal('miles')">
-                            <div class="miles-badge">
-                                
-                                <span ng-if="vm.thousandsOfMiles" ng-class="{'lte':vm.milesMin, 'gte':vm.milesMax}">
-                                {{vm.thousandsOfMiles}}<span class="small">{{vm.mileUnit}}</span>
-                                </span>
-                                
-                                <span ng-if="!vm.thousandsOfMiles" class="empty"> <i class="ion ion-compose"></i> </span>
+                            <div class="badge miles">
+                                <span ng-if="!vm.thousandsOfMiles" class="empty"> <i class="ion ion-compose"></i> </span>                       
+                                <span ng-if="vm.thousandsOfMiles" ng-class="{'lte':vm.milesMin, 'gte':vm.milesMax}"></span>
+                                <span class="text">{{vm.thousandsOfMiles}}</span>
+                                <span class="small">{{vm.mileUnit}}</span>
                                 <span class="label-text bot">miles</span>
                             </div>
                         </div>
                         <div class="circle" ng-click="vm.showEditModal('license')">
-                            <div class="license-badge">
+                            <div class="badge license">
                                 <span ng-if="!vm.profileData.license || !vm.profileData.license.class" class="empty"> <i class="ion ion-compose"></i> </span>
-                                <span class="label-text bot">license</span> {{vm.profileData.license.class}}
+                                <span class="label-text bot">license</span> 
+                                <span class="text">{{vm.profileData.license.class}}</span>
                                 <span class="label-text bot hide">license</span>
                             </div>
                         </div>
                         <div class="circle" ng-click="vm.showEditModal('started')">
-                            <div class="experience-badge">
-                                <span ng-if="vm.yearsDriving" ng-class="{'lte':vm.timeMin}" class="value">
-                                {{vm.yearsDriving}}
-                                </span>
+                            <div class="badge experience">
                                 <span ng-if="!vm.yearsDriving" class="empty"> <i class="ion ion-compose"></i> </span>
+                                <span ng-if="vm.yearsDriving" ng-class="{'lte':vm.timeMin}" class="value text"> {{vm.yearsDriving}} </span>
                                 <span class="label-text bot">years</span>
                             </div>
                         </div>

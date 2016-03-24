@@ -132,7 +132,7 @@
       background: -webkit-linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%);       
       color: $positive;
     
-    .miles-badge, .license-badge, .experience-badge {
+    .badge {
       color: $calm;
       font-size: 1.7em;
       line-height: 9vw;
@@ -140,6 +140,7 @@
       left: 0;
       width: 100%;
       top: 4vw;
+      text-align: center;
       
       .lte::before {
         content: '<';
@@ -165,8 +166,10 @@
       
       .empty {
         color: $calm;
-        font-size: 0.7em;
+        font-size: 0.9em;
         text-transform: uppercase;
+        width: 100%;
+        
         
         i.ion {
           font-size: 1.1em;
@@ -192,9 +195,10 @@
           top: 60%;
         }
       }
+      /////////////////////
     }
 
-    .experience-badge>.value::after {
+    .badge.experience>.value::after {
       content: '+';
       font-size: 4vw;
       position: absolute;
@@ -221,10 +225,15 @@
       }   
     }
 
-    .license-badge {
-      font-size: 12vw;
-      font-weight: 500;
-      top: 3vw;
+    .badge.license {
+    //   top: 3vw;
+        font-size: 8vw;
+        
+      .text {
+          margin: auto;
+          font-size: 12vw;
+          font-weight: normal; 
+      }
               
       .label-text {
         &.bot {
@@ -233,16 +242,24 @@
       }
     }
 
-    .experience-badge {
+    .badge.experience {
+      .value.text{
+        //   font-size: 12vw;
+          font-weight: normal; 
+          margin: auto;
+          padding-right: inherit;
+      }
       .label-text {
           &.bot {
-              top: 6vw;
+              top: 6.5vw;
           }
       }
     }
 
-    .miles-badge {
-      font-size: 1.6em;
+    .badge.miles {
+        .text, .small {
+            font-weight: normal;
+        }
     }
   }
   
@@ -422,6 +439,17 @@
     width: 63px;
     height: 75px;
   }
+  
+}
+
+@media only screen and (max-device-height : 570px) {
+    .header-actions.right {
+        left: calc(50vw + 100px / 1.6);
+        top: 55px;
+        .icon-tier {
+           width: 63 * 0.83;
+       }
+    }
 }
 
 .profile-visual {
@@ -1187,7 +1215,7 @@
       font-size: $font-size-base;
     }
     
-    @media only screen and (max-device-height : 568px) {
+    @media only screen and (max-device-height : 570px) {
         .col-33 {
            margin-left: auto; //not enough space for left margin on small devices
         }
