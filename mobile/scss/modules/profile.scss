@@ -1131,6 +1131,10 @@
 }
 
 .badge-info-modal {
+    .col-33, .col-67 {
+        position: relative;
+    }
+    
     h4, .button-icon {
       color: $light;
     }
@@ -1156,7 +1160,7 @@
     li {
       font-size: 16px;
       font-weight: 500;
-      padding-bottom: 5px;
+      line-height: 1.2em;
     }
     
     .order-now {
@@ -1172,10 +1176,24 @@
     .icon-tier {
       width: 100px;
       height: 100px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
     
     .footer-text {
       margin: 20px;
       font-size: $font-size-base;
+    }
+    
+    @media only screen and (max-device-height : 568px) {
+        .col-33 {
+           margin-left: auto; //not enough space for left margin on small devices
+        }
+        
+        li {
+          font-size: 14px;
+        }
     }
 }

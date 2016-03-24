@@ -543,18 +543,18 @@ i.welcome-joe {
     background-size: contain;
     
     &.gold {
-      background-image: url('../img/tier1.svg');
+      background-image: url('../img/tier1.png');
     }
     
     &.silver {
-      background-image: url('../img/tier2.svg');
+      background-image: url('../img/tier2.png');
     }
     
     &.bronze {
-      background-image: url('../img/tier3.svg');
+      background-image: url('../img/tier3.png');
     } 
     
     &.none {
-      background-image: url('../img/tierNone.svg');
+      background-image: url('../img/tierNone.png');
     }
   }
