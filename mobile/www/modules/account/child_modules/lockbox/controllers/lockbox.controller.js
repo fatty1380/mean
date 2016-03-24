@@ -2,17 +2,18 @@
     'use strict';
 
     angular
-        .module('lockbox', ['pdf'])
+        .module('lockbox')
         .controller('LockboxCtrl', LockboxCtrl);
 
-    LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', '$ionicHistory', 'securityService', 'user', 'documents', 'lockboxDocuments',
-        'lockboxModalsService', '$ionicPopup', '$cordovaGoogleAnalytics', 'LoadingService', 'welcomeService'];
+    LockboxCtrl.$inject = ['$cordovaGoogleAnalytics', '$ionicHistory', '$rootScope', '$scope', '$state',
+        'documents', 'LoadingService', 'lockboxDocuments', 'lockboxModalsService', 'securityService'];
 
-    function LockboxCtrl ($scope, $state, $rootScope, $ionicHistory, securityService, user, documents, lockboxDocuments,
-        lockboxModalsService, $ionicPopup, $cordovaGoogleAnalytics, LoadingService, welcomeService) {
+    function LockboxCtrl ($cordovaGoogleAnalytics, $ionicHistory, $rootScope, $scope, $state,
+        documents, LoadingService, lockboxDocuments, lockboxModalsService, securityService) {
 
 
         var vm = this;
+        var watches = [];
 
         vm.currentDoc = null;
         vm.documents = documents instanceof Array ? documents : [] || [];
@@ -39,7 +40,7 @@
             init();
         });
 
-        $rootScope.$on('clear', function () {
+        var clear = $rootScope.$on('clear', function () {
             $cordovaGoogleAnalytics.trackEvent('Lockbox', 'clear', null, vm.documents.length);
             logger.debug('LockboxCtrl clear');
             vm.currentDoc = null;
@@ -48,33 +49,10 @@
             securityService.logout();
         });
 
+        watches.push(clear);
+
         function init () {
             $cordovaGoogleAnalytics.trackEvent('Lockbox', 'init', 'start', vm.documents.length);
-
-            // return lockboxDocuments.checkAccess({ setNew: true })
-            //     .then(function (isAccessible) {
-            //         vm.canAccess = isAccessible;
-
-            //         if (isAccessible) {
-            //             $cordovaGoogleAnalytics.trackEvent('Lockbox', 'init', 'accessible', vm.documents.length);
-            //             if (_.isEmpty(vm.documents)) {
-            //                 logger.debug('Documents not included in parameters - looking up');
-            //                 getDocs();
-            //             }
-
-            //             return;
-            //         } else {
-            //             return goBack();
-            //         }
-            //         $cordovaGoogleAnalytics.trackEvent('Lockbox', 'init', 'inaccessible', vm.documents.length);
-            //     })
-            //     .catch(function fail (err) {
-            //         $cordovaGoogleAnalytics.trackEvent('Lockbox', 'init', 'fail', vm.documents.length);
-            //         logger.debug('Failed to access lockbox due to `%s`', err);
-            //         vm.canAccess = false;
-
-            //         return goBack();
-            //     });
         }
 
         function goBack () {
@@ -86,18 +64,6 @@
             }
 
             return $ionicHistory.goBack();
-        }
-
-        function getDocs () {
-            if (_.isEmpty(user) || !user.id) {
-                return false;
-            }
-
-            return lockboxDocuments.loadLocalDocsForUser(user.id)
-                .then(function (response) {
-                    logger.debug('Documents List', response);
-                    sortDocs();
-                });
         }
 
         /**
@@ -124,7 +90,7 @@
             lockboxDocuments.addDocsPopup(docSku)
                 .then(
                     function success (doc) {
-                        if (!!doc) {
+                        if (doc) {
                             logger.debug('Added new document with sku `%s` ', doc && doc.sku || doc);
 
                             sortDocs();
@@ -138,7 +104,8 @@
                     function fail (rejection) {
                         if (rejection.error || _.isUndefined(rejection.error)) {
                             logger.error('Failed to add Documents', rejection);
-                        } else {
+                        }
+                        else {
                             logger.debug('getNewAvatar Aborted %s', rejection.message || rejection);
                         }
                     })
@@ -170,7 +137,7 @@
             return lockboxDocuments.orderReports(doc);
         }
 
-        function showEditModal (parameters) {
+        function showEditModal () {
             $cordovaGoogleAnalytics.trackEvent('Lockbox', 'edit', 'click', vm.documents.length);
 
             var params = {
@@ -198,7 +165,7 @@
                     });
         }
 
-        function showShareModal (parameters) {
+        function showShareModal () {
             var params = {
                 documents: vm.documents
             };
