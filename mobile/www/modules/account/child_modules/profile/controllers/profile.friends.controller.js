@@ -198,12 +198,25 @@
                         contactInfo: contact
                     });
                 })
-                .then(function sendInviteSuccess (result) {
-                    logger.debug('Sent Invite', result.data);
+                .then(function () {
+                    return friendsService.getInviteStatus();
+                })
+                .then(function sendInviteSuccess (response) {
+                    logger.debug('Sent Invite', response.data);
                     LoadingService.showSuccess('Invitation Sent!');
+
+                    var info = response.data;
+                    debugger;
+
+                    if (info.promoCode && moment(info.expires).isAfter(moment())) {
+                        LoadingService.showSuccess('PROMO CODE ... BOOM!<br><strong>' + info.promoCode + '</strong>');
+                    } else {
+                        LoadingService.showFailure('No Promo for You :(');
+                    }
+
                 })
                 .catch(function failure (err) {
-                    LoadingService.showError('Unable to Send Invitation');
+                    LoadingService.showFailure('Unable to Send Invitation');
                     return null;
                 });
         }
