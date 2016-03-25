@@ -324,18 +324,7 @@
 
                     vm.closeModal(newResume);
                 })
-                .catch(function resumeRefreshFailed(err) {
-
-                    logger.error('Resume Refresh failed', err);
-
-                    Loader.showFailure(err.userMessage || 'Sorry, Resume Update Failed');
-                })
-                .finally(function() { vm.loading = false; })
-
-            $timeout(function() {
-                Loader.showSuccess('Nothing has been updated!<br>Returning Existing Resume');
-                vm.closeModal(vm.document);
-            }, 1000);
+                .finally(function () { vm.loading = false; });
         }
     }
 })();

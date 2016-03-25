@@ -29,7 +29,8 @@ function lockboxSecurity ($cordovaGoogleAnalytics, $ionicPopup, $q, $rootScope, 
         // Step 1: Pulled out into standalone function
 
         options = _.defaults({}, options, {
-            setNew: true
+            setNew: true,       // Allow the User to set a new lockbox PIN code
+            throwOnFail: false  // Throw a rejected promise, rather than returinng true/false
         });
 
         var $scope = $rootScope.$new();

@@ -17,7 +17,6 @@
 
     settings.auth = settings.api + 'auth/';
     settings.users = settings.api + 'users/';
-    settings.profile = settings.api + 'profile/';
     settings.profiles = settings.api + 'profiles/';
     settings.reviews = settings.api + 'reviews/';
     settings.experience = settings.api + 'experience/';

@@ -86,9 +86,7 @@
 
             return API.doRequest(settings.documents, 'get')
                 .then(function success (documentListResponse) {
-                    var docs = documentListResponse.data;
-                    debugger;
-                    return syncDocsFromServer(docs, saveToDevice);
+                    return syncDocsFromServer(documentListResponse.data, saveToDevice);
                 })
                 .finally(function () {
                     var hasRealDoc = _.some(vm.documents, function (doc) { return !!doc.id; });
@@ -157,53 +155,57 @@
                 });
         }
 
-        function processLoadedDocs (newDocuments) {
-            debugger;
-            if (!_.isEmpty(newDocuments)) {
-                _.each(newDocuments, function (doc) {
-                    var id, name, sku, url, user, created;
+        function processLoadedDocs(newDocuments) {
 
-                    if (!doc) {
-                        logger.debug('No Doc, no Go');
-                        return; }
-
-                    // No ID, With Name and Native FS URL
-                    if (!doc.id && doc.name && doc.nativeURL) {
-                        logger.debug('No Doc ID for doc name: ', doc.name, doc.nativeURL);
-                        var docObject = parseDocFromFilename(doc.name);
-
-                        id = docObject.id;
-                        sku = docObject.sku;
-                        name = docObject.name;
-                        url = doc.nativeURL;
-                    }
-                    else {
-                        logger.debug('Standard processing: ', doc.name, doc.nativeURL);
-
-                        id = doc.id;
-                        sku = doc.sku;
-                        name = doc.name;
-                        url = doc.nativeURL || doc.url; // Use Local URL if available...
-                    }
-
-                    logger.debug('Continuing with the doc creation ...');
-
-                    user = getUserId(doc);
-                    created = doc.created;
-
-                    var ledoc = {
-                        name: name,
-                        url: url,
-                        id: id,
-                        user: user,
-                        created: created,
-                        sku: sku
-                    };
-
-                    logger.debug('prep doc add', ledoc);
-                    addDocument(ledoc);
-                });
+            if (_.isEmpty(newDocuments)) {
+                return vm.documents;
             }
+
+            _.each(newDocuments, function (doc) {
+                var id, name, sku, url, user, created, modified;
+
+                if (!doc) {
+                    logger.debug('No Doc, no Go');
+                    return; }
+
+                // No ID, With Name and Native FS URL
+                if (!doc.id && doc.name && doc.nativeURL) {
+                    logger.debug('No Doc ID for doc name: ', doc.name, doc.nativeURL);
+                    var docObject = parseDocFromFilename(doc.name);
+
+                    id = docObject.id;
+                    sku = docObject.sku;
+                    name = docObject.name;
+                    url = doc.nativeURL;
+                }
+                else {
+                    logger.debug('Standard processing: ', doc.name, doc.nativeURL);
+
+                    id = doc.id;
+                    sku = doc.sku;
+                    name = doc.name;
+                    url = doc.nativeURL || doc.url; // Use Local URL if available...
+                }
+
+                logger.debug('Continuing with the doc creation ...');
+
+                user = getUserId(doc);
+                created = doc.created;
+                modified = doc.modified;
+
+                var ledoc = {
+                    name: name,
+                    url: url,
+                    id: id,
+                    user: user,
+                    created: created,
+                    modified: modified,
+                    sku: sku
+                };
+
+                logger.debug('prep doc add', ledoc);
+                addDocument(ledoc);
+            });
 
             return vm.documents;
         }
@@ -221,7 +223,7 @@
                 logger.info('loadLocalDocsForUser : No Local Docs ... loading from server');
 
                 return $q.reject('Local Filesystem Not Available');
-                //return loadAllDocsFromServer(false);
+                // return loadAllDocsFromServer(false);
             }
 
             logger.warn('loadLocalDocsForUser() for id >>> @ path `%s`', vm.path, userId);
@@ -619,8 +621,6 @@
             var i = -1;
             var sku = (doc.sku || 'misc').toLowerCase();
 
-
-            debugger;
             var def = _.find(docTypeDefinitions, { sku: doc.sku }) || {};
             var order = def.order || vm.documents.length;
             doc.order = order !== 99 ? order : vm.documents.length;
@@ -818,16 +818,20 @@
                 return $q.reject('User is not logged in');
             }
 
-            API.doApiRequest(settings.profile + userId + '/resume', 'get')
+            return API.doRequest(settings.profiles + userId + '/resume', 'get')
                 .then(function success(resumeDocResponse) {
                     var resumeDoc = resumeDocResponse.data;
-                    debugger;
-                    return syncDocsFromServer([resumeDoc], true)
+
+                    if (_.isObject(resumeDoc)) {
+                        debugger;
+                        return syncDocsFromServer([resumeDoc], true);
+                    }
+
+                    return vm.documents;
+
                 })
                 .then(function captureResume(allDocs) {
-                    var resume = _.find(allDocs, { sku: 'res' });
-                    debugger;
-                    return resume;                    
+                    return _.find(allDocs, { sku: 'res' });
                 });
 
 

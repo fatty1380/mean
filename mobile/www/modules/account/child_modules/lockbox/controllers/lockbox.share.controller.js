@@ -6,10 +6,10 @@
         .controller('LockboxShareCtrl', LockboxShareCtrl);
 
     LockboxShareCtrl.$inject = ['$filter', '$ionicPopup', 'parameters', 'contactsService', 'lockboxModalsService', 'lockboxDocuments', 'welcomeService',
-        'requestService', 'utilsService'];
+        'requestService', 'utilsService', 'LoadingService'];
 
-    function LockboxShareCtrl ($filter, $ionicPopup, parameters, contactsService, lockboxModalsService, lockboxDocuments, welcomeService,
-        requestService, utilsService) {
+    function LockboxShareCtrl ($filter, $ionicPopup, parameters, contactsService, LockboxModals, lockboxDocuments, welcomeService,
+        requestService, utilsService, LoadingService) {
 
         var vm = this;
         vm.selectedContact = {};
@@ -40,13 +40,21 @@
 
                         if (_.isEmpty(vm.documents)) {
                             logger.debug('Documents not included in parameters - looking up');
-                            getDocs();
+                            return getDocs();
                         }
 
                         return;
                     }
 
                     return skipDocs();
+                })
+                .then(function checkResume () {
+                    var resume = _.find(vm.documents, { sku: 'res' });
+
+                    if (resume) {
+                        resume.checked = true;
+                        logger.debug('Pre-Selecting Resume on doc-load');
+                    }
                 })
                 .catch(function fail (err) {
                     logger.error('Failed to access lockbox due to error', err);
@@ -94,6 +102,21 @@
                 vm.docsToShare = selectedDocs;
             } else {
                 vm.docsToShare = [];
+            }
+
+            debugger;            
+
+            if (_.find(vm.docsToShare, { sku: 'res' })) {
+                return LockboxModals.showResumeValidationModal({ validationMode: 'view', document: vm.document })
+                    .then(function validated (result) {
+                        logger.debug('Resume DOcuments have been updated and/or validated');
+                        vm.shareStep = 2;
+                    })
+                    .catch(function fail (err) {
+                        logger.error('Lockbox Resume Validation Failed', err);
+
+                        LoadingService.showFailure('You must complete your resume before&nbsp;sending');
+                    });
             }
 
             vm.shareStep = 2;

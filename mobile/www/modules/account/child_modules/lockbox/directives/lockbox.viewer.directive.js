@@ -66,11 +66,11 @@
         }
     }
 
-    ViewDocDirectiveCtrl.$inject = ['modalService', 'lockboxModalsService', 'lockboxSecurity'];
-    function ViewDocDirectiveCtrl (DocPreview, LockboxModals, lockboxSecurity) {
+    ViewDocDirectiveCtrl.$inject = ['modalService', 'lockboxModalsService', 'lockboxSecurity', 'LoadingService', '$timeout'];
+    function ViewDocDirectiveCtrl(DocPreview, LockboxModals, lockboxSecurity, Loader, $timeout) {
         var vm = this;
 
-        vm.docClick = function (event) {
+        vm.docClick = function(event) {
 
             event.stopPropagation();
 
@@ -83,7 +83,17 @@
                             return true;
                         }
 
-                        return LockboxModals.showResumeValidationModal({ validationMode: 'view', document: vm.document });
+                        return LockboxModals.showResumeValidationModal({ validationMode: 'view', document: vm.document })
+                            .catch(function resumeRefreshFailed (err) {
+                                logger.error('Resume Refresh failed', err);
+
+                                Loader.showFailure(err.userMessage || 'Sorry, Unable to update resume at&nbsp;this&nbsp;time');
+
+                                $timeout(function () {
+                                    Loader.showFailure('Showing latest copy');
+                                    vm.closeModal(vm.document);
+                                }, 1000);
+                            })
                     })
                     .then(function() {
                         debugger;
