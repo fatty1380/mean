@@ -29,11 +29,11 @@
      */
 
     FriendsCtrl.$inject = ['updates', 'user', 'profile', 'friends',
-        '$rootScope', '$state', '$filter', 'LoadingService', '$ionicScrollDelegate', '$timeout',
+        '$rootScope', '$state', '$filter', 'LoadingService', '$ionicScrollDelegate', '$timeout', 'welcomeService',
         'userService', 'outsetUsersService', 'utilsService', 'friendsService', 'contactsService', 'profileModalsService'];
 
     function FriendsCtrl (updates, user, profile, friends,
-        $rootScope, $state, $filter, LoadingService, $ionicScrollDelegate, $timeout,
+        $rootScope, $state, $filter, LoadingService, $ionicScrollDelegate, $timeout, welcomeService,
         userService, outsetUsersService, utilsService, friendsService, contactsService, profileModalsService) {
 
         var vm = this;
@@ -209,7 +209,14 @@
                     debugger;
 
                     if (info.promoCode && moment(info.expires).isAfter(moment())) {
-                        LoadingService.showSuccess('PROMO CODE ... BOOM!<br><strong>' + info.promoCode + '</strong>');
+                        // LoadingService.showSuccess('PROMO CODE ... BOOM!<br><strong>' + info.promoCode + '</strong>');
+                        logger.debug('promo code received', info.promoCode);
+                        debugger;
+                        // return welcomeService.initialize('promo.success')
+                            // .then(function(success) {
+                                return welcomeService.showModal('promo.success', { stateName: 'promo.success', promoCode: info.promoCode });
+                            // });
+
                     } else {
                         LoadingService.showFailure('No Promo for You :(');
                     }

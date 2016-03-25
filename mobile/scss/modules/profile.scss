@@ -60,6 +60,8 @@
       font-weight: 400;
     }
   }
+  
+
     
   .item.profile-highlights {
     text-align: center;
@@ -1199,6 +1201,28 @@
 }
 
 .badge-info-modal {
+    
+    &.thanks-screen {
+        border: 1px solid red;
+        .text {
+            padding: 20px;
+            position: absolute;
+            top: 30%;
+            text-align: center;
+            // height: 130px
+        }
+        
+        .icon-tier {
+            // border: 1px solid yellow;
+            top: 25%;
+        }
+        
+        .promo-code {
+            border: 1px solid #333;
+            background-color: rgba($dark, 0.5);
+            font-family: Courier New, Courier, monospace;
+        }
+    }
     .col-33, .col-67 {
         position: relative;
     }
