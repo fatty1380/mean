@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
 	/**
@@ -9,7 +9,7 @@
         .directive('tlineDocView', ViewDocumentDirective)
         .directive('tlineDocAttrView', ViewDocAttrDirective);
 
-    function ViewDocAttrDirective () {
+    function ViewDocAttrDirective() {
         var directive = {
             link: link,
             restrict: 'A',
@@ -26,18 +26,18 @@
         return directive;
 
         // Inject controller as 'vm' for consistency
-        function link (scope, el, attr, vm) {
+        function link(scope, el, attr, vm) {
             // Set defaults
             vm.scope = scope;
 
-            el.bind('click', function (event) {
+            el.bind('click', function(event) {
                 logger.debug('Displaying doc at URL: ', vm.document.url);
                 vm.docClick(event);
             });
         }
     }
 
-    function ViewDocumentDirective () {
+    function ViewDocumentDirective() {
         var directive = {
             link: link,
             template: documentTemplate,
@@ -55,7 +55,7 @@
         return directive;
 
         // Inject controller as 'vm' for consistency
-        function link (scope, el, attr, vm) {
+        function link(scope, el, attr, vm) {
             // Set defaults
             vm.scope = scope;
 
@@ -78,7 +78,7 @@
                 return lockboxSecurity
                     .checkAccess({ setNew: true, throwOnFail: true })
 
-                    .then(function () {
+                    .then(function() {
                         if (vm.document.sku !== 'res') {
                             return true;
                         }
@@ -96,10 +96,9 @@
                             })
                     })
                     .then(function() {
-                        debugger;
                         return showDocument(vm.document, event);
                     })
-                    .catch(function (err) {
+                    .catch(function(err) {
                         logger.error('Lockbox Access Failed', err);
                     });
             }
@@ -111,7 +110,7 @@
 
         // /
 
-        function activate () {
+        function activate() {
             vm.btnText = vm.document && vm.document.name || 'huh?';
 
             if (!!vm.document && !!vm.document.created) {
@@ -120,8 +119,8 @@
             //            vm.btnText = vm.btnText || 'View';
         }
 
-        function showDocument (document, event) {
-            if (!!event) {
+        function showDocument(document, event) {
+            if (event) {
                 event.stopPropagation();
             }
             document = document || vm.document;

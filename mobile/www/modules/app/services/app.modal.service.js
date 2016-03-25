@@ -71,9 +71,9 @@
                         if (thisModal.currentScope) {
                             var modalScopeId = thisModal.currentScope.$id;
                             if (thisScopeId === modalScopeId) {
-                                    deferred.resolve(null);
-                                    _cleanup(thisModal.currentScope);
-                                }
+                                deferred.resolve(null);
+                                _cleanup(thisModal.currentScope);
+                            }
                         }
                     });
 

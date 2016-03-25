@@ -78,7 +78,6 @@
                     return a.order - b.order;
                 });
             }
-
             // return _.sortBy(docs, function (d) { return !d.url; });
         }
 

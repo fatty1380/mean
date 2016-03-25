@@ -58,7 +58,7 @@ var AppConfig = (function () { // eslint-disable-line no-unused-vars
         dev: '1682496348706520'
     };
 
-    
+
 
     var screenConfigs = {
         'account.profile': {
@@ -106,7 +106,7 @@ var AppConfig = (function () { // eslint-disable-line no-unused-vars
             text: 'Your help in inviting friends is greatly appreciated. As a token of our thanks, we have provided you with a promo code',
             promoCode: ''
         }
-    };    
+    };
 
     var debug = debugModes[envMode] || false;
 

@@ -286,10 +286,10 @@
                     });
             };
 
-            vm.clickBadge = function() {
+            vm.clickBadge = function () {
                 welcomeService.initialize('badge.info');
                 welcomeService.showModal('badge.info');
-            };           
+            };
 
             /**
              * vm.showAddExperienceModal
