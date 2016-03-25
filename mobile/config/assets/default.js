@@ -65,6 +65,7 @@ module.exports = {
             'modules/signup/controllers/friends.controller.js',
             'modules/signup/controllers/add.contact.controller.js',
             'modules/signup/controllers/add.friend.manually.controller.js',
+            'modules/signup/controllers/welcomeModal.controller.js',
             'modules/signup/directives/compare-to.directive.js',
             'modules/signup/directives/accessible.form.directive.js',
             'modules/signup/directives/ng-img-crop.js',
