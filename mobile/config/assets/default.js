@@ -117,7 +117,6 @@ module.exports = {
             'modules/account/child_modules/lockbox/controllers/lockbox.share.controller.js',
             'modules/account/child_modules/lockbox/controllers/lockbox.order.reports.controller.js',
             'modules/account/child_modules/lockbox/controllers/lockbox.edit.controller.js',
-            'modules/account/child_modules/lockbox/controllers/lockbox.share.contacts.controller.js',
             'modules/account/child_modules/lockbox/services/lockbox.documents.service.js',
             'modules/account/child_modules/lockbox/services/lockboxSecurity.service.js',
             'modules/account/child_modules/lockbox/services/lockbox.modals.service.js',
