@@ -34,8 +34,8 @@
             };
 
             if (!!key) {
-                StorageService.set(key, viewData);
-                return;
+                debugger;
+               return StorageService.set(key, viewData);
             }
             else {
                 _.each(_.keys(screenConfigs), function (key) {
@@ -63,6 +63,7 @@
 
             return StorageService.get(key)
                 .then(function(data) {
+                    debugger;
 
                     var modalData = data;
 
@@ -75,6 +76,11 @@
                     if (state === 'badge.info') {
                         templateUrl = 'modules/account/child_modules/profile/templates/badge-info-modal.html';
                         modalData.views = 1;
+                    }
+
+                    if (state === 'promo.success') {
+                        templateUrl = 'modules/account/child_modules/profile/templates/promo-thanks-modal.html';
+                        logger.debug('template modal success');
                     }
 
                     if (!modalData.views) {
@@ -120,7 +126,8 @@
 
     WelcomeModalCtrl.$inject = ['parameters', 'tokenService', '$window', 'settings'];
 
-    function WelcomeModalCtrl (parameters, tokenService, $window, settings) {
+    function WelcomeModalCtrl(parameters, tokenService, $window, settings) {
+        debugger;
         var vm = this;
         var screenConfig = screenConfigs[parameters.stateName];
 
@@ -144,6 +151,8 @@
         vm.acknowledge = acknowledge;
         vm.goToOrderReports = goToOrderReports;
 
+        vm.promoCode = parameters.promoCode || 'This should be the promocode';
+
         // ///////////////////////////////////
 
         function acknowledge () {
@@ -156,7 +165,7 @@
 
             $window.open(settings.baseUrl + 'reports/' + refreshQuery, '_system');
             vm.closeModal('Opened Report Order Page');
-        }          
+        }
     }
 
     var screenConfigs = {
@@ -199,6 +208,11 @@
         'badge.info': {
             title: '',
             text: ''
+        },
+        'promo.success': {
+            title: 'Thank You!',
+            text: 'Your help in inviting friends is greatly appreciated. As a token of our thanks, we have provided you with a promo code',
+            promoCode: ''
         }
     };
 
