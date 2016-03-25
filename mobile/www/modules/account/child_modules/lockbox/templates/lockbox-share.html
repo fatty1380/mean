@@ -15,7 +15,8 @@
                   ng-click="doc.checked = !doc.checked" ng-class="{'active': !!doc.checked}">
                     <div class="item-content" ng-class="{'no-date': !doc.created}">
                         <strong>{{doc.name}}</strong>
-                        <span>{{doc.created | date : 'MMMM d, y' }}</span>
+                        <br ng-if="!!(doc.modified || doc.created)" />
+                        <div class="created-date">{{(doc.modified || doc.created) | date : 'MMMM d, y' }}</div>
                         <i class="icon ion-checkmark" ng-show="!!doc.checked"></i>
                     </div>
                 </div>
@@ -32,6 +33,8 @@
     </ion-footer-bar>
 
 </ion-modal-view>
+
+<!-- ##################################################################################### --!>
 
 <!-- Modal step #2 -->
 <ion-modal-view class="lockbox lockbox-share view-section compact-size bg-transparent" ng-class="{'compact-size': (vm.docsToShare && vm.docsToShare.length), 'min-size': (!vm.docsToShare || !vm.docsToShare.length)}"

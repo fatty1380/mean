@@ -10,12 +10,14 @@
     <ion-pane class="lockbox-edit-top" ng-class="{'has-footer': !vm.deleteDisabled }">
         <ion-scroll>
             <ion-list class="list document-list">
-                <div class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id"
-                  ng-click="doc.checked = !doc.checked" ng-class="{'active': !!doc.checked}">
-                    <div class="item-content col-67" ng-class="{'no-date': !doc.created}">
-                        <strong>{{doc.name}}</strong>
-                        <span>{{doc.created | date : 'MMMM d, y' }}</span>
-                        <button class="button button-small col-33" ng-click="vm.rename($index)">Rename</button>
+                <div class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id" ng-click="doc.sku !== 'res' && doc.checked = !doc.checked"
+                ng-class="{'active': !!doc.checked}">
+                    <div class="item-content {{doc.sku === 'res' ? 'col' : 'col-67'}}" ng-class="{'no-date': !(doc.modified || doc.created)}">
+                        <span class="doc-title"><i class=" ion-locked" ng-if="doc.sku==='res'"></i>&nbsp;{{doc.name}}</span>
+                        <br ng-if="!!(doc.modified || doc.created)" />
+                        <div class="created-date">{{(doc.modified || doc.created) | date : 'MMMM d, y' }}</div>
+                        <button ng-if="doc.sku !== 'res'" class="button button-small col-33" ng-click="vm.rename($index)">Rename</button>
+                        
                     </div>
                 </div>
             </ion-list>
