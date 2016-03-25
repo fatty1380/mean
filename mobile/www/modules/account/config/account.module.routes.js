@@ -113,13 +113,14 @@
 
                                     return lockboxDocuments.loadLocalDocsForUser(user.id)
                                         .then(function (data) {
-                                            logger.debug('returning lockbox doc loaded from device');
-                                            return lockboxDocuments.loadDocuments(true);
+                                            logger.debug('returning lockbox dox', data);
+                                            return data;
                                         })
                                         .catch(function (err) {
                                             logger.error('[LockboxDocResolve] Couldn\'t retrieve documents err --->>>', err);
 
-                                            return -1;
+                                            return lockboxDocuments.loadDocuments(true);
+                                            //return -1;
 
                                             // if (/no access/i.test(err)) {
                                             //     return -1;
