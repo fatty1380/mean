@@ -15,6 +15,7 @@ var AppConfig = (function () { // eslint-disable-line no-unused-vars
     var isDevice = /^file/.test(window.location.href);
 
     if (isDevice) {
+        // alert('IMA Device - appconfig!');
         appModuleDependencies.concat([
             'ngCordova.plugins.file',
             'ngCordova.plugins.fileTransfer']);
