@@ -114,7 +114,7 @@
 
                         <div class="exp-item">
                             <div class="row">
-                                <div class="col">
+                                <div class="col trailers">
                                     <span ng-repeat="trailer in vm.profileData.props.trailer">
                                     {{trailer}}<span ng-if="!$last">, </span>
                                     </span>
@@ -140,7 +140,7 @@
                                 <div ng-if="!!vm.profileData.props.truck && !vm.trucksMap[vm.profileData.props.truck]">{{vm.profileData.props.truck}} {{vm.profileData.props.model}}</div>
                                 <div ng-if="!vm.profileData.props.truck && vm.profileData.props.model">{{vm.profileData.props.model}}</div>
                             </div>
-                            <span ng-if="vm.trucksMap[vm.profileData.props.truck] && vm.profileData.props.model" class="badge badge-positive">
+                            <span ng-if="vm.trucksMap[vm.profileData.props.truck] && vm.profileData.props.model" class="badge badge-positive truck-type">
                                 {{vm.profileData.props.model}}
                             </span>
                         </div>

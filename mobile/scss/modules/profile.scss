@@ -46,6 +46,10 @@
     .profile-screen .profile-pane .scroll-view {
       padding-top: 20px;
     }
+    
+    .license.badge {
+      top: 4vw;
+    }
   }
 }
 
@@ -121,18 +125,18 @@
     padding-bottom: $padding-large-vertical + 2px; // Accomodate optical aligment issues due to drop-shadow
   }
     
-    .circle {
-      margin: 0 $padding-small-horizontal/2;
-      display: inline-block;   
-      vertical-align: top;    
-      width: 76px;
-      height: 76px;   
-      border: 2px solid $light;
-      border-radius: 50%;
-      box-shadow: 1px 1px 10px rgba($action-text, 0.8);     
-      background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
-      background: -webkit-linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%);       
-      color: $positive;
+  .circle {
+    margin: 0 $padding-small-horizontal/2;
+    display: inline-block;   
+    vertical-align: top;    
+    width: 76px;
+    height: 76px;   
+    border: 2px solid $light;
+    border-radius: 50%;
+    box-shadow: 1px 1px 10px rgba($action-text, 0.8);     
+    background: linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%); 
+    background: -webkit-linear-gradient(to bottom, rgba(248,248,248,1) 0%,rgba(232,232,232,1) 100%);       
+    color: $positive;
     
     .badge {
       color: $calm;
@@ -197,7 +201,6 @@
           top: 60%;
         }
       }
-      /////////////////////
     }
 
     .badge.experience>.value::after {
@@ -226,14 +229,17 @@
         max-width: 76px + 2*$button-bar-button-padding;
       }   
     }
+    
+    .badge.truck-type {
+      color: $light;
+      width: auto;
+    }
 
     .badge.license {
-    //   top: 3vw;
-        font-size: 8vw;
+        font-size: 2.7em;
         
       .text {
           margin: auto;
-          font-size: 12vw;
           font-weight: normal; 
       }
               
@@ -246,7 +252,6 @@
 
     .badge.experience {
       .value.text{
-        //   font-size: 12vw;
           font-weight: normal; 
           margin: auto;
           padding-right: inherit;
@@ -262,6 +267,11 @@
         .text, .small {
             font-weight: normal;
         }
+    }
+    
+    @media only screen and (max-device-height : 570px) {
+      width: 70px;
+      height: 70px;
     }
   }
   
@@ -332,6 +342,10 @@
       margin-left: $padding-base-horizontal;
       margin-right: $padding-base-horizontal;  
       color: $dark;
+      
+      .trailers {
+        white-space: initial;
+      }
     }
     
     .col, .col-50 {
@@ -346,6 +360,7 @@
     .company-container {
       max-width: 70%;
       padding-left: 0;
+      height: 40px;
     }
     
     .company {
@@ -403,7 +418,7 @@
   
   &.right {
     margin-left: $padding-base-horizontal;
-    left:  calc(50vw + #{$photo-dimension} / 2);
+    left:  calc(50vw + #{$photo-dimension} / 1.5);
   }
   
   &.left {
@@ -438,21 +453,42 @@
   }
   
   .icon-tier {
-    width: 63px;
-    height: 75px;
+    width: 80px;
+    height: 95px;
   }
   
+  @media only screen and (max-device-height : 570px) {
+   .platform-ios & {
+     &.right {
+        margin-top: 10px !important;
+        left:  calc(50vw + #{$photo-dimension} / 2);
+     }
+   }
+   
+   .icon-tier {
+     width: 63px;
+     height: 75px;
+   }
+ }
+ 
+  @media only screen and (max-device-height : 650px) {
+   .platform-android & {
+     &.right {
+       left:  calc(50vw + #{$photo-dimension} / 2);
+     }
+   }
+ }
 }
 
-@media only screen and (max-device-height : 570px) {
-    .header-actions.right {
-        left: calc(50vw + 100px / 1.6);
-        top: 55px;
-        .icon-tier {
-           width: 63 * 0.83;
-       }
-    }
-}
+// @media only screen and (max-device-height : 570px) {
+//     .header-actions.right {
+//         left: calc(50vw + 100px / 1.6);
+//         top: 55px;
+//         .icon-tier {
+//            width: 63 * 0.83;
+//        }
+//     }
+// }
 
 .profile-visual {
   text-align: center;
@@ -1100,6 +1136,10 @@
       -webkit-background-size: 94px 94px;
       background-size: 94px 94px;
       border-width: 1px;
+      
+      .platform-ios & {
+         top: $ios-statusbar-height !important;
+      }
     }
 
     .contacts-amount {

@@ -12,10 +12,10 @@
             <ion-list class="list document-list">
                 <div class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id"
                   ng-click="doc.checked = !doc.checked" ng-class="{'active': !!doc.checked}">
-                    <div class="item-content" ng-class="{'no-date': !doc.created}">
+                    <div class="item-content col-67" ng-class="{'no-date': !doc.created}">
                         <strong>{{doc.name}}</strong>
                         <span>{{doc.created | date : 'MMMM d, y' }}</span>
-                        <button class="button button-small" ng-click="vm.rename($index)">Rename</button>
+                        <button class="button button-small col-33" ng-click="vm.rename($index)">Rename</button>
                     </div>
                 </div>
             </ion-list>
