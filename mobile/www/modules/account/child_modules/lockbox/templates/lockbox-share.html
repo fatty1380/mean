@@ -6,16 +6,19 @@
         <h1 class="title">Select Documents</h1>
     </ion-header-bar>
 
-    <h3 class="title">Select documents to share along with your resume</h3>
+    <div class="bar bar-subheader">
+        <h3 class="title">Select documents to share along with your resume</h3>
+    </div>
 
     <ion-pane class="has-footer">
         <ion-scroll>
             <ion-list class="list document-list">
-                <div class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id"
-                  ng-click="doc.checked = !doc.checked" ng-class="{'active': !!doc.checked}">
-                    <div class="item-content" ng-class="{'no-date': !doc.created}">
-                        <strong>{{doc.name}}</strong>
-                        <span>{{doc.created | date : 'MMMM d, y' }}</span>
+                <div class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id" ng-click="doc.checked = !doc.checked"
+                ng-class="{'active': !!doc.checked}">
+                    <div class="item-content" ng-class="{'no-date': !(doc.modified || doc.created)}">
+                        <span class="doc-title">{{doc.name}}</span>
+                        <br ng-if="!!(doc.modified || doc.created)" />
+                        <div class="created-date">{{(doc.modified || doc.created) | date : 'MMMM d, y' }}</div>
                         <i class="icon ion-checkmark" ng-show="!!doc.checked"></i>
                     </div>
                 </div>
@@ -43,15 +46,17 @@ ng-if="vm.shareStep === 2">
         <h1 class="title">Send Resume</h1>
     </ion-header-bar>
 
-    <h3 class="title" ng-if="vm.docsToShare.length">Enter Email and Message to Send Resume & Selected Documents</h3>
-
+    <div class="bar bar-subheader">
+        <h3 class="title" ng-if="vm.docsToShare.length">Enter Email and Message to Send Resume & Selected Documents</h3>
+    </div>
+    
     <ion-pane class="has-footer">
         <ion-scroll>
             <tline-manual-contact model="vm.contact" show-message="true" show-phone="false" hide-button="true"></tline-manual-contact>
             <div class="included-documents">
                 <div class="title">Attached Documents</div>
                 <ul>
-                  <li ng-repeat="doc in vm.docsToShare"> <i class="ion-document-text"></i>{{doc.name}}</li>
+                    <li ng-repeat="doc in vm.docsToShare"> <i class="ion-document-text"></i>{{doc.name}}</li>
                 </ul>
             </div>
         </ion-scroll>

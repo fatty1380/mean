@@ -203,11 +203,18 @@
       }
     }
 
+    // .badge.experience>.value::after {
+    //   content: '+';
+    //   font-size: 4vw;
+    //   position: absolute;
+    //   bottom: -1vw;
+    // }
     .badge.experience>.value::after {
+      position: absolute;      
       content: '+';
       font-size: 4vw;
-      position: absolute;
-      bottom: -1vw;
+      top: 10px;
+      line-height: 10px;
     }
 
     .equipment-logo {
