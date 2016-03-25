@@ -819,7 +819,7 @@
         },
         {
             sku: 'res',
-            name: 'Resume',
+            name: 'Resume Document',
             info: '',
             order: 1
         },
