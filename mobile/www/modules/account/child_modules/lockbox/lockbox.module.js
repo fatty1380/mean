@@ -1,9 +1,8 @@
-(function() {
+(function () {
     'use strict';
 
     var lockboxModuleDependencies = ['account', 'pdf'];
 
-    debugger;
     if (AppConfig.isDevice) {
         // alert('IMA Device - Lockup!');
         lockboxModuleDependencies.concat([

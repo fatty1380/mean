@@ -66,8 +66,8 @@
         }
     }
 
-    ViewDocDirectiveCtrl.$inject = ['modalService', 'lockboxSecurity'];
-    function ViewDocDirectiveCtrl (DocPreview, lockboxSecurity) {
+    ViewDocDirectiveCtrl.$inject = ['modalService', 'lockboxModalsService', 'lockboxSecurity'];
+    function ViewDocDirectiveCtrl (DocPreview, LockboxModals, lockboxSecurity) {
         var vm = this;
 
         vm.docClick = function (event) {
@@ -77,7 +77,16 @@
             if (vm.document.url) {
                 return lockboxSecurity
                     .checkAccess({ setNew: true, throwOnFail: true })
+
                     .then(function () {
+                        if (vm.document.sku !== 'res') {
+                            return true;
+                        }
+
+                        return LockboxModals.showResumeValidationModal({ validationMode: 'view', document: vm.document });
+                    })
+                    .then(function() {
+                        debugger;
                         return showDocument(vm.document, event);
                     })
                     .catch(function (err) {
