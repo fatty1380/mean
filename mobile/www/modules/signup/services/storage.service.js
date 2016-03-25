@@ -11,7 +11,7 @@
 
         function getUserId () {
             return userService.getUserData()
-                .then(function(profileData) {
+                .then(function (profileData) {
 
                     if (profileData === null) {
                         return false;
@@ -30,7 +30,7 @@
         return {
             set: function (key, value, id) {
                 return getId(id)
-                    .then(function(resolvedId) {
+                    .then(function (resolvedId) {
                         if (!resolvedId) {
                             logger.debug('userId is not available, resolving to:', false);
                             return false;

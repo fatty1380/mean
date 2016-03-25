@@ -210,7 +210,7 @@
                     if (info.promoCode && moment(info.expires).isAfter(moment())) {
                         // LoadingService.showSuccess('PROMO CODE ... BOOM!<br><strong>' + info.promoCode + '</strong>');
                         logger.debug('promo code received', info.promoCode);
-                                return welcomeService.showModal('promo.success', { stateName: 'promo.success', promoCode: info.promoCode });
+                        return welcomeService.showModal('promo.success', { stateName: 'promo.success', promoCode: info.promoCode });
                     } else {
                         LoadingService.showFailure('No Promo for You :(');
                     }

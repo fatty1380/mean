@@ -11,9 +11,9 @@
         .module('signup')
         .factory('welcomeService', welcomeService);
 
-    welcomeService.$inject = ['modalService', '$q', 'StorageService'];
+    welcomeService.$inject = ['modalService', 'StorageService'];
 
-    function welcomeService(modalService, $q, StorageService) {
+    function welcomeService (modalService, StorageService) {
 
         return {
             showModal: showModal,
@@ -45,8 +45,8 @@
 
         function acknowledge (key) {
             return StorageService.get(key)
-                .then(function(data) {
-                    
+                .then(function (data) {
+
                     var modalData = data;
                     modalData.views --;
                     return StorageService.set(key, modalData);
@@ -61,7 +61,7 @@
             var key = parameters.stateName;
 
             return StorageService.get(key)
-                .then(function(data) {
+                .then(function (data) {
 
                     var modalData = data;
 
@@ -92,13 +92,13 @@
 
                     return modalService
                         .show(templateUrl, controller, parameters)
-                        .then(function(isAckd) {
-                            if (isAckd) {
+                        .then(function (isAcknowledged) {
+                            if (isAcknowledged) {
                                 modalData.views--;
                                 modalData.noViewBefore = moment().add({ days: modalData.delayDays });
 
                                 return StorageService.set(key, modalData)
-                                    .then(function() {
+                                    .then(function () {
                                         return true;
                                     });
                             }
@@ -111,7 +111,7 @@
         // This is used in the activity service, but there was an inconsistent spelling: `isAcked` vs `isAckd`
         function isAckd (key) {
             return StorageService.get(key)
-                .then(function(data) {
+                .then(function (data) {
                     // Fixing null pointer exception:
                     return data && !!data.views;
                 });

@@ -8,7 +8,7 @@
         .module('company')
         .controller('JobApplicationCtrl', JobApplicationCtrl);
 
-    JobApplicationCtrl.$inject = ['$q', '$timeout', 'CompanyService', 'Loader', 'parameters', 'ProfileModals', 'UserService'];
+    JobApplicationCtrl.$inject = ['$q', '$timeout', 'CompanyService', 'LoadingService', 'parameters', 'profileModalsService', 'userService'];
 
     function JobApplicationCtrl (CompanyService, Loader, parameters, ProfileModals, $q, $timeout, UserService) {
 

@@ -38,6 +38,9 @@
             vm.profileData.props = vm.profileData.props || {};
             vm.profileData.profileImageURL = userService.getAvatar(vm.profileData);
 
+            // Handle 'numeric' values:
+            vm.profileData.props.miles = !_.isEmpty(vm.profileData.props.miles) ? Number(vm.profileData.props.miles) : null;
+
             vm.owner = vm.profileData.props.owner;
             vm.started = getFormattedDate(vm.profileData.props.started);
 

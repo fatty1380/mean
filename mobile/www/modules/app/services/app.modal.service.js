@@ -50,32 +50,32 @@
                     modalScope.modal = modal;
 
                     modalScope.openModal = function openModal () {
-                            return modalScope.modal.show();
-                        };
+                        return modalScope.modal.show();
+                    };
                     modalScope.cancelModal = function cancelModal (result) {
-                            deferred.reject(result);
+                        deferred.reject(result);
 
-                            $cordovaGoogleAnalytics.trackTiming('ModalView', Date.now() - start, 'cancel', evt);
-                            $cordovaGoogleAnalytics.trackView(location.hash);
+                        $cordovaGoogleAnalytics.trackTiming('ModalView', Date.now() - start, 'cancel', evt);
+                        $cordovaGoogleAnalytics.trackView(location.hash);
 
-                            return modalScope.modal.hide();
-                        };
+                        return modalScope.modal.hide();
+                    };
                     modalScope.closeModal = function closeModal (result) {
-                            deferred.resolve(result);
-                            $cordovaGoogleAnalytics.trackTiming('ModalView', Date.now() - start, 'close', evt);
-                            $cordovaGoogleAnalytics.trackView(location.hash);
-                            return modalScope.modal.hide();
-                        };
+                        deferred.resolve(result);
+                        $cordovaGoogleAnalytics.trackTiming('ModalView', Date.now() - start, 'close', evt);
+                        $cordovaGoogleAnalytics.trackView(location.hash);
+                        return modalScope.modal.hide();
+                    };
 
                     modalScope.$on('modal.hidden', function (thisModal) {
-                            if (thisModal.currentScope) {
-                                var modalScopeId = thisModal.currentScope.$id;
-                                if (thisScopeId === modalScopeId) {
+                        if (thisModal.currentScope) {
+                            var modalScopeId = thisModal.currentScope.$id;
+                            if (thisScopeId === modalScopeId) {
                                     deferred.resolve(null);
                                     _cleanup(thisModal.currentScope);
                                 }
-                            }
-                        });
+                        }
+                    });
 
                         // Invoke the controller
                     var locals = { '$scope': modalScope, 'parameters': parameters };
@@ -84,8 +84,8 @@
                     ctrlInstance = $controller(controller, locals);
 
                     if (ctrlEval.isControllerAs) {
-                            _.extend(ctrlInstance, modalScope);
-                        }
+                        _.extend(ctrlInstance, modalScope);
+                    }
 
                     modalScope.modal.show()
                             .then(function () {
@@ -96,8 +96,8 @@
                             });
 
                     if (angular.isFunction(options.modalCallback)) {
-                            options.modalCallback(modal);
-                        }
+                        options.modalCallback(modal);
+                    }
 
                 })
                 .catch(

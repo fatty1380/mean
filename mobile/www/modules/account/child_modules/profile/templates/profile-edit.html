@@ -36,7 +36,7 @@
             </ion-input>
             <ion-input id="phone" ng-class="{focused : vm.hash === 'phone' }" class="item item-input item-floating-label">
                 <ion-label>Phone Number</ion-label>
-                <input type="number" ng-model="vm.profileData.phone" placeholder="Phone Number" name="phone">
+                <input type="text" ng-model="vm.profileData.phone" placeholder="Phone Number" name="phone" onfocus="this.type='number';this.setAttribute('onfocus','');this.blur();this.focus();">
             </ion-input>
 
             <div id="address" ng-class="{focused : vm.hash === 'address' }" class="item edit-profile-types">
