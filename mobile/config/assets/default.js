@@ -110,6 +110,7 @@ module.exports = {
             'modules/account/child_modules/company/controllers/application.controller.js',
             'modules/account/child_modules/lockbox/lockbox.module.js',
             'modules/account/child_modules/lockbox/controllers/DocumentModal.controller.js',
+            'modules/account/child_modules/lockbox/controllers/ResumeInfo.controller.js',
             'modules/account/child_modules/lockbox/controllers/lockbox.controller.js',
             'modules/account/child_modules/lockbox/controllers/lockbox.create.controller.js',
             'modules/account/child_modules/lockbox/controllers/lockbox.share.controller.js',

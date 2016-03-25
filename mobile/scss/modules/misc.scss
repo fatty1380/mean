@@ -55,6 +55,18 @@
         .button {
           margin-top: 15px;
         }
+      }
+      
+      &.item-validation-step {
+            padding-left: 50px;
+
+            span {
+                line-height: $line-height-small;
+            }    
+
+            .button {
+                min-height: $button-small-height;
+            }
       } 
     }
   }

@@ -2,10 +2,11 @@
 
     <ion-list>
         <ion-item class="item-header item-divider">
-            {{vm.status | capitalize }} Application
+            Resume Validation
         </ion-item>
         <div ng-repeat="validator in vm.validators" ng-if="!validator.hidden">
-            <ion-item class="item-icon-left item-button-right item-validation-step" ng-if="vm.status !== 'valid'">
+            <ion-item class="item-icon-left item-button-right item-validation-step">
+                <!--ng-if="vm.status !== 'valid'"-->
                 <i class="icon" ng-show="validator.status === 'loading'">
                     <ion-spinner></ion-spinner>
                 </i>
@@ -13,16 +14,16 @@
                 <i class="icon ion-checkmark" ng-show="validator.status === 'valid'"></i>
                 <i class="icon ion-alert" ng-show="validator.status === 'invalid'"></i>
                 <i class="icon ion-close" ng-show="validator.status === 'failed'"></i>
-                <span class="step-title">Validating {{validator.name}}</span>
+                <span class="step-title">{{validator.name}}</span>
 
-                <button type="button" class="button button-positive" ng-if="!validator.note && validator.action" ng-click="validator.action()">
-                    Fix
+                <button type="button" class="button button-clear button-positive" ng-if="!validator.note && validator.action" ng-click="validator.action()">
+                    {{validator.fixTitle || 'Edit' }}
                 </button>
             </ion-item>
             <ion-item ng-if="validator.note" class="item-button-right item-body padding">
                 {{validator.note}}
-                <button type="button" class="button button-positive" ng-if="validator.action" ng-click="validator.action()">
-                    Fix
+                <button type="button" class="button button-clear button-positive" ng-if="validator.action" ng-click="validator.action()">
+                    {{validator.fixTitle || 'Edit' }}
                 </button>
             </ion-item>
         </div>
@@ -31,17 +32,17 @@
             <button type="button" ng-click="vm.cancelModal(vm.status)" class="button button-dark button-block">cancel</button>
         </ion-item>
 
-        <ion-item class="item-icon-center" ng-if="vm.status === 'valid'">
-            <i class="icon icon-xl ion-checkmark-circled button-positive"></i>
-        </ion-item>
-
-        <ion-item class="item-message item-footer" ng-if="vm.status === 'invalid'">
-            Sorry, we are unable to complete your application at this time.
-            <button type="button" ng-click="vm.cancelModal(vm.status)" class="button button-dark button-block">OK</button>
-        </ion-item>
-
-        <ion-item class="item-message item-footer" ng-if="vm.status === 'valid'">
-            <span ng-bind-html="vm.text.confirm"></span>
+        <ion-item class="item-message item-footer" ng-if="vm.status !== 'validating'">
+            <span ng-if="vm.requireAll && vm.status === 'invalid'">
+                You must fill in all elements of your profile before emailing your resume and documents.
+            </span>
+            <span ng-if="!vm.requireAll && vm.status === 'invalid'">
+                Add additional information to your resume, or click {{vm.continueTitle || 'continue'}} to view
+            </span>
+            <!--<span ng-bind-html="vm.text.confirm">-->
+            <span ng-if="vm.status === 'valid'">
+                Add additional information to your resume, or click {{vm.continueTitle || 'continue'}} to {{vm.validationMode}}
+            </span>
             <br ng-if="!!vm.text.confirm" />
             <div class="row">
                 <div class="col-10">
@@ -49,11 +50,12 @@
                     </button>
                 </div>
                 <div class="col-80 col-offset-10">
-                    <button type="button" class="button button-positive button-block" ng-click="vm.apply()">Apply</button>
+                    <button type="button" class="button button-positive button-block" ng-click="vm.apply()">{{vm.continueTitle || 'continue'}}</button>
                 </div>
             </div>
 
         </ion-item>
+        
     </ion-list>
 
 
