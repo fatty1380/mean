@@ -78,7 +78,6 @@
                     if (info.promoCode && moment(info.expires).isAfter(moment())) {
                         LoadingService.showSuccess('PROMO CODE ... BOOM!<br><strong>' + info.promoCode + '</strong>');
                     } else {
-                        debugger;
                         LoadingService.showFailure('No Promo for You :(');
                     }
 

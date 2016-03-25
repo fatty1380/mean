@@ -34,7 +34,6 @@
             };
 
             if (!!key) {
-                debugger;
                return StorageService.set(key, viewData);
             }
             else {
@@ -63,7 +62,6 @@
 
             return StorageService.get(key)
                 .then(function(data) {
-                    debugger;
 
                     var modalData = data;
 
@@ -127,7 +125,6 @@
     WelcomeModalCtrl.$inject = ['parameters', 'tokenService', '$window', 'settings'];
 
     function WelcomeModalCtrl(parameters, tokenService, $window, settings) {
-        debugger;
         var vm = this;
         var screenConfig = screenConfigs[parameters.stateName];
 
