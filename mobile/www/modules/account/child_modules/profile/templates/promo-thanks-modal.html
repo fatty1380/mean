@@ -1,0 +1,25 @@
+<ion-modal-view class="welcome-screen badge-info-modal thanks-screen">
+    <ion-pane class="pane">
+
+        <ion-scroll>
+            <button class="button-icon ion-close-round" ng-click="vm.acknowledge()"></button>
+            <h4 class="text-center">Thank You!</h4>
+
+            <div class="icon-tier gold"></div>
+            <div class="text">
+                <h4>{{vm.welcomeText}}</h4>
+                <!--margin: 20px-->
+                <h4>Your Free MVR Promocode:</h4>
+                <h4 class="promo-code">{{vm.promoCode}}</h4>
+                <div class="row">
+                    <div class="col text-center order-now">
+                        <button class="button button-block button-positive" ng-click="vm.goToOrderReports()">Collect Your Free MVR</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </ion-scroll>
+    </ion-pane>
+</ion-modal-view>
